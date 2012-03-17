@@ -8,6 +8,7 @@ class CItemAnalog : public CWndMenuItem
 public:
 	virtual void Create(CSettings::AnalogChannel* pInfo, CWnd *pParent) 
 	{
+		BIOS::DBG::Print("CItemAnalog::Create pInfo=%x\n", (ui32)pInfo);
 		_ASSERT( pInfo );
 		m_pInfo = pInfo;
 		CWndMenuItem::Create( NULL, pInfo->u16Color, 2, pParent);

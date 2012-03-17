@@ -1,0 +1,167 @@
+<html>
+<head>
+    <title>websockets client</title>
+    <style>
+			html, body {
+			  background:#c0c0e0;
+			  height: 100%;
+			}
+		</style>
+</head>
+<body>
+<canvas id="canvas" width="1000" height="256" style="border:solid 1px #000000;"></canvas>
+
+<input type="text" id="in"><input type="button" value="send" onClick="WSocket.Send(document.getElementById('in').value);">
+<input type="button" value="Start" onClick="Start()">
+<input type="button" value="Stop" onClick="Stop()">
+
+<div id="txt"></div>
+
+    <script type="text/javascript">
+				String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
+
+				var SocketClass = function()
+        {
+					// private
+					var ws = null;
+					var arrListeners = new Array();
+					var _this = this;
+
+					var url = "ws://127.0.0.1:38950/resourcePath";
+
+					// public
+					this.Send = function( msg ) 
+					{
+						ws.send( msg );
+					}
+					this.Receive = function ( msg )
+					{
+						if ( msg.substr(0, 1) == "[" )
+							ProcessArray( eval(msg));
+						if ( msg.substr(0, 1) == "\"" )
+							ProcessMessage( eval(msg) );                          
+					}
+					this.Connect = function()
+					{
+            document.title = "Connecting...";
+	          ws = new WebSocket(url);
+            ws.onmessage = this.onMessage;
+            ws.onopen = this.onOpen;
+            ws.onclose = this.onClose;
+            ws.onerror = this.onError;
+          }
+
+					// private
+					this.onMessage = function(evt)
+					{
+            if (typeof evt !== "undefined" && typeof evt.data == "string") {
+								_this.Receive( evt.data.toString() );
+            }
+					}
+
+					this.onOpen = function(evt)
+					{
+						document.title = "Online";
+					}
+
+					this.onClose = function(evt)
+					{
+						document.title = "Offline";
+					}
+					this.onEror = function(evt)
+					{
+						document.title = "Error";
+						alert(evt);
+					}
+
+				};
+
+				var WSocket = new SocketClass();
+        window.onload = function () {
+          setTimeout( "WSocket.Connect();", 500 );
+        };
+
+  var c = document.getElementById("canvas");
+  var ctx = c.getContext('2d');
+  var running = false;
+function Start()
+{
+running = true;
+WSocket.Send('ADC::Get()');
+}
+function Stop()
+{
+running = false;
+}
+
+		function ProcessMessage(msg)
+		{
+				document.getElementById("txt").innerHTML = msg;
+
+		}
+		function ProcessArray(arr)
+		{
+			if (arr.length > 0)
+			{
+					document.getElementById("txt").innerHTML = "array "+arr.length;
+
+				  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+				  ctx.fillRect(0, 0, c.width, c.height);
+					ctx.strokeStyle = '#ff0';
+					ctx.beginPath();
+					for (var i=0, x=0; i<arr.length; i+=4,x+=0.2)
+					{
+						var y = 255-arr[i];
+						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+					}
+					ctx.stroke();
+					ctx.strokeStyle = '#0ff';
+					ctx.beginPath();
+					for (var i=0, x=0; i<arr.length; i+=4,x+=0.2)
+					{
+						var y = 255-arr[i+1];
+						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+					}
+					ctx.stroke();
+					if (running)
+						setTimeout("WSocket.Send('ADC::Get()');",1500);
+			} else
+				document.getElementById("txt").innerHTML = arr;
+
+/*
+	//		document.write(arr.length);
+			Aura.Send( "rcvd="+arr.length );
+	    ctx.beginPath();
+			if (lasty!=-1)	
+				ctx.moveTo(x, lasty);
+
+			for (var i=0; i<arr.length; i++ )
+			{
+				var r=0;
+				if (lasty==-1)r=1;
+
+				var sample = arr[i];					
+			  avg += sample;
+
+
+			  lasty = c.height/2+(-sample+center)/5;
+			  r?ctx.moveTo(x,lasty): ctx.lineTo(x, lasty);
+				x += 0.5;
+				if (x > c.width)
+				{
+					x = 0;
+				  ctx.fillStyle = "rgba(255,255,255,1)";
+				  ctx.fillRect(0, 0, c.width, c.height);
+					lasty = -1;
+					center = avg / c.width;
+					avg = 0;
+				}
+			}
+ 	   ctx.stroke();
+ 	*/
+		} 
+
+
+    </script>
+</body>
+</html>

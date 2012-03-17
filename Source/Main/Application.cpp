@@ -37,6 +37,7 @@ public:
 	}
 };
 
+
 // Arm M3
 void Run()
 {
@@ -67,40 +68,41 @@ void Run()
 			m_wndMain.OnMessage(NULL, ToWord('d', 'g'), 0);
 			BIOS::ADC::Restart();
 		}
+		m_wndMain.WindowMessage( CWnd::WmTick, 0 );
 	}
 }
+
 
 // Win32
 CMainWnd m_wndMain;
 CSettings m_Settings;
-CKeyProcessor kp;
+CKeyProcessor m_kp;
 
 CApplication::CApplication()
 {
-	BIOS::LCD::Print(100, 100, 0xff00, 0, __DATE__);
-	BIOS::LCD::Print(100, 120, 0xff00, 0, __TIME__);
+/*
+		BIOS::Init();
+		m_wndMain.Create();
+		m_wndMain.WindowMessage( CWnd::WmPaint );
+		m_wndMain.m_wndMenuInput.ConfigureAdc();
+		m_wndMain.m_wndMenuInput.ConfigureTrigger();
+		BIOS::ADC::Restart();
+		BIOS::DBG::Print("Starting...");
+*/
 }
 
 CApplication::~CApplication()
 {
 }
 
-void CApplication::operator ()()
+bool CApplication::operator ()()
 {
-	static ui8 bInit = 1;
-	if (bInit)
-	{
-		bInit = 0;
-		BIOS::Init();
-		m_wndMain.Create();
-		m_wndMain.WindowMessage( CWnd::WmPaint );
-		m_wndMain.m_wndMenuInput.ConfigureAdc();
-	}
-	
+	Run();
+/*
 	ui16 nKeys = BIOS::KEY::GetKeys();
 	
-	kp << nKeys;
-	kp >> nKeys;
+	m_kp << nKeys;
+	m_kp >> nKeys;
 
 	if ( nKeys )
 		m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
@@ -110,4 +112,6 @@ void CApplication::operator ()()
 		m_wndMain.OnMessage(NULL, ToWord('d', 'g'), 0);
 		BIOS::ADC::Restart();
 	}
+*/
+	return true;
 }

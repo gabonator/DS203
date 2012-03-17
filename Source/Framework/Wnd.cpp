@@ -3,13 +3,18 @@
 /*static*/ CWnd* CWnd::m_pTop = NULL;
 /*static*/ ui16 CWnd::m_nInstances = 0;
 /*static*/ CWnd* CWnd::m_pFocus = NULL;
+/*static*/ CWnd::CTimer CWnd::m_arrTimers_[16];
+/*static*/ CArray<CWnd::CTimer> CWnd::m_arrTimers;
 
 CWnd::CWnd()
 {
 	m_nInstances++;
 	m_pParent = NULL;
 	if (!m_pTop)
+	{
 		m_pTop = this;
+		m_arrTimers.Init( m_arrTimers_, COUNT(m_arrTimers_) );
+	}
 }
 
 CWnd* CWnd::GetLast()
@@ -87,6 +92,10 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 {
 }
 
+/*virtual*/ void CWnd::OnTimer()
+{
+}
+
 /*virtual*/ void CWnd::OnKey(ui16 nKey)
 {
 	if ( nKey & BIOS::KEY::KeyDown )
@@ -146,6 +155,12 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 		{
 			if ( GetActiveWindow() )
 				GetActiveWindow()->OnKey( nParam );
+		}
+		break;
+		// called only for main wnd
+		case WmTick:
+		{
+			_UpdateTimers();
 		}
 		break;
 	}	
@@ -227,3 +242,32 @@ CWnd* CWnd::_GetPrevActiveWindow()
 	return pWnd;
 }
 
+void CWnd::SetTimer(ui32 nInterval)
+{
+	m_arrTimers.Add( CTimer(this, nInterval) ); 
+}
+
+void CWnd::KillTimer()
+{
+	for ( int i = 0; i < m_arrTimers.GetSize(); i++ )
+		if ( m_arrTimers[i].m_pWnd == this )
+		{
+			m_arrTimers.RemoveAt(i); 
+			break;
+		}	
+}
+
+void CWnd::_UpdateTimers()
+{
+	ui32 nTick = BIOS::GetTick();
+
+	for ( int i = 0; i < m_arrTimers.GetSize(); i++ )
+	{
+		CTimer& timer = m_arrTimers[i];
+		if ( (si32)(nTick - timer.m_nLast) > (si32)timer.m_nInterval )
+		{
+			timer.m_pWnd->OnTimer();
+			timer.m_nLast = BIOS::GetTick();
+		}
+	}
+}

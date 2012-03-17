@@ -8,9 +8,28 @@
 class CWnd
 {
 public:
+	class CTimer 
+	{
+	public:
+		CTimer( CWnd* pWnd, ui32 nInterval ) :
+			m_pWnd( pWnd ), m_nInterval( nInterval ), m_nLast(0)
+		{
+		}
+		CTimer()
+		{
+		}
+
+	public:
+		CWnd*		m_pWnd;		
+		ui32		m_nInterval;
+		ui32		m_nLast;
+	};
+
+public:
 	enum {
 		WmPaint = 1,
 		WmKey = 2,
+		WmTick = 3,
 
 		WsHidden = 0,
 		WsVisible = 1,
@@ -26,6 +45,8 @@ public:
 	static CWnd*	m_pTop;					
 	static CWnd*	m_pFocus;
 	static ui16		m_nInstances;
+	static CTimer	m_arrTimers_[16];
+	static CArray<CTimer>	m_arrTimers;
 
 	CRect	m_rcClient;						// 16
     CWnd*	m_pParent;						// 4
@@ -44,6 +65,7 @@ public:
 	virtual void OnKey(ui16 nKey);
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	virtual void WindowMessage(int nMsg, int nParam = 0);
+	virtual void OnTimer();
 	void SetFocus();
 	ui8 HasFocus();
 	CWnd* GetActiveWindow();
@@ -51,10 +73,13 @@ public:
 	void Update();
 	void SendMessage(CWnd* pTarget, ui16 code, ui32 data);
 	void ShowWindow(ui8 sh);
+	void SetTimer(ui32 nInterval);
+	void KillTimer();
 
 private:
 	CWnd* _GetNextActiveWindow();
 	CWnd* _GetPrevActiveWindow();
+	void _UpdateTimers();
 };                                 
 
 #endif

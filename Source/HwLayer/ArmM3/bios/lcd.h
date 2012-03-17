@@ -12,7 +12,49 @@
 CRect m_rcBuffer;
 CPoint m_cpBuffer;
 
+#include <stdarg.h>
 #include "LowLcd.h"
+//#include <stdio.h>
+//#include <malloc.h>
+
+//#include "tpf/printf.h"
+#include "tpf/spf.h"
+
+/*static*/ void BIOS::DBG::Print(const char * format, ...)
+{
+	static int px = 0;
+	static int py = 0;
+
+	char buf[128];
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        print( &bbuf, format, args );
+
+	for ( bbuf = buf; *bbuf; bbuf++ )
+	{
+		if ( *bbuf == '\n' || px >= 400-8 )
+		{
+			px = 0;
+			py+=14;
+			if (py > 240)
+				py = 0;
+			continue;
+		}
+		px += _DrawChar(px, py, RGB565(ffffff), RGB565(0000B0), *bbuf);
+	}
+}
+/*static*/ void BIOS::DBG::sprintf(char* buf, const char * format, ...)
+{
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        print( &bbuf, format, args );
+}
 
 /*static*/ void BIOS::LCD::Init()
 {
@@ -44,8 +86,15 @@ CPoint m_cpBuffer;
 
 /*static*/ int BIOS::LCD::Printf (int x, int y, unsigned short clrf, unsigned short clrb, const char * format, ...)
 {
-//	_ASSERT(0);
-	return 0;
+	char buf[128];
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        int aux = print( &bbuf, format, args );
+	Print(x, y, clrf, clrb, buf);
+	return aux;
 }
 
 /*static*/ void BIOS::LCD::Clear(unsigned short clr)
@@ -191,23 +240,45 @@ CPoint m_cpBuffer;
 
 /*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch)
 {
+	const unsigned char *pFont = GetFont(ch);
+	if (clrb == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<14; _y++)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<8; _x++, col <<= 1)
+				if ( col & 128 )
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
+		}
+	} else if (clrf == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<14; _y++)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<8; _x++, col <<= 1)
+				if ( col & 128 )
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
+		}
+	} else
+	{
+		for (ui8 _y=0; _y<14; _y++)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<8; _x++, col <<= 1)
+				if ( col & 128 )
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
+				else
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
+		}
+	}
+
+/*
 	const unsigned short *pFont = Get_TAB_8x14(ch);
 	if (clrb == RGBTRANS)
 	{
-//		ui16 _x;
-//		ui8 _y;
-/*
-		ui16 tempbuf[14];
-		
-		__LCD_Set_Block(x, x+1, 240-(y+14), 239-y);
-		LCD_WR_Ctrl(0x2E);
-
-		tempbuf[0] = LCD_PORT; 
-		for (_y=0; y<14; y++)
-		    tempbuf[_y] = LCD_PORT; 
-
-		__LCD_Set_Block(x, x+8-1, 240-(y+14), 239-y);
-*/
 		for (ui8 _x=0; _x<8; _x++)
 		{
 			const unsigned short col = *pFont++;
@@ -215,16 +286,7 @@ CPoint m_cpBuffer;
 			for (ui8 _y=0; _y<14; _y++)
 				if ( (col & (2<<(14-_y))) )
 					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
-/*
-
-			for (_y=0; _y<14; _y++)
-				if ( (col & (2<<_y)) )
-					__LCD_SetPixl( clrf);
-				else
-					__LCD_SetPixl(tempbuf[_y]);
-*/
 		}
-//		__LCD_Set_Block(0, 399, 0, 239);
 	} else if (clrf == RGBTRANS)
 	{
 		for (int _x=0; _x<8; _x++)
@@ -248,6 +310,7 @@ CPoint m_cpBuffer;
 					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
 		}
 	}
+*/
 	return 8;
 }
 

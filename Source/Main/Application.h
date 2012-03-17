@@ -9,5 +9,5 @@ class CApplication {
 public:
 	CApplication();
 	~CApplication();
-	void operator ()();
+	bool operator ()();
 };

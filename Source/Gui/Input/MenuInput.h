@@ -37,8 +37,8 @@ public:
 	CWnd*			m_pComboSource;
 
 	// dev
-	void ConfigureAdc();
-	void ConfigureTrigger();
+	static void ConfigureAdc();
+	static void ConfigureTrigger();
 
 	CWndMenuInput();
 

@@ -1,7 +1,9 @@
 #ifndef AQW
 #define AQW
+
 extern vu32 vu32Tick;
 extern vu16 Delay_Cnt;
+extern vu16 Beep_mS;
 
 /*static*/ ui32 BIOS::GetTick()
 {
@@ -12,6 +14,14 @@ extern vu16 Delay_Cnt;
 {
     Delay_Cnt = ms;
     while (Delay_Cnt > 0){}
+}
+
+/*static*/ void BIOS::Beep( int ms )
+{
+	__Set(BEEP_VOLUME, 50);
+	Beep_mS = ms;
+//	if ( vol > -1 )
+//		__Set( BEEP_VOLUME, vol ); // 0..100
 }
 
 /*static*/ void BIOS::Init()

@@ -65,4 +65,82 @@ public:
 	int left, top, right, bottom;
 };
 
+template <class TYPE>
+class CArray
+{
+	TYPE	*m_arrElements;
+	ui16	m_nCount;
+	ui16	m_nMaxCount;
+public:
+	CArray()
+	{
+	}
+
+	CArray( TYPE *pSource, int nLength )
+	{
+		m_arrElements = pSource;
+		m_nCount = 0;
+		m_nMaxCount = nLength;
+	}
+	
+	void Init( TYPE *pSource, int nLength )
+	{
+		m_arrElements = pSource;
+		m_nCount = 0;
+		m_nMaxCount = nLength;
+	}
+
+	BOOL IsEmpty()
+	{
+		_ASSERT( m_arrElements );
+		return m_nCount == 0;
+	}
+
+	void Add(TYPE t)
+	{
+		_ASSERT( m_nCount < m_nMaxCount );
+		m_arrElements[m_nCount++] = t;
+	}
+
+	TYPE &GetLast()
+	{
+		_ASSERT( m_nCount > 0 );
+		return m_arrElements[m_nCount-1];
+	}
+	
+	TYPE RemoveLast()
+	{
+		_ASSERT( m_nCount > 0 );
+		TYPE& t = m_arrElements[--m_nCount];
+		return t;
+	}
+
+	void Resize( int nDif )
+	{
+		m_nCount += nDif;
+		_ASSERT( m_nCount >= 0 && m_nCount < m_nMaxCount );
+	}
+
+	int GetSize()
+	{
+		return m_nCount;
+	}
+
+	TYPE& operator []( int i)
+	{
+		if ( i < 0 )
+			i += m_nCount;
+		_ASSERT( i >= 0 && i < GetSize() );
+		return m_arrElements[i];
+	}
+	void RemoveAt( int i )
+	{
+		_ASSERT( i < GetSize() );
+		for ( ; i < GetSize()-1; i++ )
+			m_arrElements[i] = m_arrElements[i+1];
+		Resize(-1);
+	}
+};
+
+
 #endif

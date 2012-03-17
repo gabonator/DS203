@@ -3,13 +3,24 @@
 
 //typedef const unsigned short uc16;
 typedef unsigned char ui8;
-typedef unsigned char ui8;
+//typedef unsigned char ui8;
 typedef unsigned short u16;
 typedef signed short si16;
 typedef signed char si8;
 typedef unsigned short ui16;
 typedef unsigned long ui32;
+typedef signed long si32;
 typedef signed short si16;
+typedef void* PVOID;
+typedef bool BOOL;
+typedef float FLOAT;
+typedef int INT;
+typedef const char * PCSTR;
+typedef char * PSTR;
+typedef char CHAR;
+
+#define TRUE 1
+#define FALSE 0
 
 #define RGB565RGB(r, g, b) (((r)>>3)|(((g)>>2)<<5)|(((b)>>3)<<11))
 #define GetHtmlR(rgb) ((rgb) >> 16)
@@ -43,7 +54,18 @@ extern void Assert(const char* msg, int n);
 #endif
 #define _ASSERT(a) if(!(a)) { Assert(__FILE__, __LINE__); }
 
+#define _ASSERT_VALID(a) if(!(a)) { Assert(__FILE__, __LINE__); }
+
 #define ToWord(a, b) (((a)<<8)|(b))
 
+struct FILEINFO {
+	enum {
+		SectorSize = 512
+	};
+	ui16 pCluster[3];
+	ui32 pDirAddr[1];
+	ui8 nMode;
+	ui8 nSectors;
+};
 
 #endif

@@ -9,6 +9,13 @@ public:
 	static void DelayMs(unsigned short ms);
 	static ui32 GetTick();
 	static void Init();
+	static void Beep( int ms );
+
+	class DBG {
+	public:
+		static void Print (const char* format, ...);
+		static void sprintf(char* buf, const char * format, ...);
+	};
 
 	class LCD {
 	public:
@@ -76,6 +83,21 @@ public:
 		static void ConfigureSq(ui16 psc, ui16 arr, ui16 ccr);
 		static void ConfigureWave(ui16* pData, ui16 cnt);
 		static void ConfigureWaveRate(ui16 arr);
+	};
+
+	class DSK {
+	public:
+		enum {
+			IoRead = 1,
+			IoWrite = 2,
+			IoClosed = 3
+		};
+		static PVOID GetSharedBuffer();
+		static BOOL Open(FILEINFO* pFileInfo, si8* strName, ui8 nIoMode);
+		static BOOL Read(FILEINFO* pFileInfo, ui8* pSectorData);
+		static BOOL Write(FILEINFO* pFileInfo, ui8* pSectorData);
+                static BOOL Close(FILEINFO* pFileInfo, int nSize = -1);
+
 	};
 
 };

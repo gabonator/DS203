@@ -2,7 +2,7 @@
 
 #include "../MainWnd.h"
 
-void CWndMenuInput::ConfigureAdc()
+/*static*/ void CWndMenuInput::ConfigureAdc()
 {
 	const static ui16 arrPsc[] = 
 	{ 1-1, 1-1, 1-1, 1-1, 1-1, 1-1, 1-1, 1-1, 1-1, 1-1, 1-1, 10-1, 10-1, 10-1, 100-1, 100-1, 
@@ -26,7 +26,7 @@ void CWndMenuInput::ConfigureAdc()
 	BIOS::ADC::Restart();
 }
 
-void CWndMenuInput::ConfigureTrigger()
+/*static*/ void CWndMenuInput::ConfigureTrigger()
 {
 	if ( Settings.Trig.Sync == CSettings::Trigger::_None )
 	{

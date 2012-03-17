@@ -32,6 +32,7 @@ public:
 	void Create();
 	virtual void OnPaint();
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
+	void OnTimer();
 };
 
 #endif

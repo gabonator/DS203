@@ -1,0 +1,30 @@
+currently these functions/variables are implemented (Source/Core/Sdk.h):
+
+			CEvalToken( "ADC::Count", CEvalToken::PrecedenceFunc, _ADC_Count ),
+			CEvalToken( "ADC::Get", CEvalToken::PrecedenceFunc, _ADC_Get ),
+
+			CEvalToken( "CH1::Coupling", CEvalToken::PrecedenceVar, _CH1_Coupling ),
+			CEvalToken( "CH1::Offset", CEvalToken::PrecedenceVar, _CH1_Offset ),
+			CEvalToken( "CH1::Resolution", CEvalToken::PrecedenceVar, _CH1_Resolution ),
+			CEvalToken( "CH1::Color", CEvalToken::PrecedenceVar, _CH1_Color ),
+			CEvalToken( "CH1::Configure", CEvalToken::PrecedenceFunc, _CH1_Configure ),
+
+			CEvalToken( "CH2::Coupling", CEvalToken::PrecedenceVar, _CH2_Coupling ),
+			CEvalToken( "CH2::Offset", CEvalToken::PrecedenceVar, _CH2_Offset ),
+			CEvalToken( "CH2::Resolution", CEvalToken::PrecedenceVar, _CH2_Resolution ),
+			CEvalToken( "CH2::Color", CEvalToken::PrecedenceVar, _CH2_Color ),
+			CEvalToken( "CH2::Configure", CEvalToken::PrecedenceFunc, _CH2_Configure ),
+
+			CEvalToken( "Print", CEvalToken::PrecedenceFunc, _Print ),
+			CEvalToken( "Beep", CEvalToken::PrecedenceFunc, _Beep ),
+			CEvalToken( "Update", CEvalToken::PrecedenceFunc, _Update ),
+
+few examples:
+
+  Beep(100)
+  Print('Hello!')
+  Print(20,20,'Hello!')
+  ADC::Count()
+  ADC::Get()
+  CH1::Resolution
+  CH1::Resolution=2
