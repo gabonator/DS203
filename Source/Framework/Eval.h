@@ -164,6 +164,7 @@ public:
 			eoInteger,
 			eoFloat,
 			eoString,
+			eoCString,
 			eoAttribute,
 			eoOperator,
 			eoError,
@@ -181,6 +182,7 @@ public:
 			CEvalToken		*m_pOperator;
 			CStream			*m_pStream;
 			char			*m_pString;
+			const char	*m_pcString;
 			ui8				m_pData8[8];
 			ui32			m_pData32[2];
 			CEvalVariable	*m_pVariable;
@@ -210,6 +212,13 @@ public:
 		{
 			m_Data.m_pString = str;
 			m_Data.m_pData32[1] = nLength;
+		}
+
+		CEvalOperand( const CHAR* str, INT nLength = -1, EOperandType eType = eoCString ) :
+			m_eType( eType )
+		{
+			m_Data.m_pcString = str;
+			m_Data.m_pData32[1] = (nLength > -1) ? nLength : strlen(str);
 		}
 
 		CEvalOperand( CEvalToken* pToken ) : m_eType( eoOperator )
@@ -360,6 +369,7 @@ class CEvalCore : public CEvalTools, public CEvalClasses
 public:	
 	CEvalOperand m_arrRpn_[RpnLength];
 	CArray<CEvalOperand> m_arrRpn;
+	PSTR m_pEndPtr;
 
 private:
 	virtual CEvalToken* isOperator( CHAR* pszExpression ) = NULL;
@@ -387,7 +397,10 @@ public:
 		CEvalToken *pTokRPar = isOperator( (char*)")" );
 		CEvalToken *pTokDelim = isOperator( (char*)"," );
 		CEvalToken *pTokEq = isOperator( (char*)"=" );
+		CEvalToken *pTokTerm = isOperator( (char*)";" );
 		CEvalToken *pToken = pTokLPar;
+
+		m_pEndPtr = NULL;
 
 		for ( ; pszExpression < pszEnd; pszExpression++ )
 		{
@@ -396,6 +409,12 @@ public:
 			
 			pPrevToken = pToken;
 			pToken = isOperator( pszExpression );
+			if ( pToken == pTokTerm )
+			{
+				pszExpression += pToken->m_nTokenLen;
+				m_pEndPtr = pszExpression;
+				break;
+			}
 
 			if ( pToken == pTokLPar || pToken == pTokEq )
 			{
@@ -661,6 +680,7 @@ public:
 			CEvalToken( "(", -1, NULL ),
 			CEvalToken( ")", -1, NULL ),
 			CEvalToken( ",", -1, NULL ),
+			CEvalToken( ";", -1, NULL ),
 			CEvalToken( "=", -1, _Set ),
 
 			CEvalToken( "*", CEvalToken::PrecedenceMul, _Mul ),

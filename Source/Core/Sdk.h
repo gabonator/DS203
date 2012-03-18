@@ -96,12 +96,6 @@ public:
 		return CEvalOperand( &color );
 	}
 
-	static CEvalOperand _CH1_Configure( CArray<CEvalOperand>& arrOperands )
-	{
-		CWndMenuInput::ConfigureAdc();
-		return CEvalOperand( CEvalOperand::eoNone );
-	}
-
 	static CEvalOperand _CH2_Coupling( CArray<CEvalOperand>& arrOperands )
 	{
 		static CEvalMappedInteger<NATIVEENUM> coupling( (NATIVEENUM*)&Settings.CH2.Coupling );
@@ -126,10 +120,42 @@ public:
 		return CEvalOperand( &color );
 	}
 
-	static CEvalOperand _CH2_Configure( CArray<CEvalOperand>& arrOperands )
+	static CEvalOperand _ALL_Setup( CArray<CEvalOperand>& arrOperands )
 	{
 		CWndMenuInput::ConfigureAdc();
 		return CEvalOperand( CEvalOperand::eoNone );
+	}
+
+	static CEvalOperand _TIME_Offset( CArray<CEvalOperand>& arrOperands )
+	{
+		static CEvalMappedInteger<si16> resolution( &Settings.Time.Shift );
+		return CEvalOperand( &resolution );
+	}
+
+	static CEvalOperand _TIME_Resolution( CArray<CEvalOperand>& arrOperands )
+	{
+		static CEvalMappedInteger<NATIVEENUM> resolution( (NATIVEENUM*)&Settings.Time.Resolution );
+		return CEvalOperand( &resolution );
+	}
+
+	static CEvalOperand _ENUM_Ampl( CArray<CEvalOperand>& arrOperands )
+	{
+		int nValue = arrOperands.RemoveLast().GetInteger();
+		if ( nValue > CSettings::AnalogChannel::_ResolutionMax )
+			return CEvalOperand( CEvalOperand::eoError );
+
+		PCSTR strEnum = CSettings::AnalogChannel::ppszTextResolution[ nValue ];
+		return CEvalOperand( strEnum, strlen(strEnum) );
+	}
+
+	static CEvalOperand _ENUM_Time( CArray<CEvalOperand>& arrOperands )
+	{
+		int nValue = arrOperands.RemoveLast().GetInteger();
+		if ( nValue > CSettings::TimeBase::_ResolutionMax )
+			return CEvalOperand( CEvalOperand::eoError );
+
+		PCSTR strEnum = CSettings::TimeBase::ppszTextResolution[ nValue ];
+		return CEvalOperand( strEnum, strlen(strEnum) );
 	}
 
 	static CEvalOperand _ADC_Count( CArray<CEvalOperand>& arrOperands )
@@ -179,9 +205,36 @@ public:
 		return CEvalOperand(CEvalOperand::eoNone);
 	}
 
+	static CEvalOperand _Sleep( CArray<CEvalOperand>& arrOperands )
+	{
+		_SAFE( arrOperands.GetSize() == 1 );
+		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
+
+		BIOS::DelayMs( arrOperands.RemoveLast().GetInteger() );
+
+		return CEvalOperand(CEvalOperand::eoNone);
+	}
+
 	static CEvalOperand _Update( CArray<CEvalOperand>& arrOperands )
 	{
 		MainWnd.WindowMessage( CWnd::WmPaint );
+		return CEvalOperand(CEvalOperand::eoNone);
+	}
+
+	static CEvalOperand _GEN_Square( CArray<CEvalOperand>& arrOperands )
+	{
+		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);		
+BIOS::DBG::Print("gensq,ops=%d\n", arrOperands.GetSize() );
+		_SAFE( arrOperands.GetSize() == 3 );
+		_ASSERT( arrOperands[-3].Is( CEvalOperand::eoInteger ) );
+		_ASSERT( arrOperands[-2].Is( pTokDelim ) );
+		_ASSERT( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
+
+		int nPsc = arrOperands[-3].GetInteger();
+		int nArr = arrOperands[-1].GetInteger();
+		arrOperands.Resize(-3);
+
+		BIOS::GEN::ConfigureSq( nPsc, nArr, (nArr+1)>>1 );
 		return CEvalOperand(CEvalOperand::eoNone);
 	}
 
@@ -196,16 +249,25 @@ public:
 			CEvalToken( "CH1::Offset", CEvalToken::PrecedenceVar, _CH1_Offset ),
 			CEvalToken( "CH1::Resolution", CEvalToken::PrecedenceVar, _CH1_Resolution ),
 			CEvalToken( "CH1::Color", CEvalToken::PrecedenceVar, _CH1_Color ),
-			CEvalToken( "CH1::Configure", CEvalToken::PrecedenceFunc, _CH1_Configure ),
 
 			CEvalToken( "CH2::Coupling", CEvalToken::PrecedenceVar, _CH2_Coupling ),
 			CEvalToken( "CH2::Offset", CEvalToken::PrecedenceVar, _CH2_Offset ),
 			CEvalToken( "CH2::Resolution", CEvalToken::PrecedenceVar, _CH2_Resolution ),
 			CEvalToken( "CH2::Color", CEvalToken::PrecedenceVar, _CH2_Color ),
-			CEvalToken( "CH2::Configure", CEvalToken::PrecedenceFunc, _CH2_Configure ),
+
+			CEvalToken( "TIME::Offset", CEvalToken::PrecedenceVar, _TIME_Offset ),
+			CEvalToken( "TIME::Resolution", CEvalToken::PrecedenceVar, _TIME_Resolution ),
+			CEvalToken( "ALL::Setup", CEvalToken::PrecedenceFunc, _ALL_Setup ),
+
+
+			CEvalToken( "ENUM::Time", CEvalToken::PrecedenceFunc, _ENUM_Time ),
+			CEvalToken( "ENUM::Ampl", CEvalToken::PrecedenceFunc, _ENUM_Ampl ),
+
+			CEvalToken( "GEN::Square", CEvalToken::PrecedenceFunc, _GEN_Square ),
 
 			CEvalToken( "Print", CEvalToken::PrecedenceFunc, _Print ),
 			CEvalToken( "Beep", CEvalToken::PrecedenceFunc, _Beep ),
+			CEvalToken( "Sleep", CEvalToken::PrecedenceFunc, _Sleep ),
 			CEvalToken( "Update", CEvalToken::PrecedenceFunc, _Update ),
 
 

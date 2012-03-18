@@ -10,12 +10,149 @@
 </head>
 <body>
 <canvas id="canvas" width="1000" height="256" style="border:solid 1px #000000;"></canvas>
-
+<br>
 <input type="text" id="in"><input type="button" value="send" onClick="WSocket.Send(document.getElementById('in').value);">
+<input type="button" value="Get Single" onClick="Single()">
 <input type="button" value="Start" onClick="Start()">
 <input type="button" value="Stop" onClick="Stop()">
+<!--<textarea disabled id="recv" cols=40 rows=10>-->
+</textarea>
 
-<div id="txt"></div>
+
+<table border=1>
+<tr>
+	<td align="center">CH1</td>
+	<td align="center">CH2</td>
+	<td align="center">TIME</td>
+	<td align="center">GEN</td>
+</tr>
+<tr>
+<td>
+
+  <select onChange="QSend(this.options[this.selectedIndex].value)">
+		<option value="CH1::Resolution=0">50 mV
+		<option value="CH1::Resolution=1">100 mV
+		<option value="CH1::Resolution=2">200 mV
+		<option value="CH1::Resolution=3">500 mV
+		<option value="CH1::Resolution=4">1 V
+		<option value="CH1::Resolution=5">2 V
+		<option value="CH1::Resolution=6">5 V
+		<option value="CH1::Resolution=7">10 V
+	</select>
+
+</td>
+<td>
+
+  <select onChange="QSend(this.options[this.selectedIndex].value)">
+		<option value="CH2::Resolution=0">50 mV
+		<option value="CH2::Resolution=1">100 mV
+		<option value="CH2::Resolution=2">200 mV
+		<option value="CH2::Resolution=3">500 mV
+		<option value="CH2::Resolution=4">1 V
+		<option value="CH2::Resolution=5">2 V
+		<option value="CH2::Resolution=6">5 V
+		<option value="CH2::Resolution=7">10 V
+	</select>
+
+</td>
+<td>
+
+  <select onChange="QSend(this.options[this.selectedIndex].value)">
+		<option value="TIME::Resolution=0">100 nS
+		<option value="TIME::Resolution=1">200 nS
+		<option value="TIME::Resolution=2">500 nS
+		<option value="TIME::Resolution=3">1 uS
+		<option value="TIME::Resolution=4">2 uS
+		<option value="TIME::Resolution=5">5 uS
+		<option value="TIME::Resolution=6">10 uS
+		<option value="TIME::Resolution=7">20 uS
+		<option value="TIME::Resolution=8">50 uS
+		<option value="TIME::Resolution=9">100 uS
+		<option value="TIME::Resolution=10">200 uS
+		<option value="TIME::Resolution=11">500 uS
+		<option value="TIME::Resolution=12">1 mS
+		<option value="TIME::Resolution=13">2 mS
+		<option value="TIME::Resolution=14">5 mS
+		<option value="TIME::Resolution=15">10 mS
+		<option value="TIME::Resolution=16">20 mS
+		<option value="TIME::Resolution=17">50 mS
+		<option value="TIME::Resolution=18">100 mS
+		<option value="TIME::Resolution=19">200 mS
+		<option value="TIME::Resolution=20">500 mS
+		<option value="TIME::Resolution=21">1 S
+	</select>
+
+</td>
+<td>
+
+  <select onChange="WSocket.Send(this.options[this.selectedIndex].value)">
+<!--
+		<option value="GEN::Square(180-1,40000-1)">10 Hz
+		<option value="GEN::Square(180-1,20000-1)">20 Hz
+		<option value="GEN::Square(180-1,8000-1)">50 Hz
+		<option value="GEN::Square(180-1,4000-1)">100 Hz
+		<option value="GEN::Square(180-1,2000-1)">200 Hz
+		<option value="GEN::Square(180-1,800-1)">500 Hz
+		<option value="GEN::Square(180-1,400-1)">1 kHz
+		<option value="GEN::Square(180-1,200-1)">2 kHz
+		<option value="GEN::Square(18-1,800-1)">5 kHz
+		<option value="GEN::Square(18-1,400-1)">10 kHz
+		<option value="GEN::Square(18-1,200-1)">20 kHz
+
+		<option value="GEN::Square(1-1,1440-1)">50 kHz
+		<option value="GEN::Square(1-1,720-1)">100 kHz
+		<option value="GEN::Square(1-1,360-1)">200 kHz
+
+		<option value="GEN::Square(1-1,144-1)">500 kHz
+		<option value="GEN::Square(1-1,72-1)">1 MHz
+		<option value="GEN::Square(1-1,36-1)">2 MHz
+		<option value="GEN::Square(1-1,18-1)">4 MHz
+		<option value="GEN::Square(1-1,12-1)">6 MHz
+		<option value="GEN::Square(1-1,8-1)">8 MHz
+-->
+		<option value="GEN::Square(179,39999)">10 Hz
+		<option value="GEN::Square(179,19999)">20 Hz
+		<option value="GEN::Square(179,7999)">50 Hz
+		<option value="GEN::Square(179,3999)">100 Hz
+		<option value="GEN::Square(179,1999)">200 Hz
+		<option value="GEN::Square(179,799)">500 Hz
+		<option value="GEN::Square(179,399)">1 kHz
+		<option value="GEN::Square(179,199)">2 kHz
+		<option value="GEN::Square(17,799)">5 kHz
+		<option value="GEN::Square(17,399)">10 kHz
+		<option value="GEN::Square(17,199)">20 kHz
+
+		<option value="GEN::Square(0,1439)">50 kHz
+		<option value="GEN::Square(0,719)">100 kHz
+		<option value="GEN::Square(0,359)">200 kHz
+
+		<option value="GEN::Square(0,143)">500 kHz
+		<option value="GEN::Square(0,71)">1 MHz
+		<option value="GEN::Square(0,35)">2 MHz
+		<option value="GEN::Square(0,17)">4 MHz
+		<option value="GEN::Square(0,11)">6 MHz
+		<option value="GEN::Square(0,7)">8 MHz
+	</select>
+
+</td>
+</tr>
+</table>
+
+<!--
+
+  {"!50KHz!",   1-1,   1440-1,     50},
+  {"100KHz",    1-1,    720-1,     50},
+  {"200KHz",    1-1,    360-1,     50},
+  {"500KHz",    1-1,    144-1,     50},
+  {" 1MHz ",    1-1,     72-1,     50},
+  {" 2MHz ",    1-1,     36-1,     50},
+  {" 4MHz ",    1-1,     18-1,     50},
+  {" 6MHz ",    1-1,     12-1,     50},
+  {" 8MHz ",    1-1,      9-1,     50}};
+
+
+-->
+<div id="txt">Result...</div>
 
     <script type="text/javascript">
 				String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
@@ -36,10 +173,13 @@
 					}
 					this.Receive = function ( msg )
 					{
-						if ( msg.substr(0, 1) == "[" )
+/*						if ( msg.substr(0, 1) == "[" )
 							ProcessArray( eval(msg));
 						if ( msg.substr(0, 1) == "\"" )
-							ProcessMessage( eval(msg) );                          
+							ProcessMessage( eval(msg) ); 
+*/
+					if ( msg.substr(0, 1) == "[" )
+							Process( eval(msg) );                         
 					}
 					this.Connect = function()
 					{
@@ -94,16 +234,55 @@ function Stop()
 running = false;
 }
 
+function Single()
+{
+	WSocket.Send("ENUM::Ampl(CH1::Resolution); ENUM::Ampl(CH2::Resolution); ENUM::Time(TIME::Resolution); ADC::Get()");
+}
+
+function QSend(cmd)
+{
+	WSocket.Send( cmd+"; Update(); ALL::Setup();");
+}
+
+function Process(msg)
+{
+  var result = "";
+	if (typeof( msg ) == "string")
+		ProcessMessage(msg);
+	if (typeof( msg ) == "object" && msg.length > 0 )
+	{
+		for (var i=0; i<msg.length; i++)
+		{
+			var element = msg[i];
+			if (result != "") result = result + ", ";
+			if ( typeof(element) == "string" )
+			{
+				result += element;
+			} else
+			if ( typeof(element) == "object" && element.length > 0 )
+			{
+				result += "array("+element.length+")";			
+				ProcessArray(element);
+			} else
+			{
+				result += "unknown";
+			}
+		}
+		document.getElementById("txt").innerHTML = result;
+	}
+}
+
 		function ProcessMessage(msg)
 		{
 				document.getElementById("txt").innerHTML = msg;
-
+				Log( msg );
 		}
 		function ProcessArray(arr)
 		{
 			if (arr.length > 0)
-			{
-					document.getElementById("txt").innerHTML = "array "+arr.length;
+			{//
+				//	document.getElementById("txt").innerHTML = "array "+arr.length;
+				//	Log( "array "+arr.length );
 
 				  ctx.fillStyle = "rgba(0, 0, 0, 1)";
 				  ctx.fillRect(0, 0, c.width, c.height);
@@ -126,7 +305,7 @@ running = false;
 					if (running)
 						setTimeout("WSocket.Send('ADC::Get()');",1500);
 			} else
-				document.getElementById("txt").innerHTML = arr;
+				alert(0);
 
 /*
 	//		document.write(arr.length);
