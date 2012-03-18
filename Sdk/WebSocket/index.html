@@ -9,7 +9,20 @@
 		</style>
 </head>
 <body>
-<canvas id="canvas" width="1000" height="256" style="border:solid 1px #000000;"></canvas>
+<style>
+#scrollpane
+{
+width:100%;
+overflow:auto;
+border: solid 1px gray;
+background-color:white;
+}
+</style>
+
+<div id="scrollpane">
+<canvas id="canvas" width="4096" height="256" style="border:solid 1px #000000;"></canvas>
+</div>
+
 <br>
 <input type="text" id="in"><input type="button" value="send" onClick="WSocket.Send(document.getElementById('in').value);">
 <input type="button" value="Get Single" onClick="Single()">
@@ -221,6 +234,12 @@
           setTimeout( "WSocket.Connect();", 500 );
         };
 
+	var timebase = [100e-9, 200e-9, 500e-9, 1e-6, 2e-6, 5e-6, 10e-6, 20e-6, 50e-6, 100e-6, 
+									200e-6, 500e-6, 1e-3, 2e-3, 5e-3, 10e-3, 20e-3, 50e-3, 100e-3, 200e-3,
+									500e-3, 1];
+	var tbase = 1;
+
+
   var c = document.getElementById("canvas");
   var ctx = c.getContext('2d');
   var running = false;
@@ -236,7 +255,7 @@ running = false;
 
 function Single()
 {
-	WSocket.Send("ENUM::Ampl(CH1::Resolution); ENUM::Ampl(CH2::Resolution); ENUM::Time(TIME::Resolution); ADC::Get()");
+	WSocket.Send("ENUM::Ampl(CH1::Resolution); ENUM::Ampl(CH2::Resolution); ENUM::Time(TIME::Resolution); ADC::Get(); 'timebase'; TIME::Resolution;");
 }
 
 function QSend(cmd)
@@ -257,6 +276,9 @@ function Process(msg)
 			if (result != "") result = result + ", ";
 			if ( typeof(element) == "string" )
 			{
+				if ( element=="timebase" )
+					tbase = timebase[msg[i+1]];
+
 				result += element;
 			} else
 			if ( typeof(element) == "object" && element.length > 0 )
@@ -277,18 +299,32 @@ function Process(msg)
 				document.getElementById("txt").innerHTML = msg;
 				Log( msg );
 		}
+
+// resolution 100us, 300values => 1 ms; 300values => 10 x resolution?
+
 		function ProcessArray(arr)
 		{
 			if (arr.length > 0)
-			{//
-				//	document.getElementById("txt").innerHTML = "array "+arr.length;
-				//	Log( "array "+arr.length );
+			{
 
+					var step = 1; // 0.2
 				  ctx.fillStyle = "rgba(0, 0, 0, 1)";
 				  ctx.fillRect(0, 0, c.width, c.height);
+
+					ctx.stroke();
+					ctx.strokeStyle = '#444';
+					ctx.beginPath();
+					for (var x=0; x < c.width; x+=step*30)
+					{
+						ctx.moveTo(x,0);
+						ctx.lineTo(x,c.height);
+					}
+					ctx.stroke();
+
+
 					ctx.strokeStyle = '#ff0';
 					ctx.beginPath();
-					for (var i=0, x=0; i<arr.length; i+=4,x+=0.2)
+					for (var i=0, x=0; i<arr.length; i+=4,x+=step)
 					{
 						var y = 255-arr[i];
 						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
@@ -296,12 +332,14 @@ function Process(msg)
 					ctx.stroke();
 					ctx.strokeStyle = '#0ff';
 					ctx.beginPath();
-					for (var i=0, x=0; i<arr.length; i+=4,x+=0.2)
+					for (var i=0, x=0; i<arr.length; i+=4,x+=step)
 					{
 						var y = 255-arr[i+1];
 						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
 					}
 					ctx.stroke();
+
+
 					if (running)
 						setTimeout("WSocket.Send('ADC::Get()');",1500);
 			} else
