@@ -6,6 +6,7 @@
 #include <string.h>
 #include "WebSocket.h"
 
+#define _ASSERT_VALID(e) { if ( !(e) ) _ASSERT(0); }
 const CHAR sdkFile[] = "G:\\SDK.BIN";
 
 bool bRunning = true;
@@ -14,10 +15,41 @@ CWebSockets m_ws;
 volatile int nRequest = 0;
 CHAR sendmsg[1024] = {0};
 
+// reading {{{
+HANDLE _rdh = NULL;
+BYTE _rdb[512];
+int _rdi = 0;
+void _Set( HANDLE h)
+{
+	_rdh = h;
+}
+void _Push( BYTE* buf, int nSize )
+{
+	_ASSERT( nSize == sizeof(_rdb) );
+	memcpy( _rdb, buf, 512 );
+	_rdi = 0;
+}
+int _Get()
+{
+	if ( _rdi < sizeof(_rdb) )
+	{
+		int nAux = _rdb[_rdi++];
+		return nAux;
+	}
+	_ASSERT( _rdh );
+	DWORD dwRead;
+	ReadFile(_rdh, _rdb, sizeof(_rdb), &dwRead, NULL );
+	_ASSERT( dwRead == sizeof(_rdb) );
+	_rdi = 0;
+	return _Get();
+}
+// }}} reading
+
 bool hasZero( char* p, int n )
 {
 	for (int i=0; i<n; i++)
-		if ( p[i] == 0 )
+		if ( p[
+			i] == 0 )
 			return true;
 	return false;
 }
@@ -47,6 +79,11 @@ BOOL Do(HANDLE hFile)
 
 	DWORD dwRead = 0;
 	ReadFile(hFile, aSector, sizeof(aSector), &dwRead, NULL );
+	if ( dwRead == 0 )
+	{
+		int nErr = GetLastError();
+		printf("Read error %d ", nErr);
+	}
 	_ASSERT( dwRead > 0 );
 
 	if ( memcmp(aLastRead, aSector, sizeof(aSector)) == 0 )
@@ -68,6 +105,101 @@ BOOL Do(HANDLE hFile)
 	memcpy(aLastRead, aSector, sizeof(aSector));
 	nBusy = 0;
 
+	_Set( hFile );
+	_Push( aSector, 512 );
+
+	/*
+	strToken[0] = _Get();
+	strToken[1] = _Get();
+	strToken[2] = _Get();
+	strToken[3] = _Get();
+	*/
+
+	CArray<CString> arrAns;
+	do 
+	{
+		CHAR strToken[4]  = { _Get(), _Get(), _Get(), _Get() };
+		if ( memcmp( strToken, "ANS=", 4 ) == 0 )
+		{
+			CString strAns = "\"";
+			_ASSERT_VALID( _Get() == '(' );
+			CHAR type[4] = {_Get(), _Get(), _Get(), _Get()};
+
+			if ( memcmp( type, "text", 4 ) == 0 )
+			{
+				CHAR ch = 0; 
+				do {
+					ch = _Get();
+				} while ( ch != ')' );
+				_ASSERT_VALID( _Get() == ' ' );
+
+				do {
+					ch = _Get();
+					if (ch)
+						strAns += ch;
+				} while ( ch != 0 );
+				strAns += "\"";
+				printf( "%s", strAns.GetBuffer() );
+			} else
+			if ( memcmp( type, "bina", 4 ) == 0 )
+			{
+				_ASSERT_VALID( _Get() == 'r' );
+				_ASSERT_VALID( _Get() == 'y' );
+				_ASSERT_VALID( _Get() == ',' );
+				_ASSERT_VALID( _Get() == ' ' );
+				_ASSERT_VALID( _Get() == 'l' );
+				_ASSERT_VALID( _Get() == 'e' );
+				_ASSERT_VALID( _Get() == 'n' );
+				_ASSERT_VALID( _Get() == '=' );
+				CString strLen;
+				CHAR ch = 0;
+				do {
+					ch = _Get();
+					strLen += ch;
+				} while ( ch && ch != ')' );
+				int nLen = atoi( strLen.GetBuffer() );
+
+				strAns = "[";
+				for ( int i = 0; i < nLen; i++ )
+				{
+					CString strSingle;
+					if ( i>0)
+						strAns += ",";
+					unsigned char uch = _Get();
+					strSingle.Format("0x%02x", uch);
+					strAns += strSingle;
+				}
+				strAns += "]";
+			}
+			arrAns.Add( strAns );
+		} else
+		if ( memcmp( strToken, "END\x1b", 4 ) == 0 )
+		{
+			break;
+		} else
+		{
+			_ASSERT(0);
+			break;
+		}
+	} while (1);
+
+	/*
+	if ( arrAns.GetSize() == 1 )
+	{
+		m_ws.Send( arrAns[0].GetBuffer() );
+	} else*/
+	{
+		CString strAns = "[";
+		for (int i=0; i<arrAns.GetSize(); i++)
+		{
+			if ( i > 0 )
+				strAns+=", ";
+			strAns += arrAns[i];
+		}
+		strAns += "]";
+		m_ws.Send( strAns.GetBuffer() );
+	}
+	/*
 	if ( memcmp( aSector, "ANS=", 4 ) == 0 )
 	{
 		if ( memcmp( aSector+5, "text", 4) == 0 )
@@ -116,7 +248,7 @@ BOOL Do(HANDLE hFile)
 		} else
 			printf("Unknown data\n");
 
-	}
+	}*/
 	return TRUE;
 }
 /*
@@ -153,7 +285,11 @@ BOOL CtrlHandler( DWORD fdwCtrlType )
 
 void listener( UCHAR* pstr )
 {
-	_ASSERT( sendmsg[0] == 0 );
+	if ( sendmsg[0] != 0 )
+	{
+		printf("Wait, previous buffer not sent yet!");
+		return;
+	}
 	strcpy( (char*)sendmsg+1, (char*)pstr+1 );
 	sendmsg[0] = pstr[0];
 }
