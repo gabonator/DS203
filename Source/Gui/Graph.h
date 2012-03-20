@@ -15,14 +15,14 @@ public:
 		DivsY = 8
 	};
 
-public:
-	static ui16	m_nMaxX;
+//public:
+//	static ui16	m_nMaxX;
 
 public:
 	virtual void Create(CWnd *pParent, ui16 dwFlags) 
 	{
 		CWnd::Create("CWndGraph", dwFlags, CRect(12, 22, 12+DivsX*BlkX, 22+DivsY*BlkY), pParent);
-		CWndGraph::m_nMaxX = -1;
+//		CWndGraph::m_nMaxX = -1;
 	}
 
 	virtual void OnPaint()
@@ -104,7 +104,7 @@ class CWndOscGraph : public CWndGraph
 	virtual void OnPaint()
 	{
 		ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
-		if ( m_nMaxX == (u16)-1 )
+		if ( !CWnd::m_rcOverlay.IsValid() )
 		{
 			CRect rc = m_rcClient;
 			rc.Inflate( 1, 1, 1, 1 );
@@ -121,7 +121,8 @@ class CWndOscGraph : public CWndGraph
 		ui8 en1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
 		ui8 en2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
 
-		int nMax = min(m_rcClient.Width(), m_nMaxX-m_rcClient.left);
+		int nMax = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
+//		int nMax = min(m_rcClient.Width(), m_nMaxX-m_rcClient.left);
 		nMax <<= 2;
 
 		ui8 bTrigger = (BIOS::GetTick() - Settings.Trig.nLastChange) < 5000;

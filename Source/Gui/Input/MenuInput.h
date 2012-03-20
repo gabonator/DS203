@@ -33,8 +33,8 @@ public:
 	CWndListTrigger	m_wndListTrigger;
 
 	// modal
-	CWnd*			m_pListSource;
-	CWnd*			m_pComboSource;
+//	CWnd*			m_pListSource;
+//	CWnd*			m_pComboSource;
 
 	// dev
 	static void ConfigureAdc();

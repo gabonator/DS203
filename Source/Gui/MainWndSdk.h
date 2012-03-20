@@ -70,7 +70,9 @@ public:
 				{
 					case CEval::CEvalOperand::eoError: 
 						BIOS::DBG::sprintf(m_strSimpleAns, "ANS=(text, msg) Error"); 
-						BIOS::DBG::Print("Erorr Evaluating '%s'", m_pszExpression);
+						BIOS::DBG::Print("Error Evaluating '%s'", m_pszExpression);
+						MainWnd.m_wndMessage.Show(&MainWnd, "SDK Warning", "Invalid request", RGB565(FF0000));
+
 						m_nSimpleLen = strlen(m_strSimpleAns) + 1; // including terminating zero
 						m_nSimplePos = 0;
 					break;
@@ -154,7 +156,7 @@ void CMainWnd::SdkProc()
 		if ( BIOS::DSK::Open(&f, (si8*)"SDK     BIN", BIOS::DSK::IoRead) )
 		{
 			fbase = f;
-			BIOS::DBG::Print("SDK File found!\n");
+			m_wndMessage.Show(this, "SDK Information", "SDK File Found!", RGB565(00FF00));
 
 			memset(buf, 0, FILEINFO::SectorSize);       	
 			strcpy(buf, "ANS=(text, msg) DSO SDK Version 1.0 by Valky.eu 2012. Ready... Type 'REQ=your expression'");
@@ -227,8 +229,15 @@ void CMainWnd::SdkProc()
 		return;
 	}
 
+	if ( buf[0] == 0 && buf[1] == 0 && buf[2] == 0 && buf[3] == 0 )
+	{
+		// empty file? maybe the connector application just created it
+		bInit = TRUE;
+		return;
+	}
+
 	// buffer mismatch
+	m_wndMessage.Show(this, "SDK Warning", "SDK File Corrupted", RGB565(FF0000));
 	bInit = TRUE; 
- 	BIOS::DBG::Print("t=%d rd='%s' ", BIOS::GetTick(), buf);
 }
 

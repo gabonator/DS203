@@ -1,10 +1,13 @@
 #include "Wnd.h"
 
-/*static*/ CWnd* CWnd::m_pTop = NULL;
-/*static*/ ui16 CWnd::m_nInstances = 0;
-/*static*/ CWnd* CWnd::m_pFocus = NULL;
-/*static*/ CWnd::CTimer CWnd::m_arrTimers_[16];
-/*static*/ CArray<CWnd::CTimer> CWnd::m_arrTimers;
+/*static*/ CWnd* 									CWnd::m_pTop = NULL;
+/*static*/ ui16 									CWnd::m_nInstances = 0;
+/*static*/ CWnd* 									CWnd::m_pFocus = NULL;
+/*static*/ CWnd::CTimer 					CWnd::m_arrTimers_[16];
+/*static*/ CArray<CWnd::CTimer> 	CWnd::m_arrTimers;
+/*static*/ CWnd::CModal						CWnd::m_arrModals_[8];
+/*static*/ CArray<CWnd::CModal> 	CWnd::m_arrModals;
+/*static*/ CRect 									CWnd::m_rcOverlay;
 
 CWnd::CWnd()
 {
@@ -14,7 +17,19 @@ CWnd::CWnd()
 	{
 		m_pTop = this;
 		m_arrTimers.Init( m_arrTimers_, COUNT(m_arrTimers_) );
+		m_arrModals.Init( m_arrModals_, COUNT(m_arrModals_) );
+		m_rcOverlay.Invalidate();
 	}
+}
+
+CWnd* CWnd::GetParent()
+{
+	return m_pParent;
+}
+
+CWnd* CWnd::GetFocus()
+{
+	return m_pFocus;
 }
 
 CWnd* CWnd::GetLast()
@@ -270,4 +285,39 @@ void CWnd::_UpdateTimers()
 			timer.m_nLast = BIOS::GetTick();
 		}
 	}
+}
+
+bool CWnd::IsWindow()
+{
+	return m_pParent ? true : false;
+}
+
+void CWnd::StartModal( CWnd* pwndChildFocus /*= NULL*/ )
+{
+	m_arrModals.Add( CModal() );
+
+	if ( pwndChildFocus )
+		pwndChildFocus->SetFocus();
+	else
+		SetFocus();
+
+	// redraw with disabled focus
+	m_arrModals.GetLast().m_pPrevFocus->Invalidate();
+
+	m_rcOverlay |= m_rcClient;
+
+	Invalidate();	
+}
+
+void CWnd::StopModal()
+{
+//	CWnd* pParent = m_pParent;
+
+	Destroy();
+	m_rcOverlay.Invalidate();
+	m_arrModals.GetLast().m_pPrevFocus->SetFocus();
+	// redraw everything without any limits
+	m_pTop->Invalidate();
+	m_rcOverlay = m_arrModals.GetLast().m_rcPrevOverlay;
+	m_arrModals.RemoveLast();
 }

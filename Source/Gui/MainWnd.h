@@ -28,7 +28,9 @@ public:
 	CWndZoomBar			m_wndZoomBar;
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
-	
+
+	CWndMessageBox		m_wndMessage;	
+
 	void Create();
 	virtual void OnPaint();
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);

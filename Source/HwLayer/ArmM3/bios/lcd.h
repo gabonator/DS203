@@ -18,7 +18,7 @@ CPoint m_cpBuffer;
 //#include <malloc.h>
 
 //#include "tpf/printf.h"
-#include "tpf/spf.h"
+#include "sprintf/spf.h"
 
 /*static*/ void BIOS::DBG::Print(const char * format, ...)
 {
@@ -258,7 +258,7 @@ CPoint m_cpBuffer;
 			ui8 col = ~*pFont++;
 	
 			for (ui8 _x=0; _x<8; _x++, col <<= 1)
-				if ( col & 128 )
+				if ( (col & 128) == 0 )
 					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
 		}
 	} else

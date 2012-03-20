@@ -53,6 +53,8 @@ background-color:white;
 		<option value="CH1::Resolution=7">10 V
 	</select>
 
+	<div id="CH1stats">
+	</div>
 </td>
 <td>
 
@@ -66,6 +68,9 @@ background-color:white;
 		<option value="CH2::Resolution=6">5 V
 		<option value="CH2::Resolution=7">10 V
 	</select>
+
+	<div id="CH2stats">
+	</div>
 
 </td>
 <td>
@@ -322,23 +327,39 @@ function Process(msg)
 					ctx.stroke();
 
 
+					var nCH1sum = 0, nCH1sum2 = 0, nCH1n = 0;
 					ctx.strokeStyle = '#ff0';
 					ctx.beginPath();
 					for (var i=0, x=0; i<arr.length; i+=4,x+=step)
 					{
-						var y = 255-arr[i];
-						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-					}
-					ctx.stroke();
-					ctx.strokeStyle = '#0ff';
-					ctx.beginPath();
-					for (var i=0, x=0; i<arr.length; i+=4,x+=step)
-					{
-						var y = 255-arr[i+1];
+						var y = arr[i];
+						nCH1sum += y;
+						nCH1sum2 += y*y;
+						nCH1n++;
+				    y = 255-y;
 						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
 					}
 					ctx.stroke();
 
+					var nCH1avg = nCH1sum / nCH1n, nCH1var = (nCH1sum2 - (nCH1sum*nCH1sum)/nCH1n)/nCH1n;
+					document.getElementById("CH1stats").innerHTML = "avg = " + nCH1avg.toFixed(2) + "<br>var = "+nCH1var.toFixed(2);
+
+					var nCH2sum = 0, nCH2sum2 = 0, nCH2n = 0;
+					ctx.strokeStyle = '#0ff';
+					ctx.beginPath();
+					for (var i=0, x=0; i<arr.length; i+=4,x+=step)
+					{
+						var y = arr[i+1];
+						nCH2sum += y;
+						nCH2sum2 += y*y;
+						nCH2n++;
+				    y = 255-y;
+						i==0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+					}
+					ctx.stroke();
+
+					var nCH2avg = nCH2sum / nCH2n, nCH2var = (nCH2sum2 - (nCH2sum*nCH2sum)/nCH2n)/nCH2n;
+					document.getElementById("CH2stats").innerHTML = "avg = " + nCH2avg.toFixed(2) + "<br>var = "+nCH2var.toFixed(2);
 
 					if (running)
 						setTimeout("WSocket.Send('ADC::Get()');",1500);

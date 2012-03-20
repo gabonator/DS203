@@ -12,8 +12,9 @@ public:
 	{
 	public:
 		CTimer( CWnd* pWnd, ui32 nInterval ) :
-			m_pWnd( pWnd ), m_nInterval( nInterval ), m_nLast(0)
+			m_pWnd( pWnd ), m_nInterval( nInterval )
 		{
+			m_nLast = BIOS::GetTick();
 		}
 		CTimer()
 		{
@@ -23,6 +24,25 @@ public:
 		CWnd*		m_pWnd;		
 		ui32		m_nInterval;
 		ui32		m_nLast;
+	};
+
+	class CModal
+	{
+	public:
+		CModal()
+		{
+			m_pPrevFocus = CWnd::m_pFocus;
+			m_rcPrevOverlay = CWnd::m_rcOverlay; 
+		}
+
+		CModal( CRect rcOverlay, CWnd* pFocus )
+		{
+			m_rcPrevOverlay = rcOverlay;
+			m_pPrevFocus = pFocus;
+		}
+
+		CWnd*		m_pPrevFocus;
+		CRect		m_rcPrevOverlay;
 	};
 
 public:
@@ -45,11 +65,15 @@ public:
 	static CWnd*	m_pTop;					
 	static CWnd*	m_pFocus;
 	static ui16		m_nInstances;
+
 	static CTimer	m_arrTimers_[16];
+	static CModal	m_arrModals_[8];
 	static CArray<CTimer>	m_arrTimers;
+	static CArray<CModal> m_arrModals;
+	static CRect m_rcOverlay;
 
 	CRect	m_rcClient;						// 16
-    CWnd*	m_pParent;						// 4
+	CWnd*	m_pParent;						// 4
 	CWnd*	m_pFirst;						// 4
 	CWnd*	m_pNext;						// 4
 	ui16	m_dwFlags;						// 4
@@ -59,6 +83,9 @@ public:
 	CWnd();
 	CWnd* GetLast();
 	CWnd* GetPrev();
+	CWnd* GetParent();
+	CWnd* GetFocus();
+
 	void Destroy();
 	void Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pParent );
 	virtual void OnPaint();
@@ -68,6 +95,7 @@ public:
 	virtual void OnTimer();
 	void SetFocus();
 	ui8 HasFocus();
+	bool IsWindow();
 	CWnd* GetActiveWindow();
 	void Invalidate();
 	void Update();
@@ -75,6 +103,8 @@ public:
 	void ShowWindow(ui8 sh);
 	void SetTimer(ui32 nInterval);
 	void KillTimer();
+	void StartModal(CWnd* pwndChildFocus = NULL);
+	void StopModal();
 
 private:
 	CWnd* _GetNextActiveWindow();

@@ -27,6 +27,10 @@ public:
 	{
 		return (left+right)>>1;
 	}
+	CPoint Center()
+	{
+		return CPoint( (left+right) >> 1, (top+bottom) >> 1 );
+	}
 	void Deflate(int l, int t, int r, int b)
 	{
 		left += l;
@@ -60,6 +64,32 @@ public:
 		right += x;
 		top += y;
 		bottom += y;
+	}
+
+	void Invalidate()
+	{
+		left = 0;
+		top = 0;
+		right = 0;
+		bottom = 0;
+	}
+
+	bool IsValid()
+	{
+		return right > left;
+	}
+
+	void operator |= (const CRect& rcUnion)
+	{
+		if ( !IsValid() )
+		{
+			*this = rcUnion;
+			return;
+		}
+		left = min(left, rcUnion.left);
+		top = min(top, rcUnion.top);
+		right = max(right, rcUnion.right);
+		bottom = max(bottom, rcUnion.bottom);
 	}
 
 	int left, top, right, bottom;

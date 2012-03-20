@@ -40,8 +40,6 @@
 
 CWndMenuInput::CWndMenuInput()
 {
-	m_pListSource = NULL;
-	m_pComboSource = NULL;
 }
 
 /*virtual*/ void CWndMenuInput::Create(CWnd *pParent, ui16 dwFlags) 
@@ -53,7 +51,6 @@ CWndMenuInput::CWndMenuInput()
 	m_itmCH4.Create(&Settings.CH4, this);
 	m_itmTime.Create(&Settings.Time, this);
 	m_itmWindow.Create(this);
-	//m_itmTrig.Create("Trig /\nNormal *", RGB565(404040), 2, this);
 	m_itmTrig.Create(this);
 }
 
@@ -62,27 +59,18 @@ CWndMenuInput::CWndMenuInput()
 	// Trigger
 	if (code == ToWord('m', 'r') )
 	{
-		m_pListSource = pSender;
 		m_wndListTrigger.Create( this );
-		m_wndListTrigger.m_itmLevel.SetFocus();
-		m_wndListTrigger.WindowMessage( WmPaint );
-		CWndGraph::m_nMaxX = m_wndListTrigger.m_rcClient.left;
+		m_wndListTrigger.StartModal(&m_wndListTrigger.m_itmLevel);
 	}
 	if ( code == ToWord('o', 'k') && pSender->m_pParent == &m_wndListTrigger )
 	{
 		// done
-		m_pListSource->SetFocus();
-		m_wndListTrigger.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndListTrigger.StopModal();
 	}
 	if ( code == ToWord('e', 'x') && pSender == &m_wndListTrigger )
 	{
 		// cancel
-		m_pListSource->SetFocus();
-		m_wndListTrigger.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndListTrigger.StopModal();
 	}
 	if ( code == ToWord('u', 'p') && pSender->m_pParent == &m_wndListTrigger )
 	{
@@ -94,10 +82,10 @@ CWndMenuInput::CWndMenuInput()
 		ConfigureTrigger();
 		Settings.Trig.nLastChange = BIOS::GetTick();
 		// update
-		m_pListSource->Invalidate();
+		CWnd::m_arrModals.GetLast().m_pPrevFocus->Invalidate();
 	}
-	// window
 
+	// window
 	if ( code == ToWord('w', 'u') )
 	{
 		MainWnd.m_wndTReferences.Invalidate();
@@ -107,64 +95,43 @@ CWndMenuInput::CWndMenuInput()
 	// Timebase
 	if (code == ToWord('m', 't') )	// more timebase
 	{
-		m_pComboSource = CWnd::m_pFocus;
-		m_wndComboSelector.Create( m_pComboSource->m_pszId, WsVisible | WsModal, 
+		m_wndComboSelector.Create( GetFocus()->m_pszId, WsVisible | WsModal, 
 			CRect( 30, 100, 370, 140), RGB565(ffffff), (CValueProvider*)(NATIVEPTR)data, this);
-		m_wndComboSelector.SetFocus();
-		m_wndComboSelector.Invalidate();
-		CWndGraph::m_nMaxX = 0;
+
+		m_wndComboSelector.StartModal();
 	}
 
 	// Digital
 	if (code == ToWord('m', 'd') )	// more input digital
 	{
-		m_pListSource = pSender;
 		m_wndListDInput.Create( (CSettings::DigitalChannel*)(NATIVEPTR)data, this );
-		m_wndListDInput.m_itmPosition.SetFocus();
-		m_wndListDInput.WindowMessage( WmPaint );
-		CWndGraph::m_nMaxX = m_wndListDInput.m_rcClient.left;
+		m_wndListDInput.StartModal( &m_wndListDInput.m_itmPosition );
 	}
 	if ( code == ToWord('o', 'k') && pSender->m_pParent == &m_wndListDInput )
 	{
 		// done
-		m_pListSource->SetFocus();
-		m_wndListDInput.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndListDInput.StopModal();
 	}
 	if ( code == ToWord('e', 'x') && pSender == &m_wndListDInput )
 	{
 		// cancel
-		m_pListSource->SetFocus();
-		m_wndListDInput.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndListDInput.StopModal();
 	}
 
 	// Analog
 	if (code == ToWord('m', 'a') )	// more input analog
 	{
-		m_pListSource = pSender;
 		m_wndListAInput.Create( (CSettings::AnalogChannel*)(NATIVEPTR)data, this );
-		m_wndListAInput.m_itmResolution.SetFocus();
-		m_wndListAInput.WindowMessage( WmPaint );
-		CWndGraph::m_nMaxX = m_wndListAInput.m_rcClient.left;
+		m_wndListAInput.StartModal( &m_wndListAInput.m_itmResolution );
 	}
 	if ( code == ToWord('o', 'k') && pSender->m_pParent == &m_wndListAInput )
 	{
 		// done
-		m_pListSource->SetFocus();
-		m_wndListAInput.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndListAInput.StopModal();
 	}
 	if ( code == ToWord('e', 'x') && pSender == &m_wndListAInput )
 	{
-		// cancel
-		m_pListSource->SetFocus();
-		m_wndListAInput.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndListAInput.StopModal();
 	}
 	if ( code == ToWord('u', 'p') && pSender->m_pParent == &m_wndListAInput )
 	{
@@ -179,7 +146,7 @@ CWndMenuInput::CWndMenuInput()
 			MainWnd.m_wndLReferences.Invalidate();
 		}
 		// update
-		m_pListSource->Invalidate();
+		CWnd::m_arrModals.GetLast().m_pPrevFocus->Invalidate();
 		ConfigureAdc();
 	}
 	if ( code == ToWord('u', 'p') && pSender->m_pParent == &m_wndListDInput )
@@ -195,34 +162,25 @@ CWndMenuInput::CWndMenuInput()
 			MainWnd.m_wndLReferences.Invalidate();
 		}
 		// update
-		m_pListSource->Invalidate();
+		CWnd::m_arrModals.GetLast().m_pPrevFocus->Invalidate();
 	}
 	// Selector
 	if ( code == ToWord('l', 'e') )	// provider selector combo box
 	{
-		m_pComboSource = CWnd::m_pFocus;
-		//m_nComboGraphX = CWndGraph::m_nMaxX = -1;
-		m_wndComboSelector.Create( m_pComboSource->m_pszId, WsVisible | WsModal, 
+		m_wndComboSelector.Create( GetFocus()->m_pszId, WsVisible | WsModal, 
 			CRect( 30, 100, 370, 140), RGB565(ffffff), (CValueProvider*)(NATIVEPTR)data, this);
-		m_wndComboSelector.SetFocus();
-		m_wndComboSelector.Invalidate();
-		CWndGraph::m_nMaxX = 0;
+
+		m_wndComboSelector.StartModal();
 	}
 	if ( code == ToWord('o', 'k') && pSender == &m_wndComboSelector )
 	{
 		// done
-		m_pComboSource->SetFocus();
-		m_wndComboSelector.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndComboSelector.StopModal();
 	}
 	if ( code == ToWord('e', 'x') && pSender == &m_wndComboSelector )
 	{
 		// cancel
-		m_pComboSource->SetFocus();
-		m_wndComboSelector.Destroy();
-		m_pParent->Invalidate();
-		CWndGraph::m_nMaxX = -1;
+		m_wndComboSelector.StopModal();
 	}
 	if ( code == ToWord('i', 'u') )
 	{
