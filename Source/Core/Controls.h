@@ -112,6 +112,14 @@ public:
 		CWnd::Create( pszId, WsVisible, rcRect, pParent );
 	}
 
+	virtual void Create(const char* pszId, ui16 clr, CRect& rcRect, CWnd *pParent) 
+	{
+		m_pClr = NULL;
+		m_clr = clr;
+		m_nRows = 1;
+		CWnd::Create( pszId, WsVisible, rcRect, pParent );
+	}
+
 	void SetColorPtr(ui16* pclr )
 	{
 		m_pClr = pclr;
@@ -132,6 +140,38 @@ public:
 			BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
 		}
 		m_rcClient.left -= MarginLeft;
+	}
+
+};
+
+class CWndMenuBlock : public CWnd
+{
+public:
+	ui16 m_clr;
+
+public:
+	virtual void Create(const char* pszId, ui16 clr, CRect& rcRect, CWnd *pParent) 
+	{
+		m_clr = clr;
+		CWnd::Create( pszId, WsVisible, rcRect, pParent );
+	}
+
+	virtual void OnPaint()
+	{
+		if ( HasFocus() )
+		{
+			CDesign::MenuBlockEnabled( m_rcClient, m_clr );
+			BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
+		} else {
+			CDesign::MenuBlockDisabled( m_rcClient, m_clr );
+			BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
+		}
+	}
+	virtual void OnKey(ui16 nKey)
+	{
+		if ( nKey == BIOS::KEY::KeyEnter )
+			GetParent()->OnKey( nKey );
+		CWnd::OnKey(nKey);
 	}
 
 };

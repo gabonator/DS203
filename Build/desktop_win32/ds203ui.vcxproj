@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4E418A6C-7374-47DE-B489-0D1BF3911BFC}</ProjectGuid>
+    <RootNamespace>ds203ui</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Gui\About\ScreenSaver.h" />
+    <ClInclude Include="..\..\Source\Gui\Generator\Generator.h" />
+    <ClInclude Include="..\..\Source\Gui\MainMenu.h" />
+    <ClInclude Include="..\..\Source\Gui\MainWndSdk.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Win32\sprintf\spf.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Win32\stdafx.h" />
+    <ClInclude Include="..\..\Source\Core\Controls.h" />
+    <ClInclude Include="..\..\Source\Core\design.h" />
+    <ClInclude Include="..\..\Source\Core\ListItems.h" />
+    <ClInclude Include="..\..\Source\Core\Settings.h" />
+    <ClInclude Include="..\..\Source\Core\Shapes.h" />
+    <ClInclude Include="..\..\Source\Core\Utils.h" />
+    <ClInclude Include="..\..\Source\Framework\Classes.h" />
+    <ClInclude Include="..\..\Source\Framework\Wnd.h" />
+    <ClInclude Include="..\..\Source\Gui\Graph.h" />
+    <ClInclude Include="..\..\Source\Gui\Input.h" />
+    <ClInclude Include="..\..\Source\Gui\MainWnd.h" />
+    <ClInclude Include="..\..\Source\Gui\Others.h" />
+    <ClInclude Include="..\..\Source\Gui\toolbar.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\Controls.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ItemAnalog.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ItemDigital.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ItemTime.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ItemTrigger.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ListAnalog.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ListDigital.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\ListTrigger.h" />
+    <ClInclude Include="..\..\Source\Gui\Input\MenuInput.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Bios.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Types.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Win32\device.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Win32\font.h" />
+    <ClInclude Include="..\..\Source\HwLayer\Win32\Types.h" />
+    <ClInclude Include="..\..\Source\Main\Application.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ds203ui.ico" />
+    <None Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ds203ui.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Gui\Generator\Generator.cpp" />
+    <ClCompile Include="..\..\Source\Gui\MainMenu.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Toolbar.cpp" />
+    <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp" />
+    <ClCompile Include="..\..\Source\HwLayer\Win32\stdafx.cpp" />
+    <ClCompile Include="..\..\Source\Core\Controls.cpp" />
+    <ClCompile Include="..\..\Source\Core\Settings.cpp" />
+    <ClCompile Include="..\..\Source\Core\Utils.cpp" />
+    <ClCompile Include="..\..\Source\Framework\Wnd.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Graph.cpp" />
+    <ClCompile Include="..\..\Source\Gui\MainWnd.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Input\MenuInput.cpp" />
+    <ClCompile Include="..\..\Source\HwLayer\Win32\bios.cpp" />
+    <ClCompile Include="..\..\Source\Main\Application.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

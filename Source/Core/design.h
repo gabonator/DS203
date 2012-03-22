@@ -18,13 +18,35 @@ public:
 		BIOS::LCD::RoundRect( rcRect.left+8-2, rcRect.top+1, rcRect.right-1, rcRect.bottom-1, RGB565(ffffff));
 	}
 
+	static void MenuBlockDisabled(const CRect& rcRect, ui16 clr)
+	{
+		// shadow
+		BIOS::LCD::RoundRect( rcRect.right-4, rcRect.top+4, rcRect.right+4, rcRect.bottom+4, RGB565(000070));
+		BIOS::LCD::RoundRect( rcRect.left+4, rcRect.bottom-4, rcRect.right+4, rcRect.bottom+4, RGB565(000070));
+
+		// inside
+		BIOS::LCD::RoundRect( rcRect.left, rcRect.top, rcRect.left+12, rcRect.bottom, clr);
+		BIOS::LCD::Bar( rcRect.left+8, rcRect.top, rcRect.right-4, rcRect.bottom, RGB565(b0b0b0));
+		BIOS::LCD::RoundRect( rcRect.right-8, rcRect.top, rcRect.right, rcRect.bottom, RGB565(b0b0b0));
+	}
+
+	static void MenuBlockEnabled(const CRect& rcRect, ui16 clr)
+	{
+		// shadow
+		BIOS::LCD::RoundRect( rcRect.right-4, rcRect.top+4, rcRect.right+4, rcRect.bottom+4, RGB565(000070));
+		BIOS::LCD::RoundRect( rcRect.left+4, rcRect.bottom-4, rcRect.right+4, rcRect.bottom+4, RGB565(000070));
+
+		// inside
+		BIOS::LCD::RoundRect( rcRect.left, rcRect.top, rcRect.right, rcRect.bottom, clr);
+	}
+
 	static void GradientTop(const CRect& rcRect)
 	{
 		ui16 pattern[16];
 		_ASSERT( rcRect.Height() == COUNT(pattern) );
 
-		ui16 clradd = RGB565(000010);
-		ui16 clr = RGB565(000000);
+		ui16 clradd = RGB565(00000b);
+		ui16 clr = RGB565(00204f);
 		for (int i=0; i<16; i++)
 		{
 			clr += clradd;

@@ -34,6 +34,10 @@ void CMainWnd::Create()
 	m_wndLReferences.Create( this, WsVisible );
 	m_wndTReferences.Create( this, WsVisible );
 
+	m_wndScreenSaver.Create( this, WsHidden );
+	m_wndModuleSel.Create(this, WsHidden );
+
+	m_wndToolBar.m_nFocus = 1;
 	m_wndToolBar.SetFocus();
 	//m_wndMenuInput.m_itmCH1.SetFocus();
 	//m_wndMenuGenerator.m_itmBpm.SetFocus();
@@ -56,25 +60,24 @@ void CMainWnd::Create()
 {
 	if ( pSender == &m_wndToolBar )
 	{
-		if ( code == ToWord('f', 'c') )	// focus changed
+		if ( code == ToWord('L', 'D') && data )	// Layout disable
 		{
-			m_wndMenuInput.ShowWindow( ( data == 0 ) ? SwShow : SwHide );
-			m_wndMenuCursor.ShowWindow( ( data == 1 ) ? SwShow : SwHide );
-			m_wndMenuMeas.ShowWindow( ( data == 2 ) ? SwShow : SwHide );
-			m_wndMenuMath.ShowWindow( ( data == 3 ) ? SwShow : SwHide );
-			m_wndMenuDisplay.ShowWindow( ( data == 4 ) ? SwShow : SwHide );
-			m_wndMenuGenerator.ShowWindow( ( data == 5 ) ? SwShow : SwHide );
-			m_wndMenuSettings.ShowWindow( ( data == 6 ) ? SwShow : SwHide );
-			m_wndMenuTools.ShowWindow( ( data == 7 ) ? SwShow : SwHide );
-
-			m_wndGraph.ShowWindow( ( data != 5 ) ? SwShow : SwHide );
-			m_wndZoomBar.ShowWindow( ( data != 5 ) ? SwShow : SwHide );
-			m_wndLReferences.ShowWindow( ( data != 5 ) ? SwShow : SwHide );
-			m_wndTReferences.ShowWindow( ( data != 5 ) ? SwShow : SwHide );
-			m_wndSignalGraph.ShowWindow( ( data == 5 ) ? SwShow : SwHide );
+			CWnd* pLayout = (CWnd*)data;
+			SendMessage( pLayout, code, 0 );
+			pLayout->ShowWindow( SwHide );
+		}
+		if ( code == ToWord('L', 'E') && data )	// Layout enable
+		{
+			CWnd* pLayout = (CWnd*)data;
+			SendMessage( pLayout, code, 0 );
+			pLayout->ShowWindow( SwShow );
+		}
+		if ( code == ToWord('L', 'R') )	// Layout reset
+		{
 			Invalidate();
 		}
 	}
+
 	if (code == ToWord('d', 'g'))
 	{
 		if ( m_wndGraph.m_dwFlags & WsVisible )

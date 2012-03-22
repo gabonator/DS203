@@ -1,5 +1,5 @@
 #include "Generator.h"
-#include "MainWnd.h"
+#include <Source/Gui/MainWnd.h>
              
 struct SWaveData {
   const char* pszName;
@@ -128,6 +128,19 @@ ui16* _GetWave(ui8 nWaveIndex)
 {
 	#define CPUCLOCK (72 MHz)
 	#define MHz *1000000
+
+	// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
+	if (code == ToWord('L', 'D') )
+	{
+		MainWnd.m_wndSignalGraph.ShowWindow( SwHide );
+		return;
+	}
+
+	if (code == ToWord('L', 'E') )
+	{
+		MainWnd.m_wndSignalGraph.ShowWindow( SwShow );
+		return;
+	}
 
 	ui8 bWaveChanged = ( pSender == &m_itmWave );
 	if ( code == ToWord('i', 'u') && pSender == &m_itmBpm )

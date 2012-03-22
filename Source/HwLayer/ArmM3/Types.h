@@ -18,6 +18,8 @@ typedef int INT;
 typedef const char * PCSTR;
 typedef char * PSTR;
 typedef char CHAR;
+typedef ui32 UINT;
+
 
 #define TRUE 1
 #define FALSE 0

@@ -16,7 +16,6 @@ typedef float FLOAT;
 #define _ASSERT(a) if (!(a)) { _asm { int 3 } }
 */
 #define _SAFE(a) if (!(a)) { _ASSERT(0); return CEvalOperand(CEvalOperand::eoError); }
-typedef ui32 UINT;
 
 class CEvalClasses 
 {

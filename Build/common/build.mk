@@ -4,10 +4,11 @@
 
 # files 
 
-OBJS := cbios.o Application.o Main.o stm32f10x_nvic.o cortexm3_macro.o interrupt.o startup.o Generator.o Graph.o Controls.o Settings.o Utils.o Wnd.o MainWnd.o MenuInput.o
+OBJS := cbios.o Application.o Main.o stm32f10x_nvic.o cortexm3_macro.o interrupt.o startup.o Generator.o Graph.o Controls.o Settings.o Utils.o Wnd.o MainWnd.o MenuInput.o Toolbar.o MainMenu.o
 C_SRCS := ../Source/HwLayer/ArmM3/stm32f10x/src/stm32f10x_nvic.c ../Source/HwLayer/ArmM3/src/interrupt.c ../Source/HwLayer/ArmM3/src/startup.c
 ASM_SRCS := ../Source/HwLayer/ArmM3/stm32f10x/asm/cortexm3_macro.s ../Source/HwLayer/ArmM3/src/BIOS.S
-CPP_SRCS := ../Source/HwLayer/ArmM3/src/main.cpp ../Source/HwLayer/ArmM3/src/cbios.cpp ../Source/Core/Controls.cpp ../Source/Core/Settings.cpp ../Source/Core/Utils.cpp ../Source/Framework/Wnd.cpp ../Source/Gui/Generator.cpp ../Source/Gui/Graph.cpp ../Source/Gui/MainWnd.cpp ../Source/Gui/Input/MenuInput.cpp ../Source/Main/Application.cpp 
+CPP_SRCS := ../Source/HwLayer/ArmM3/src/main.cpp ../Source/HwLayer/ArmM3/src/cbios.cpp ../Source/Core/Controls.cpp ../Source/Core/Settings.cpp ../Source/Core/Utils.cpp ../Source/Framework/Wnd.cpp ../Source/Gui/Generator/Generator.cpp ../Source/Gui/Graph.cpp ../Source/Gui/MainWnd.cpp ../Source/Gui/Input/MenuInput.cpp ../Source/Main/Application.cpp ../Source/Gui/Toolbar.cpp ../Source/Gui/MainMenu.cpp
+
 
 
 # building for ARM on Win32 platform

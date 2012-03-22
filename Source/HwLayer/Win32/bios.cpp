@@ -8,6 +8,7 @@
 #include "font.h"
 #include <math.h>
 //u16 *Get_TAB_8x14(u8 Code)
+#include "sprintf\spf.h"
 
 CRect m_rcBuffer;
 CPoint m_cpBuffer;
@@ -221,12 +222,44 @@ void Assert(const char *msg, int n)
 		return r[y*8+x];
 	return 0;
 }
+
+
 /*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch)
 {
-	const unsigned short *pFont = Get_TAB_8x14(ch);
-	for (int _y=0; _y<14; _y++)
-		for (int _x=0; _x<8; _x++)
-			BIOS::LCD::PutPixel(x+_x, y+_y, (pFont[_x] & (2<<(14-_y))) ? clrf : clrb);
+	const unsigned char *pFont = GetFont(ch);
+	if (clrb == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<14; _y++)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<8; _x++, col <<= 1)
+				if ( col & 128 )
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
+		}
+	} else if (clrf == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<14; _y++)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<8; _x++, col <<= 1)
+				if ( (col & 128) == 0 )
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
+		}
+	} else
+	{
+		for (ui8 _y=0; _y<14; _y++)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<8; _x++, col <<= 1)
+				if ( col & 128 )
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
+				else
+					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
+		}
+	}
 	return 8;
 }
 
@@ -379,3 +412,95 @@ BOOL bADCReady = FALSE;
 ///*static*/ void ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBPosition, ui16 nTimePsc, ui16 nTimeArr)
 //{
 //}
+
+/*static*/ PVOID BIOS::DSK::GetSharedBuffer()
+{
+	static ui8 pSectorBuffer[FILEINFO::SectorSize];
+	return (PVOID)pSectorBuffer;
+}
+
+/*static*/ BOOL BIOS::DSK::Open(FILEINFO* pFileInfo, si8* strName, ui8 nIoMode)
+{
+	return FALSE;
+}
+
+/*static*/ BOOL BIOS::DSK::Read(FILEINFO* pFileInfo, ui8* pSectorData)
+{
+	return TRUE;
+}
+
+/*static*/ BOOL BIOS::DSK::Write(FILEINFO* pFileInfo, ui8* pSectorData)
+{
+	return TRUE;
+}
+
+/*static*/ BOOL BIOS::DSK::Close(FILEINFO* pFileInfo, int nSize /*=-1*/)
+{
+	return TRUE;
+}
+
+void BIOS::Beep(int)
+{
+}
+
+/*static*/ void BIOS::DBG::Print(const char * format, ...)
+{
+	static int px = 0;
+	static int py = 0;
+
+	char buf[128];
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        print( &bbuf, format, args );
+
+	for ( bbuf = buf; *bbuf; bbuf++ )
+	{
+		if ( *bbuf == '\n' || px >= 400-8 )
+		{
+			px = 0;
+			py+=14;
+			if (py > 240)
+				py = 0;
+			continue;
+		}
+		px += _DrawChar(px, py, RGB565(ffffff), RGB565(0000B0), *bbuf);
+	}
+}
+
+#if 0
+/*static*/ int BIOS::LCD::Print (int x, int y, unsigned short clrf, unsigned short clrb, const char *str)
+{
+	if (!str || !*str)
+		return 0;
+	int _x = x;
+	for (;*str; str++)
+	{
+		if (*str == '\n')
+		{
+			x = _x;
+			y += 16;
+			continue;
+		}
+		x += _DrawChar(x, y, clrf, clrb, *str);
+	}
+	return x - _x;
+}
+
+#endif
+/*static*/ void BIOS::DBG::sprintf(char* buf, const char * format, ...)
+{
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        print( &bbuf, format, args );
+}
+
+/*static*/ void BIOS::DelayMs(unsigned short l)
+{
+	Sleep(l);
+}

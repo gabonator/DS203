@@ -11,6 +11,7 @@ typedef signed short si16;
 typedef signed char si8;
 typedef unsigned short ui16;
 typedef unsigned long ui32;
+typedef signed long si32;
 typedef signed short si16;
 
 #define RGB565RGB(r, g, b) (((r)>>3)|(((g)>>2)<<5)|(((b)>>3)<<11))
@@ -28,6 +29,18 @@ typedef signed short si16;
 #define NATIVEENUM LONG
 
 #define ToWord(a, b) (((a)<<8)|(b))
+
+#define _ASSERT_VALID(a) if(!(a)) { _ASSERT(#a); }
+
+struct FILEINFO {
+	enum {
+		SectorSize = 512
+	};
+	ui16 pCluster[3];
+	ui32 pDirAddr[1];
+	ui8 nMode;
+	ui8 nSectors;
+};
 
 
 #endif

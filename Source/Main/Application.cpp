@@ -37,58 +37,33 @@ public:
 	}
 };
 
+/* workaround class for the issue of global classes constructors being not called */
 
-// Arm M3
-void Run()
+#define GLOBAL (*CInit::getInstance())
+class CInit
 {
-	BIOS::Init();
-	//ADC::Configure();
-
-	CSettings m_Settings;
+public:
 	CMainWnd m_wndMain;
-	m_wndMain.Create();
-	m_wndMain.WindowMessage( CWnd::WmPaint );
+	CSettings m_Settings;
+	CKeyProcessor m_kp;
 
-	m_wndMain.m_wndMenuInput.ConfigureAdc();
-	m_wndMain.m_wndMenuInput.ConfigureTrigger();
-	BIOS::ADC::Restart();
-	CKeyProcessor kp;
-
-	while (1)
+	static CInit* getInstance()
 	{
-		ui16 nKeys = BIOS::KEY::GetKeys();
-		
-		kp << nKeys;
-		kp >> nKeys;
-
-		if ( nKeys )
-			m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
-		if ( BIOS::ADC::Ready() )
-		{
-			m_wndMain.OnMessage(NULL, ToWord('d', 'g'), 0);
-			BIOS::ADC::Restart();
-		}
-		m_wndMain.WindowMessage( CWnd::WmTick, 0 );
+		static CInit init;
+		return &init;
 	}
-}
-
-
-// Win32
-CMainWnd m_wndMain;
-CSettings m_Settings;
-CKeyProcessor m_kp;
+};
 
 CApplication::CApplication()
 {
-/*
-		BIOS::Init();
-		m_wndMain.Create();
-		m_wndMain.WindowMessage( CWnd::WmPaint );
-		m_wndMain.m_wndMenuInput.ConfigureAdc();
-		m_wndMain.m_wndMenuInput.ConfigureTrigger();
-		BIOS::ADC::Restart();
-		BIOS::DBG::Print("Starting...");
-*/
+	BIOS::Init();
+
+	GLOBAL.m_wndMain.Create();
+	GLOBAL.m_wndMain.WindowMessage( CWnd::WmPaint );
+
+	GLOBAL.m_wndMain.m_wndMenuInput.ConfigureAdc();
+	GLOBAL.m_wndMain.m_wndMenuInput.ConfigureTrigger();
+	BIOS::ADC::Restart();
 }
 
 CApplication::~CApplication()
@@ -97,21 +72,19 @@ CApplication::~CApplication()
 
 bool CApplication::operator ()()
 {
-	Run();
-/*
 	ui16 nKeys = BIOS::KEY::GetKeys();
-	
-	m_kp << nKeys;
-	m_kp >> nKeys;
+
+	GLOBAL.m_kp << nKeys;
+	GLOBAL.m_kp >> nKeys;
 
 	if ( nKeys )
-		m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
-	// if (m_wndMain.m_dwFlags & CWnd::WmNeedUpdate) m_wndMain.Update();
+		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
 	if ( BIOS::ADC::Ready() )
 	{
-		m_wndMain.OnMessage(NULL, ToWord('d', 'g'), 0);
+		GLOBAL.m_wndMain.OnMessage(NULL, ToWord('d', 'g'), 0);
 		BIOS::ADC::Restart();
 	}
-*/
+	GLOBAL.m_wndMain.WindowMessage( CWnd::WmTick, 0 );
+
 	return true;
 }

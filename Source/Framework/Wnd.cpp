@@ -111,6 +111,10 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 {
 }
 
+/*virtual*/ void CWnd::OnTick()
+{
+}
+
 /*virtual*/ void CWnd::OnKey(ui16 nKey)
 {
 	if ( nKey & BIOS::KEY::KeyDown )
@@ -172,10 +176,20 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 				GetActiveWindow()->OnKey( nParam );
 		}
 		break;
-		// called only for main wnd
 		case WmTick:
 		{
-			_UpdateTimers();
+			if ( m_pParent == NULL )
+				_UpdateTimers();
+
+			OnTick();
+
+			CWnd *pChild = m_pFirst;
+			while (pChild)
+			{
+				if ( pChild->m_dwFlags & WsVisible )
+					pChild->WindowMessage( WmTick );
+				pChild = pChild->m_pNext;
+			}
 		}
 		break;
 	}	

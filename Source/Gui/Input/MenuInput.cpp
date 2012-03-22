@@ -56,6 +56,24 @@ CWndMenuInput::CWndMenuInput()
 
 /*virtual*/ void CWndMenuInput::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
+	// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
+	if (code == ToWord('L', 'D') )
+	{
+		MainWnd.m_wndGraph.ShowWindow( SwHide );
+		MainWnd.m_wndZoomBar.ShowWindow( SwHide );
+		MainWnd.m_wndLReferences.ShowWindow( SwHide );
+		MainWnd.m_wndTReferences.ShowWindow( SwHide );
+	}
+
+	if (code == ToWord('L', 'E') )
+	{
+		MainWnd.m_wndGraph.ShowWindow( SwShow );
+		MainWnd.m_wndZoomBar.ShowWindow( SwShow );
+		MainWnd.m_wndLReferences.ShowWindow( SwShow );
+		MainWnd.m_wndTReferences.ShowWindow( SwShow );
+	}
+
+
 	// Trigger
 	if (code == ToWord('m', 'r') )
 	{

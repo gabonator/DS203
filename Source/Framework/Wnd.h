@@ -56,6 +56,7 @@ public:
 		WsNoActivate = 2,
 		WsNeedRedraw = 4,
 		WsModal = 8,
+		WsTick = 16,
 		
 		SwShow = 1,
 		SwHide = 0
@@ -93,12 +94,14 @@ public:
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	virtual void WindowMessage(int nMsg, int nParam = 0);
 	virtual void OnTimer();
+	virtual void OnTick();
+	virtual void Update();
+
 	void SetFocus();
 	ui8 HasFocus();
 	bool IsWindow();
 	CWnd* GetActiveWindow();
 	void Invalidate();
-	void Update();
 	void SendMessage(CWnd* pTarget, ui16 code, ui32 data);
 	void ShowWindow(ui8 sh);
 	void SetTimer(ui32 nInterval);

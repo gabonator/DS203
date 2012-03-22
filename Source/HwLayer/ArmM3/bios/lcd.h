@@ -142,8 +142,21 @@ CPoint m_cpBuffer;
 
 /*static*/ void BIOS::LCD::Bar(int x1, int y1, int x2, int y2, unsigned short clr)
 {
+	ui32 cnt = (x2-x1)*(y2-y1);
+	if ( cnt >= 48000 )
+	{
+	  __LCD_Set_Block(x1, x2-1, 240-y2, 239-y1);
+		__LCD_Fill(&clr, cnt>>1);
+		cnt -= cnt>>1;
+	  __LCD_DMA_Ready();
+		__LCD_Fill(&clr, cnt);
+	  __LCD_DMA_Ready();
+	  __LCD_Set_Block(0, 399, 0, 239);
+		return;
+	}
+
   __LCD_Set_Block(x1, x2-1, 240-y2, 239-y1);
-  __LCD_Fill(&clr,(x2-x1)*(y2-y1));
+  __LCD_Fill(&clr, cnt);
   __LCD_DMA_Ready();
   __LCD_Set_Block(0, 399, 0, 239);
 }
@@ -274,43 +287,6 @@ CPoint m_cpBuffer;
 					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
 		}
 	}
-
-/*
-	const unsigned short *pFont = Get_TAB_8x14(ch);
-	if (clrb == RGBTRANS)
-	{
-		for (ui8 _x=0; _x<8; _x++)
-		{
-			const unsigned short col = *pFont++;
-	
-			for (ui8 _y=0; _y<14; _y++)
-				if ( (col & (2<<(14-_y))) )
-					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
-		}
-	} else if (clrf == RGBTRANS)
-	{
-		for (int _x=0; _x<8; _x++)
-		{
-			const unsigned short col = *pFont++;
-	
-			for (int _y=0; _y<14; _y++)
-				if ( !(col & (2<<(14-_y))) )
-					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
-		}
-	} else
-	{
-		for (int _x=0; _x<8; _x++)
-		{
-			const unsigned short col = *pFont++;
-	
-			for (int _y=0; _y<14; _y++)
-				if ( (col & (2<<(14-_y))) )
-					BIOS::LCD::PutPixel(x+_x, y+_y, clrf);
-				else
-					BIOS::LCD::PutPixel(x+_x, y+_y, clrb);
-		}
-	}
-*/
 	return 8;
 }
 

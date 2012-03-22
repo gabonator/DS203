@@ -6,7 +6,9 @@
 #include "Toolbar.h"
 #include "Input.h"
 #include "Others.h"
-#include "Generator.h"
+#include "Generator/Generator.h"
+#include "MainMenu.h"
+#include "About/Screensaver.h"
 
 class CMainWnd : public CWnd
 {
@@ -28,7 +30,9 @@ public:
 	CWndZoomBar			m_wndZoomBar;
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
+	CWndScreenSaver		m_wndScreenSaver;
 
+	CWndModuleSelector	m_wndModuleSel;
 	CWndMessageBox		m_wndMessage;	
 
 	void Create();

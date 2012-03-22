@@ -1,6 +1,66 @@
 #ifndef __OTHERS_H__
 #define __OTHERS_H__
+/*
+class CWndModuleSelector : public CWnd
+{
+public:
+	CWndMenuBlock	m_itmOscilloscope;
+	CWndMenuBlock	m_itmSpectrum;
+	CWndMenuBlock	m_itmGenerator;
+	CWndMenuBlock	m_itmSettings;
+	CWndMenuBlock	m_itmAbout;
 
+	virtual void Create(CWnd *pParent, ui16 dwFlags) 
+	{
+		CWnd::Create("CWndModuleSelector", dwFlags, CRect(0, 16, 400, 240), pParent);
+
+		#define _BORDER 20
+		#define _SPACING 8
+		#define _LEFT(x) m_rcClient.left+_BORDER+(m_rcClient.Width()-_BORDER*2-_SPACING)*(x)/3
+		#define _RIGHT(x) _LEFT(x+1)-_SPACING
+		#define _TOP(y) m_rcClient.top+_BORDER+(m_rcClient.Height()-_BORDER*2-_SPACING)*(y)/3
+		#define _BOTTOM(y) _TOP(y+1)-_SPACING
+		#define _ITEM(x,y) CRect(_LEFT(x), _TOP(y), _RIGHT(x), _BOTTOM(y))
+
+		m_itmOscilloscope.Create( "Oscillo\nscope", RGB565(ffffff), _ITEM(0, 0), this );
+		m_itmSpectrum.Create( "Spectrum\nanalyser", RGB565(ffffff), _ITEM(1, 0), this );
+		m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), _ITEM(2, 0), this );
+
+		m_itmSettings.Create( "Settings", RGB565(ffffff), _ITEM(0, 1), this );
+		m_itmAbout.Create( "About", RGB565(ffffff), _ITEM(1, 1), this );
+
+	}
+
+	virtual void OnPaint()
+	{
+		BIOS::LCD::Bar( m_rcClient.left, m_rcClient.top, m_rcClient.right, m_rcClient.bottom, RGB565(0020ff));
+		CWnd::OnPaint();
+	}
+
+	virtual void OnKey(ui16 nKey)
+	{
+		if ( nKey & BIOS::KEY::KeyEnter )
+		{
+			const char* strTarget = NULL;
+			if ( GetFocus() == &m_itmOscilloscope )
+				strTarget = "Oscilloscope"; 
+			if ( GetFocus() == &m_itmSpectrum )
+				strTarget = "Spectrum analyser";
+			if ( GetFocus() == &m_itmGenerator )
+				strTarget = "Generator"; 
+			if ( GetFocus() == &m_itmSettings )
+				strTarget = "Settings"; 
+			if ( GetFocus() == &m_itmAbout )
+				strTarget = "About";
+			
+			if (strTarget)
+			{
+				SendMessage( &MainWnd.m_wndModuleSel, ToWord('g', 'o'), (NATIVEPTR)strTaget);
+			}
+		}
+	}
+};
+*/
 class CWndMenuCursor : public CWnd
 {
 public:
