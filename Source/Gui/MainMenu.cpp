@@ -19,18 +19,22 @@
 
 	CRect rcItem;
 
-	rcItem = _ITEM(0, 0);
+	rcItem = _ITEM(0, 0);          
 	m_itmOscilloscope.Create( "Oscillo\nscope", RGB565(ffffff), rcItem, this );
 	rcItem = _ITEM(1, 0);
 	m_itmSpectrum.Create( "Spectrum\nanalyser", RGB565(ffffff), rcItem, this );
 	rcItem = _ITEM(2, 0);
-	m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), rcItem, this );
-
+	m_itmResponse.Create( "Frequency\nresponse", RGB565(808080), rcItem, this );
 	rcItem = _ITEM(0, 1);
-	m_itmSettings.Create( "Settings", RGB565(ffffff), rcItem, this );
+	m_itmLogic.Create( "Logic\nanalyser", RGB565(808080), rcItem, this );
 	rcItem = _ITEM(1, 1);
+	m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), rcItem, this );
+	rcItem = _ITEM(2, 1);
+	m_itmSettings.Create( "Settings", RGB565(ffffff), rcItem, this );
+	rcItem = _ITEM(0, 2);
+	m_itmUser.Create( "User\napplications", RGB565(ffffff), rcItem, this );
+	rcItem = _ITEM(1, 2);
 	m_itmAbout.Create( "About", RGB565(ffffff), rcItem, this );
-
 }
 
 /*virtual*/ void CWndModuleSelector::OnPaint()
@@ -54,10 +58,14 @@
 			strTarget = "Settings"; 
 		if ( GetFocus() == &m_itmAbout )
 			strTarget = "About";
+		if ( GetFocus() == &m_itmUser )
+			strTarget = "User app";
 		
 		if (strTarget)
 		{
 			SendMessage( &MainWnd.m_wndToolBar, ToWord('g', 'o'), (NATIVEPTR)strTarget);
+		} else {
+			MainWnd.m_wndMessage.Show(this, "Info", "Sorry, not implemented", RGB565(FFFF00));
 		}
 		return;
 	}

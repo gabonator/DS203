@@ -14,19 +14,23 @@ public:
 		//if ( Settings.Trig.Sync != CSettings::Trigger::_None )
 		{
 			ui16 y = Settings.Trig.nLevel;
-			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - ((y*m_rcClient.Height())>>8)-5, 
+			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
 				RGB565(606060), RGBTRANS, trig_base );
 		}
 		if ( Settings.CH2.Enabled )
 		{
 			ui16 y = Settings.CH2.u16Position;
-			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - ((y*m_rcClient.Height())>>8)-5, 
+//			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
 				Settings.CH2.u16Color, RGBTRANS, chb_base );
 		}
 		if ( Settings.CH1.Enabled )
 		{
 			ui16 y = Settings.CH1.u16Position;
-			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - ((y*m_rcClient.Height())>>8)-5, 
+//			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+//			y = Settings.calRefCH1[Settings.CH1.Resolution].Apply(y);
+			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
 				Settings.CH1.u16Color, RGBTRANS, cha_base );
 		}
 	}

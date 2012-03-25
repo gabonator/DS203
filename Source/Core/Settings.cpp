@@ -81,4 +81,6 @@ CSettings::CSettings()
 	//Gen.nArr = 592; //2000-1;
 	Gen.nPsc = 180-1;
 	Gen.nArr = 5100;
+
+	calCH1[AnalogChannel::_500mV] = LinearCalibration(-7, 1024*256/182);
 }

@@ -527,6 +527,7 @@ public:
 					char* pszStart = pszExpression;
 					while ( ( *pszExpression >= 'a' && *pszExpression <= 'z' ) || 
 							( *pszExpression >= 'A' && *pszExpression <= 'Z' ) || 
+							( *pszExpression >= '0' && *pszExpression <= '9' ) || 
 							( *pszExpression == '.' ) || 
 							( *pszExpression == '_' ) )
 					{
@@ -660,7 +661,9 @@ public:
 	static CEvalOperand _Sub( CArray<CEvalOperand>& arrOperands )
 	{
 		_SAFE( arrOperands.GetSize() >= 2 );
-		return - arrOperands.RemoveLast().GetFloat() + arrOperands.RemoveLast().GetFloat();
+		FLOAT fResult = arrOperands[-2].GetFloat() - arrOperands[-1].GetFloat();
+		arrOperands.Resize(-2);
+		return fResult;
 	}
 
 	static CEvalOperand _Set( CArray<CEvalOperand>& arrOperands )

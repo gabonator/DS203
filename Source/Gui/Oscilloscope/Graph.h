@@ -120,19 +120,60 @@ class CWndOscGraph : public CWndGraph
 		ui16 clr2 = Settings.CH2.u16Color;
 		ui8 en1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
 		ui8 en2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
+		CSettings::LinearCalibration& cal1 = Settings.calCH1[Settings.CH1.Resolution];
+		CSettings::LinearCalibration& cal2 = Settings.calCH2[Settings.CH2.Resolution];
 
 		int nMax = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
 //		int nMax = min(m_rcClient.Width(), m_nMaxX-m_rcClient.left);
-		nMax <<= 2;
+//		nMax <<= 2;
 
 		ui8 bTrigger = (BIOS::GetTick() - Settings.Trig.nLastChange) < 5000;
-		ui16 nTriggerTime = (Settings.Trig.nTime - Settings.Time.Shift) >> 2;
+		ui16 nTriggerTime = (Settings.Trig.nTime - Settings.Time.Shift);
 		if (!bTrigger)
 			nTriggerTime = -1;
 
 		for (i=0; i<Settings.Time.Shift; i++)
 			BIOS::ADC::Get();
 
+		for (ui16 x=0; x<nMax; x++)
+		{
+			_PrepareColumn( column, x, (nTriggerTime != x) ? 0x01 : 0x00 );
+
+			ui32 val = BIOS::ADC::Get();
+			if ( en2 )
+			{
+				si16 ch2 = (ui8)((val>>8) & 0xff);
+				ch2 = cal2.Apply( ch2 );
+				if ( ch2 < 0 ) 
+					ch2 = 0;
+				if ( ch2 > 255 ) 
+					ch2 = 255;
+				ui16 y = (ch2*(DivsY*BlkY))>>8;
+				column[y] = clr2;
+			}
+
+			if ( en1 )
+			{
+				si16 ch1 = (ui8)((val) & 0xff);
+				ch1 = cal1.Apply( ch1 );
+				if ( ch1 < 0 ) 
+					ch1 = 0;
+				if ( ch1 > 255 ) 
+					ch1 = 255;
+				ui16 y = (ch1*(DivsY*BlkY))>>8;
+				column[y] = clr1;
+			}
+
+			if ( bTrigger && (x & 1) == 1 )
+			{
+				ui16 y = (Settings.Trig.nLevel*(DivsY*BlkY))>>8;
+				column[y] = RGB565(404040);
+			}
+
+			BIOS::LCD::Buffer( m_rcClient.left + x, m_rcClient.top, column, DivsY*BlkY );
+		}
+
+/*
 		_PrepareColumn( column, 0, (nTriggerTime != 0) ? 0x01 : 0x00 );
 
 		for (i=0; i<nMax; i++)
@@ -144,6 +185,7 @@ class CWndOscGraph : public CWndGraph
 			if ( en2 )
 			{
 				si16 ch2 = (ui8)((val>>8) & 0xff);
+				ch2 = Settings.calCH2.Apply( ch2 );
 				ui16 y = (ch2*(DivsY*BlkY))>>8;
 				column[y] = clr2;
 			}
@@ -151,6 +193,7 @@ class CWndOscGraph : public CWndGraph
 			if ( en1 )
 			{
 				si16 ch1 = (ui8)((val) & 0xff);
+				ch1 = Settings.calCH2.Apply( ch1 );
 				ui16 y = (ch1*(DivsY*BlkY))>>8;
 				column[y] = clr1;
 			}
@@ -168,6 +211,8 @@ class CWndOscGraph : public CWndGraph
 				//memset( column, 0x01, sizeof(column) );
 			}
 		}
+*/
+
 	}
 };
 

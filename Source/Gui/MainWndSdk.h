@@ -4,7 +4,7 @@ class CSdkStreamProvider : public CSdkEval
 {
 public:
 	CHAR m_strExpression[FILEINFO::SectorSize];
-	CHAR m_strSimpleAns[32];
+	CHAR m_strSimpleAns[64];
 	PSTR m_pszExpression;
 	int m_nSimpleLen;
 	int m_nStreamLen;

@@ -1,0 +1,334 @@
+<html>
+<head>
+    <title>websockets client</title>
+    <style>
+			html, body {
+			  background:#c0c0e0;
+			  height: 100%;
+			}
+		</style>
+</head>
+<body>
+<style>
+#scrollpane
+{
+width:100%;
+overflow:auto;
+border: solid 1px gray;
+background-color:white;
+}
+</style>
+
+<input type="button" value="Calibrate current resolution CH1" onClick="CalibrateCh1()">
+<br>
+<textarea id="ta" cols="100" rows="20">
+</textarea>
+<div id="txt"></div>
+
+    <script type="text/javascript">
+				String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
+
+				function LogReset()
+				{
+					document.getElementById("ta").value = "";
+				}
+				function Log(msg)
+				{
+					document.getElementById("ta").value = document.getElementById("ta").value + msg + "\n";
+				}
+
+				var SocketClass = function()
+        {
+					// private
+					var ws = null;
+					var arrListeners = new Array();
+					var _this = this;
+
+					var url = "ws://127.0.0.1:38950/resourcePath";
+
+					// public
+					this.Send = function( msg ) 
+					{
+						ws.send( msg );
+					}
+					this.Receive = function ( msg )
+					{
+						if ( msg.substr(0, 1) == "[" )
+							Process( eval(msg) );                         
+					}
+					this.Connect = function()
+					{
+            document.title = "Connecting...";
+	          ws = new WebSocket(url);
+            ws.onmessage = this.onMessage;
+            ws.onopen = this.onOpen;
+            ws.onclose = this.onClose;
+            ws.onerror = this.onError;
+          }
+
+					// private
+					this.onMessage = function(evt)
+					{
+            if (typeof evt !== "undefined" && typeof evt.data == "string") {
+								_this.Receive( evt.data.toString() );
+            }
+					}
+
+					this.onOpen = function(evt)
+					{
+						document.title = "Online";
+					}
+
+					this.onClose = function(evt)
+					{
+						document.title = "Offline";
+					}
+					this.onEror = function(evt)
+					{
+						document.title = "Error";
+						alert(evt);
+					}
+
+				};
+
+				var WSocket = new SocketClass();
+        window.onload = function () {
+          setTimeout( "WSocket.Connect();", 500 );
+        };
+
+function Process(msg)
+{
+  var result = "";
+	if (typeof( msg ) == "string")
+	{
+		alert(0);
+		ProcessMessage(msg);
+	}
+	if (typeof( msg ) == "object" && msg.length > 0 )
+	{
+		for (var i=0; i<msg.length; i++)
+		{
+			var element = msg[i];
+			if (result != "") result = result + ", ";
+			if ( typeof(element) == "string" )
+			{
+				if ( element.substr(-1,1)==")" )
+					setTimeout( element, 0 );
+
+				result += element;
+			} else
+			if ( typeof(element) == "object" && element.length > 0 )
+			{
+				result += "array("+element.length+")";			
+				ProcessArray(element);
+			} else
+			{
+				result += "unknown";
+			}
+		}
+		document.getElementById("txt").innerHTML = result;
+	}
+}
+
+function ProcessMessage(msg)
+{
+ 	document.getElementById("txt").innerHTML = msg;
+}
+
+var hWaveHandler = false;
+function ProcessArray(arr)
+{
+ if (arr.length > 0)
+ {
+ 		var nCH1sum = 0, nCH1sum2 = 0, nCH1n = 0;
+ 		for (var i=0, x=0; i<arr.length; i+=4)
+ 		{
+ 			var y = arr[i];
+ 			nCH1sum += y;
+ 			nCH1sum2 += y*y;
+ 			nCH1n++;
+ 		}
+
+ 		var nCH1avg = nCH1sum / nCH1n, nCH1var = (nCH1sum2 - (nCH1sum*nCH1sum)/nCH1n)/nCH1n;
+		if (hWaveHandler)
+			hWaveHandler( nCH1avg, nCH1var );
+/*
+ 		var nCH2sum = 0, nCH2sum2 = 0, nCH2n = 0;
+ 		for (var i=0, x=0; i<arr.length; i+=4,x+=step)
+ 		{
+ 			var y = arr[i+1];
+ 			nCH2sum += y;
+ 			nCH2sum2 += y*y;
+ 			nCH2n++;
+ 	    y = 255-y;
+ 		}
+ 		var nCH2avg = nCH2sum / nCH2n, nCH2var = (nCH2sum2 - (nCH2sum*nCH2sum)/nCH2n)/nCH2n;
+*/
+ } else
+ 	alert(0);
+} 
+
+var oldp, oldq;
+var newp, newq, newq2, newq4, newq6;
+var resol;
+var resol_num, resol_units;
+
+function myHandler()
+{
+	alert("myHandler called!");
+}
+
+function CalibrateCh1()
+{
+	LogReset();
+	Log("Calibrating...");
+	WSocket.Send("#hResolution(ENUM::Ampl(CH1::Resolution)); #hGetCalibP(CH1::Calib.p); #hGetCalibQ(CH1::Calib.q)");
+}
+function hResolution(name)
+{
+  resol = name;
+
+	var lastnumeric = 0;
+	for (var i=0; i<resol.length; i++)
+	{
+		if ( ( resol[i] >= '0' && resol[i] <= '9' ) || resol[i] == '.' )
+		{
+			lastnumeric = i;
+		} else
+			break;
+	}
+	resol_num = resol.substr(0, lastnumeric+1);
+	resol_units = resol.substr(lastnumeric+1);
+
+	Log("Current resolution = " + name );
+}
+function hGetCalibP(p)
+{
+	oldp = p;
+}
+function hGetCalibQ(q)
+{
+	oldq = q;
+	Log("Old calibration raw data = p:" + oldp + " q:" + oldq );
+	
+	Log("Waiting for user to short circuit CH1 probe");
+
+	alert("Short circuit CH1 probe");
+
+	Log("Settings CH1::Offset to zero");
+	WSocket.Send("CH1::Offset=0; ALL::Setup(); Update(); #hDownloadA(0);");
+}
+
+function hDownloadA()
+{
+	Log("Downloading wave...");
+	hWaveHandler = hCalibZero;
+	WSocket.Send("ADC::Get()");
+}
+
+function hCalibZero(average, variance)
+{
+	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
+	if ( variance > 4 )
+	{
+		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
+		WSocket.Send("ADC::Get()");
+		return;		
+	}
+
+	newp = -average;
+
+	var num = resol_num*2; // 2 divs
+
+	Log("Waiting for user to set the voltage on CH1 to "+num+" "+resol_units);
+	alert("Put " +num+" "+resol_units+ " DC voltage source to CH1 probe");
+
+	Log("Downloading wave...");
+	hWaveHandler = hCalib2;
+	WSocket.Send("ADC::Get()");
+}
+
+function hCalib2(average, variance)
+{
+	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
+	if ( variance > 4 )
+	{
+		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
+		WSocket.Send("ADC::Get()");
+		return;		
+	}
+	// cim musime vynasobit (average - newp) aby sme ziskali 4 dieliky ? (4divs = 1/2 displeja => 256/2 = 128)
+
+	newq2 = 64/(average + newp); // 2 divs => 256/8*2
+	// 
+	var num = resol_num*4;
+
+	Log("Waiting for user to set the voltage on CH1 to "+num+" "+resol_units);
+	alert("Put " +num+" "+resol_units+ " DC voltage source to CH1 probe");
+
+	Log("Downloading wave...");
+	hWaveHandler = hCalib4;
+	WSocket.Send("ADC::Get()");	
+}
+
+function hCalib4(average, variance)
+{
+	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
+	if ( variance > 4 )
+	{
+		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
+		WSocket.Send("ADC::Get()");
+		return;		
+	}
+	// cim musime vynasobit (average - newp) aby sme ziskali 4 dieliky ? (4divs = 1/2 displeja => 256/2 = 128)
+
+	newq4 = 128/(average + newp); // 4 divs => 256/8*4
+	// 
+	var num = resol_num*6;
+
+	Log("Waiting for user to set the voltage on CH1 to "+num+" "+resol_units);
+	alert("Put " +num+" "+resol_units+ " DC voltage source to CH1 probe");
+
+	Log("Downloading wave...");
+	hWaveHandler = hCalib6;
+	WSocket.Send("ADC::Get()");	
+}
+
+function hCalib6(average, variance)
+{
+	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
+	if ( variance > 4 )
+	{
+		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
+		WSocket.Send("ADC::Get()");
+		return;		
+	}
+	// cim musime vynasobit (average - newp) aby sme ziskali 4 dieliky ? (4divs = 1/2 displeja => 256/2 = 128)
+
+	newq6 = 192/(average + newp); // 4 divs => 256/8*4
+
+	Log("Calibration scalers are " + newq2.toFixed(2) + ", " + newq4.toFixed(2) + ", " + newq6.toFixed(2) );
+	newq = (newq2 + newq4 + newq6)/3;
+	Log("Final calibration coefficients are p="+newp.toFixed(2)+" q="+newq.toFixed(2));
+
+	var calibp = Math.floor(newp);
+	var calibq = Math.floor(newq*1024);
+
+	Log("New raw values p="+calibp+" q="+calibq);
+
+	if ( confirm("Do you wish to set these coefficient to your DSO?") )
+	{
+		WSocket.Send("CH1::Calib.p="+calibp+"; CH1::Calib.q="+calibq+"; #hDone(0);");
+	} else
+	{
+		Log("Operation aborted");
+	}
+}
+
+function hDone(x)
+{
+	Log("Operation succeed!");
+}
+</script>
+</body>
+</html>

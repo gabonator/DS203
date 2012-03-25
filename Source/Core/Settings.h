@@ -10,6 +10,34 @@ public:
 	static CSettings* m_pInstance;
 
 public:
+	class LinearCalibration
+	{
+		public:
+		si16 nOffset;
+		ui16 nScale;
+
+		si16 Apply( si16 nInput )
+		{
+			si32 nTemp = nInput + nOffset;
+			nTemp *= nScale;
+			nTemp >>= 10; // div 1024
+			return (si16)nTemp;
+		}
+
+		LinearCalibration()
+		{
+			// set identity
+			nOffset = 0;
+			nScale = 1024;
+		}
+
+		LinearCalibration(si16 nOffset_, ui16 nScale_) :
+			nOffset( nOffset_ ), nScale( nScale_ )
+		{
+		}
+
+	};
+
 	struct AnalogChannel
 	{
 		static const char* const ppszTextEnabled[];
@@ -96,6 +124,8 @@ public:
 	Trigger Trig;
 	Generator Gen;
 
+	LinearCalibration calCH1[AnalogChannel::_ResolutionMax];
+	LinearCalibration calCH2[AnalogChannel::_ResolutionMax];
 	CSettings();
 };
 #endif

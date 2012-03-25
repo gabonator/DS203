@@ -4,7 +4,7 @@
 #include <Source/Core/Controls.h>
 #include <Source/Core/ListItems.h>
 #include <Source/Core/Settings.h>
-#include <Source/Gui/Graph.h>
+#include <Source/Gui/Oscilloscope/Graph.h>
 
 #include "ListAnalog.h"
 #include "ListDigital.h"

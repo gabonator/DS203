@@ -1,6 +1,6 @@
 #include "MenuInput.h"
 
-#include "../MainWnd.h"
+#include <Source/Gui/MainWnd.h>
 
 /*static*/ void CWndMenuInput::ConfigureAdc()
 {

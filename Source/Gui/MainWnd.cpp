@@ -21,6 +21,7 @@ void CMainWnd::Create()
 	m_wndToolBar.Create( this );
 	m_wndGraph.Create( this, WsVisible | WsNoActivate );
 	m_wndSignalGraph.Create( this, WsNoActivate );
+	m_wndSpectrumGraph.Create( this, WsNoActivate );
 
 	m_wndMenuInput.Create( this, WsVisible );
 	m_wndMenuCursor.Create( this, WsHidden );
@@ -33,6 +34,7 @@ void CMainWnd::Create()
 	m_wndZoomBar.Create( this, &m_wndGraph );
 	m_wndLReferences.Create( this, WsVisible );
 	m_wndTReferences.Create( this, WsVisible );
+	m_wndSpectrumMain.Create( this, WsHidden );
 
 	m_wndScreenSaver.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
@@ -82,6 +84,8 @@ void CMainWnd::Create()
 	{
 		if ( m_wndGraph.m_dwFlags & WsVisible )
 			m_wndGraph.Invalidate();
+		if ( m_wndSpectrumGraph.m_dwFlags & WsVisible )
+			m_wndSpectrumGraph.Invalidate();
 	}
 }
 

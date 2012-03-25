@@ -100,6 +100,14 @@ public:
 
 	};
 
+	class FFT
+	{	
+	public:	
+		static void Window( si16* arrSignal, const ui16* arrWindowHalf, int n );
+		static void Convert( si16* arrOutput, si16* arrInput, int n );	
+		static ui32 Sqrt( ui32 value );
+	};
+
 };
 
 #endif

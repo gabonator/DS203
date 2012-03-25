@@ -13,7 +13,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Disp", &MainWnd.m_wndMenuDisplay},
 
 		{ CBarItem::IMain,	"Spectrum", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Settings", NULL},
+		{ CBarItem::ISub,	"Main", &MainWnd.m_wndSpectrumMain},
 
 		{ CBarItem::IMain,	"Generator", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Settings", &MainWnd.m_wndMenuGenerator},
@@ -24,6 +24,8 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::IMain,	"About", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Device", NULL},
 		{ CBarItem::ISub,	"Authors", NULL},
+
+		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Screen saver", &MainWnd.m_wndScreenSaver},
 
 		{ CBarItem::IEnd,		NULL, NULL }

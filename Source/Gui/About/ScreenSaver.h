@@ -37,7 +37,7 @@ public:
 		x >>= 1;
 		y += ay[i];
 		y >>= 1;
-		BIOS::LCD::PutPixel( x, y, (ui16)(n>>2));
+		BIOS::LCD::PutPixel( x, y, (ui16)(n<<2));
 	}
 
 	virtual void OnTick()	
