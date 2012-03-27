@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -283,23 +283,11 @@
 				Name="Gui"
 				>
 				<File
-					RelativePath="..\..\Source\Gui\Generator.cpp"
+					RelativePath="..\..\Source\Gui\MainMenu.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\Source\Gui\Generator.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Gui\Graph.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Gui\Graph.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Source\Gui\Input.h"
+					RelativePath="..\..\Source\Gui\MainMenu.h"
 					>
 				</File>
 				<File
@@ -311,7 +299,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Source\Gui\MainWndSdk.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Source\Gui\Others.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Source\Gui\Toolbar.cpp"
 					>
 				</File>
 				<File
@@ -319,46 +315,106 @@
 					>
 				</File>
 				<Filter
-					Name="Input"
+					Name="About"
+					>
+				</Filter>
+				<Filter
+					Name="User"
 					>
 					<File
-						RelativePath="..\..\Source\Gui\Input\Controls.h"
+						RelativePath="..\..\Source\Gui\About\ScreenSaver.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Generator"
+					>
+					<File
+						RelativePath="..\..\Source\Gui\Generator\Generator.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ItemAnalog.h"
+						RelativePath="..\..\Source\Gui\Generator\Generator.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Oscilloscope"
+					>
+					<File
+						RelativePath="..\..\Source\Gui\Oscilloscope\Controls.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ItemDigital.h"
+						RelativePath="..\..\Source\Gui\Oscilloscope\Graph.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ItemTime.h"
+						RelativePath="..\..\Source\Gui\Oscilloscope\Graph.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ItemTrigger.h"
+						RelativePath="..\..\Source\Gui\Oscilloscope\Oscilloscope.h"
+						>
+					</File>
+					<Filter
+						Name="Input"
+						>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ItemAnalog.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ItemDigital.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ItemTime.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ItemTrigger.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ListAnalog.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ListDigital.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\ListTrigger.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Source\Gui\Oscilloscope\Input\MenuInput.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Spectrum"
+					>
+					<File
+						RelativePath="..\..\Source\Gui\Spectrum\MenuSpectMain.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ListAnalog.h"
+						RelativePath="..\..\Source\Gui\Spectrum\MenuSpectMain.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ListDigital.h"
+						RelativePath="..\..\Source\Gui\Spectrum\Spectrum.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Source\Gui\Input\ListTrigger.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Gui\Input\MenuInput.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\Source\Gui\Input\MenuInput.h"
+						RelativePath="..\..\Source\Gui\Spectrum\SpectrumGraph.h"
 						>
 					</File>
 				</Filter>
@@ -393,6 +449,14 @@
 						RelativePath="..\..\Source\HwLayer\Win32\Types.h"
 						>
 					</File>
+					<Filter
+						Name="sprintf"
+						>
+						<File
+							RelativePath="..\..\Source\HwLayer\Win32\sprintf\spf.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
