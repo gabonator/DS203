@@ -81,6 +81,43 @@ static int prints(char **out, const char *string, int width, int pad)
 /* the following should be enough for 32 bit int */
 #define PRINT_BUF_LEN 12
 
+static int printf(char **out, float f, int width)
+{
+	char print_buf[PRINT_BUF_LEN];
+	char* pb = print_buf;
+	if (f<0)
+		*pb++ = '-';
+	
+	if ( f < 0 )
+		f = -f;
+
+	int nNumber = (int)f;
+
+	int nBase = 1;
+	while ( nNumber >= nBase*10 )
+		nBase *= 10;
+
+	while ( nBase >= 1 )
+	{
+		int digit = nNumber / nBase;
+		*pb++ = '0' + digit;
+		nNumber -= digit * nBase;
+		nBase /= 10;
+	}
+	*pb++ = '.';
+	if ( width == 0 )
+		width = 3;
+
+	for (int i=0; i<width; i++)
+	{
+		f -= (int)f;
+		f *= 10.0f;
+		*pb++ = '0' + (int)f;
+	}
+	*pb = 0;
+	return prints (out, print_buf, 0, ' ');
+}
+
 static int printi(char **out, int i, int b, int sg, int width, int pad, int letbase)
 {
 	char print_buf[PRINT_BUF_LEN];
@@ -155,6 +192,13 @@ static int print(char **out, const char *format, va_list args )
 			}
 			if( *format == 'd' ) {
 				pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a');
+				continue;
+			}
+			if( *format == 'f' ) {
+//				int f = va_arg( args, int );
+//				float* ff = (float*)&f;
+				float f = (float)va_arg( args, double );
+				pc += printf (out, f, width);
 				continue;
 			}
 			if( *format == 'x' ) {

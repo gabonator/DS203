@@ -16,7 +16,7 @@ public:
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndScreenSaver", dwFlags, CRect(0, 16, 400, 240), pParent);
+		CWnd::Create("CWndScreenSaver", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
 
 	virtual void OnPaint()

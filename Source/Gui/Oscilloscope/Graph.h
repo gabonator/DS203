@@ -120,8 +120,8 @@ class CWndOscGraph : public CWndGraph
 		ui16 clr2 = Settings.CH2.u16Color;
 		ui8 en1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
 		ui8 en2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
-		CSettings::LinearCalibration& cal1 = Settings.calCH1[Settings.CH1.Resolution];
-		CSettings::LinearCalibration& cal2 = Settings.calCH2[Settings.CH2.Resolution];
+//		CSettings::ChannelCalibrationCurve& cal1 = Settings.calCH1[Settings.CH1.Resolution];
+//		CSettings::ChannelCalibrationCurve& cal2 = Settings.calCH2[Settings.CH2.Resolution];
 
 		int nMax = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
 //		int nMax = min(m_rcClient.Width(), m_nMaxX-m_rcClient.left);
@@ -143,7 +143,7 @@ class CWndOscGraph : public CWndGraph
 			if ( en2 )
 			{
 				si16 ch2 = (ui8)((val>>8) & 0xff);
-				ch2 = cal2.Apply( ch2 );
+				ch2 = CSettings::Correct(Settings.CH1.u16Position, ch2);
 				if ( ch2 < 0 ) 
 					ch2 = 0;
 				if ( ch2 > 255 ) 
@@ -155,7 +155,7 @@ class CWndOscGraph : public CWndGraph
 			if ( en1 )
 			{
 				si16 ch1 = (ui8)((val) & 0xff);
-				ch1 = cal1.Apply( ch1 );
+				ch1 = CSettings::Correct(Settings.CH1.u16Position, ch1);
 				if ( ch1 < 0 ) 
 					ch1 = 0;
 				if ( ch1 > 255 ) 

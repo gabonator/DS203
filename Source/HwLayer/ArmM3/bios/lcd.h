@@ -39,21 +39,21 @@ CPoint m_cpBuffer;
 		{
 			px = 0;
 			py+=14;
-			if (py > 240)
+			if (py > 240-16)
 				py = 0;
 			continue;
 		}
 		px += _DrawChar(px, py, RGB565(ffffff), RGB565(0000B0), *bbuf);
 	}
 }
-/*static*/ void BIOS::DBG::sprintf(char* buf, const char * format, ...)
+/*static*/ int BIOS::DBG::sprintf(char* buf, const char * format, ...)
 {
 	char* bbuf = buf; 
 
         va_list args;
         
         va_start( args, format );
-        print( &bbuf, format, args );
+        return print( &bbuf, format, args );
 }
 
 /*static*/ void BIOS::LCD::Init()
@@ -160,7 +160,7 @@ CPoint m_cpBuffer;
   __LCD_DMA_Ready();
   __LCD_Set_Block(0, 399, 0, 239);
 }
-
+                                                                 
 /*static*/ void BIOS::LCD::Pattern(int x1, int y1, int x2, int y2, const ui16 *pat, int l)
 {
 	const ui16* patb = pat;
@@ -175,6 +175,33 @@ CPoint m_cpBuffer;
 			if (++pat == pate) 
 				pat = patb;
 		}
+  __LCD_Set_Block(0, 399, 0, 239);
+}
+
+
+
+/*static*/ void BIOS::LCD::GetImage(const CRect& rcRect, ui16* pBuffer )
+{
+//  __LCD_Set_Block(rcRect.left, rcRect.right-1, 240-rcRect.bottom, 239-rcRect.top);
+
+		for (int x=rcRect.left; x<rcRect.right; x++)
+	for (int y=rcRect.bottom-1; y>=rcRect.top; y--)
+		{
+			__Point_SCR(x, 239-y);
+			*pBuffer++ = LCD_GetPixel();
+		}
+
+//  __LCD_Set_Block(0, 399, 0, 239);
+}
+
+/*static*/ void BIOS::LCD::PutImage(const CRect& rcRect, ui16* pBuffer )
+{
+  __LCD_Set_Block(rcRect.left, rcRect.right-1, 240-rcRect.bottom, 239-rcRect.top);
+
+	for (int y=rcRect.top; y<rcRect.bottom; y++)
+		for (int x=rcRect.left; x<rcRect.right; x++)
+			__LCD_SetPixl(*pBuffer++);
+
   __LCD_Set_Block(0, 399, 0, 239);
 }
 

@@ -58,6 +58,10 @@ const SWaveData Waves[] =
 		{NULL, 0, NULL, 0}		
 	};
 
+/*static*/ ui16*	CWndMenuGenerator::GetRamDac()
+{
+	return pRamWave;
+}
 
 ui16 _GetCount(ui8 nWaveIndex)
 {

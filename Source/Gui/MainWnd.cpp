@@ -17,7 +17,10 @@ void CMainWnd::Create()
 		CSettings::TimeBase::ppszTextResolution[CSettings::TimeBase::_1s][1] == 's' &&
 		CSettings::TimeBase::ppszTextResolution[CSettings::TimeBase::_1s][2] == 0 );
 
+	Settings.Load();
+	
 	CWnd::Create("CMainWnd", WsVisible, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
+
 	m_wndToolBar.Create( this );
 	m_wndGraph.Create( this, WsVisible | WsNoActivate );
 	m_wndSignalGraph.Create( this, WsNoActivate );
@@ -37,10 +40,17 @@ void CMainWnd::Create()
 	m_wndSpectrumMain.Create( this, WsHidden );
 
 	m_wndScreenSaver.Create( this, WsHidden );
+
+	m_wndUserGame.Create( this, WsHidden );
+	m_wndUserBalls.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
+
+	m_wndUserCalibration.Create( this, WsHidden );
 
 	m_wndToolBar.m_nFocus = 1;
 	m_wndToolBar.SetFocus();
+
+	SendMessage( &m_wndToolBar, ToWord('g', 'o'), (ui32)"Balls");
 	//m_wndMenuInput.m_itmCH1.SetFocus();
 	//m_wndMenuGenerator.m_itmBpm.SetFocus();
 	//OnMessage( &m_wndToolBar, ToWord('f', 'c'), 0 ); // force update
@@ -84,8 +94,10 @@ void CMainWnd::Create()
 	{
 		if ( m_wndGraph.m_dwFlags & WsVisible )
 			m_wndGraph.Invalidate();
-		if ( m_wndSpectrumGraph.m_dwFlags & WsVisible )
+		else if ( m_wndSpectrumGraph.m_dwFlags & WsVisible )
 			m_wndSpectrumGraph.Invalidate();
+		else if ( GetFocus() != this )
+			SendMessage( GetFocus(), code, data );
 	}
 }
 

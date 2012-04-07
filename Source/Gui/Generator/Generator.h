@@ -28,6 +28,9 @@ public:
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
+
+public:
+	static ui16*	GetRamDac();
 };
 
 #endif

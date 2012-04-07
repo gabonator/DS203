@@ -1,6 +1,8 @@
 #include "Application.h"
 #include <Source/Gui/MainWnd.h>
 
+/*static*/ CApplication* CApplication::m_pInstance = NULL;
+
 class CKeyProcessor
 {
 	ui16 keys;
@@ -40,6 +42,7 @@ public:
 /* workaround class for the issue of global classes constructors being not called */
 
 #define GLOBAL (*CInit::getInstance())
+
 class CInit
 {
 public:
@@ -56,6 +59,8 @@ public:
 
 CApplication::CApplication()
 {
+	m_pInstance = this;
+
 	BIOS::Init();
 
 	GLOBAL.m_wndMain.Create();
@@ -87,4 +92,9 @@ bool CApplication::operator ()()
 	GLOBAL.m_wndMain.WindowMessage( CWnd::WmTick, 0 );
 
 	return true;
+}
+
+/*static*/ CApplication* CApplication::getInstance()
+{
+	return m_pInstance;	
 }

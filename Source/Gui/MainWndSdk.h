@@ -153,7 +153,7 @@ void CMainWnd::SdkProc()
 
 	if ( bInit )
 	{
-		if ( BIOS::DSK::Open(&f, (si8*)"SDK     BIN", BIOS::DSK::IoRead) )
+		if ( BIOS::DSK::Open(&f, "SDK     BIN", BIOS::DSK::IoRead) )
 		{
 			fbase = f;
 			m_wndMessage.Show(this, "SDK Information", "SDK File Found!", RGB565(00FF00));

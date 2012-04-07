@@ -11,7 +11,7 @@ public:
 	virtual void OnPaint()
 	{
 		BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
-		//if ( Settings.Trig.Sync != CSettings::Trigger::_None )
+		//if ( Settings.Trig.Sync != CSettings::Trigger::_None )                                           
 		{
 			ui16 y = Settings.Trig.nLevel;
 			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
@@ -21,15 +21,20 @@ public:
 		if ( Settings.CH2.Enabled )
 		{
 			ui16 y = Settings.CH2.u16Position;
-//			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+
+			y = CSettings::GetZero(y);
+			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+
 			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
 				Settings.CH2.u16Color, RGBTRANS, chb_base );
 		}
 		if ( Settings.CH1.Enabled )
 		{
-			ui16 y = Settings.CH1.u16Position;
-//			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
-//			y = Settings.calRefCH1[Settings.CH1.Resolution].Apply(y);
+			si16 y = Settings.CH1.u16Position;
+
+			y = CSettings::GetZero(y);
+			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+
 			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
 				Settings.CH1.u16Color, RGBTRANS, cha_base );
 		}

@@ -21,8 +21,14 @@ background-color:white;
 
 <input type="button" value="Calibrate current resolution CH1" onClick="CalibrateCh1()">
 <br>
-<textarea id="ta" cols="100" rows="20">
+<table><tr><td>
+<textarea id="ta" cols="80" rows="20">
 </textarea>
+</td><td>
+<textarea id="ta2" cols="40" rows="20">
+</textarea>
+</td></tr>
+</table>
 <div id="txt"></div>
 
     <script type="text/javascript">
@@ -35,6 +41,16 @@ background-color:white;
 				function Log(msg)
 				{
 					document.getElementById("ta").value = document.getElementById("ta").value + msg + "\n";
+document.getElementById("ta").scrollTop = document.getElementById("ta").scrollHeight;
+				}
+				function Log2Reset()
+				{
+					document.getElementById("ta2").value = "";
+				}
+				function Log2(msg)
+				{
+					document.getElementById("ta2").value = document.getElementById("ta2").value + msg + "\n";
+document.getElementById("ta2").scrollTop = document.getElementById("ta2").scrollHeight;
 				}
 
 				var SocketClass = function()
@@ -172,162 +188,93 @@ var oldp, oldq;
 var newp, newq, newq2, newq4, newq6;
 var resol;
 var resol_num, resol_units;
-
-function myHandler()
-{
-	alert("myHandler called!");
-}
+var running = 0;
 
 function CalibrateCh1()
 {
+	if (running)
+	{
+		Log("Already running...");
+		return;
+	}
+	running = 1;
 	LogReset();
+	Log2Reset();
 	Log("Calibrating...");
-	WSocket.Send("#hResolution(ENUM::Ampl(CH1::Resolution)); #hGetCalibP(CH1::Calib.p); #hGetCalibQ(CH1::Calib.q)");
+	WSocket.Send("CH1::Resolution=2;#hResolution(ENUM::Ampl(CH1::Resolution));");
 }
 function hResolution(name)
 {
-  resol = name;
-
-	var lastnumeric = 0;
-	for (var i=0; i<resol.length; i++)
-	{
-		if ( ( resol[i] >= '0' && resol[i] <= '9' ) || resol[i] == '.' )
-		{
-			lastnumeric = i;
-		} else
-			break;
-	}
-	resol_num = resol.substr(0, lastnumeric+1);
-	resol_units = resol.substr(lastnumeric+1);
-
 	Log("Current resolution = " + name );
+	Proc();
 }
-function hGetCalibP(p)
+var lastset = -999;
+function Proc()
 {
-	oldp = p;
-}
-function hGetCalibQ(q)
-{
-	oldq = q;
-	Log("Old calibration raw data = p:" + oldp + " q:" + oldq );
-	
-	Log("Waiting for user to short circuit CH1 probe");
+	if (lastset != dc)
+	{
+		alert("Please set DC voltage to "+dc.toFixed(3));
+		lastset = dc;
+	}
 
-	alert("Short circuit CH1 probe");
-
-	Log("Settings CH1::Offset to zero");
-	WSocket.Send("CH1::Offset=0; ALL::Setup(); Update(); #hDownloadA(0);");
+	WSocket.Send("CH1::Offset="+pos+"; ALL::Setup(); Update(); #hDownload(CH1::Offset);");
 }
 
-function hDownloadA()
+function hDownload(p)
 {
-	Log("Downloading wave...");
-	hWaveHandler = hCalibZero;
+	if ( p != pos )
+	{
+		Log("Something wrong happened...");
+		Proc();
+		return;
+	}
+	Log("Downloading wave... (pos="+pos+", dc="+dc.toFixed(2)+")");
+	hWaveHandler = hHandler;
 	WSocket.Send("ADC::Get()");
 }
 
-function hCalibZero(average, variance)
+var pos=-20, dc=-2.0; //-0.5;
+
+function hHandler(average, variance)
 {
 	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
-	if ( variance > 4 )
+	if ( variance > 1 )
 	{
 		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
 		WSocket.Send("ADC::Get()");
 		return;		
 	}
 
-	newp = -average;
+	Log("Value [" + pos + ", " + average.toFixed(3) + "]");
+	Log2(pos + ", " + dc.toFixed(2) + ", " + average.toFixed(3) + ",");
 
-	var num = resol_num*2; // 2 divs
-
-	Log("Waiting for user to set the voltage on CH1 to "+num+" "+resol_units);
-	alert("Put " +num+" "+resol_units+ " DC voltage source to CH1 probe");
-
-	Log("Downloading wave...");
-	hWaveHandler = hCalib2;
-	WSocket.Send("ADC::Get()");
-}
-
-function hCalib2(average, variance)
-{
-	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
-	if ( variance > 4 )
+	pos += 5;
+		if ( pos > 280 )
 	{
-		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
-		WSocket.Send("ADC::Get()");
-		return;		
-	}
-	// cim musime vynasobit (average - newp) aby sme ziskali 4 dieliky ? (4divs = 1/2 displeja => 256/2 = 128)
+Log2("");
+Log2("");
 
-	newq2 = 64/(average + newp); // 2 divs => 256/8*2
-	// 
-	var num = resol_num*4;
-
-	Log("Waiting for user to set the voltage on CH1 to "+num+" "+resol_units);
-	alert("Put " +num+" "+resol_units+ " DC voltage source to CH1 probe");
-
-	Log("Downloading wave...");
-	hWaveHandler = hCalib4;
-	WSocket.Send("ADC::Get()");	
-}
-
-function hCalib4(average, variance)
-{
-	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
-	if ( variance > 4 )
-	{
-		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
-		WSocket.Send("ADC::Get()");
-		return;		
-	}
-	// cim musime vynasobit (average - newp) aby sme ziskali 4 dieliky ? (4divs = 1/2 displeja => 256/2 = 128)
-
-	newq4 = 128/(average + newp); // 4 divs => 256/8*4
-	// 
-	var num = resol_num*6;
-
-	Log("Waiting for user to set the voltage on CH1 to "+num+" "+resol_units);
-	alert("Put " +num+" "+resol_units+ " DC voltage source to CH1 probe");
-
-	Log("Downloading wave...");
-	hWaveHandler = hCalib6;
-	WSocket.Send("ADC::Get()");	
-}
-
-function hCalib6(average, variance)
-{
-	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
-	if ( variance > 4 )
-	{
-		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
-		WSocket.Send("ADC::Get()");
-		return;		
-	}
-	// cim musime vynasobit (average - newp) aby sme ziskali 4 dieliky ? (4divs = 1/2 displeja => 256/2 = 128)
-
-	newq6 = 192/(average + newp); // 4 divs => 256/8*4
-
-	Log("Calibration scalers are " + newq2.toFixed(2) + ", " + newq4.toFixed(2) + ", " + newq6.toFixed(2) );
-	newq = (newq2 + newq4 + newq6)/3;
-	Log("Final calibration coefficients are p="+newp.toFixed(2)+" q="+newq.toFixed(2));
-
-	var calibp = Math.floor(newp);
-	var calibq = Math.floor(newq*1024);
-
-	Log("New raw values p="+calibp+" q="+calibq);
-
-	if ( confirm("Do you wish to set these coefficient to your DSO?") )
-	{
-		WSocket.Send("CH1::Calib.p="+calibp+"; CH1::Calib.q="+calibq+"; #hDone(0);");
+		dc += 0.1;
+	  pos = -20;
+	if ( dc > 2.1 )
+		{
+			hDone(0);
+			return;
+		}
+		BeepProc();
 	} else
-	{
-		Log("Operation aborted");
-	}
+		Proc();
+}
+
+function BeepProc()
+{
+	WSocket.Send("Beep(500);#Proc(0);");
 }
 
 function hDone(x)
 {
 	Log("Operation succeed!");
+	running = 0;
 }
 </script>
 </body>

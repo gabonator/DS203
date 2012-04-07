@@ -153,3 +153,19 @@ void LCD_Init()
   while (1);
 */
 }
+
+u16 LCD_GetPixel(void)
+{ 
+  u16 Data;
+  
+  if(LCD_Type == 0x02049327){
+    LCD_WR_Ctrl(0x2E);
+    Data  = LCD_PORT; 
+    Data  = LCD_PORT; 
+    LCD_WR_Ctrl(0x2C);
+  } else {
+    Data  = LCD_PORT; 
+    Data  = LCD_PORT; 
+  }
+  return Data;
+}

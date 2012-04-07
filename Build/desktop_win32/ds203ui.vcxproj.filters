@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Win32Subsystem">
+      <UniqueIdentifier>{740346f3-1741-4e8f-8e0f-a40159bb9589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32Subsystem\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Win32Subsystem\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Win32Subsystem\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{6cd037d4-492e-4e51-85a7-8ca72db402f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{fe8df082-f89f-4910-a55a-f365dac6190c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework">
+      <UniqueIdentifier>{4e90c8d0-6d6e-4461-ab0a-1d770154607e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui">
+      <UniqueIdentifier>{efc71cd4-cf0c-4384-b35b-d2b258c0433e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\About">
+      <UniqueIdentifier>{ec1431ff-88fe-4c7f-b6f5-3703a8819453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\User">
+      <UniqueIdentifier>{5bf6662a-1e47-4020-8b3f-a19d245ef8d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Generator">
+      <UniqueIdentifier>{b79d7ffa-0ab2-4cd0-a247-f558015e4190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Oscilloscope">
+      <UniqueIdentifier>{fd6357a0-8f29-4e30-af59-3d41d61d0392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Input">
+      <UniqueIdentifier>{9d790c9e-43c9-4a6b-b2b0-765733626be3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Spectrum">
+      <UniqueIdentifier>{a5d20757-2359-4cf1-a631-009b89398ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HwLayer">
+      <UniqueIdentifier>{a40b7edb-efdb-480c-bc1e-320b11c59c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HwLayer\Win32">
+      <UniqueIdentifier>{66ca11eb-6eb4-4e2e-ac44-a0be24ed01c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HwLayer\Win32\sprintf">
+      <UniqueIdentifier>{1f9775f9-1dee-48de-8119-605b7b09fcad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Main">
+      <UniqueIdentifier>{c3437d86-460b-432f-9694-cc263bc60876}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
+      <Filter>Win32Subsystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Win32\stdafx.h">
+      <Filter>Win32Subsystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Controls.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\design.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\ListItems.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Settings.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Shapes.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Utils.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Framework\Classes.h">
+      <Filter>Source\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Framework\Wnd.h">
+      <Filter>Source\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\MainMenu.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\MainWnd.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\MainWndSdk.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Others.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\toolbar.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\About\ScreenSaver.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Generator.h">
+      <Filter>Source\Gui\Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls.h">
+      <Filter>Source\Gui\Oscilloscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Graph.h">
+      <Filter>Source\Gui\Oscilloscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Oscilloscope.h">
+      <Filter>Source\Gui\Oscilloscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ItemAnalog.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ItemDigital.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ItemTime.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ItemTrigger.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ListAnalog.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ListDigital.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ListTrigger.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.h">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\MenuSpectMain.h">
+      <Filter>Source\Gui\Spectrum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Spectrum.h">
+      <Filter>Source\Gui\Spectrum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\SpectrumGraph.h">
+      <Filter>Source\Gui\Spectrum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Bios.h">
+      <Filter>Source\HwLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Types.h">
+      <Filter>Source\HwLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Win32\device.h">
+      <Filter>Source\HwLayer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Win32\font.h">
+      <Filter>Source\HwLayer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Win32\Types.h">
+      <Filter>Source\HwLayer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HwLayer\Win32\sprintf\spf.h">
+      <Filter>Source\HwLayer\Win32\sprintf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Main\Application.h">
+      <Filter>Source\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\Snake.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\Balls.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\Calibration.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ds203ui.ico">
+      <Filter>Win32Subsystem\Resource Files</Filter>
+    </None>
+    <None Include="small.ico">
+      <Filter>Win32Subsystem\Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ds203ui.rc">
+      <Filter>Win32Subsystem\Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp">
+      <Filter>Win32Subsystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\HwLayer\Win32\stdafx.cpp">
+      <Filter>Win32Subsystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Controls.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Settings.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Utils.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Framework\Wnd.cpp">
+      <Filter>Source\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\MainMenu.cpp">
+      <Filter>Source\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\MainWnd.cpp">
+      <Filter>Source\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Toolbar.cpp">
+      <Filter>Source\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Generator\Generator.cpp">
+      <Filter>Source\Gui\Generator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Graph.cpp">
+      <Filter>Source\Gui\Oscilloscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp">
+      <Filter>Source\Gui\Oscilloscope\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Spectrum\MenuSpectMain.cpp">
+      <Filter>Source\Gui\Spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\HwLayer\Win32\bios.cpp">
+      <Filter>Source\HwLayer\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Main\Application.cpp">
+      <Filter>Source\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\Calibration.cpp">
+      <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

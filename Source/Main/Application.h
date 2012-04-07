@@ -1,13 +1,23 @@
 //#pragma once
+#ifndef __APPLICATION__
+#define __APPLICATION__
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
-//#include <string.h>
 
+#define Application (*CApplication::getInstance())
 
-class CApplication {
+class CApplication 
+{
+	static CApplication* m_pInstance;
+ 
 public:
+	static CApplication* getInstance();
+
 	CApplication();
 	~CApplication();
 	bool operator ()();
 };
+
+#endif

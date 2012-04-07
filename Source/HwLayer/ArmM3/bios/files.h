@@ -16,7 +16,7 @@
 	return (PVOID)pSectorBuffer;
 }
 
-/*static*/ BOOL BIOS::DSK::Open(FILEINFO* pFileInfo, si8* strName, ui8 nIoMode)
+/*static*/ BOOL BIOS::DSK::Open(FILEINFO* pFileInfo, const char* strName, ui8 nIoMode)
 {
 	pFileInfo->nMode = nIoMode;
 	pFileInfo->nSectors = 0;

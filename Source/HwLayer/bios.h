@@ -14,7 +14,7 @@ public:
 	class DBG {
 	public:
 		static void Print (const char* format, ...);
-		static void sprintf(char* buf, const char * format, ...);
+		static int sprintf(char* buf, const char * format, ...);
 	};
 
 	class LCD {
@@ -44,12 +44,16 @@ public:
 		static void Bar(int x1, int y1, int x2, int y2, unsigned short clr);
 		static void Bar(const CRect& rc, unsigned short clr);
 		static void Rectangle(const CRect& rc, unsigned short clr);
-		static void Pattern(int x1, int y1, int x2, int y2, const ui16 *pat, int l);
+		static void Pattern(int x1, int y1, int x2, int y2, const ui16 *pat, int l);	
 		static int Draw(int x, int y, unsigned short clrf, unsigned short clrb, const char *p);
+		
 		static void BufferBegin(const CRect& rc, ui8 nMode);
 		static void BufferPush(ui16 clr);
 		static void BufferEnd();
 		static void Buffer(int x, int y, unsigned short* pBuffer, int n);
+		
+		static void GetImage(const CRect& rcRect, ui16* pBuffer );
+		static void PutImage(const CRect& rcRect, ui16* pBuffer );
 	};
 
 	class KEY {
@@ -93,11 +97,10 @@ public:
 			IoClosed = 3
 		};
 		static PVOID GetSharedBuffer();
-		static BOOL Open(FILEINFO* pFileInfo, si8* strName, ui8 nIoMode);
+		static BOOL Open(FILEINFO* pFileInfo, const char* strName, ui8 nIoMode);
 		static BOOL Read(FILEINFO* pFileInfo, ui8* pSectorData);
 		static BOOL Write(FILEINFO* pFileInfo, ui8* pSectorData);
-                static BOOL Close(FILEINFO* pFileInfo, int nSize = -1);
-
+		static BOOL Close(FILEINFO* pFileInfo, int nSize = -1);
 	};
 
 	class FFT

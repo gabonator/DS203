@@ -1,0 +1,491 @@
+<html>
+<body>
+<script language="javascript" src="calib_data.js"></script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://www.highcharts.com/js/themes/grid.js"></script>
+
+
+
+<div id="container" style="min-width: 400px; height: 100%; margin: 0 auto"></div>
+<div id="containerk" style="min-width: 400px; height: 300px; margin: 0 auto"></div>
+<div id="containerq" style="min-width: 400px; height: 300px; margin: 0 auto"></div>
+<div id="containerz" style="min-width: 400px; height: 300px; margin: 0 auto"></div>
+
+
+<div id="result" style="color:#000000; background:#b0b0b0;"></div>
+<div id="warnings" style="color:#ff0000;"></div>
+<div id="dbg"></div>
+
+<script language="javascript">
+
+function _assert(b)
+{
+	if (!b) alert("error");
+}
+function dbg(msg)
+{
+	document.getElementById("dbg").innerHTML += msg + "<br>";
+}
+function warning(msg)
+{
+	document.getElementById("warning").innerHTML += msg + "<br>";
+}
+function result(msg)
+{
+	document.getElementById("result").innerHTML += msg + "<br>";
+}
+function linearreg(set)
+{
+	var xs=0, ys=0, x2s=0, y2s=0, xys=0;
+	var numpair = set.length;
+	for (var i=0; i<set.length; i++)
+	{
+		xs+=set[i].x;
+		ys+=set[i].y;
+		x2s+=set[i].x*set[i].x;		
+		y2s+=set[i].y*set[i].y;		
+		xys+=set[i].x*set[i].y;
+	}
+	var slope, intercept, correlation;
+	intercept = (ys*x2s - xys*xs)/(numpair*x2s - xs*xs);
+	slope = (numpair*xys - xs*ys)/(numpair*x2s - xs*xs);
+	correlation = (numpair*xys - xs*ys)/Math.sqrt((numpair*x2s-xs*xs)*(numpair*y2s-ys*ys));
+	correlation = correlation * correlation;
+	return {k:slope, q:intercept, r:correlation, n:numpair};
+}
+
+var i = 0, j = 0;
+var series = [];
+var xlabels = [];
+var plabels = [];
+var coef_k = [];
+var coef_q = [];
+var la_q = [];
+var val_zero = [];
+var val_1 = [];
+var val_m1 = [];
+
+dbg("EQUATION: Y<sub>[V]</sub>=k<sub>pos</sub>*X<sub>ADC</sub>+q<sub>pos</sub>");
+for (base=minpos; base<=maxpos; base += stppos)
+{
+	var set = [];
+	var curset = [];
+	plabels[plabels.length] = Math.floor(base);
+  for (volt=minvol; volt <= maxvol+0.01; volt+=stpvol, j++, i+=3)
+	{
+
+//		dbg(i+": "+data[i]+"="+base+", "+data[i+1]);
+		var _s = Math.floor( (maxpos-minpos)/stppos + 1);
+		i = Math.floor( ( (volt-minvol)/stpvol ) * 3 * _s + (base-minpos)/stppos*3 );
+
+		if (base==minpos)
+			xlabels[xlabels.length] = volt.toFixed(1);
+
+//		dbg(j+": "+i+": "+data[i]+"="+base);
+		_assert( data[i] == base );
+		var adc = data[i+2];
+		curset[curset.length] = adc;
+
+		if ( Math.abs(volt) < 0.01 )
+			val_zero[val_zero.length] = adc;
+
+		if ( Math.abs(volt-1) < 0.01 )
+			val_1[val_1.length] = adc;
+
+		if ( Math.abs(volt+1) < 0.01 )
+			val_m1[val_m1.length] = adc;
+
+//		if ( adc > 30 && adc <= 220 )
+		if ( adc >= 16 && adc < 255-16 )
+			set[set.length] = {x:adc, y:volt};
+	}
+
+
+	series[series.length] = {name:base, data:curset};
+
+	var la = linearreg(set);
+	dbg("base="+base+" k="+la.k.toFixed(3)+" q="+la.q.toFixed(3)+" r="+la.r.toFixed(5)+" n="+la.n);
+	if ( la.r < 0.999 )
+	{
+		warning("Correlation coefficient too large - measured part is not linear enough (Vpos="+base+")");
+	}
+	coef_k[coef_k.length] = la.k;
+	coef_q[coef_q.length] = la.q;
+	la_q[la_q.length] = {x:base, y:la.q};
+}
+
+function filter(data, fir)
+{
+	var newdata = [];
+//	var fir = [0.25, 0.5, 0.25];
+	for (var i=0; i<data.length; i++)
+	{
+		var d0 = data[(i>1) ? (i-1) : 0];
+		var d1 = data[i];
+		var d2 = data[(i<data.length-1) ? (i+1) : i];
+
+		newdata[i] = d0*fir[0] + d1*fir[1] + d2*fir[2];
+	}
+	return newdata;
+}
+
+
+function Interpolator( app, i ) 
+{
+	var b = 0;
+	var e = app.length-1;
+	while (e-b > 1) 
+	{
+		var m = Math.floor((b+e)/2);
+		if (i >= app[m].x)
+		{
+			b = m;
+		} else {
+			e = m;
+		}
+	};
+	return app[b].y + (i-app[b].x)/(app[e].x-app[b].x)*(app[e].y-app[b].y);
+}
+
+function applyapprox(app, from, to, step)
+{
+	var result = [];
+	for ( var x = from; x < to + step*0.4; x += step )
+	{
+		result[result.length] = Interpolator(app, x);
+	}
+	return result;
+}
+
+function linearapprox(set, points)
+{
+	var app = [{x:0, y:set[0]}, {x:set.length-1, y:set[set.length-1]}];
+	while ( app.length < points )
+	{
+		// find max diff
+		var maxdiff = 0;
+		for (var i=1; i<set.length; i++)
+		{
+			if ( Math.abs(set[i]-Interpolator(app, i)) > Math.abs(set[maxdiff]-Interpolator(app, maxdiff)) )
+			{
+				maxdiff = i;
+			}
+		}
+		// insert
+		for (var i=0; i<app.length; i++)
+		{
+			if ( app[i].x > maxdiff )
+			{
+				// insert at i-th index
+				app.splice(i, 0, {x:maxdiff, y:set[maxdiff]});
+				break;
+			}
+		}
+	}
+	return app;
+}
+
+function copyapprox(source, values)
+{
+	var out = [];
+	for (var i=0; i<source.length; i++)
+		out[i] = {x:source[i].x, y:values[source[i].x]};
+	return out;
+}
+
+function remap(src, shift, mul)
+{
+	var out = []
+	for (var i=0; i<src.length; i++)
+	{
+		out[i] = {x: shift + src[i].x*mul, y:src[i].y};
+	}
+	return out;
+}
+
+var filtered_k = filter(coef_k, [1/4, 2/4, 1/4]); // average
+var filtered_k2 = filter(filtered_k, [1/2, 0, 1/2]); // filters out zig-zag values
+
+var approx_k = linearapprox(filtered_k2, 6);	// find 6-point approximation
+var approxk = remap(approx_k, minpos, stppos);
+
+//var approxout_k = applyapprox(approx_k, 0, filtered_k2.length, 1);
+var approxout_k = applyapprox(approxk, minpos, maxpos, stppos);
+
+var seriesk = [{name:"K", data:coef_k}, {name:"K filtered", data:filtered_k}, {name:"K filtered two pass", data:filtered_k2}, {name:"K 6pt approximation", data:approxout_k}];
+
+var linearq = linearreg(la_q);       
+dbg("coefficient Q approximation: k="+linearq.k.toFixed(3)+" q="+linearq.q.toFixed(3)+" r="+linearq.r.toFixed(5));
+if (linearq.r < 0.999)
+{
+	warning("Q-coefficient cannot be approximated by linear transformation!");
+}
+
+var approxq = [{x:la_q[0].x, y:linearq.q+la_q[0].x*linearq.k}, {x:la_q[la_q.length-1].x, y:linearq.q+linearq.k*la_q[la_q.length-1].x}];
+var approxout_q = applyapprox(approxq, la_q[0].x, la_q[la_q.length-1].x, stppos); //copyapprox(approx, coef_q);
+var seriesq = [{name:"Q", data:coef_q}, {name:"Q linear approximation", data:approxout_q}];
+
+var seriesz = [{name:"zero", data:val_zero}, {name:"1V", data:val_1}, {name:"-1V", data:val_m1}];
+
+	chart();
+	chartk();
+	chartq();
+	chartz();
+
+// generate result
+result("result:");
+dumpapprox(approxk, approxq);
+
+function dumpapprox(apk, apq)
+{
+	var qin = "", qout = "", kin = "", kout = "";
+	for (var i=0; i<apk.length; i++)
+	{
+		if (i > 0)
+		{
+			kin += ", ";
+			kout += ", ";
+		}
+		kin += apk[i].x; 
+		kout += apk[i].y.toFixed(8)+"f"; 
+	}
+	for (var i=0; i<apq.length; i++)
+	{
+		if (i > 0)
+		{
+			qin += ", ";
+			qout += ", ";
+		}
+		qin += apq[i].x; 
+		qout += apq[i].y.toFixed(8)+"f"; 
+	}
+
+var code = 
+	"static float GetVoltage(int nVertPos, float nAdc)\n"+
+	"{\n"+
+	"	static const si16 curveQin[] = {"+qin+"};\n"+
+	"	static const float curveQout[] = {"+qout+"};\n"+
+	"	static CSettings::CalibrationCurve&lt;si16, float, int, float, float, "+apq.length+"&gt; curveQ( curveQin, curveQout );\n"+
+	"\n"+
+	"	static const si16 curveKin[] = {"+kin+"};\n"+
+	"	static const float curveKout[] = {"+kout+"};\n"+
+	"	static CSettings::CalibrationCurve&lt;si16, float, int, float, float, "+apk.length+"&gt; curveK( curveKin, curveKout );\n"+
+	"\n"+
+	"	// for current nVertPos\n"+
+	"	float fCoefK = curveK.Get( nVertPos );\n"+
+	"	float fCoefQ = curveQ.Get( nVertPos );\n"+
+	"	return fCoefQ + nAdc * fCoefK;\n"+
+	"}\n";
+	result("<pre>"+code+"</code>");
+
+	qin = ""; qout = ""; kin = ""; kout = "";
+	for (var i=0; i<apk.length; i++)
+	{
+		if (i > 0)
+		{
+			kin += ", ";
+			kout += ", ";
+		}
+		kin += apk[i].x; 
+		kout += Math.floor(apk[i].y*65536); 
+	}
+	for (var i=0; i<apq.length; i++)
+	{
+		if (i > 0)
+		{
+			qin += ", ";
+			qout += ", ";
+		}
+		qin += apq[i].x; 
+		qout += Math.floor(apq[i].y*65536); 
+	}
+
+
+var code2 = 
+	"static int Correct(int nVertPos, int nAdc)\n"+
+	"{\n"+
+	"	static const si16 curveQin[] = {"+qin+"};\n"+
+	"	static const si32 curveQout[] = {"+qout+"};\n"+
+	"	static CSettings::CalibrationCurve&lt;si16, si32, int, int, int, "+apq.length+"&gt; curveQ( curveQin, curveQout );\n"+
+	"\n"+
+	"	static const si16 curveKin[] = {"+kin+"};\n"+
+	"	static const si32 curveKout[] = {"+kout+"};\n"+
+	"	static CSettings::CalibrationCurve&lt;si16, si32, int, int, int, "+apk.length+"&gt; curveK( curveKin, curveKout );\n"+
+	"\n"+
+	"	// for current nVertPos\n"+
+	"	int nCoefK = curveK.Get( nVertPos );\n"+
+	"	int nCoefQ = curveQ.Get( nVertPos );\n"+
+	"	int nZero = -nCoefQ/nCoefK;\n"+
+	"	return nZero + ( ((nCoefQ + nAdc * nCoefK)*5) >> (16-5) ); // *32/200mV 5=1/200mV\n"+
+	"}\n";
+	result("<pre>"+code2+"</code>");
+
+var code3 = 
+	"static int Zero(int nVertPos)\n"+
+	"{\n"+
+	"	static const si16 curveQin[] = {"+qin+"};\n"+
+	"	static const si32 curveQout[] = {"+qout+"};\n"+
+	"	static CSettings::CalibrationCurve&lt;si16, si32, int, int, int, "+apq.length+"&gt; curveQ( curveQin, curveQout );\n"+
+	"\n"+
+	"	static const si16 curveKin[] = {"+kin+"};\n"+
+	"	static const si32 curveKout[] = {"+kout+"};\n"+
+	"	static CSettings::CalibrationCurve&lt;si16, si32, int, int, int, "+apk.length+"&gt; curveK( curveKin, curveKout );\n"+
+	"\n"+
+	"	// for current nVertPos\n"+
+	"	int nCoefK = curveK.Get( nVertPos );\n"+
+	"	int nCoefQ = curveQ.Get( nVertPos );\n"+
+	"	int nZero = -nCoefQ/nCoefK;\n"+
+	"	return nZero;\n"+
+	"}\n";
+	result("<pre>"+code3+"</code>");
+
+/*
+   X = -q/k
+*/
+
+}
+
+/*
+static float GetVoltage(int nVertPos, float nAdc)
+{
+	static ui16 curveQin[] = {.....};
+	static float curveQout[] = {.....};
+  static CalibrationCurve<ui16, float, int, float, float, 6> curveQ( curveQin, curveQout );
+
+	static ui16 curveKin[] = {.....};
+	static float curveKout[] = {.....};
+  static CalibrationCurve<ui16, float, int, float, float, 6> curveK( curveKin, curveKout );
+
+	// for current nVertPos
+	float fCoefK = curveK.Get( nVertPos );
+	float fCoefQ = curveQ.Get( nVertPos );
+	return fCoefQ + nAdc*nCoefK;
+}
+*/
+function chart() {
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                type: 'line',
+            },
+
+            title: {
+                text: title+'/div calibration curve',
+            },
+						xAxis: { categories: xlabels, title: {text: 'Input voltage [V]'} },
+            yAxis: {
+								max:255,
+								min:0,
+                title: {
+                    text: 'ADC value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+
+            tooltip: {
+                formatter: function() {
+                        return 'Vpos='+ this.series.name +'<br/>'+
+                        "U="+this.x +' ADC='+ this.y;
+                }
+            },
+						series: series
+        });
+    });   
+}
+
+function chartk() 
+{
+    var chart;
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'containerk',
+                type: 'line',
+            },
+
+            title: {
+                text: 'Coeffiecient K',
+            },
+						xAxis: { categories: plabels, title: {text: 'Vertical position'} },
+            yAxis: {
+                title: {
+                    text: 'K value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+						series: seriesk
+        });
+}
+
+function chartq() 
+{
+    var chart;
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'containerq',
+                type: 'line',
+            },
+
+            title: {
+                text: 'Coeffiecient Q',
+            },
+						xAxis: { categories: plabels, title: {text: 'Vertical position'} },
+            yAxis: {
+                title: {
+                    text: 'Q value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+						series: seriesq
+        });
+}
+
+
+function chartz() 
+{
+    var chart;
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'containerz',
+                type: 'line',
+            },
+
+            title: {
+                text: 'Zero voltage',
+            },
+						xAxis: { categories: plabels, title: {text: 'Vertical position'} },
+            yAxis: {
+								max:255,
+								min:0,
+                title: {
+                    text: 'ADC value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+						series: seriesz
+        });
+}
+
+</script>
+
+</body>
+</html>

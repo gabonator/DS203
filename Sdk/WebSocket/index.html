@@ -342,7 +342,7 @@ function Process(msg)
 					ctx.stroke();
 
 					var nCH1avg = nCH1sum / nCH1n, nCH1var = (nCH1sum2 - (nCH1sum*nCH1sum)/nCH1n)/nCH1n;
-					document.getElementById("CH1stats").innerHTML = "avg = " + nCH1avg.toFixed(2) + "<br>var = "+nCH1var.toFixed(2);
+					document.getElementById("CH1stats").innerHTML = "avg = " + nCH1avg.toFixed(3) + "<br>var = "+nCH1var.toFixed(3);
 
 					var nCH2sum = 0, nCH2sum2 = 0, nCH2n = 0;
 					ctx.strokeStyle = '#0ff';
@@ -359,7 +359,7 @@ function Process(msg)
 					ctx.stroke();
 
 					var nCH2avg = nCH2sum / nCH2n, nCH2var = (nCH2sum2 - (nCH2sum*nCH2sum)/nCH2n)/nCH2n;
-					document.getElementById("CH2stats").innerHTML = "avg = " + nCH2avg.toFixed(2) + "<br>var = "+nCH2var.toFixed(2);
+					document.getElementById("CH2stats").innerHTML = "avg = " + nCH2avg.toFixed(3) + "<br>var = "+nCH2var.toFixed(3);
 
 					if (running)
 						setTimeout("WSocket.Send('ADC::Get()');",1500);

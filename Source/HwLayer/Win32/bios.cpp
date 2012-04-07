@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 #include <stdio.h>
 #include <crtdbg.h>
 #include "device.h"
@@ -14,8 +15,11 @@ CRect m_rcBuffer;
 CPoint m_cpBuffer;
 int m_nKeys;
 
+#define RGB565RGB(r, g, b) (((r)>>3)|(((g)>>2)<<5)|(((b)>>3)<<11))
+
 int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch);
 DWORD FROM_565_TO_RGB(unsigned short clr565);
+WORD FROM_RGB_TO_565(unsigned int clrrgb);
 ui8 _Round(int x, int y);
 
 void Assert(const char *msg, int n)
@@ -153,6 +157,30 @@ void Assert(const char *msg, int n)
 				pat = patb;
 		}
 }
+
+/*static*/ void BIOS::LCD::GetImage(const CRect& rcRect, ui16* pBuffer )
+{
+	DWORD *pBuf = (DWORD*)DEVICE->display.GetBuffer();
+	int x1=rcRect.left, x2=rcRect.right, y1=rcRect.top, y2=rcRect.bottom;
+	for (int x=x1; x<x2; x++)
+		for (int y=y2-1; y>=y1; y--)
+		{
+			*pBuffer++ = FROM_RGB_TO_565( pBuf[y*CFrameBuffer::Width+x] );
+
+		}
+}
+
+/*static*/ void BIOS::LCD::PutImage(const CRect& rcRect, ui16* pBuffer )
+{
+	int x1=rcRect.left, x2=rcRect.right, y1=rcRect.top, y2=rcRect.bottom;
+	for (int x=x1; x<x2; x++)
+		for (int y=y2-1; y>=y1; y--)
+		{
+			PutPixel(x, y, *pBuffer++);
+		}
+}
+
+
 /*static*/ int BIOS::LCD::Draw(int x, int y, unsigned short clrf, unsigned short clrb, const char *p)
 {
 	int h = *p++;
@@ -276,6 +304,17 @@ void Assert(const char *msg, int n)
 	return RGB(r, g, b);
 }
 
+/*static*/ WORD FROM_RGB_TO_565(unsigned int clrrgb)
+{
+	int b = clrrgb&0xff;
+	clrrgb >>= 8;
+	int g = clrrgb&0xff;
+	clrrgb >>= 8;
+	int r = clrrgb&0xff;
+
+	return RGB565RGB(r, g, b);
+}
+
 /*static*/ void BIOS::LCD::Buffer(int x, int y, unsigned short* pBuffer, int n)
 {
 	y += n;
@@ -369,7 +408,8 @@ BOOL bADCReady = FALSE;
 	if (lLast == 0)
 		lLast = GetTickCount();
 	bADCReady = (GetTickCount()-lLast) > 100;
-	lLast = lTick;
+	if (bADCReady)
+		lLast = lTick;
 	return bADCReady;
 }
 
@@ -419,7 +459,7 @@ BOOL bADCReady = FALSE;
 	return (PVOID)pSectorBuffer;
 }
 
-/*static*/ BOOL BIOS::DSK::Open(FILEINFO* pFileInfo, si8* strName, ui8 nIoMode)
+/*static*/ BOOL BIOS::DSK::Open(FILEINFO* pFileInfo, const char* strName, ui8 nIoMode)
 {
 	return FALSE;
 }
@@ -456,13 +496,14 @@ void BIOS::Beep(int)
         va_start( args, format );
         print( &bbuf, format, args );
 
+	OutputDebugString( buf );
 	for ( bbuf = buf; *bbuf; bbuf++ )
 	{
 		if ( *bbuf == '\n' || px >= 400-8 )
 		{
 			px = 0;
 			py+=14;
-			if (py > 240)
+			if (py > 240-16)
 				py = 0;
 			continue;
 		}
@@ -490,17 +531,58 @@ void BIOS::Beep(int)
 }
 
 #endif
-/*static*/ void BIOS::DBG::sprintf(char* buf, const char * format, ...)
+/*static*/ int BIOS::DBG::sprintf(char* buf, const char * format, ...)
 {
 	char* bbuf = buf; 
 
         va_list args;
         
         va_start( args, format );
-        print( &bbuf, format, args );
+	return print( &bbuf, format, args );
 }
 
 /*static*/ void BIOS::DelayMs(unsigned short l)
 {
 	Sleep(l);
 }
+
+
+  /*static*/ void BIOS::FFT::Window(si16* arrSignal, const ui16*arrWindowHalf, int n)
+  {
+    short *p = arrSignal;
+    ui32 tmp;
+    for (int i=0; i<n; i++)
+    {
+      tmp = *p;
+      if (i<n/2)
+        tmp *= arrWindowHalf[i];
+      else
+        tmp *= arrWindowHalf[n-i-1];
+      tmp >>= 16;
+      *p = (short)tmp;
+      p+= 2;
+    }
+    
+  }
+
+/*static*/ void BIOS::FFT::Convert( si16* arrOutput, si16* arrInput, int n )
+  {
+_ASSERT(!!!"Not implemented");
+  }
+
+/*static*/ ui32 BIOS::FFT::Sqrt( ui32 value )
+{
+int nv, v = value>>1, c = 0;
+if (!v)
+return value;
+do
+{
+nv = (v + value/v)>>1;
+if (abs(v - nv) <= 1) // I have an available fast absolute value in this forum. If you have it. use the next one.
+return nv;
+v = nv;
+}
+while (c++ < 25);
+return nv;
+}
+

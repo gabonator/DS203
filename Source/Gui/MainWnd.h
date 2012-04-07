@@ -8,7 +8,10 @@
 #include "Others.h"
 #include "Generator/Generator.h"
 #include "MainMenu.h"
-#include "About/Screensaver.h"
+#include "User/Screensaver.h"
+#include "User/Snake.h"
+#include "User/Balls.h"
+#include "User/Calibration.h"
 #include "Spectrum/Spectrum.h"
 
 class CMainWnd : public CWnd
@@ -33,6 +36,9 @@ public:
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
 	CWndScreenSaver		m_wndScreenSaver;
+	CWndSnake			m_wndUserGame;
+	CWndBalls			m_wndUserBalls;
+	CWndCalibration		m_wndUserCalibration;
 	CWndMenuSpectMain	m_wndSpectrumMain;
 
 	CWndModuleSelector	m_wndModuleSel;

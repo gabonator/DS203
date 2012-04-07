@@ -148,12 +148,17 @@ public:
 	void Resize( int nDif )
 	{
 		m_nCount += nDif;
-		_ASSERT( m_nCount >= 0 && m_nCount < m_nMaxCount );
+		_ASSERT( m_nCount >= 0 && m_nCount <= m_nMaxCount );
 	}
 
 	int GetSize()
 	{
 		return m_nCount;
+	}
+
+	void SetSize( int nSize )
+	{
+		m_nCount = nSize;
 	}
 
 	TYPE& operator []( int i)
@@ -163,12 +168,29 @@ public:
 		_ASSERT( i >= 0 && i < GetSize() );
 		return m_arrElements[i];
 	}
+
 	void RemoveAt( int i )
 	{
 		_ASSERT( i < GetSize() );
 		for ( ; i < GetSize()-1; i++ )
 			m_arrElements[i] = m_arrElements[i+1];
 		Resize(-1);
+	}
+
+	void InsertAt( int i, const TYPE& element )
+	{
+		int nSize = GetSize();
+		_ASSERT( i < nSize );
+		Resize(+1);
+
+		for ( int j = nSize-1; j >= i; j-- )
+			m_arrElements[j+1] = m_arrElements[j];
+		m_arrElements[i] = element;
+	}
+
+	void RemoveAll()
+	{
+		m_nCount = 0;
 	}
 };
 

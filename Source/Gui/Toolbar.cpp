@@ -26,7 +26,10 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Authors", NULL},
 
 		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Screen saver", &MainWnd.m_wndScreenSaver},
+		{ CBarItem::ISub,	"Triangle", &MainWnd.m_wndScreenSaver},
+		{ CBarItem::ISub,	"Snake", &MainWnd.m_wndUserGame},
+		{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
+		{ CBarItem::ISub,	"Calibrate", &MainWnd.m_wndUserCalibration},
 
 		{ CBarItem::IEnd,		NULL, NULL }
 	};
@@ -140,11 +143,14 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 
 		for (int i=0; pItems[i].m_eType != CBarItem::IEnd; i++ )
 		{
-			if ( pItems[i].m_eType == CBarItem::IMain && 
+			if ( /*pItems[i].m_eType == CBarItem::IMain &&*/ 
 				 pItems[i].m_pName == strId )
 			{
 				SendMessage( GetParent(), ToWord('L', 'D'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-				m_nFocus = i+1;
+				if ( pItems[i].m_eType == CBarItem::IMain )
+					m_nFocus = i+1;
+				else 
+					m_nFocus = i;
 				SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
 				SetFocus();
 				SendMessage( GetParent(), ToWord('L', 'R'), 0 );

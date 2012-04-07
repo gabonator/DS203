@@ -1,4 +1,6 @@
-#include "Settings.h"
+#include "Settings.h"    
+//#include <Source/HwLayer/bios.h>
+#include <string.h>
 
 CSettings* CSettings::m_pInstance = NULL;
 
@@ -82,5 +84,87 @@ CSettings::CSettings()
 	Gen.nPsc = 180-1;
 	Gen.nArr = 5100;
 
-	calCH1[AnalogChannel::_500mV] = LinearCalibration(-7, 1024*256/182);
+//	calCH1[AnalogChannel::_500mV] = LinearCalibration(-7, 1024*256/182);
+
+	const ui8 _inp[] = {0, 40, 80, 120, 160, 200};
+	const ui8 _out[] = {7*200/256, 40*200/256, 77*200/256, 114*200/256, 152*200/256, 190*200/256};
+
+	memcpy(calPosCH1.inp, _inp, sizeof(_inp));
+	memcpy(calPosCH1.out, _out, sizeof(_out));
+
+/*
+pos=-9 500mV 1x
+0V: 0.015   
+1V: 40.017
+2V: 86.978
+3V: 133.073
+4V: 180.997 
+5V: 228.008
+6V: 255
+*/
+	const ui8 _inp1[] = {0, 40, 87, 133, 181, 228};
+	const ui8 _out1[] = {0, 64, 128, 192, 255, 255};
+	memcpy(calCH1[AnalogChannel::_500mV].inp, _inp1, sizeof(_inp1));
+	memcpy(calCH1[AnalogChannel::_500mV].out, _out1, sizeof(_out1));
+	CH1.u16Position = -9;
+
+/*
+	const float _out_dac[] = {0.0679f, 0.0795f, 0.1733f, 0.4297f, 1.5747f, 2.7179f};
+	const ui16 _inp_dac[] = {0,        128, 256, 640, 2304, 3968};
+	memcpy(calDAC.inp, _out_dac, sizeof(_out_dac));
+	memcpy(calDAC.out, _inp_dac, sizeof(_inp_dac));
+*/
+
+
+	// valid on range 128..4096
+	calDAC.inp[0] = 0.1765;		calDAC.out[0] = 256;
+	calDAC.inp[1] = 1.412;		calDAC.out[1] = 2048;
+
+
+/*
+generator
+GEN::Output(0)	2.859*64/40/32*0.5 = 0.071475 V
+500							13.250*64/40/32*0.5	= 0.33125 V
+1000						27.266 							= 0.68165
+*/
+}
+
+void CSettings::Save()
+{
+/*
+	FILEINFO f;
+
+	if ( !BIOS::DSK::Open(&f, (si8*)"CONFIG  DAT", BIOS::DSK::IoWrite) )
+	{
+		_ASSERT( 0 );
+		return;
+	}
+
+	ui8* pBuffer = (ui8*)this;
+	int nLength = sizeof(CSettings);
+	_ASSERT( nLength < 512 );
+	_ASSERT_VALID( BIOS::DSK::Write(&f, pBuffer ) );
+
+	BIOS::DSK::Close(&f, nLength);
+*/
+}
+
+void CSettings::Load()
+{
+/*
+	FILEINFO f;
+
+	if ( !BIOS::DSK::Open(&f, (si8*)"CONFIG  DAT", BIOS::DSK::IoRead) )
+	{
+		return;
+	}
+
+	ui8* pBuffer = (ui8*)this;
+	int nLength = sizeof(CSettings);
+	_ASSERT( nLength < 512 );
+
+	_ASSERT_VALID( BIOS::DSK::Read(&f, pBuffer ) );
+
+	BIOS::DSK::Close(&f, nLength);
+*/
 }

@@ -30,7 +30,6 @@
 		}
 	};
 
-
 class CSdkEval : public CEval
 {
 public:
@@ -145,7 +144,7 @@ public:
 		static CEvalMappedInteger<NATIVEENUM> resolution( (NATIVEENUM*)&Settings.Time.Resolution );
 		return CEvalOperand( &resolution );
 	}
-
+/*
 	static CEvalOperand _CH1_Calib_p( CArray<CEvalOperand>& arrOperands )
 	{
 		static CEvalMappedInteger<si16> p;
@@ -173,7 +172,7 @@ public:
 		q.Reset( &Settings.calCH2[Settings.CH2.Resolution].nScale );
 		return CEvalOperand( &q );
 	}
-
+*/
 	static CEvalOperand _ENUM_Ampl( CArray<CEvalOperand>& arrOperands )
 	{
 		int nValue = arrOperands.RemoveLast().GetInteger();
@@ -272,7 +271,110 @@ public:
 		BIOS::GEN::ConfigureSq( nPsc, nArr, (nArr+1)>>1 );
 		return CEvalOperand(CEvalOperand::eoNone);
 	}
+/*
 
+*/
+	static CEvalOperand _GenUpdate( CArray<CEvalOperand>& arrOperands )
+	{
+		_SAFE( arrOperands.GetSize() == 1 );
+		_SAFE( arrOperands.GetLast().Is( CEval::CEvalOperand::eoInteger ) );
+		
+		int nLength = arrOperands.RemoveLast().GetInteger();
+		BIOS::GEN::ConfigureWave( CWndMenuGenerator::GetRamDac(), nLength );
+
+		return CEvalOperand::eoNone;
+	}
+/*
+	static CEvalOperand _GenRamDacPtr( CArray<CEvalOperand>& arrOperands )
+	{
+		return CEvalOperand( (int)CWndMenuGenerator::GetRamDac() );
+	}
+*/
+
+	static CEvalOperand _GenOutput( CArray<CEvalOperand>& arrOperands )
+	{
+		static ui16 nDacValue;
+
+		if ( arrOperands.GetLast().Is( CEvalOperand::eoInteger ) )
+		{
+			_SAFE( arrOperands.GetLast().Is( CEvalOperand::eoInteger ) );	
+			int nValue = arrOperands.RemoveLast().GetInteger();
+			if ( nValue < 0 || nValue > 65536 )
+				return CEvalOperand::eoError;
+
+			nDacValue = nValue;
+			BIOS::GEN::ConfigureWave( &nDacValue, 1 );
+		
+			return CEvalOperand(CEvalOperand::eoNone);
+		} else
+		if ( arrOperands.GetLast().Is( CEvalOperand::eoFloat ) )
+		{
+			float fVoltage = arrOperands.RemoveLast().GetFloat();
+
+			ui16 nValue = Settings.calDAC.Get( fVoltage );
+		
+			nDacValue = nValue;
+			BIOS::GEN::ConfigureWave( &nDacValue, 1 );
+		
+			return CEvalOperand(CEvalOperand::eoNone);
+		} else
+		{
+			return CEvalOperand( CEvalOperand::eoError );
+		}
+	}   
+/*
+	static CEvalOperand _MemWrite( CArray<CEvalOperand>& arrOperands )
+	{
+		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);
+
+		_SAFE( arrOperands[-3].Is( CEvalOperand::eoInteger ) );
+		_SAFE( arrOperands[-2].Is( pTokDelim ) );
+		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
+		
+		ui32 nAddress = arrOperands[-3].GetInteger();
+		ui8* pBuffer = (ui8*)nAddress;
+		ui8 nValue = arrOperands[-1].GetInteger();
+
+		*pBuffer = nValue;
+
+		arrOperands.Resize(-3);
+		return CEvalOperand::eoNone;
+		*/
+/*
+		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);		
+
+		_SAFE( arrOperands[0].Is( CEvalOperand::eoInteger ) );
+		ui32 nAddress = arrOperands[0].GetInteger();
+		ui8* pBuffer = (ui8*)nAddress;
+
+		_SAFE( arrOperands[1].Is( pTokDelim ) );
+
+	  for (int i=2; i < arrOperands.GetSize(); i+=2)
+		{
+			_SAFE( arrOperands[i].Is( CEval::CEvalOperand::eoInteger ) );
+			_SAFE( arrOperands[i+1].Is( pTokDelim ) );
+			ui8 bValue = arrOperands[i].GetInteger();
+			*pBuffer++ = bValue;
+		}
+//		arrOperands.RemoveAll();
+		arrOperands.Resize( -arrOperands.GetSize() );
+
+		return CEvalOperand::eoNone;
+*/
+//	}
+/*
+	static CEvalOperand _MemRead( CArray<CEvalOperand>& arrOperands )
+	{
+		// implement with stream and variable length !
+		_SAFE( arrOperands.GetLast().Is( CEvalOperand::eoInteger ) );
+
+		ui32 nAddress = arrOperands.RemoveLast().GetInteger();
+		ui8* pBuffer = (ui8*)nAddress;
+		ui8 nValue = *pBuffer;
+
+		return nValue;
+	}
+*/	
 	static CEvalOperand _Transfer( CArray<CEvalOperand>& arrOperands )
 	{
 		static char strAnswer[32];
@@ -353,16 +455,16 @@ public:
 			CEvalToken( "CH1::Resolution", CEvalToken::PrecedenceVar, _CH1_Resolution ),
 			CEvalToken( "CH1::Color", CEvalToken::PrecedenceVar, _CH1_Color ),
 
-			CEvalToken( "CH1::Calib.p", CEvalToken::PrecedenceVar, _CH1_Calib_p ),
-			CEvalToken( "CH1::Calib.q", CEvalToken::PrecedenceVar, _CH1_Calib_q ),
+//			CEvalToken( "CH1::Calib.p", CEvalToken::PrecedenceVar, _CH1_Calib_p ),
+//			CEvalToken( "CH1::Calib.q", CEvalToken::PrecedenceVar, _CH1_Calib_q ),
 
 			CEvalToken( "CH2::Coupling", CEvalToken::PrecedenceVar, _CH2_Coupling ),
 			CEvalToken( "CH2::Offset", CEvalToken::PrecedenceVar, _CH2_Offset ),
 			CEvalToken( "CH2::Resolution", CEvalToken::PrecedenceVar, _CH2_Resolution ),
 			CEvalToken( "CH2::Color", CEvalToken::PrecedenceVar, _CH2_Color ),
 
-			CEvalToken( "CH2::Calib.p", CEvalToken::PrecedenceVar, _CH2_Calib_p ),
-			CEvalToken( "CH2::Calib.q", CEvalToken::PrecedenceVar, _CH2_Calib_q ),
+//			CEvalToken( "CH2::Calib.p", CEvalToken::PrecedenceVar, _CH2_Calib_p ),
+//			CEvalToken( "CH2::Calib.q", CEvalToken::PrecedenceVar, _CH2_Calib_q ),
 
 			CEvalToken( "TIME::Offset", CEvalToken::PrecedenceVar, _TIME_Offset ),
 			CEvalToken( "TIME::Resolution", CEvalToken::PrecedenceVar, _TIME_Resolution ),
@@ -373,6 +475,13 @@ public:
 			CEvalToken( "ENUM::Ampl", CEvalToken::PrecedenceFunc, _ENUM_Ampl ),
 
 			CEvalToken( "GEN::Square", CEvalToken::PrecedenceFunc, _GEN_Square ),
+			CEvalToken( "GEN::Update", CEvalToken::PrecedenceFunc, _GenUpdate ),
+	//		CEvalToken( "GEN::RamDacPtr", CEvalToken::PrecedenceConst, _GenRamDacPtr ),
+			CEvalToken( "GEN::Output", CEvalToken::PrecedenceFunc, _GenOutput ),
+
+	//		CEvalToken( "MEM::Write", CEvalToken::PrecedenceConst, _MemWrite ),
+	//		CEvalToken( "MEM::Read", CEvalToken::PrecedenceFunc, _MemRead ),
+
 
 			CEvalToken( "Print", CEvalToken::PrecedenceFunc, _Print ),
 			CEvalToken( "Beep", CEvalToken::PrecedenceFunc, _Beep ),
