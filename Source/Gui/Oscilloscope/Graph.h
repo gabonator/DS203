@@ -135,6 +135,10 @@ class CWndOscGraph : public CWndGraph
 		for (i=0; i<Settings.Time.Shift; i++)
 			BIOS::ADC::Get();
 
+		CSettings::Calibrator::FastCalc Ch1fast, Ch2fast;
+		Settings.CH1Calib.Prepare( &Settings.CH1, Ch1fast );
+		Settings.CH2Calib.Prepare( &Settings.CH2, Ch2fast );
+
 		for (ui16 x=0; x<nMax; x++)
 		{
 			_PrepareColumn( column, x, (nTriggerTime != x) ? 0x01 : 0x00 );
@@ -143,7 +147,8 @@ class CWndOscGraph : public CWndGraph
 			if ( en2 )
 			{
 				si16 ch2 = (ui8)((val>>8) & 0xff);
-				ch2 = CSettings::Correct(Settings.CH1.u16Position, ch2);
+				//ch2 = CSettings::Correct(Settings.CH1.u16Position, ch2);
+				ch2 = Settings.CH2Calib.Correct( Ch2fast, ch2 );
 				if ( ch2 < 0 ) 
 					ch2 = 0;
 				if ( ch2 > 255 ) 
@@ -155,7 +160,8 @@ class CWndOscGraph : public CWndGraph
 			if ( en1 )
 			{
 				si16 ch1 = (ui8)((val) & 0xff);
-				ch1 = CSettings::Correct(Settings.CH1.u16Position, ch1);
+//				ch1 = CSettings::Correct(Settings.CH1.u16Position, ch1);
+				ch1 = Settings.CH1Calib.Correct( Ch1fast, ch1 );
 				if ( ch1 < 0 ) 
 					ch1 = 0;
 				if ( ch1 > 255 ) 

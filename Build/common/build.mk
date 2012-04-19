@@ -4,10 +4,10 @@
 
 # files 
 
-OBJS := cbios.o Application.o Main.o stm32f10x_nvic.o cortexm3_macro.o interrupt.o startup.o Generator.o Graph.o Controls.o Settings.o Utils.o Wnd.o MainWnd.o MenuInput.o Toolbar.o MainMenu.o FFTCM3.o MenuSpectMain.o Calibration.o
+OBJS := cbios.o Application.o Main.o stm32f10x_nvic.o cortexm3_macro.o interrupt.o startup.o Generator.o Graph.o Controls.o Settings.o Utils.o Wnd.o MainWnd.o MenuInput.o Toolbar.o MainMenu.o FFTCM3.o MenuSpectMain.o Calibration.o Meter.o
 C_SRCS := ../Source/HwLayer/ArmM3/stm32f10x/src/stm32f10x_nvic.c ../Source/HwLayer/ArmM3/src/interrupt.c ../Source/HwLayer/ArmM3/src/startup.c
 ASM_SRCS := ../Source/HwLayer/ArmM3/stm32f10x/asm/cortexm3_macro.s ../Source/HwLayer/ArmM3/src/BIOS.S ..\Source\HwLayer\ArmM3\bios\FFTCM3.S
-CPP_SRCS := ../Source/HwLayer/ArmM3/src/main.cpp ../Source/HwLayer/ArmM3/src/cbios.cpp ../Source/Core/Controls.cpp ../Source/Core/Settings.cpp ../Source/Core/Utils.cpp ../Source/Framework/Wnd.cpp ../Source/Gui/Generator/Generator.cpp ../Source/Gui/Oscilloscope/Graph.cpp ../Source/Gui/MainWnd.cpp ../Source/Gui/Oscilloscope/Input/MenuInput.cpp ../Source/Main/Application.cpp ../Source/Gui/Toolbar.cpp ../Source/Gui/MainMenu.cpp ../Source/Gui/Spectrum/MenuSpectMain.cpp ../Source/Gui/User/Calibration.cpp
+CPP_SRCS := ../Source/HwLayer/ArmM3/src/main.cpp ../Source/HwLayer/ArmM3/src/cbios.cpp ../Source/Core/Controls.cpp ../Source/Core/Settings.cpp ../Source/Core/Utils.cpp ../Source/Framework/Wnd.cpp ../Source/Gui/Generator/Generator.cpp ../Source/Gui/Oscilloscope/Graph.cpp ../Source/Gui/MainWnd.cpp ../Source/Gui/Oscilloscope/Input/MenuInput.cpp ../Source/Main/Application.cpp ../Source/Gui/Toolbar.cpp ../Source/Gui/MainMenu.cpp ../Source/Gui/Spectrum/MenuSpectMain.cpp ../Source/Gui/User/Calibration.cpp ../Source/Gui/User/Meter.cpp
 
 
 

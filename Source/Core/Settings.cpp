@@ -37,7 +37,7 @@ CSettings::CSettings()
 	CH1.pszName = "CH1";
 	CH1.pszFullName = "Analog input: CH1";
 	CH1.Coupling = AnalogChannel::_DC;
-	CH1.Resolution = AnalogChannel::_500mV;
+	CH1.Resolution = AnalogChannel::_200mV;
 	CH1.Probe = AnalogChannel::_1X;
 	CH1.u16Color = RGB565(ffff00);
 	CH1.u16Position = 55;
@@ -84,8 +84,9 @@ CSettings::CSettings()
 	Gen.nPsc = 180-1;
 	Gen.nArr = 5100;
 
+	ResetCalibration();
 //	calCH1[AnalogChannel::_500mV] = LinearCalibration(-7, 1024*256/182);
-
+#if 0
 	const ui8 _inp[] = {0, 40, 80, 120, 160, 200};
 	const ui8 _out[] = {7*200/256, 40*200/256, 77*200/256, 114*200/256, 152*200/256, 190*200/256};
 
@@ -116,9 +117,6 @@ pos=-9 500mV 1x
 */
 
 
-	// valid on range 128..4096
-	calDAC.inp[0] = 0.1765;		calDAC.out[0] = 256;
-	calDAC.inp[1] = 1.412;		calDAC.out[1] = 2048;
 
 
 /*
@@ -127,6 +125,7 @@ GEN::Output(0)	2.859*64/40/32*0.5 = 0.071475 V
 500							13.250*64/40/32*0.5	= 0.33125 V
 1000						27.266 							= 0.68165
 */
+#endif
 }
 
 void CSettings::Save()
@@ -167,4 +166,40 @@ void CSettings::Load()
 
 	BIOS::DSK::Close(&f, nLength);
 */
+}
+
+void CSettings::ResetCalibration()
+{
+	// valid on range 128..4096
+	DacCalib.m_arrCurveIn[0] = 0.1765f;	DacCalib.m_arrCurveOut[0] = 256;
+	DacCalib.m_arrCurveIn[1] = 1.412f;	DacCalib.m_arrCurveOut[1] = 2048;
+
+	const static si16 defaultQin[] = {0, 256};
+	const static si32 defaultQout[] = {0, 0};
+	const static si16 defaultKin[] = {0, 0, 0, 0, 0, 256};
+	const static si32 defaultKout[] = {2048, 2048, 2048, 2048, 2048, 2048};
+
+	for ( int i = 0; i < AnalogChannel::_ResolutionMax; i++ )
+	{
+		memcpy( CH1Calib.CalData[i].m_arrCurveQin, defaultQin, sizeof(defaultQin) );
+		memcpy( CH1Calib.CalData[i].m_arrCurveQout, defaultQout, sizeof(defaultQout) );
+		memcpy( CH1Calib.CalData[i].m_arrCurveKin, defaultKin, sizeof(defaultKin) );
+		memcpy( CH1Calib.CalData[i].m_arrCurveKout, defaultKout, sizeof(defaultKout) );
+
+		memcpy( CH2Calib.CalData[i].m_arrCurveQin, defaultQin, sizeof(defaultQin) );
+		memcpy( CH2Calib.CalData[i].m_arrCurveQout, defaultQout, sizeof(defaultQout) );
+		memcpy( CH2Calib.CalData[i].m_arrCurveKin, defaultKin, sizeof(defaultKin) );
+		memcpy( CH2Calib.CalData[i].m_arrCurveKout, defaultKout, sizeof(defaultKout) );
+	}
+
+	#define CONCAT2(x, y) x ## y
+	#define CONCAT(x, y) CONCAT2(x, y)
+	#define _COPY(type, target, ...) \
+		const static type CONCAT(tmp,__LINE__)[] = __VA_ARGS__; \
+		memcpy( target, CONCAT(tmp,__LINE__), sizeof(CONCAT(tmp,__LINE__)) );
+
+	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQin, {-20, 280} );
+	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQout, {9380*5, -154816*5} );
+	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKin, {-20, 15, 75, 90, 245, 280} );
+	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKout, {581*5, 580*5, 581*5, 582*5, 584*5, 580*5} );
 }

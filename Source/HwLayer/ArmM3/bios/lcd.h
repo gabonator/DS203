@@ -132,6 +132,12 @@ CPoint m_cpBuffer;
   __LCD_SetPixl(clr);
 }
 
+/*static*/ ui16 BIOS::LCD::GetPixel(int x, int y)
+{
+  __Point_SCR(x, 239-y);
+  return __LCD_GetPixl();
+}
+
 /*static*/ void BIOS::LCD::Rectangle(const CRect& rc, unsigned short clr)
 {
 	BIOS::LCD::Bar(rc.left, rc.top, rc.right, rc.top+1, clr);

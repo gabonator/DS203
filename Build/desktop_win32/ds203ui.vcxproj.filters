@@ -183,6 +183,12 @@
     <ClInclude Include="..\..\Source\Gui\User\Calibration.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\Meter.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Calibration.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -244,6 +250,9 @@
       <Filter>Source\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Calibration.cpp">
+      <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
       <Filter>Source\Gui\User</Filter>
     </ClCompile>
   </ItemGroup>

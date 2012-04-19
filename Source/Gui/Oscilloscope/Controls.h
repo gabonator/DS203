@@ -20,9 +20,11 @@ public:
 		}
 		if ( Settings.CH2.Enabled )
 		{
-			ui16 y = Settings.CH2.u16Position;
-
-			y = CSettings::GetZero(y);
+			//ui16 y = Settings.CH2.u16Position;
+			//y = CSettings::GetZero(y);
+			CSettings::Calibrator::FastCalc fastCalc;
+			Settings.CH2Calib.Prepare( &Settings.CH2, fastCalc );
+			ui16 y = Settings.CH2Calib.GetZero( fastCalc );
 			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
 
 			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
@@ -30,13 +32,19 @@ public:
 		}
 		if ( Settings.CH1.Enabled )
 		{
-			si16 y = Settings.CH1.u16Position;
+			//si16 y = Settings.CH1.u16Position;
+			//y = CSettings::GetZero(y);
+			CSettings::Calibrator::FastCalc fastCalc;
+			Settings.CH1Calib.Prepare( &Settings.CH1, fastCalc );
+			si16 y = Settings.CH1Calib.GetZero( fastCalc );
 
-			y = CSettings::GetZero(y);
 			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
-
-			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
-				Settings.CH1.u16Color, RGBTRANS, cha_base );
+			int nScrY =  m_rcClient.bottom - y-5;
+			if ( nScrY >= 0 && nScrY+7 < BIOS::LCD::LcdHeight ) 
+			{
+				BIOS::LCD::Draw( m_rcClient.left, nScrY, 
+					Settings.CH1.u16Color, RGBTRANS, cha_base );
+			}
 		}
 	}
 };

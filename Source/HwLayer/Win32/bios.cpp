@@ -34,11 +34,20 @@ void Assert(const char *msg, int n)
 /*static*/ int BIOS::LCD::Printf (int x, int y, unsigned short clrf, unsigned short clrb, const char * format, ...)
 {
 	char buffer[256];
+	/*
 	va_list args;
 	va_start (args, format);
 	vsnprintf_s (buffer, 256, 255, format, args);
 	int nAux = Print (x, y, clrf, clrb, buffer);
 	va_end (args);
+	*/
+
+	char* bbuf = buffer; 
+    va_list args;
+    va_start( args, format );
+	int nAux = print( &bbuf, format, args );
+	Print( x, y, clrf, clrb, buffer );
+
 	return nAux;
 }
        
@@ -95,6 +104,12 @@ void Assert(const char *msg, int n)
 		return;
 	DWORD *pBuf = (DWORD*)DEVICE->display.GetBuffer();
 	pBuf[y*CFrameBuffer::Width+x] = FROM_565_TO_RGB(clr);
+}
+
+/*static*/ ui16 BIOS::LCD::GetPixel(int x, int y)
+{
+	DWORD *pBuf = (DWORD*)DEVICE->display.GetBuffer();
+	return FROM_RGB_TO_565( pBuf[y*CFrameBuffer::Width+x] );
 }
 
 /*static*/ void BIOS::LCD::PutPixel(const CPoint& cp, unsigned short clr)

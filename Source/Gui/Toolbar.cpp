@@ -29,7 +29,8 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Triangle", &MainWnd.m_wndScreenSaver},
 		{ CBarItem::ISub,	"Snake", &MainWnd.m_wndUserGame},
 		{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
-		{ CBarItem::ISub,	"Calibrate", &MainWnd.m_wndUserCalibration},
+		{ CBarItem::ISub,	"Calib", &MainWnd.m_wndUserCalibration},
+		{ CBarItem::ISub,	"Meter", &MainWnd.m_wndUserMeter},
 
 		{ CBarItem::IEnd,		NULL, NULL }
 	};

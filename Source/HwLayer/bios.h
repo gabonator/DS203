@@ -36,6 +36,7 @@ public:
 		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, const char* str);
 		static int Print (const CPoint& cp, unsigned short clrf, char *str);
 		static void Line(int x1, int y1, int x2, int y2, unsigned short clr);
+		static ui16 GetPixel(int x, int y);
 		static void PutPixel(int x, int y, unsigned short clr);
 		static void PutPixel(const CPoint& cp, unsigned short clr);
 		static void Clear(unsigned short clr);

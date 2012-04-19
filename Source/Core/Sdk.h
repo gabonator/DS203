@@ -311,7 +311,7 @@ public:
 		{
 			float fVoltage = arrOperands.RemoveLast().GetFloat();
 
-			ui16 nValue = Settings.calDAC.Get( fVoltage );
+			ui16 nValue = Settings.DacCalib.Get( fVoltage );
 		
 			nDacValue = nValue;
 			BIOS::GEN::ConfigureWave( &nDacValue, 1 );

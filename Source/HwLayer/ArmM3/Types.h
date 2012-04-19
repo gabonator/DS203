@@ -52,6 +52,9 @@ typedef ui32 UINT;
 #ifndef max
 #	define max(a, b) ((a)>(b)?(a):(b))
 #endif
+#ifndef abs
+#	define abs(a) ((a)>0?(a):(-(a)))
+#endif
 
 #define NATIVEPTR ui32
 #define NATIVEENUM unsigned char

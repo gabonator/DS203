@@ -12,6 +12,7 @@
 #include "User/Snake.h"
 #include "User/Balls.h"
 #include "User/Calibration.h"
+#include "User/Meter.h"
 #include "Spectrum/Spectrum.h"
 
 class CMainWnd : public CWnd
@@ -39,6 +40,7 @@ public:
 	CWndSnake			m_wndUserGame;
 	CWndBalls			m_wndUserBalls;
 	CWndCalibration		m_wndUserCalibration;
+	CWndUserMeter		m_wndUserMeter;
 	CWndMenuSpectMain	m_wndSpectrumMain;
 
 	CWndModuleSelector	m_wndModuleSel;

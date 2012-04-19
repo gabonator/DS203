@@ -20,7 +20,10 @@ public:
 	virtual void OnPaint()
 	{
 		if ( GetFocus() == this )
+		{
 			BIOS::LCD::Print( 40, 40, RGB565(000000), RGB565(ffffff), "Press enter to start calibration" );
+			BIOS::LCD::Print( 40, 56, RGB565(ffffff), RGB565(000000), "Connect wave out to selected channel" );
+		}
 		else
 			BIOS::LCD::Print( 40, 40, RGB565(ffffff), RGB565(000000), "Press down to enable this window" );		
 	}

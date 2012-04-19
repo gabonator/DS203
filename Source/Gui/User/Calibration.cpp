@@ -149,14 +149,18 @@ class CCalibration
 public:
 	enum {
 		EResolution = CSettings::AnalogChannel::_200mV,
-		EMaxPPoints = (280+15)/5, // vertical positions
-		EMaxVPoints = (2500-100)/100, // voltages 
-		EVertMin = -15,
+//		EMaxPPoints = (280+20)/5, // vertical positions
+//		EMaxVPoints = (2500-100)/100, // voltages 
+
+		EVertMin = -20,
 		EVertMax = 280,
 		EVertStep = 5,		
 		EVoltMinMv = 100, // 0.1V
 		EVoltMaxMv = 2500, // 2.5V
-		EVoltStepMv = 100 // 0.1V
+		EVoltStepMv = 100, // 0.1V
+		EMaxPPoints = (EVertMax-EVertMin)/EVertStep, // vertical positions
+		EMaxVPoints = (EVoltMaxMv-EVoltMinMv)/EVoltStepMv, // voltages 
+
 	};
 /*
 	enum {
@@ -249,7 +253,7 @@ public:
 	{
 		static ui16 nDacValue;
 
-		ui16 nValue = Settings.calDAC.Get( fVoltage );
+		ui16 nValue = Settings.DacCalib.Get( fVoltage );
 
 		nDacValue = nValue;
 		BIOS::GEN::ConfigureWave( &nDacValue, 1 );
@@ -280,7 +284,7 @@ public:
 		KqPair arrKq_[EMaxPPoints];
 		CArray <KqPair> arrKq( arrKq_, COUNT(arrKq_) );
 
-		for ( nVertPos = EVertMin; nVertPos < EVertMax; nVertPos += EVertStep )
+		for ( nVertPos = EVertMin; nVertPos <= EVertMax; nVertPos += EVertStep )
 		{
 			SetVertPos();
 			CWndMenuInput::ConfigureAdc();
@@ -407,7 +411,7 @@ public:
 		{
 			if ( i > 0 )
 				pBuffer += BIOS::DBG::sprintf( pBuffer, ", " );
-			pBuffer += BIOS::DBG::sprintf( pBuffer, "{x:%1f, y:%8f}", _F(arrK[i].getx()), _F(arrK[i].gety()));
+			pBuffer += BIOS::DBG::sprintf( pBuffer, "{x:%d, y:%d}", (int)arrK[i].getx(), (int)(arrK[i].gety()*65536.0f));
 		}
 
 		pBuffer += BIOS::DBG::sprintf( pBuffer, "]\n" );
@@ -417,7 +421,7 @@ public:
 		{
 			if ( i > 0 )
 				pBuffer += BIOS::DBG::sprintf( pBuffer, ", " );
-			pBuffer += BIOS::DBG::sprintf( pBuffer, "{x:%1f, y:%8f}", _F(arrQ[i].getx()), _F(arrQ[i].gety()));
+			pBuffer += BIOS::DBG::sprintf( pBuffer, "{x:%d, y:%d}", (int)arrQ[i].getx(), (int)(arrQ[i].gety()*65536.0f));
 		}
 
 		pBuffer += BIOS::DBG::sprintf( pBuffer, "]\n" );

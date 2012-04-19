@@ -2,7 +2,6 @@
 #define __SETTINGS_H__
 
 #define Settings (*CSettings::m_pInstance)
-//#include <Source/HwLayer/bios.h>
 #include <Source/HwLayer/Types.h>
 
 class CSettings
@@ -11,94 +10,6 @@ public:
 	static CSettings* m_pInstance;
 
 public:
-	class LinearCalibration
-	{
-	public:
-		si16 nOffset;
-		ui16 nScale;
-
-		si16 Apply( si16 nInput )
-		{
-			si32 nTemp = nInput + nOffset;
-			nTemp *= nScale;
-			nTemp >>= 10; // div 1024
-			return (si16)nTemp;
-		}
-
-		LinearCalibration()
-		{
-			// set identity
-			nOffset = 0;
-			nScale = 1024;
-		}
-
-		LinearCalibration(si16 nOffset_, ui16 nScale_) :
-			nOffset( nOffset_ ), nScale( nScale_ )
-		{
-		}
-
-	};
-
-	// input_storage_class, output_storage_class, input_variabe, output_variable, internal_calculations, length
-	template <class Ttabin, class Ttabout, class Tvarin, class Tvarout, class Tcalc, int N_>
-	class CalibrationCurve
-	{
-	public:
-		Ttabin inp[N_];
-		Ttabout out[N_];
-
-		CalibrationCurve()
-		{
-			for ( int i=0; i<(int)COUNT(inp); i++ )
-			{
-				Tcalc t = 255*i/COUNT(inp);
-				inp[i] = (Ttabin)t;
-				out[i] = (Ttabout)t;
-			}
-		}
-
-		CalibrationCurve(const Ttabin* tin, const Ttabout* tout)
-		{
-			for ( int i=0; i<(int)COUNT(inp); i++ )
-			{
-				inp[i] = tin[i];
-				out[i] = tout[i];
-			}
-		}
-
-		Tvarout Get( Tvarin i )
-		{
-			int b = 0, e = COUNT(inp)-1;
-			while ( e-b > 1 )	
-			{
-				int m = (b+e) >> 1;
-				if ( i >= inp[m] )
-					b = m;
-				else
-					e = m;
-			}
-			if (sizeof(Tvarin) == sizeof(float))
-			{
-//			BIOS::DBG::Print("CC: b=%d, e=%d\n", b, e);
-			}
-
-			Tcalc nTmp = (Tcalc)(i - inp[b]);
-			nTmp *= out[e] - out[b];
-			nTmp /= inp[e] - inp[b];
-			nTmp += out[b];
-			return (Tvarout)nTmp;
-
-//			return (Tout)( (i - inp[b]) * (out[e] - out[b]) / (inp[e] - inp[b]) + out[b] ); 
-/*
-			Tin nTmp = i - inp[b];
-			nTmp *= out[e] - out[b];
-			nTmp /= inp[e] - inp[b];
-			nTmp += out[b];
-			return (Tout)nTmp;
-*/
-		}		
-	};
-
 	struct AnalogChannel
 	{
 		static const char* const ppszTextEnabled[];
@@ -178,6 +89,9 @@ public:
 	};
 
 public:
+	#include "Calibration.h"
+	
+public:
 	AnalogChannel CH1;
 	AnalogChannel CH2;
 	DigitalChannel CH3;
@@ -186,16 +100,13 @@ public:
 	Trigger Trig;
 	Generator Gen;
 
-	typedef CalibrationCurve<ui8, ui8, int, int, int, 6> ChannelCalibrationCurve;
-	ChannelCalibrationCurve calCH1[AnalogChannel::_ResolutionMax];
-	ChannelCalibrationCurve calCH2[AnalogChannel::_ResolutionMax];
-	ChannelCalibrationCurve calPosCH1;
-	CalibrationCurve<float, ui16, float, int, float, 2> calDAC;
-
-#include "Calibrate.h"
+	Calibrator	CH1Calib;
+	Calibrator	CH2Calib;
+	LinApprox	DacCalib;
 
 	CSettings();
 	void Save();
 	void Load();
+	void ResetCalibration();
 };
 #endif

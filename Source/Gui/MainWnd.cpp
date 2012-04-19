@@ -43,6 +43,7 @@ void CMainWnd::Create()
 
 	m_wndUserGame.Create( this, WsHidden );
 	m_wndUserBalls.Create( this, WsHidden );
+	m_wndUserMeter.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
 
 	m_wndUserCalibration.Create( this, WsHidden );
@@ -50,7 +51,7 @@ void CMainWnd::Create()
 	m_wndToolBar.m_nFocus = 1;
 	m_wndToolBar.SetFocus();
 
-	SendMessage( &m_wndToolBar, ToWord('g', 'o'), (ui32)"Balls");
+	SendMessage( &m_wndToolBar, ToWord('g', 'o'), (ui32)"Meter");
 	//m_wndMenuInput.m_itmCH1.SetFocus();
 	//m_wndMenuGenerator.m_itmBpm.SetFocus();
 	//OnMessage( &m_wndToolBar, ToWord('f', 'c'), 0 ); // force update
