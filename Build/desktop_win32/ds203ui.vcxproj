@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Calibration.h" />
+    <ClInclude Include="..\..\Source\Core\Serialize.h" />
     <ClInclude Include="..\..\Source\Gui\User\Balls.h" />
     <ClInclude Include="..\..\Source\Gui\User\Calibration.h" />
     <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
@@ -132,6 +133,7 @@
     <ResourceCompile Include="ds203ui.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Core\Serialize.cpp" />
     <ClCompile Include="..\..\Source\Gui\User\Calibration.cpp" />
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp" />

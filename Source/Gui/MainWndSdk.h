@@ -9,7 +9,7 @@ public:
 	int m_nSimpleLen;
 	int m_nStreamLen;
 	int m_nSimplePos;
-  bool m_bTerminator;
+	bool m_bTerminator;
 	CEval::CStream* m_pStream;
 
   void Evaluate( PSTR pszExpression )

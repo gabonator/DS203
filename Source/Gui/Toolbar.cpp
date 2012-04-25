@@ -120,6 +120,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		m_nFocus--;
 		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
 		SendMessage( GetParent(), ToWord('L', 'R'), 0 );
+		Settings.Runtime.m_nMenuItem = m_nFocus;
 	}
 
 	if ( nKey & BIOS::KEY::KeyRight && GetMenuItems()[m_nFocus+1].m_eType != CBarItem::IEnd )
@@ -131,12 +132,21 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		m_nFocus++;
 		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
 		SendMessage( GetParent(), ToWord('L', 'R'), 0 );
+		Settings.Runtime.m_nMenuItem = m_nFocus;
 	}
 	CWnd::OnKey( nKey );
 }
 
 /*virtual*/ void CWndToolBar::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
+	if ( code == ToWord('g', 'i') )
+	{
+		CBarItem *pItems = GetMenuItems();
+		m_nFocus = (ui8)data;
+		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
+		SetFocus();
+	}
+
 	if ( code == ToWord('g', 'o') )
 	{
 		const char* strId = (const char*)data;
@@ -155,6 +165,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 				SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
 				SetFocus();
 				SendMessage( GetParent(), ToWord('L', 'R'), 0 );
+				Settings.Runtime.m_nMenuItem = m_nFocus;
 				return;
 			}
 		}

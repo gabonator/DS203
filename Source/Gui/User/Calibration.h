@@ -14,7 +14,7 @@ public:
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndCalibration", dwFlags, CRect(0, 16, 400, 240), pParent);
+		CWnd::Create("CWndCalibration", dwFlags | CWnd::WsListener, CRect(0, 16, 400, 240), pParent);
 	}
 
 	virtual void OnPaint()
@@ -30,6 +30,11 @@ public:
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{
+		if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
+		{
+			OnWave();
+			return;
+		}
 		// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
 		if (code == ToWord('L', 'D') )
 		{
@@ -39,12 +44,6 @@ public:
 		if (code == ToWord('L', 'E') )
 		{
 			OnInit();
-			return;
-		}
-
-		if (code == ToWord('d', 'g') )
-		{
-			OnWave();
 			return;
 		}
 	}

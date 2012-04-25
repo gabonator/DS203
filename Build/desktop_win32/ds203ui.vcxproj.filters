@@ -189,6 +189,9 @@
     <ClInclude Include="..\..\Source\Core\Calibration.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Serialize.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -254,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
       <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Serialize.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -50,12 +50,12 @@ public:
 class CWndZoomBar : public CWnd
 {
 public:
-	virtual void Create(CWnd* pParent, CWnd* pGraph) 
+	virtual void Create(CWnd* pParent, ui16 nFlags, CWnd* pGraph) 
 	{
 		CRect rcClient( pGraph->m_rcClient );
 		rcClient.top = rcClient.bottom + 4;
 		rcClient.bottom = rcClient.top + 7;
-		CWnd::Create("CWndZoomBar", WsVisible | WsNoActivate, rcClient, pParent);
+		CWnd::Create("CWndZoomBar", nFlags | WsNoActivate, rcClient, pParent);
 	}
 
 	virtual void OnPaint()
@@ -98,6 +98,21 @@ class CWndOscGraph : public CWndGraph
 		{
 			for (ui16 y=BlkY; y<DivsY*BlkY-1; y += BlkY)
 				column[y] = RGB565(808080);
+		}
+	}
+
+public:
+	virtual void Create(CWnd *pParent, ui16 dwFlags) 
+	{
+		CWndGraph::Create( pParent, dwFlags | CWnd::WsListener );
+	}
+
+	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
+	{
+		if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
+		{
+			Invalidate();
+			return;
 		}
 	}
 

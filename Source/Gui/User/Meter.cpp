@@ -15,43 +15,23 @@ void CWndUserMeter::OnPaint()
 	ui16 cOn = RGB565(000000);
 	ui16 cOff = RGB565(e0e0e0);
 	ui16 cClr = RGB565(ffffff);
-	if ( bFirst )
+
+	if ( bRefresh )
 	{
 		BIOS::LCD::Bar( m_rcClient, cClr );
-		//bFirst = false;
+		bRefresh = false;
 	}
 
-	if ( GetFocus() == this )
-		BIOS::LCD::Printf( 8, 220, RGB565(808080), RGB565(ffffff), "adc=%3f cal=%3f var=%3f range=%s ",
-			m_fAverage, fCorrect, m_fVariance, CSettings::AnalogChannel::ppszTextResolution[Settings.CH1.Resolution]);
-	else
-	{
-		strcpy(strDisplay, "????");
-		BIOS::LCD::Print( 20, 220, RGB565(808080), RGB565(ffffff), " Press down to activate this window ");
-	}
+	BIOS::LCD::Printf( 8, 220, RGB565(808080), RGB565(ffffff), "adc=%3f cal=%3f var=%3f range=%s ",
+		m_fAverage, fCorrect, m_fVariance, CSettings::AnalogChannel::ppszTextResolution[Settings.CH1.Resolution]);
+
 	if ( m_fAverage < 16 || m_fAverage > 240 )
 		strcpy(strDisplay, " Err");
-		
-
 
 	const char* pDisplay = strDisplay;
 	int i;
 	for (i=0; *pDisplay && i < 4; i++, pDisplay++)
 	{
-		/*
-		int nDigit = 15;
-		if ( *pDisplay == '-' )
-			nDigit = 10;
-		else
-		if ( *pDisplay >= '0' && *pDisplay <= '9' )
-			nDigit = *pDisplay - '0';
-
-		if ( pDisplay[1] == '.' )
-		{
-			nDigit |= 0x10;
-			pDisplay++;
-		}
-		*/
 		int nDigit = *pDisplay;
 		if ( pDisplay[1] == '.' )
 		{
@@ -66,12 +46,6 @@ void CWndUserMeter::OnPaint()
 
 void DrawDigitH0(int x, int y, ui16 clr)
 {
-	/*
-	for (int i=0; i<16; i++)
-	{
-		int nShift = abs(i-8);
-		BIOS::LCD::Line( x+nShift, y+i, x+60-nShift, y+i, clr );
-	}*/
 	if ( clr == RGB565(ff00ff) )
 		return;
 	BIOS::LCD::Bar( x, y, x+60, y+16, clr ); 
@@ -79,13 +53,6 @@ void DrawDigitH0(int x, int y, ui16 clr)
 
 void DrawDigitV0(int x, int y, ui16 clr)
 {
-/*
-	for (int i=0; i<16; i++)
-	{
-		int nShift = abs(i-8);
-		BIOS::LCD::Line( x+i, y+nShift, x+i, y+60-nShift, clr );
-	}
-	*/
 	if ( clr == RGB565(ff00ff) )
 		return;
 	BIOS::LCD::Bar( x, y, x+16, y+60, clr ); 
@@ -119,14 +86,7 @@ void CWndUserMeter::DrawDigit(int x, int y, int nDigit, ui16 clrOn, ui16 clrOff)
 		case 'r': dec = 0x0000101; break;
 		}
 	}
-	/*
-	ui32 dec = 0;
-	if ( (n & 0xf) >= 0 && (n & 0xf) <= 10 )
-		dec = decoder[n&0xf];
 
-	if (n&0x10)
-		dec |= 0x10000000;
-		*/
 	#define EN(n) ( dec>>(28-n*4)&1 ) ? RGB565(ff00ff) : clrOff
  	DrawDigitH0( x, y, EN(1) ); // horny
 	DrawDigitH0( x, y+62, EN(7) ); // stredny
@@ -151,6 +111,9 @@ void CWndUserMeter::DrawDigit(int x, int y, int nDigit, ui16 clrOn, ui16 clrOff)
 
 void CWndUserMeter::OnWave()
 {
+	if (bTimer)
+		return;
+
 	int nSum = 0;
 	int nMax = -1, nMin = -1;
 	for (int i=0; i</*BIOS::ADC::Length()*/ 4096; i++)
@@ -168,13 +131,14 @@ void CWndUserMeter::OnWave()
 
 	m_fAverage = (float)nSum/4096.0f;
 	m_fVariance = (nMax-nMin)/4.0f;	// pseudo variance :)
+	KillTimer();
 	SetTimer(100);
+	bTimer = true;
 }
 
 /*virtual*/ void CWndUserMeter::OnTimer()
 {
+	bTimer = false;
 	KillTimer();
-	bFirst = false;
 	Invalidate();
-	bFirst = true;
 }

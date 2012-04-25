@@ -192,6 +192,20 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 			}
 		}
 		break;
+		case WmBroadcast:
+		{
+			if ( m_dwFlags & WsListener )
+				OnMessage( NULL, WmBroadcast, nParam );
+
+			CWnd *pChild = m_pFirst;
+			while (pChild)
+			{
+				if ( pChild->m_dwFlags & WsVisible )
+					pChild->WindowMessage( WmBroadcast, nParam );
+				pChild = pChild->m_pNext;
+			}
+		}
+		break;
 	}	
 }
 
@@ -245,8 +259,13 @@ void CWnd::ShowWindow(ui8 sh)
 CWnd* CWnd::_GetNextActiveWindow()
 {
 	CWnd *pWnd = m_pNext;
-	while ( pWnd && ((!pWnd->m_dwFlags & WsVisible) || (pWnd->m_dwFlags & WsNoActivate)) )
+
+	while ( pWnd )
+	{
+		if ( (pWnd->m_dwFlags & WsVisible) && (!(pWnd->m_dwFlags & WsNoActivate)) )
+			break;
 		pWnd = pWnd->m_pNext;
+	}
 
 	if (!pWnd && m_pParent && (m_pParent->m_dwFlags & WsModal))
 		return NULL;
@@ -293,10 +312,11 @@ void CWnd::_UpdateTimers()
 	for ( int i = 0; i < m_arrTimers.GetSize(); i++ )
 	{
 		CTimer& timer = m_arrTimers[i];
-		if ( (si32)(nTick - timer.m_nLast) > (si32)timer.m_nInterval )
+		if ( /*(si32)(nTick - timer.m_nLast)*/ nTick > timer.m_nNext )
 		{
+			_ASSERT( timer.m_pWnd->m_dwFlags & CWnd::WsVisible );
 			timer.m_pWnd->OnTimer();
-			timer.m_nLast = BIOS::GetTick();
+			timer.m_nNext = BIOS::GetTick() + timer.m_nInterval;
 		}
 	}
 }

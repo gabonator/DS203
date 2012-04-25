@@ -1,6 +1,8 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#include <string.h>
+
 //typedef const unsigned short uc16;
 typedef unsigned char ui8;
 //typedef unsigned char ui8;
@@ -73,6 +75,7 @@ extern void Assert(const char* msg, int n);
 #define _ASSERT_VALID(a) if(!(a)) { Assert(__FILE__, __LINE__); }
 
 #define ToWord(a, b) (((a)<<8)|(b))
+#define ToDword(a, b, c, d) ((ToWord(a, b)<<16)|ToWord(c,d))
 
 struct FILEINFO {
 	enum {

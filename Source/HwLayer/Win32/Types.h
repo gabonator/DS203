@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <crtdbg.h>
+#include <stdio.h>
 
 typedef unsigned char ui8;
 typedef unsigned char ui8;
@@ -36,6 +37,7 @@ typedef signed short si16;
 #define NATIVEENUM LONG
 
 #define ToWord(a, b) (((a)<<8)|(b))
+#define ToDword(a, b, c, d) ((ToWord(a, b)<<16)|ToWord(c,d))
 
 #define _ASSERT_VALID(a) if(!(a)) { _ASSERT(#a); }
 
@@ -43,10 +45,13 @@ struct FILEINFO {
 	enum {
 		SectorSize = 512
 	};
+	/*
 	ui16 pCluster[3];
 	ui32 pDirAddr[1];
+	*/
 	ui8 nMode;
 	ui8 nSectors;
+	FILE *f;
 };
 
 

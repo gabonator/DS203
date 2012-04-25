@@ -11,7 +11,7 @@ public:
 
 	CWndScreenSaver()
 	{
-		bReset = false;
+		bReset = true;
 	}
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)

@@ -476,21 +476,45 @@ BOOL bADCReady = FALSE;
 
 /*static*/ BOOL BIOS::DSK::Open(FILEINFO* pFileInfo, const char* strName, ui8 nIoMode)
 {
-	return FALSE;
+	char name[32];
+	memcpy(name, strName, 8);
+	name[8] = 0;
+	while ( name[strlen(name)-1] == ' ' )
+		name[strlen(name)-1] = 0;
+	strcat(name, ".");
+	strcat(name, strName+8);
+
+	if ( nIoMode == BIOS::DSK::IoRead )
+		pFileInfo->f = fopen(name, "rb");
+	if ( nIoMode == BIOS::DSK::IoWrite )
+		pFileInfo->f = fopen(name, "wb");
+	pFileInfo->nSectors = 0;
+	return pFileInfo->f != NULL && pFileInfo->f != INVALID_HANDLE_VALUE;
 }
 
 /*static*/ BOOL BIOS::DSK::Read(FILEINFO* pFileInfo, ui8* pSectorData)
 {
+	fread( pSectorData, 512, 1, pFileInfo->f );
 	return TRUE;
 }
 
 /*static*/ BOOL BIOS::DSK::Write(FILEINFO* pFileInfo, ui8* pSectorData)
 {
+	fwrite( pSectorData, 512, 1, pFileInfo->f );
+	pFileInfo->nSectors++;
 	return TRUE;
 }
 
 /*static*/ BOOL BIOS::DSK::Close(FILEINFO* pFileInfo, int nSize /*=-1*/)
 {
+	if ( pFileInfo->nMode == BIOS::DSK::IoWrite )
+	{
+		if ( nSize != -1 )
+		{
+			// not supported...
+		}
+	}
+	fclose( pFileInfo->f );
 	return TRUE;
 }
 

@@ -137,6 +137,44 @@ public:
 	}
 };
 
+class CProviderBtn : public CValueProvider
+{
+public:
+	const char* m_pName;
+
+public:
+	void Create(const char* pName)
+	{
+		m_pName = pName;
+	}
+
+	virtual VPNavigate operator +(si8 d)
+	{
+		return Disabled;
+	}
+
+	virtual void OnPaint(const CRect& rcRect, ui8 bFocus)
+	{
+		ui16 clr = bFocus ? RGB565(ffffff) : RGB565(000000);
+
+		ui16 x = rcRect.left;
+		x -= 8;
+		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, sel_left );
+		x += BIOS::LCD::Print( x, rcRect.top, RGBTRANS, clr, m_pName );
+		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, sel_right );
+	}	
+	
+	virtual ui16 GetWidth()
+	{
+		return 0;
+	}
+
+	virtual ui32 Get() 
+	{ 
+		return 0; 
+	}
+};
+
 class CProviderRgb : public CValueProvider
 {
 public:

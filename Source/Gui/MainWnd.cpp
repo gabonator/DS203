@@ -17,16 +17,20 @@ void CMainWnd::Create()
 		CSettings::TimeBase::ppszTextResolution[CSettings::TimeBase::_1s][1] == 's' &&
 		CSettings::TimeBase::ppszTextResolution[CSettings::TimeBase::_1s][2] == 0 );
 
+	//Settings.Save();
+	//Settings.SaveCalibration();
+
 	Settings.Load();
+	Settings.LoadCalibration();
 	
 	CWnd::Create("CMainWnd", WsVisible, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
 
 	m_wndToolBar.Create( this );
-	m_wndGraph.Create( this, WsVisible | WsNoActivate );
+	m_wndGraph.Create( this, WsHidden | WsNoActivate );
 	m_wndSignalGraph.Create( this, WsNoActivate );
 	m_wndSpectrumGraph.Create( this, WsNoActivate );
 
-	m_wndMenuInput.Create( this, WsVisible );
+	m_wndMenuInput.Create( this, WsHidden );
 	m_wndMenuCursor.Create( this, WsHidden );
 	m_wndMenuMeas.Create( this, WsHidden );
 	m_wndMenuMath.Create( this, WsHidden );
@@ -34,24 +38,24 @@ void CMainWnd::Create()
 	m_wndMenuDisplay.Create( this, WsHidden );
 	m_wndMenuGenerator.Create( this, WsHidden );
 	m_wndMenuTools.Create( this, WsHidden );
-	m_wndZoomBar.Create( this, &m_wndGraph );
-	m_wndLReferences.Create( this, WsVisible );
-	m_wndTReferences.Create( this, WsVisible );
+	m_wndZoomBar.Create( this, WsHidden, &m_wndGraph );
+	m_wndLReferences.Create( this, WsHidden );
+	m_wndTReferences.Create( this, WsHidden );
 	m_wndSpectrumMain.Create( this, WsHidden );
-
 	m_wndScreenSaver.Create( this, WsHidden );
-
 	m_wndUserGame.Create( this, WsHidden );
 	m_wndUserBalls.Create( this, WsHidden );
 	m_wndUserMeter.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
-
 	m_wndUserCalibration.Create( this, WsHidden );
 
-	m_wndToolBar.m_nFocus = 1;
-	m_wndToolBar.SetFocus();
-
-	SendMessage( &m_wndToolBar, ToWord('g', 'o'), (ui32)"Meter");
+	if ( Settings.Runtime.m_nMenuItem != -1 )
+		SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
+	else
+		SendMessage( &m_wndToolBar, ToWord('g', 'i'), 1);
+	
+	//m_wndToolBar.SetFocus();
+	//SendMessage( &m_wndToolBar, ToWord('g', 'o'), (ui32)"Meter");
 	//m_wndMenuInput.m_itmCH1.SetFocus();
 	//m_wndMenuGenerator.m_itmBpm.SetFocus();
 	//OnMessage( &m_wndToolBar, ToWord('f', 'c'), 0 ); // force update
@@ -61,6 +65,25 @@ void CMainWnd::Create()
 
 /*virtual*/ void CMainWnd::OnTimer()
 {
+	static int nSeconds = 0;
+	static ui32 nChecksum = -1;
+
+	if ( nChecksum == (ui32)-1 )
+	{
+		nChecksum = Settings.GetChecksum();
+	}
+	if ( ++nSeconds >= 20 )
+	{
+		nSeconds = 0;
+		ui32 nNewChecksum = Settings.GetChecksum();
+		if ( nNewChecksum != nChecksum )
+		{
+			//m_wndMessage.Show(this, "Information", "Saving settings...", RGB565(ffff00));
+			Settings.Save();
+			nChecksum = nNewChecksum;
+		}
+	}
+
 	SdkProc();
 }
 
@@ -90,8 +113,8 @@ void CMainWnd::Create()
 			Invalidate();
 		}
 	}
-
-	if (code == ToWord('d', 'g'))
+/*
+	if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
 	{
 		if ( m_wndGraph.m_dwFlags & WsVisible )
 			m_wndGraph.Invalidate();
@@ -100,5 +123,6 @@ void CMainWnd::Create()
 		else if ( GetFocus() != this )
 			SendMessage( GetFocus(), code, data );
 	}
+	*/
 }
 

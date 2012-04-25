@@ -54,7 +54,7 @@
 	{
 		ui32 nWritten = (nSize!=-1) ? nSize : ((ui32)pFileInfo->nSectors) << 9;
 
-		BIOS::DBG::Print("Writing %d bytes (%d sectors)...\n", nWritten, pFileInfo->nSectors);
+		//BIOS::DBG::Print("Writing %d bytes (%d sectors)...\n", nWritten, pFileInfo->nSectors);
 
 		if ( __CloseFile( (ui8*)GetSharedBuffer(), nWritten,
 			pFileInfo->pCluster, pFileInfo->pDirAddr ) != OK )

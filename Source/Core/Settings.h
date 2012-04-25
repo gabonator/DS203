@@ -3,15 +3,19 @@
 
 #define Settings (*CSettings::m_pInstance)
 #include <Source/HwLayer/Types.h>
+#include "Serialize.h"
 
-class CSettings
+#define _VERSION ToDword('D', 'S', 'C', '2')
+
+class CSettings : public CSerialize
 {
 public:
 	static CSettings* m_pInstance;
 
 public:
-	struct AnalogChannel
+	class AnalogChannel : public CSerialize
 	{
+	public:
 		static const char* const ppszTextEnabled[];
 		static const char* const ppszTextCoupling[];
 		static const char* const ppszTextResolution[];
@@ -29,9 +33,21 @@ public:
 		si16 u16Position;
 		const char* pszName;
 		const char* pszFullName;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Enabled) << _E(Coupling) << _E(Resolution) << _E(Probe) << u16Color << u16Position;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Enabled) >> _E(Coupling) >> _E(Resolution) >> _E(Probe) >> u16Color >> u16Position;
+			return *this;
+		}
 	};
-	struct DigitalChannel
+	class DigitalChannel : public CSerialize
 	{
+	public:
 		static const char* const ppszTextPolarity[];
 
 		enum {_NO = 0, _YES = 1, _EnabledMax = _YES}
@@ -43,9 +59,21 @@ public:
 
 		const char* pszName;
 		const char* pszFullName;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Enabled) << _E(Polarity) << u16Color << u16Position;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Enabled) >> _E(Polarity) >> u16Color >> u16Position;
+			return *this;
+		}
 	};
-	struct TimeBase
+	class TimeBase : public CSerialize
 	{
+	public:
 		static const char* const ppszTextResolution[];
 		enum { 
 			_100ns, _200ns, _500ns, 
@@ -59,10 +87,23 @@ public:
 			_1, _2, _4, _FULL}
 			Range;
 		si16 Shift;
+
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Resolution) << _E(Range) << Shift; 
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Resolution) >> _E(Range) >> Shift; 
+			return *this;
+		}
 	};
 
-	struct Trigger
+	class Trigger : public CSerialize
 	{
+	public:
 		static const char* const ppszTextSync[];
 		static const char* const ppszTextSource[];
 		static const char* const ppszTextType[];
@@ -78,20 +119,59 @@ public:
 		si16 nTime;
 		ui32 nLastChange;
 
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Sync) << _E(Type) << _E(Source) << _E(State) << nLevel << nTime;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Sync) >> _E(Type) >> _E(Source) >> _E(State) >> nLevel >> nTime;
+			return *this;
+		}
 	};
-	struct Generator
+	class Generator : public CSerialize
 	{
+	public:
 		static const char* const ppszTextWave[];
 		enum { _Sin = 0, _Tri, _Saw, _Sq, _Cardiac, _WaveMax = _Cardiac }
 			Wave;
 		int nPsc;
 		int nArr;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Wave) << nPsc << nArr;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Wave) >> nPsc >> nArr;
+			return *this;
+		}
+	};
+	class CRuntime : public CSerialize
+	{
+	public:
+		int m_nMenuItem;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << m_nMenuItem;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> m_nMenuItem;
+			return *this;
+		}
 	};
 
 public:
 	#include "Calibration.h"
 	
 public:
+	CRuntime Runtime;
 	AnalogChannel CH1;
 	AnalogChannel CH2;
 	DigitalChannel CH3;
@@ -104,9 +184,36 @@ public:
 	Calibrator	CH2Calib;
 	LinApprox	DacCalib;
 
+	virtual CSerialize& operator <<( CStream& stream )
+	{
+		ui32 dwId = _VERSION;
+		ui32 dwEnd = ToDword('E', 'N', 'D', 27);
+		stream << dwId << Runtime << CH1 << CH2 << CH3 << CH4 << Time << Trig << Gen << dwEnd;
+
+		return *this;
+	}
+
+	virtual CSerialize& operator >>( CStream& stream )
+	{
+		ui32 dwId = 0, dwEnd = 0;
+		
+		stream >> dwId;
+		_ASSERT( dwId == _VERSION );
+		if ( dwId == _VERSION )
+		{
+			stream >> Runtime >> CH1 >> CH2 >> CH3 >> CH4 >> Time >> Trig >> Gen >> dwEnd;
+			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
+		}
+		return *this;
+	}
+
 	CSettings();
+	ui32 GetChecksum();
 	void Save();
 	void Load();
+
 	void ResetCalibration();
+	void SaveCalibration();
+	void LoadCalibration();
 };
 #endif

@@ -14,7 +14,7 @@ public:
 		CTimer( CWnd* pWnd, ui32 nInterval ) :
 			m_pWnd( pWnd ), m_nInterval( nInterval )
 		{
-			m_nLast = BIOS::GetTick();
+			m_nNext = BIOS::GetTick() + nInterval;
 		}
 		CTimer()
 		{
@@ -23,7 +23,7 @@ public:
 	public:
 		CWnd*		m_pWnd;		
 		ui32		m_nInterval;
-		ui32		m_nLast;
+		ui32		m_nNext;
 	};
 
 	class CModal
@@ -50,6 +50,7 @@ public:
 		WmPaint = 1,
 		WmKey = 2,
 		WmTick = 3,
+		WmBroadcast = 4,
 
 		WsHidden = 0,
 		WsVisible = 1,
@@ -57,6 +58,7 @@ public:
 		WsNeedRedraw = 4,
 		WsModal = 8,
 		WsTick = 16,
+		WsListener = 32,
 		
 		SwShow = 1,
 		SwHide = 0

@@ -241,13 +241,13 @@ public:
 
 	virtual void OnKey(ui16 nKey)
 	{
-		if ( nKey & BIOS::KEY::KeyLeft && (*m_pProvider)-1 != CValueProvider::No )
+		if ( nKey & BIOS::KEY::KeyLeft && (*m_pProvider)-1 == CValueProvider::Yes )
 		{
 			(*m_pProvider)--;
 			Invalidate();
 			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
 		}
-		if ( nKey & BIOS::KEY::KeyRight && (*m_pProvider)+1 != CValueProvider::No )
+		if ( nKey & BIOS::KEY::KeyRight && (*m_pProvider)+1 == CValueProvider::Yes )
 		{
 			(*m_pProvider)++;
 			Invalidate();
@@ -256,7 +256,7 @@ public:
 		if ( nKey & BIOS::KEY::KeyEnter  )
 		{
 			// is that provider enumerator ?
-			if ( m_pProvider->Get() != CValueProvider::Invalid )
+			if ( m_pProvider->Get() !=	CValueProvider::Invalid )
 			{
 				SendMessage(m_pParent->m_pParent, ToWord('l', 'e'), (ui32)(NATIVEPTR)(m_pProvider));
 			}
@@ -452,6 +452,153 @@ public:
 			SendMessage(m_pParent, ToWord('i', 'u'), NULL);
 		}
 		CWnd::OnKey( nKey );
+	}
+};
+
+// Digits control
+/*
+TestCode:
+	CProviderDigit	m_proDigit1000;
+	CProviderDigit	m_proDigit100;
+	CProviderDigit	m_proDigit10;
+	CProviderDigit	m_proDigit1;
+	CDigitsItem<4>	m_itmTest;
+
+		static int nNumber = 123;
+		m_proDigit1000.Create( &nNumber, 1000 );
+		m_proDigit100.Create( &nNumber, 100 );
+		m_proDigit10.Create( &nNumber, 10 );
+		m_proDigit1.Create( &nNumber, 1 );
+		CValueProvider* arrDigits[4] = {&m_proDigit1000, &m_proDigit100, &m_proDigit10, &m_proDigit1};
+		m_itmTest.Create("Test", CWnd::WsVisible, this, arrDigits);
+*/
+
+class CLPSubItem : public CListItem
+{
+	CValueProvider* m_pProvider;
+
+public:
+	void Create(const char* pszId, ui16 dwFlags, const CRect& rcClient, CValueProvider* pProvider, CWnd* pParent)
+	{
+		m_pProvider = pProvider;
+		CWnd::Create( pszId, dwFlags, rcClient, pParent );
+	}
+
+	virtual void OnPaint()
+	{
+		ui16 clr = HasFocus() ? RGB565(ffffff) : RGB565(000000);
+			
+		if ( HasFocus() )
+		{
+			CRect rcHighlight( m_rcClient );
+			rcHighlight.left -= 8;
+			rcHighlight.right += 8;
+			CDesign::ListItemEnabled( rcHighlight );
+		}
+
+		if ( HasFocus() )
+			BIOS::LCD::Draw( m_rcClient.left-7, m_rcClient.top, clr, RGBTRANS, more_left );
+
+		m_pProvider->OnPaint(m_rcClient, HasFocus());
+		int x = m_rcClient.left + m_pProvider->GetWidth() + 1;
+
+		if ( HasFocus() )
+			BIOS::LCD::Draw( x, m_rcClient.top, clr, RGBTRANS, more_right );
+	}	
+
+	virtual void OnKey(ui16 nKey)
+	{
+		if ( nKey & BIOS::KEY::KeyLeft && (*m_pProvider)-1 != CValueProvider::No )
+		{
+			(*m_pProvider)--;
+			GetParent()->Invalidate();
+			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
+		}
+		if ( nKey & BIOS::KEY::KeyRight && (*m_pProvider)+1 != CValueProvider::No )
+		{
+			(*m_pProvider)++;
+			GetParent()->Invalidate();
+			//Invalidate();
+			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
+		}
+		if ( nKey & (BIOS::KEY::KeyUp | BIOS::KEY::KeyDown) )
+		{
+			CWnd* pSafeFocus = m_pFocus;
+			m_pFocus = NULL;
+			GetParent()->Invalidate();
+			m_pFocus = pSafeFocus;
+		}
+		CListItem::OnKey( nKey );
+	}
+
+};
+
+template<int N>
+class CDigitsItem : public CListItem
+{
+	CLPSubItem m_wndItem[N];
+
+public:
+	void Create(const char* pszId, ui16 dwFlags, CWnd* pParent, CValueProvider** arrProviders)
+	{
+		CListItem::Create( pszId, dwFlags, pParent );
+		CRect rcChild(m_rcClient);
+		rcChild.right = rcChild.left + 100;
+		for (int i=0; i<N; i++)
+		{
+			rcChild.left = rcChild.right + 8;
+			rcChild.right = rcChild.left + 10;
+			m_wndItem[i].Create( "child", CWnd::WsVisible, rcChild, arrProviders[i], this );
+		}
+	}
+	void OnPaint()
+	{
+		CListItem::OnPaint();
+		ui16 clr = RGB565(000000);
+		int x = m_rcClient.left+4;
+		BIOS::LCD::Print( x, m_rcClient.top, clr, RGBTRANS, m_pszId);
+	}
+};
+
+class CProviderDigit : public CValueProvider
+{
+	int* m_pNumber;
+	int m_nStep;
+
+public:
+	void Create(int* val, int nStep)
+	{
+		m_pNumber = val;
+		m_nStep = nStep;
+	}
+
+	virtual VPNavigate operator +(si8 d)
+	{
+		return Yes;
+	}
+
+	virtual void operator++(int)
+	{
+		(*m_pNumber) += m_nStep;
+	}
+
+	virtual void operator--(int)
+	{
+		(*m_pNumber) -= m_nStep;
+	}
+
+	virtual void OnPaint(const CRect& rcRect, ui8 bFocus)
+	{
+		ui16 clr = bFocus ? RGB565(ffffff) : RGB565(000000);
+		int nDigit = ((*m_pNumber) / m_nStep) % 10;
+		char strDigit[2] = { '0'+nDigit, 0 };
+
+		BIOS::LCD::Print( rcRect.left, rcRect.top, clr, RGBTRANS, strDigit);
+	}	
+
+	virtual ui16 GetWidth()
+	{
+		return 8; // single digit
 	}
 };
 

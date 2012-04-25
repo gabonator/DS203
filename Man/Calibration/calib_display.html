@@ -4,12 +4,12 @@
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://www.highcharts.com/js/themes/grid.js"></script>
-
-
+<!--<script src="http://www.highcharts.com/js/themes/grid.js"></script>-->
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script language="javascript" src="theme.js"></script>
 
 <div id="container" style="min-width: 400px; height: 100%; margin: 0 auto"></div>
-<div id="containerk" style="min-width: 400px; height: 300px; margin: 0 auto"></div>
+<div id="containerk" style="width: 900px; height: 450px; margin: 0 auto"></div>
 <div id="containerq" style="min-width: 400px; height: 300px; margin: 0 auto"></div>
 <div id="containerz" style="min-width: 400px; height: 300px; margin: 0 auto"></div>
 
@@ -111,7 +111,7 @@ for (base=minpos; base<=maxpos; base += stppos)
 	{
 		warning("Correlation coefficient too large - measured part is not linear enough (Vpos="+base+")");
 	}
-	coef_k[coef_k.length] = la.k;
+	coef_k[coef_k.length] = 1/la.k;
 	coef_q[coef_q.length] = la.q;
 	la_q[la_q.length] = {x:base, y:la.q};
 }
@@ -413,10 +413,10 @@ function chartk()
             title: {
                 text: 'Coeffiecient K',
             },
-						xAxis: { categories: plabels, title: {text: 'Vertical position'} },
+						xAxis: { tickInterval :5, categories: plabels, title: {text: 'Vertical position'} },
             yAxis: {
                 title: {
-                    text: 'K value'
+                    text: '1/K value'
                 },
                 plotLines: [{
                     value: 0,

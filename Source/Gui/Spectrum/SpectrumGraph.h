@@ -28,6 +28,20 @@ static const ui16 arrHannWindow[512] = {
 class CWndSpectrumGraph : public CWndGraph
 {
 public:
+	virtual void Create(CWnd *pParent, ui16 dwFlags) 
+	{
+		CWndGraph::Create( pParent, dwFlags | CWnd::WsListener );
+	}
+
+	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
+	{
+		if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
+		{
+			Invalidate();
+			return;
+		}
+	}
+
 	void _PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	{
 		memset( column, clr, DivsY*BlkY*2 );

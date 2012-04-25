@@ -1,5 +1,5 @@
 #include "Settings.h"    
-//#include <Source/HwLayer/bios.h>
+#include <Source/HwLayer/bios.h>
 #include <string.h>
 
 CSettings* CSettings::m_pInstance = NULL;
@@ -84,88 +84,56 @@ CSettings::CSettings()
 	Gen.nPsc = 180-1;
 	Gen.nArr = 5100;
 
+	Runtime.m_nMenuItem = -1;
+
 	ResetCalibration();
-//	calCH1[AnalogChannel::_500mV] = LinearCalibration(-7, 1024*256/182);
-#if 0
-	const ui8 _inp[] = {0, 40, 80, 120, 160, 200};
-	const ui8 _out[] = {7*200/256, 40*200/256, 77*200/256, 114*200/256, 152*200/256, 190*200/256};
+}
 
-	memcpy(calPosCH1.inp, _inp, sizeof(_inp));
-	memcpy(calPosCH1.out, _out, sizeof(_out));
+ui32 CSettings::GetChecksum()
+{
+	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
+	memset( pSharedBuffer, 0, FILEINFO::SectorSize );
 
-/*
-pos=-9 500mV 1x
-0V: 0.015   
-1V: 40.017
-2V: 86.978
-3V: 133.073
-4V: 180.997 
-5V: 228.008
-6V: 255
-*/
-	const ui8 _inp1[] = {0, 40, 87, 133, 181, 228};
-	const ui8 _out1[] = {0, 64, 128, 192, 255, 255};
-	memcpy(calCH1[AnalogChannel::_500mV].inp, _inp1, sizeof(_inp1));
-	memcpy(calCH1[AnalogChannel::_500mV].out, _out1, sizeof(_out1));
-	CH1.u16Position = -9;
-
-/*
-	const float _out_dac[] = {0.0679f, 0.0795f, 0.1733f, 0.4297f, 1.5747f, 2.7179f};
-	const ui16 _inp_dac[] = {0,        128, 256, 640, 2304, 3968};
-	memcpy(calDAC.inp, _out_dac, sizeof(_out_dac));
-	memcpy(calDAC.out, _inp_dac, sizeof(_inp_dac));
-*/
-
-
-
-
-/*
-generator
-GEN::Output(0)	2.859*64/40/32*0.5 = 0.071475 V
-500							13.250*64/40/32*0.5	= 0.33125 V
-1000						27.266 							= 0.68165
-*/
-#endif
+	CStream bufStream( pSharedBuffer, FILEINFO::SectorSize );
+	bufStream << *this;
+	return bufStream.GetChecksum();
 }
 
 void CSettings::Save()
 {
-/*
 	FILEINFO f;
-
-	if ( !BIOS::DSK::Open(&f, (si8*)"CONFIG  DAT", BIOS::DSK::IoWrite) )
+	if ( !BIOS::DSK::Open(&f, "CONFIG  DAT", BIOS::DSK::IoWrite) )
 	{
 		_ASSERT( 0 );
 		return;
 	}
+	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
+	memset( pSharedBuffer, 0, FILEINFO::SectorSize );
 
-	ui8* pBuffer = (ui8*)this;
-	int nLength = sizeof(CSettings);
-	_ASSERT( nLength < 512 );
-	_ASSERT_VALID( BIOS::DSK::Write(&f, pBuffer ) );
+	CStream bufStream( pSharedBuffer, FILEINFO::SectorSize );
+	bufStream << *this;
 
-	BIOS::DSK::Close(&f, nLength);
-*/
+	_ASSERT_VALID( BIOS::DSK::Write(&f, pSharedBuffer) );
+	BIOS::DSK::Close(&f, bufStream.GetLength());
 }
 
 void CSettings::Load()
 {
-/*
 	FILEINFO f;
 
-	if ( !BIOS::DSK::Open(&f, (si8*)"CONFIG  DAT", BIOS::DSK::IoRead) )
+	if ( !BIOS::DSK::Open(&f, "CONFIG  DAT", BIOS::DSK::IoRead) )
 	{
 		return;
 	}
 
-	ui8* pBuffer = (ui8*)this;
-	int nLength = sizeof(CSettings);
-	_ASSERT( nLength < 512 );
+	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
 
-	_ASSERT_VALID( BIOS::DSK::Read(&f, pBuffer ) );
+	_ASSERT_VALID( BIOS::DSK::Read(&f, pSharedBuffer) );
 
-	BIOS::DSK::Close(&f, nLength);
-*/
+	CStream bufStream( pSharedBuffer, FILEINFO::SectorSize );
+	bufStream >> *this;
+
+	BIOS::DSK::Close(&f);
 }
 
 void CSettings::ResetCalibration()
@@ -202,4 +170,73 @@ void CSettings::ResetCalibration()
 	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQout, {9380*5, -154816*5} );
 	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKin, {-20, 15, 75, 90, 245, 280} );
 	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKout, {581*5, 580*5, 581*5, 582*5, 584*5, 580*5} );
+}
+
+void CSettings::SaveCalibration()
+{
+	FILEINFO f;
+	if ( !BIOS::DSK::Open(&f, "CALIB   DAT", BIOS::DSK::IoWrite) )
+	{
+		_ASSERT( 0 );
+		return;
+	}
+	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
+	memset( pSharedBuffer, 0, FILEINFO::SectorSize );
+
+	ui32 dwId = ToDword('C', 'A', 'L', '1');
+
+	CStream bufStream( pSharedBuffer, FILEINFO::SectorSize );
+	bufStream
+			<< dwId
+			<< CStream(&DacCalib, sizeof(DacCalib));
+
+	_ASSERT_VALID( BIOS::DSK::Write(&f, pSharedBuffer) );
+
+	memset( pSharedBuffer, 0, FILEINFO::SectorSize );
+	bufStream.Reset();
+	bufStream << CStream(&CH1Calib, sizeof(CH1Calib));
+	_ASSERT_VALID( BIOS::DSK::Write(&f, pSharedBuffer) );
+
+	memset( pSharedBuffer, 0, FILEINFO::SectorSize );
+	bufStream.Reset();
+	bufStream << CStream(&CH2Calib, sizeof(CH1Calib));
+
+	_ASSERT_VALID( BIOS::DSK::Write(&f, pSharedBuffer) );
+	BIOS::DSK::Close(&f);
+}
+
+void CSettings::LoadCalibration()
+{
+	FILEINFO f;
+
+	if ( !BIOS::DSK::Open(&f, "CALIB   DAT", BIOS::DSK::IoRead) )
+	{
+		return;
+	}
+
+	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
+
+	_ASSERT_VALID( BIOS::DSK::Read(&f, pSharedBuffer) );
+
+	CStream bufStream( pSharedBuffer, FILEINFO::SectorSize );
+
+	ui32 dwId = 0;
+	bufStream >> dwId;
+	if ( dwId != ToDword('C', 'A', 'L', '1') )
+	{
+		_ASSERT(0);
+		return;
+	}
+
+	bufStream >> CStream(&DacCalib, sizeof(DacCalib));
+
+	bufStream.Reset();
+	_ASSERT_VALID( BIOS::DSK::Read(&f, pSharedBuffer) );
+	bufStream >> CStream(&CH1Calib, sizeof(CH1Calib));
+
+	bufStream.Reset();
+	_ASSERT_VALID( BIOS::DSK::Read(&f, pSharedBuffer) );
+	bufStream >> CStream(&CH2Calib, sizeof(CH2Calib));
+
+	BIOS::DSK::Close(&f);
 }
