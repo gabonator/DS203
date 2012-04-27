@@ -261,5 +261,8 @@
     <ClCompile Include="..\..\Source\Core\Serialize.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\CalibDac.cpp">
+      <Filter>Source\Gui\User</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

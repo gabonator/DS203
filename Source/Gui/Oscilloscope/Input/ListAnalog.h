@@ -1,9 +1,6 @@
 #ifndef __LISTAINPUT_H__
 #define __LISTAINPUT_H__
 
-
-
-
 class CWndListAInput : public CListBox
 {
 public:
@@ -16,7 +13,6 @@ public:
 	CProviderNum	m_proPosition;
 	CProviderColor	m_proColour;
 	CProviderRgb	m_proRed, m_proGrn, m_proBlu;
-	//CProviderBtn	m_proExecute;
 
 	CLPItem			m_itmEnabled;
 	CLPItem			m_itmCoupling;
@@ -26,16 +22,12 @@ public:
 	CLPItem			m_itmColour;
 	CLPItem			m_itmRed, m_itmGrn, m_itmBlu;
 
-	//CLPItem			m_itmExecute;
-
 public:
 	void Create( CSettings::AnalogChannel* pInfo, CWnd* pParent )
 	{
 		m_pInfo = pInfo;
 		CListBox::Create( pInfo->pszFullName, WsVisible | WsModal, CRect(120, 30, 319, 201), pInfo->u16Color, pParent );
 
-		//m_proExecute.Create( "Ok!" );
-		//m_itmExecute.Create( "Execute", CWnd::WsVisible, &m_proExecute, this );
 
 		m_proEnabled.Create( (const char**)CSettings::AnalogChannel::ppszTextEnabled,
 			(NATIVEENUM*)&pInfo->Enabled, CSettings::AnalogChannel::_EnabledMax );

@@ -5,6 +5,13 @@
     __Set(DIGTAL_CCR, ccr);
 }
 
+/*static*/ void BIOS::GEN::ConfigureDc(ui16 nData)
+{
+	static ui16 sData;
+	sData = nData;
+	ConfigureWave( &sData, 1 );
+}
+
 /*static*/ void BIOS::GEN::ConfigureWave(ui16* pData, ui16 cnt)
 {
 	#define DMA2_CMAR4  (*((vu32 *)(0x40020400+0x50)))

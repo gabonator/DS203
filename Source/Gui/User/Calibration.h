@@ -3,6 +3,61 @@
 
 #include <Source/Framework/Wnd.h>
 #include <Source/Main/Application.h>
+#include <Source/Core/Controls.h>
+#include <Source/Core/ListItems.h>
+#include <Source/Core/Settings.h>
+
+#include "CalibDac.h"
+
+class CWndMenuCalibration : public CWnd
+{
+public:
+	CWndMenuItem	m_itmAdc;
+	CWndMenuItem	m_itmAnalog;
+
+	CWndListCalAdc	m_wndListAdc;
+
+	CWndMenuCalibration()
+	{
+	}
+
+	virtual void Create(CWnd *pParent, ui16 dwFlags)
+	{
+		CWnd::Create("CWndMenuCalibration", dwFlags, CRect(320-CWndMenuItem::MarginLeft, 20, 400, 240), pParent);
+		m_itmAdc.Create("Adc", RGB565(00b040), 2, this);
+		m_itmAnalog.Create("Analog", RGB565(00b040), 2, this);
+	}
+
+	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
+	{
+		if ( data == (ui32)&m_wndListAdc.m_proExecute && code == ToWord('l', 'e' ) )
+		{
+			m_wndListAdc.m_itmExecute.SendMessage( &m_wndListAdc, code, 0 );
+		}
+
+		if ( code == ToWord('m', 'o') && pSender == &m_itmAdc )
+		{
+			m_wndListAdc.Create( this );
+			m_wndListAdc.StartModal( &m_wndListAdc.m_itmExecute );
+			return;
+		}
+
+		if ( code == ToWord('o', 'k') && pSender->m_pParent == &m_wndListAdc )
+		{
+			// done
+			m_wndListAdc.StopModal();
+			return;
+		}
+
+		if ( code == ToWord('e', 'x') && pSender == &m_wndListAdc )
+		{
+			// cancel
+			m_wndListAdc.StopModal();
+			return;
+		}
+
+	}
+};
 
 class CWndCalibration : public CWnd
 {
@@ -66,10 +121,11 @@ public:
 	}
 
 	//
-	void OnWave();
-	void OnInit();
 	void OnStart();
 	void OnStop();
+
+	void OnWave();
+	void OnInit();
 	bool IsRunning();
 
 	static void Wait( int nTime )

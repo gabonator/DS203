@@ -139,8 +139,10 @@ void CSettings::Load()
 void CSettings::ResetCalibration()
 {
 	// valid on range 128..4096
-	DacCalib.m_arrCurveIn[0] = 0.1765f;	DacCalib.m_arrCurveOut[0] = 256;
-	DacCalib.m_arrCurveIn[1] = 1.412f;	DacCalib.m_arrCurveOut[1] = 2048;
+	//DacCalib.m_arrCurveIn[0] = 0.1765f;	DacCalib.m_arrCurveOut[0] = 256;
+	//DacCalib.m_arrCurveIn[1] = 1.412f;	DacCalib.m_arrCurveOut[1] = 2048;
+	DacCalib.m_arrCurveIn[0] = 0.5f;	DacCalib.m_arrCurveOut[0] = 725;
+	DacCalib.m_arrCurveIn[1] = 1.5f;	DacCalib.m_arrCurveOut[1] = 2176;
 
 	const static si16 defaultQin[] = {0, 256};
 	const static si32 defaultQout[] = {0, 0};

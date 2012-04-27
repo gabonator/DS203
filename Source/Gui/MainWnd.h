@@ -39,12 +39,14 @@ public:
 	CWndScreenSaver		m_wndScreenSaver;
 	CWndSnake			m_wndUserGame;
 	CWndBalls			m_wndUserBalls;
-	CWndCalibration		m_wndUserCalibration;
+	//CWndCalibration		m_wndUserCalibration;
+	CWndMenuCalibration	m_wndUserCalibration;
 	CWndUserMeter		m_wndUserMeter;
 	CWndMenuSpectMain	m_wndSpectrumMain;
 
 	CWndModuleSelector	m_wndModuleSel;
 	CWndMessageBox		m_wndMessage;	
+	CWndConfirm			m_wndConfirm;
 
 	void Create();
 	virtual void OnPaint();

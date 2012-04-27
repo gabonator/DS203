@@ -2,6 +2,19 @@
 
 #include <Source/Core/Settings.h>
 #include <Source/Gui/MainWnd.h>
+#include <Source/Framework/Thread.h>
+
+/*
+10V 80V
+5V 40V
+2V 16V
+1V 8V
+500mV 4V
+200mV 1.6V
+100mV 800mV
+50mV 400mV
+*/
+
 
 /*
 int _F(float f)
@@ -144,7 +157,7 @@ public:
 	}
 };
 
-class CCalibration
+class CCalibration : public CThread
 {
 public:
 	enum {
@@ -259,18 +272,18 @@ public:
 		BIOS::GEN::ConfigureWave( &nDacValue, 1 );
 	}
 
-	void OnStart()
+	void Start()
 	{
 		bRunning = true;
-		Calibration();
+		Run();
 	}
 
-	void OnStop()
+	void Stop()
 	{
 		bRunning = false;
 	}
 
-	bool Calibration()
+	void Run()
 	{
 		BIOS::DBG::Print( "Setting voltage range CH%d to %s\n", nChannel,
 			CSettings::AnalogChannel::ppszTextResolution[CSettings::AnalogChannel::_200mV]);
@@ -295,7 +308,7 @@ public:
 			for ( fVoltage = EVoltMinMv/1000.0f; fVoltage <= (EVoltMaxMv+EVoltStepMv/4)/1000.0f; fVoltage += EVoltStepMv/1000.0f )
 			{
 				SetOutVoltage();		
-				Wait(100);
+				Sleep(100);
 
 				if ( !bRunning )
 					return OnAbort();
@@ -309,7 +322,7 @@ public:
 				{
 					while ( nDownload > 0 )
 					{		
-						Wait(100);
+						Sleep(100);
 						if ( !bRunning )
 							return OnAbort();
 					}
@@ -318,7 +331,7 @@ public:
 						break;
 
 					BIOS::DBG::Print("Variance too high (%3f), retrying... \n", _F(fMeasVariance));
-					Wait(500);
+					Sleep(500);
 					if ( !bRunning )
 						return OnAbort();
 					nDownload = 1;
@@ -348,7 +361,8 @@ public:
 			if ( linApprox.r < 0.99 )
 			{
 				BIOS::DBG::Print("Calibration failed: part not linear (nVertPos=%d, r=%f) \n", nVertPos, _F(linApprox.r));
-				return FALSE;
+				return;
+				//return FALSE;
 			}
 			BIOS::DBG::Print("Result: [pos=%d, 1/k=%f, q=%f, r=%f] \n", nVertPos, 
 				_F(linApprox.k), _F(linApprox.q), _F(linApprox.r));
@@ -394,7 +408,8 @@ public:
 		// result : arrFitQ, arrFitK
 		WriteReport( arrFitK, arrFitQ );
 		bRunning = false;
-		return true;
+		//return true;
+		return;
 	}
 
 	void WriteReport( CArray<CStatistics::CurvePoint>& arrK, CArray<CStatistics::CurvePoint>& arrQ )
@@ -448,16 +463,17 @@ public:
 		fMeasVariance = fVariance;
 	}
 
-	bool OnAbort()
+	void OnAbort()
 	{
 		BIOS::DBG::Print("Calibration aborted\n");	
-		return false;
+		//return false;
 	}
-
+/*
 	void Wait( int nTime )
 	{
 		CWndCalibration::Wait( nTime );
 	}
+	*/
 };
 
 CCalibration g_Calibration;
@@ -506,12 +522,12 @@ void CWndCalibration::OnInit()
 
 void CWndCalibration::OnStart()
 {
-	g_Calibration.OnStart();
+	g_Calibration.Start();
 }
 
 void CWndCalibration::OnStop()
 {
-	g_Calibration.OnStop();
+	g_Calibration.Stop();
 }
 
 bool CWndCalibration::IsRunning()

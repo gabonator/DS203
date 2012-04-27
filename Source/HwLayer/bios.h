@@ -88,6 +88,7 @@ public:
 		static void ConfigureSq(ui16 psc, ui16 arr, ui16 ccr);
 		static void ConfigureWave(ui16* pData, ui16 cnt);
 		static void ConfigureWaveRate(ui16 arr);
+		static void ConfigureDc(ui16 nData);
 	};
 
 	class DSK {

@@ -448,6 +448,10 @@ BOOL bADCReady = FALSE;
 	bADCReady = FALSE;
 }
 
+/*static*/ void BIOS::GEN::ConfigureDc(ui16 nData)
+{
+}
+
 /*static*/ void BIOS::GEN::ConfigureSq(ui16 psc, ui16 arr, ui16 ccr)
 {
 }

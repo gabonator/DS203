@@ -142,6 +142,15 @@ public:
 		m_rcClient.left -= MarginLeft;
 	}
 
+	virtual void OnKey(ui16 nKey)
+	{
+		if ( nKey & BIOS::KEY::KeyEnter )
+		{
+			SendMessage(m_pParent, ToWord('m', 'o'), 0);
+		}
+		CWnd::OnKey( nKey );
+	}
+
 };
 
 class CWndMenuBlock : public CWnd
@@ -194,6 +203,20 @@ public:
 	virtual ui16 GetWidth() { _ASSERT(0); return 0; }
 	virtual void Set(ui32 value) { _ASSERT(0); }
 	virtual ui32 Get() { return Invalid; }
+};
+	
+class CLStaticItem : public CListItem
+{
+public:
+	virtual void OnPaint()
+	{
+		ui16 clr = HasFocus() ? RGB565(ffffff) : RGB565(000000);
+		
+		CListItem::OnPaint();
+
+		int x = m_rcClient.left+4;
+		BIOS::LCD::Print( x, m_rcClient.top, clr, RGBTRANS, m_pszId);
+	}	
 };
 
 class CLPItem : public CListItem
@@ -455,24 +478,6 @@ public:
 	}
 };
 
-// Digits control
-/*
-TestCode:
-	CProviderDigit	m_proDigit1000;
-	CProviderDigit	m_proDigit100;
-	CProviderDigit	m_proDigit10;
-	CProviderDigit	m_proDigit1;
-	CDigitsItem<4>	m_itmTest;
-
-		static int nNumber = 123;
-		m_proDigit1000.Create( &nNumber, 1000 );
-		m_proDigit100.Create( &nNumber, 100 );
-		m_proDigit10.Create( &nNumber, 10 );
-		m_proDigit1.Create( &nNumber, 1 );
-		CValueProvider* arrDigits[4] = {&m_proDigit1000, &m_proDigit100, &m_proDigit10, &m_proDigit1};
-		m_itmTest.Create("Test", CWnd::WsVisible, this, arrDigits);
-*/
-
 class CLPSubItem : public CListItem
 {
 	CValueProvider* m_pProvider;
@@ -512,22 +517,30 @@ public:
 		{
 			(*m_pProvider)--;
 			GetParent()->Invalidate();
-			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
+			m_pParent->SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
 		}
 		if ( nKey & BIOS::KEY::KeyRight && (*m_pProvider)+1 != CValueProvider::No )
 		{
 			(*m_pProvider)++;
 			GetParent()->Invalidate();
 			//Invalidate();
-			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
+			m_pParent->SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
 		}
 		if ( nKey & (BIOS::KEY::KeyUp | BIOS::KEY::KeyDown) )
 		{
 			CWnd* pSafeFocus = m_pFocus;
-			m_pFocus = NULL;
-			GetParent()->Invalidate();
-			m_pFocus = pSafeFocus;
+			CListItem::OnKey( nKey );
+			if ( m_pFocus != pSafeFocus )
+				GetParent()->Invalidate();
+			return;
 		}
+
+		if ( nKey & BIOS::KEY::KeyEscape )
+		{
+			// TODO: escape doesnt work
+			//m_pParent->SendMessage( m_pParent->m_pParent, ToWord('e', 'x'), 0 );
+		}
+
 		CListItem::OnKey( nKey );
 	}
 
@@ -589,6 +602,7 @@ public:
 
 	virtual void OnPaint(const CRect& rcRect, ui8 bFocus)
 	{
+		_ASSERT( m_pNumber );
 		ui16 clr = bFocus ? RGB565(ffffff) : RGB565(000000);
 		int nDigit = ((*m_pNumber) / m_nStep) % 10;
 		char strDigit[2] = { '0'+nDigit, 0 };
