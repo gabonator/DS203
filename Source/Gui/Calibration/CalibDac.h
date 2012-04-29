@@ -7,7 +7,7 @@
 #include <Source/Core/ListItems.h>
 #include <Source/Core/Settings.h>
 
-class CWndListCalAdc : public CListBox
+class CWndListCalDac : public CListBox
 {
 public:
 	CLStaticItem	m_itmStaticA;
@@ -62,7 +62,7 @@ public:
 		m_itmStaticD.Create( "", CWnd::WsVisible | CWnd::WsNoActivate, this);
 
 		m_proExecute.Create( "Ok!" );
-		m_itmExecute.Create( "Save values", CWnd::WsVisible, &m_proExecute, this );
+		m_itmExecute.Create( "Use values", CWnd::WsVisible, &m_proExecute, this );
 	}
 
 	void Load()

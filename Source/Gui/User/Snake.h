@@ -448,11 +448,6 @@ public:
 		}
 	}
 
-	virtual void OnTick()	
-	{
-//		Invalidate();
-	}
-
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{
 		// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR

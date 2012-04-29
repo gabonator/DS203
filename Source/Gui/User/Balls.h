@@ -150,18 +150,34 @@ class CWndBalls : public CWnd
 public:
 	CBallGenerator	m_Gen;
 	ui16 pBuffer[BallSize*BallSize];
+	bool bRedraw;
 
 	CWndBalls() : m_Gen(BallSize, BallSize)
 	{
+		bRedraw = true;
 	}
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndBalls", dwFlags/* | CWnd::WsNoActivate*/, CRect(0, 16, 400, 240), pParent);
+		CWnd::Create("CWndBalls", dwFlags | CWnd::WsTick | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
 	
 	virtual void OnPaint()
 	{
+		if ( bRedraw )
+		{
+			CRect rc1( m_rcClient );
+			CRect rc2( m_rcClient );
+			CRect rc3( m_rcClient );
+			rc1.bottom = m_rcClient.Height() / 3;
+			rc2.top = rc1.bottom;
+			rc2.bottom = m_rcClient.Height() * 2 / 3;
+			rc3.top = rc2.bottom;
+			BIOS::LCD::Bar( rc1, RGB565(ffffff) );
+			BIOS::LCD::Bar( rc2, RGB565(000000) );
+			BIOS::LCD::Bar( rc3, RGB565(0000ff) );
+			bRedraw = false;
+		}
 		int nX = Random() % (m_rcClient.Width()-m_Gen.w) + m_rcClient.left;
 		int nY = Random() % (m_rcClient.Height()-m_Gen.h) + m_rcClient.top;
 		int nR = Random();
@@ -175,13 +191,19 @@ public:
 		BIOS::LCD::PutImage( rcImage, pBuffer );
 	}
 
-	virtual void OnTick()	
+	void OnTick()	
 	{
 		Invalidate();
 	}
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{
+		if (code == ToWord('t', 'i') )
+		{
+			// OnTick
+			OnTick();
+			return;
+		}
 		// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
 		if (code == ToWord('L', 'D') )
 		{
@@ -189,7 +211,9 @@ public:
 		}
 
 		if (code == ToWord('L', 'E') )
-		{/*
+		{
+			bRedraw = true;
+			/*
 			const char* message = "Ahoj, toto je experimentalny zapis do suboru!";
 			FILEINFO f;
 			BIOS::DSK::Open( &f, "TEST    TXT", BIOS::DSK::IoWrite );

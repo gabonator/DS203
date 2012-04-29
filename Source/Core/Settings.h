@@ -154,15 +154,16 @@ public:
 	{
 	public:
 		int m_nMenuItem;
+		int m_nUptime;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << m_nMenuItem;
+			stream << m_nMenuItem << m_nUptime;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> m_nMenuItem;
+			stream >> m_nMenuItem >> m_nUptime;
 			return *this;
 		}
 	};
@@ -203,6 +204,7 @@ public:
 		{
 			stream >> Runtime >> CH1 >> CH2 >> CH3 >> CH4 >> Time >> Trig >> Gen >> dwEnd;
 			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
+			Reset();
 		}
 		return *this;
 	}
@@ -211,9 +213,10 @@ public:
 	ui32 GetChecksum();
 	void Save();
 	void Load();
+	void Reset();
 
 	void ResetCalibration();
 	void SaveCalibration();
-	void LoadCalibration();
+	bool LoadCalibration();
 };
 #endif

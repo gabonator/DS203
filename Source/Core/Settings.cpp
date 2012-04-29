@@ -33,7 +33,12 @@ CSettings* CSettings::m_pInstance = NULL;
 CSettings::CSettings()
 {
 	m_pInstance = this;
+	Reset();
+	ResetCalibration();
+}
 
+void CSettings::Reset()
+{
 	CH1.pszName = "CH1";
 	CH1.pszFullName = "Analog input: CH1";
 	CH1.Coupling = AnalogChannel::_DC;
@@ -85,8 +90,7 @@ CSettings::CSettings()
 	Gen.nArr = 5100;
 
 	Runtime.m_nMenuItem = -1;
-
-	ResetCalibration();
+	Runtime.m_nUptime = 0;
 }
 
 ui32 CSettings::GetChecksum()
@@ -145,9 +149,9 @@ void CSettings::ResetCalibration()
 	DacCalib.m_arrCurveIn[1] = 1.5f;	DacCalib.m_arrCurveOut[1] = 2176;
 
 	const static si16 defaultQin[] = {0, 256};
-	const static si32 defaultQout[] = {0, 0};
+	const static si32 defaultQout[] = {0, -(256<<11)};
 	const static si16 defaultKin[] = {0, 0, 0, 0, 0, 256};
-	const static si32 defaultKout[] = {2048, 2048, 2048, 2048, 2048, 2048};
+	const static si32 defaultKout[] = {1<<11, 1<<11, 1<<11, 1<<11, 1<<11, 1<<11};
 
 	for ( int i = 0; i < AnalogChannel::_ResolutionMax; i++ )
 	{
@@ -207,13 +211,13 @@ void CSettings::SaveCalibration()
 	BIOS::DSK::Close(&f);
 }
 
-void CSettings::LoadCalibration()
+bool CSettings::LoadCalibration()
 {
 	FILEINFO f;
 
 	if ( !BIOS::DSK::Open(&f, "CALIB   DAT", BIOS::DSK::IoRead) )
 	{
-		return;
+		return false;
 	}
 
 	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
@@ -227,7 +231,7 @@ void CSettings::LoadCalibration()
 	if ( dwId != ToDword('C', 'A', 'L', '1') )
 	{
 		_ASSERT(0);
-		return;
+		return false;
 	}
 
 	bufStream >> CStream(&DacCalib, sizeof(DacCalib));
@@ -241,4 +245,5 @@ void CSettings::LoadCalibration()
 	bufStream >> CStream(&CH2Calib, sizeof(CH2Calib));
 
 	BIOS::DSK::Close(&f);
+	return true;
 }

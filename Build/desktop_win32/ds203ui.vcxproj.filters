@@ -58,6 +58,9 @@
     <Filter Include="Source\Main">
       <UniqueIdentifier>{c3437d86-460b-432f-9694-cc263bc60876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Calibration">
+      <UniqueIdentifier>{ad0e9f2d-ab5d-4dc0-874a-4b0a52deed3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -180,9 +183,6 @@
     <ClInclude Include="..\..\Source\Gui\User\Balls.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Calibration.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\User\Meter.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
@@ -191,6 +191,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\Serialize.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibAnalog.h">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibCore.h">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibDac.h">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibMenu.h">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Calibration\Calibration.h">
+      <Filter>Source\Gui\Calibration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -252,17 +267,23 @@
     <ClCompile Include="..\..\Source\Main\Application.cpp">
       <Filter>Source\Main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Calibration.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
       <Filter>Source\Gui\User</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\Serialize.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\CalibDac.cpp">
-      <Filter>Source\Gui\User</Filter>
+    <ClCompile Include="..\..\Source\Gui\Calibration\CalibAnalog.cpp">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Calibration\CalibDac.cpp">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Calibration\Calibration.cpp">
+      <Filter>Source\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp">
+      <Filter>Source\Gui\Calibration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

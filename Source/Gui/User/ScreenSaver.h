@@ -16,7 +16,7 @@ public:
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndScreenSaver", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
+		CWnd::Create("CWndScreenSaver", dwFlags | CWnd::WsTick | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
 
 	virtual void OnPaint()
@@ -40,13 +40,20 @@ public:
 		BIOS::LCD::PutPixel( x, y, (ui16)(n<<2));
 	}
 
-	virtual void OnTick()	
+	void OnTick()	
 	{
 		Invalidate();
 	}
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{
+		if (code == ToWord('t', 'i') )
+		{
+			// OnTick
+			OnTick();
+			return;
+		}
+
 		// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
 		if (code == ToWord('L', 'D') )
 		{

@@ -11,7 +11,7 @@
 #include "User/Screensaver.h"
 #include "User/Snake.h"
 #include "User/Balls.h"
-#include "User/Calibration.h"
+#include "Calibration/Calibration.h"
 #include "User/Meter.h"
 #include "Spectrum/Spectrum.h"
 

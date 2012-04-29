@@ -111,10 +111,6 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 {
 }
 
-/*virtual*/ void CWnd::OnTick()
-{
-}
-
 /*virtual*/ void CWnd::OnKey(ui16 nKey)
 {
 	if ( nKey & BIOS::KEY::KeyDown )
@@ -181,7 +177,8 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 			if ( m_pParent == NULL )
 				_UpdateTimers();
 
-			OnTick();
+			if ( m_dwFlags & WsTick )
+				SendMessage( this, ToWord('t', 'i'), 0 );
 
 			CWnd *pChild = m_pFirst;
 			while (pChild)

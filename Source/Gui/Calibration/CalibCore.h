@@ -1,27 +1,8 @@
-#include "Calibration.h"
+#ifndef __CALIBCORE_H__
+#define __CALIBCORE_H__
 
-#include <Source/Core/Settings.h>
-#include <Source/Gui/MainWnd.h>
 #include <Source/Framework/Thread.h>
-
-/*
-10V 80V
-5V 40V
-2V 16V
-1V 8V
-500mV 4V
-200mV 1.6V
-100mV 800mV
-50mV 400mV
-*/
-
-
-/*
-int _F(float f)
-{
-	return f;
-//	return *((int*)&f);
-}*/
+#include <Source/Gui/Oscilloscope/Input/MenuInput.h>
 #define _F(a) a
 
 class CStatistics 
@@ -171,9 +152,15 @@ public:
 		EVoltMinMv = 100, // 0.1V
 		EVoltMaxMv = 2500, // 2.5V
 		EVoltStepMv = 100, // 0.1V
-		EMaxPPoints = (EVertMax-EVertMin)/EVertStep, // vertical positions
-		EMaxVPoints = (EVoltMaxMv-EVoltMinMv)/EVoltStepMv, // voltages 
+		EMaxPPoints = (EVertMax-EVertMin)/EVertStep+1, // vertical positions
+		EMaxVPoints = (EVoltMaxMv-EVoltMinMv)/EVoltStepMv+1, // voltages 
 
+	};
+	enum ECalibResult {
+		ECalibNone = 0, // not started
+		ECalibError = 1,
+		ECalibFinished = 2,
+		ECalibAborted = 3
 	};
 /*
 	enum {
@@ -195,6 +182,8 @@ public:
 
 	float fMeasAverage;
 	float fMeasVariance;
+	CSettings::LinCalibCurve* pCurve;
+	ECalibResult eResult;
 
 	struct MeasPair
 	{ 
@@ -242,16 +231,34 @@ public:
 
 	CCalibration()
 	{
-		OnInit();
+		eResult = ECalibNone;
+		bRunning = false;
+		pCurve = NULL;
+//		OnInit();
 	}
 
-	void OnInit()
+	virtual int GetResult()
+	{
+		return eResult;
+	}
+
+	void Setup(NATIVEENUM calCh, NATIVEENUM calRang, CSettings::LinCalibCurve* pCurve_ )
 	{
 		bRunning = false;
 		bResolutionSet = false;
-		nChannel = 1;
+		/*switch (calRang)
+		{
+		}*/
+		switch (calCh)
+		{
+			case CSettings::Trigger::_CH1: nChannel = 1; break;
+			case CSettings::Trigger::_CH2: nChannel = 2; break;
+			default:
+				_ASSERT(0);
+		}
 		nDownload = -1;
-		nRange = EResolution;
+		nRange = calRang;
+		pCurve = pCurve_;
 	}
 
 	void SetVertPos()
@@ -272,21 +279,27 @@ public:
 		BIOS::GEN::ConfigureWave( &nDacValue, 1 );
 	}
 
-	void Start()
+	virtual void Start()
 	{
+		eResult = ECalibNone;
 		bRunning = true;
 		Run();
 	}
 
-	void Stop()
+	virtual void Stop()
 	{
 		bRunning = false;
+	}
+
+	virtual BOOL IsRunning()
+	{
+		return bRunning;
 	}
 
 	void Run()
 	{
 		BIOS::DBG::Print( "Setting voltage range CH%d to %s\n", nChannel,
-			CSettings::AnalogChannel::ppszTextResolution[CSettings::AnalogChannel::_200mV]);
+			CSettings::AnalogChannel::ppszTextResolution[nRange]);
 
 		if ( nChannel == 1 )
 			Settings.CH1.Resolution = (CSettings::AnalogChannel::eResolution)nRange;
@@ -301,7 +314,6 @@ public:
 		{
 			SetVertPos();
 			CWndMenuInput::ConfigureAdc();
-			//MainWnd.WindowMessage( CWnd::WmPaint );
 
 			CArray <MeasPair> arrMeas( arrMeas_, COUNT(arrMeas_));
 
@@ -318,7 +330,8 @@ public:
 
 				BIOS::DBG::Print("Meas Vpos=%d, U=%1fV:", nVertPos, _F(fVoltage) );	
 
-				while (1) 
+				int nPass = 0;
+				while (1)
 				{
 					while ( nDownload > 0 )
 					{		
@@ -327,7 +340,7 @@ public:
 							return OnAbort();
 					}
 
-					if ( fMeasVariance < 1.0f )
+					if ( fMeasVariance <= 1.0f )
 						break;
 
 					BIOS::DBG::Print("Variance too high (%3f), retrying... \n", _F(fMeasVariance));
@@ -335,6 +348,14 @@ public:
 					if ( !bRunning )
 						return OnAbort();
 					nDownload = 1;
+					if ( ++nPass >= 10 )
+					{
+						BIOS::Beep(500);
+						BIOS::DBG::Print("Calibration failed: Signal too noisy, exiting...\n");
+						BIOS::DelayMs(500);
+						OnError();
+						return;
+					}
 				}
 
 				BIOS::DBG::Print(" avg=%2f, var=%2f \n", _F(fMeasAverage), _F(fMeasVariance));
@@ -360,12 +381,15 @@ public:
 
 			if ( linApprox.r < 0.99 )
 			{
+				BIOS::Beep(500);
 				BIOS::DBG::Print("Calibration failed: part not linear (nVertPos=%d, r=%f) \n", nVertPos, _F(linApprox.r));
+				BIOS::DelayMs(500);
+				OnError();
 				return;
 				//return FALSE;
 			}
 			BIOS::DBG::Print("Result: [pos=%d, 1/k=%f, q=%f, r=%f] \n", nVertPos, 
-				_F(linApprox.k), _F(linApprox.q), _F(linApprox.r));
+				_F(1.0f/linApprox.k), _F(linApprox.q), _F(linApprox.r));
 			arrKq.Add( KqPair( nVertPos, linApprox.k, linApprox.q ) );
 		}			
 
@@ -406,7 +430,27 @@ public:
 		DumpCurve(arrFitK);
 		BIOS::DBG::Print("]\n");
 		// result : arrFitQ, arrFitK
-		WriteReport( arrFitK, arrFitQ );
+		//WriteReport( arrFitK, arrFitQ );
+		if ( pCurve )
+		{
+			const static float arrMultipliers[] = 
+				{50e-3f, 100e-3f, 200e-3f, 500e-3f, 1.0f, 2.0f, 5.0f, 10.0f};
+			FLOAT fCorrect = 65536.0f / arrMultipliers[nRange];
+
+			_ASSERT( arrFitQ.GetSize() == CSettings::LinCalibCurve::eQPoints );
+			for ( int i = 0; i < CSettings::LinCalibCurve::eQPoints; i++ )
+			{
+				pCurve->m_arrCurveQin[i] = (int)arrFitQ[i].m_x;
+				pCurve->m_arrCurveQout[i] = (si32)(arrFitQ[i].m_y * fCorrect);
+			}
+			_ASSERT( arrFitK.GetSize() == CSettings::LinCalibCurve::eKPoints );
+			for ( int i = 0; i < CSettings::LinCalibCurve::eKPoints; i++ )
+			{
+				pCurve->m_arrCurveKin[i] = (int)arrFitK[i].m_x;
+				pCurve->m_arrCurveKout[i] = (si32)(arrFitK[i].m_y * fCorrect);
+			}
+		}
+		OnFinish();
 		bRunning = false;
 		//return true;
 		return;
@@ -465,8 +509,18 @@ public:
 
 	void OnAbort()
 	{
+		eResult = ECalibAborted;
 		BIOS::DBG::Print("Calibration aborted\n");	
-		//return false;
+	}
+
+	void OnError()
+	{
+		eResult = ECalibError;
+	}
+
+	void OnFinish()
+	{
+		eResult = ECalibFinished;
 	}
 /*
 	void Wait( int nTime )
@@ -476,61 +530,4 @@ public:
 	*/
 };
 
-CCalibration g_Calibration;
-
-void CWndCalibration::OnWave()
-{
-	if ( g_Calibration.nDownload > 0 )
-		if ( --g_Calibration.nDownload == 0 )			
-		{
-#ifdef _WIN32
-			float fAvg = g_Calibration.nVertPos*256/200 + g_Calibration.fVoltage*32/0.2f;
-			if ( fAvg < 0 ) 
-				fAvg = 0;
-			if ( fAvg > 255.0f )
-				fAvg = 255.0f;
-
-			g_Calibration.OnWave( fAvg, 0.5f );
-			return;
 #endif
-			int nSum = 0;
-			int nMax = -1, nMin = -1;
-			for (int i=0; i</*BIOS::ADC::Length()*/ 4096; i++)
-			{
-				int nValue = BIOS::ADC::Get()&0xff;
-				if ( nMax == -1 )
-					nMax = nMin = nValue;
-				else
-				{
-					nMax = max(nMax, nValue);
-					nMin = min(nMin, nValue);
-				}
-				nSum += nValue;
-			}
-
-			float fAverage = (float)nSum/4096.0f;
-			float fVariance = (nMax-nMin)/4.0f;	// pseudo variance :)
-			g_Calibration.OnWave( fAverage, fVariance );
-		}
-}
-
-void CWndCalibration::OnInit()
-{
-	nDownload = -1;
-	g_Calibration.OnInit();
-}
-
-void CWndCalibration::OnStart()
-{
-	g_Calibration.Start();
-}
-
-void CWndCalibration::OnStop()
-{
-	g_Calibration.Stop();
-}
-
-bool CWndCalibration::IsRunning()
-{
-	return g_Calibration.bRunning;
-}

@@ -1,7 +1,7 @@
 #include "CalibDac.h"
 #include "Source/Gui/MainWnd.h"
 
-/*virtual*/ void CWndListCalAdc::OnMessage(CWnd* pSender, ui16 code, ui32 data)
+/*virtual*/ void CWndListCalDac::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
 	if ( pSender == &m_itmANumber && code == ToWord('u', 'p') )	
 	{
@@ -31,12 +31,15 @@
 		}
 		BIOS::GEN::ConfigureDc( m_nValueB );
 	}
-				
+
 	// Selector
 	if ( pSender == &m_itmExecute && code == ToWord('l', 'e') )	// provider selector combo box
 	{
-		MainWnd.m_wndConfirm.Show( this, "Message", "Do you really want to\nsave these settings?", RGB565(ffff00), "Yes", "No");
+		Save();
+		StopModal();
+		//MainWnd.m_wndConfirm.Show( this, "Message", "Do you really want to\nsave these settings?", RGB565(ffff00), "Yes", "No");
 	}
+	/*
 	if ( pSender == &MainWnd.m_wndConfirm && code == ToWord('e', 'd') && data == (ui32)"Yes" )
 	{
 		MainWnd.m_wndConfirm.Hide();
@@ -49,6 +52,6 @@
 	{
 		MainWnd.m_wndConfirm.Hide();
 		StopModal(); // hide this list
-	}
+	}*/
 }
 	

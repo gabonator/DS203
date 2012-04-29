@@ -82,8 +82,12 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Calibration.h" />
     <ClInclude Include="..\..\Source\Core\Serialize.h" />
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibAnalog.h" />
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibCore.h" />
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibDac.h" />
+    <ClInclude Include="..\..\Source\Gui\Calibration\CalibMenu.h" />
+    <ClInclude Include="..\..\Source\Gui\Calibration\Calibration.h" />
     <ClInclude Include="..\..\Source\Gui\User\Balls.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Calibration.h" />
     <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
     <ClInclude Include="..\..\Source\Gui\User\Snake.h" />
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h" />
@@ -134,8 +138,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\Serialize.cpp" />
-    <ClCompile Include="..\..\Source\Gui\User\CalibDac.cpp" />
-    <ClCompile Include="..\..\Source\Gui\User\Calibration.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Calibration\CalibAnalog.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Calibration\CalibDac.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Calibration\Calibration.cpp" />
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\stdafx.cpp" />

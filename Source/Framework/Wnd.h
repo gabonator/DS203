@@ -47,11 +47,13 @@ public:
 
 public:
 	enum {
+		// Window message
 		WmPaint = 1,
 		WmKey = 2,
 		WmTick = 3,
 		WmBroadcast = 4,
 
+		// Window style
 		WsHidden = 0,
 		WsVisible = 1,
 		WsNoActivate = 2,
@@ -96,7 +98,7 @@ public:
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	virtual void WindowMessage(int nMsg, int nParam = 0);
 	virtual void OnTimer();
-	virtual void OnTick();
+	//virtual void OnTick();
 	virtual void Update();
 
 	void SetFocus();

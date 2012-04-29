@@ -77,6 +77,17 @@ CApplication::~CApplication()
 
 bool CApplication::operator ()()
 {
+	static ui32 lLastTick = (ui32)-1;
+	ui32 lCurTick = BIOS::GetTick();
+	if ( lLastTick == (ui32)-1 )
+		lLastTick = lCurTick;
+	if ( lCurTick - lLastTick > 1000 )
+	{
+		int nSeconds = (lCurTick - lLastTick) / 1000;
+		lLastTick += nSeconds * 1000;
+		GLOBAL.m_Settings.Runtime.m_nUptime += nSeconds;
+	}
+
 	ui16 nKeys = BIOS::KEY::GetKeys();
 
 	GLOBAL.m_kp << nKeys;
@@ -86,9 +97,6 @@ bool CApplication::operator ()()
 		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
 	if ( BIOS::ADC::Ready() )
 	{
-		/*
-		GLOBAL.m_wndMain.OnMessage(NULL, ToWord('d', 'g'), 0);
-		*/
 		GLOBAL.m_wndMain.WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
 		BIOS::ADC::Restart();
 	}
