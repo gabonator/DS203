@@ -1,4 +1,5 @@
 #pragma once
+
 #include <Windows.h>
 #include <stdio.h>
 #include <crtdbg.h>
@@ -229,22 +230,50 @@ void Assert(const char *msg, int n)
 {
 }
 
+/*static*/ void BIOS::LCD::Shadow(int x1, int y1, int x2, int y2, unsigned int nColor)
+{
+	// rrggbbaa
+	int nA_ = nColor >> 24;
+	int nR_ = (nColor >> 16) & 0xff;
+	int nG_ = (nColor >> 8) & 0xff;
+	int nB_ = nColor & 0xff;
+
+	for (int x=x1; x<x2; x++)
+		for (int y=y1; y<y2; y++)
+			if ( !_Round(min(x-x1, x2-x-1), min(y-y1, y2-y-1)) )
+			{
+				ui16 nOld = GetPixel(x, y);
+				int nR = Get565R( nOld );
+				int nG = Get565G( nOld );
+				int nB = Get565B( nOld );
+
+				nR += ( (nR_ - nR) * nA_ ) >> 8;
+				nG += ( (nG_ - nG) * nA_ ) >> 8;
+				nB += ( (nB_ - nB) * nA_ ) >> 8;
+
+				PutPixel(x, y, RGB565RGB(nR, nG, nB));
+			}
+}
+
+
 /*static*/ ui16 BIOS::KEY::GetKeys()
 {
-	DWORD dwDevKeys = DEVICE->GetKeys();
+	int *pKeys = DEVICE->GetKeys();
 	ui16 nKeys = 0;
-	if ( dwDevKeys == VK_LEFT )
+	if ( pKeys[VK_LEFT] )
 		nKeys |= KeyLeft;
-	if ( dwDevKeys == VK_RIGHT )
+	if ( pKeys[VK_RIGHT] )
 		nKeys |= KeyRight;
-	if ( dwDevKeys == VK_UP )
+	if ( pKeys[VK_UP] )
 		nKeys |= KeyUp;
-	if ( dwDevKeys == VK_DOWN )
+	if ( pKeys[VK_DOWN] )
 		nKeys |= KeyDown;
-	if ( dwDevKeys == VK_RETURN )
+	if ( pKeys[VK_RETURN] )
 		nKeys |= KeyEnter;
-	if ( dwDevKeys == VK_BACK)
+	if ( pKeys[VK_BACK] )
 		nKeys |= KeyEscape;
+	if ( pKeys[VK_SPACE] )
+		nKeys |= KeyFunction;
 	return nKeys;
 }
 
@@ -409,6 +438,13 @@ void Assert(const char *msg, int n)
 {
 }
 
+bool bADCEnabled = false;
+
+/*static*/ void BIOS::ADC::Enable(bool bEnable)
+{
+	bADCEnabled = bEnable;
+}
+
 /*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBPosition, ui16 nTimePsc, ui16 nTimeArr)
 {
 }
@@ -417,6 +453,8 @@ BOOL bADCReady = FALSE;
 /*static*/ unsigned char BIOS::ADC::Ready()
 {
 	static long lLast = 0;
+	if ( !bADCEnabled )
+		return false;
 	if ( bADCReady )
 		return bADCReady;
 	long lTick = GetTickCount();
@@ -629,3 +667,8 @@ while (c++ < 25);
 return nv;
 }
 
+
+/*static*/ int BIOS::GetBattery()
+{
+	return 85;
+}

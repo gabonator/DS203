@@ -1,6 +1,10 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#ifndef _WIN32
+#error Include the folder "HwLayer/Win32" only for desktop application compilation
+#endif
+
 #include <windows.h>
 #include <crtdbg.h>
 #include <stdio.h>

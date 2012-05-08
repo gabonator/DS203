@@ -4,8 +4,13 @@
       BIOS::LCD::Print(6*8, 30, RGB565(ff0000), RGB565(ffffff), "FPGA configuration error");
       while (1){};
     }
-    __Set(ADC_CTRL, EN );
+//    __Set(ADC_CTRL, EN );
     __Set(STANDBY, DN);          // ÍË³öÊ¡µç×´Ì¬
+}
+
+/*static*/ void BIOS::ADC::Enable(bool bEnable)
+{
+    __Set(ADC_CTRL, bEnable ? EN : DN );
 }
 
 /*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr)
@@ -13,7 +18,7 @@
     __Set(TRIGG_MODE, UNCONDITION);
 
     // init channel
-    __Set(ADC_CTRL, EN);       
+//    __Set(ADC_CTRL, EN);       
     __Set(ADC_MODE, SEPARATE);               
 
     __Set(CH_A_COUPLE, nACouple); //0);

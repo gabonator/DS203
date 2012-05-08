@@ -21,7 +21,8 @@
 	ui16 nBPosition = Settings.CH2.u16Position;
 	ui16 nTimePsc = arrPsc[ (NATIVEENUM)Settings.Time.Resolution ];
 	ui16 nTimeArr = arrArr[ (NATIVEENUM)Settings.Time.Resolution ];
-
+	
+	BIOS::ADC::Enable(true);
 	BIOS::ADC::Configure( nACouple, nARange, nAOffset, nBCouple, nBRange, nBPosition, nTimePsc, nTimeArr );
 	BIOS::ADC::Restart();
 }

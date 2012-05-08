@@ -62,12 +62,14 @@ public:
 	static CDevice* m_pInstance;
 	CFrameBuffer display;
 	int keys;
+	int keybuf[1000];
 
 public:
 	CDevice()
 	{
 		m_pInstance = this;
 		keys = 0;
+		memset(keybuf, 0, sizeof(keybuf));
 	}
 	~CDevice()
 	{
@@ -79,14 +81,20 @@ public:
 	{
 		display.Blit( hDC );
 	}
-	void OnKey(int k)
+	void OnKeyDown(int k)
 	{
-		keys |= k;
+		_ASSERT( k >= 0 && k < 1000 );
+		keybuf[k] = 1;
+		//keys |= k;
 	}
-	int GetKeys()
+	void OnKeyUp(int k)
 	{
-		int t=keys;
-		keys = 0;
-		return t;
+		_ASSERT( k >= 0 && k < 1000 );
+		keybuf[k] = 0;
+		//keys |= k;
+	}
+	int* GetKeys()
+	{
+		return keybuf;
 	}
 };

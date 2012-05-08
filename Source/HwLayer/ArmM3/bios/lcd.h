@@ -126,6 +126,40 @@ CPoint m_cpBuffer;
 	RoundRect(rc.left, rc.top, rc.right, rc.bottom, clr);
 } 
 
+/*static*/ void BIOS::LCD::Shadow(int x1, int y1, int x2, int y2, unsigned int nColor)
+{
+	// rrggbbaa
+//	int nA_ = nColor >> 24;
+	int nR_ = (nColor >> 16) & 0xff;
+	int nG_ = (nColor >> 8) & 0xff;
+	int nB_ = nColor & 0xff;
+/*
+  __Point_SCR(x, 239-y);
+  __LCD_SetPixl(clr);
+  __Point_SCR(x, 239-y);
+  return __LCD_GetPixl();
+
+*/
+	for (int x=x1; x<x2; x++)
+		for (int y=y1; y<y2; y++)
+			if ( !_Round(min(x-x1, x2-x-1), min(y-y1, y2-y-1)) )
+			{
+			  __Point_SCR(x, 239-y);
+				ui16 nOld = __LCD_GetPixl();
+				//ui16 nOld = GetPixel(x, y);
+				int nR = Get565R( nOld );
+				int nG = Get565G( nOld );
+				int nB = Get565B( nOld );
+
+				nR += (nR_ - nR)>>1; //( (nR_ - nR) * nA_ ) >> 8;
+				nG += (nG_ - nG)>>1; //( (nG_ - nG) * nA_ ) >> 8;
+				nB += (nB_ - nB)>>1; //( (nB_ - nB) * nA_ ) >> 8;
+
+				//PutPixel(x, y, RGB565RGB(nR, nG, nB));
+				__LCD_SetPixl( RGB565RGB(nR, nG, nB) );
+			}
+}
+
 /*static*/ void BIOS::LCD::PutPixel(int x, int y, unsigned short clr)
 {
   __Point_SCR(x, 239-y);

@@ -1,66 +1,284 @@
 #ifndef __OTHERS_H__
 #define __OTHERS_H__
-/*
-class CWndModuleSelector : public CWnd
+
+#include <Source\Framework\Thread.h>
+
+class CWndToolbox : public CWnd, public CThread
 {
-public:
-	CWndMenuBlock	m_itmOscilloscope;
-	CWndMenuBlock	m_itmSpectrum;
-	CWndMenuBlock	m_itmGenerator;
-	CWndMenuBlock	m_itmSettings;
-	CWndMenuBlock	m_itmAbout;
-
-	virtual void Create(CWnd *pParent, ui16 dwFlags) 
+#pragma pack(push)
+#pragma pack(2)
+	struct BmpHdr 
 	{
-		CWnd::Create("CWndModuleSelector", dwFlags, CRect(0, 16, 400, 240), pParent);
+		ui16 wBfType;
+		ui32 dwBfSize;
+		ui16 wBfReserved1;
+		ui16 wBfReserved2;
+		ui32 dwBfOffset;
 
-		#define _BORDER 20
-		#define _SPACING 8
-		#define _LEFT(x) m_rcClient.left+_BORDER+(m_rcClient.Width()-_BORDER*2-_SPACING)*(x)/3
-		#define _RIGHT(x) _LEFT(x+1)-_SPACING
-		#define _TOP(y) m_rcClient.top+_BORDER+(m_rcClient.Height()-_BORDER*2-_SPACING)*(y)/3
-		#define _BOTTOM(y) _TOP(y+1)-_SPACING
-		#define _ITEM(x,y) CRect(_LEFT(x), _TOP(y), _RIGHT(x), _BOTTOM(y))
+		ui32 dwBiSize;
+		ui32 dwBiWidth;
+		ui32 dwBiHeight;
+		ui16 wBiPlanes;
+		ui16 wBiBitDepth;
+		ui32 dwBiCompression;
+		ui32 dwBiSizeImage;
+		ui32 dwBiXPels;
+		ui32 dwBiYPels;
 
-		m_itmOscilloscope.Create( "Oscillo\nscope", RGB565(ffffff), _ITEM(0, 0), this );
-		m_itmSpectrum.Create( "Spectrum\nanalyser", RGB565(ffffff), _ITEM(1, 0), this );
-		m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), _ITEM(2, 0), this );
+		ui32 dwBiClrUsed;
+		ui32 dwBiClrImportant;
+	};
+#pragma pack(pop)
 
-		m_itmSettings.Create( "Settings", RGB565(ffffff), _ITEM(0, 1), this );
-		m_itmAbout.Create( "About", RGB565(ffffff), _ITEM(1, 1), this );
+	enum {
+		Width = 200,
+		Height = 80
+	};
 
+public:
+	bool m_bRunning;
+	bool m_bFirst;
+	int m_nFocus;
+	
+	CWndToolbox()
+	{
+		m_bRunning = false;
+		m_nFocus = -1;
+		m_bFirst = true;
 	}
 
+	void Create( CWnd* pParent )
+	{
+	  CWnd::Create("CWndToolbox", CWnd::WsHidden | CWnd::WsModal, 
+			CRect( (BIOS::LCD::LcdWidth-Width)/2 ,
+			(BIOS::LCD::LcdHeight-Height)/2,
+			(BIOS::LCD::LcdWidth+Width)/2,
+			(BIOS::LCD::LcdHeight+Height)/2 ), pParent);
+	}
 	virtual void OnPaint()
 	{
-		BIOS::LCD::Bar( m_rcClient.left, m_rcClient.top, m_rcClient.right, m_rcClient.bottom, RGB565(0020ff));
-		CWnd::OnPaint();
+		CRect rcClient(m_rcClient);
+		if ( m_bFirst )
+		{
+			CDesign::Shadow(rcClient, 0x80ffffff); // aa rr gg bb
+			rcClient.Deflate( 2, 2, 2, 2 );
+			CDesign::Shadow(rcClient, 0x80ffffff); // aa rr gg bb
+			m_bFirst = false;
+		}
+
+		if ( m_nFocus == -1 )
+			m_nFocus = 0;
+
+		#define FOC(n) (m_nFocus==n)?RGB565(ffffff):RGB565(808080)
+		PrintBold( m_rcClient.left + 8, m_rcClient.top + 8, FOC(0), RGB565(000000), "\x10 Save bitmap");
+		PrintBold( m_rcClient.left + 8, m_rcClient.top + 8 + 16, FOC(1), RGB565(000000), "\x10 Save waveform (TXT)");
+		PrintBold( m_rcClient.left + 8, m_rcClient.top + 8 + 32, FOC(2), RGB565(000000), "\x10 Save waveform (SVG)");
+
+		char str[32];
+		BIOS::DBG::sprintf(str, "bat %d%%", BIOS::GetBattery());
+		BIOS::LCD::Printf( m_rcClient.left + 8, m_rcClient.top + 8 + 48, RGB565(000000), RGBTRANS, "\x10 Select  \xfe Close");
+		PrintBold( m_rcClient.left + 8 + 120, m_rcClient.top + 8, RGB565(ffff00), RGB565(000000), str);
+		//BIOS::LCD::Printf( m_rcClient.left + 8 + 130, m_rcClient.top + 8, RGB565(000000), RGBTRANS, str);
+	}
+
+	void PrintBold( int x, int y, ui16 clrFront, ui16 clrBorder, PCSTR szLabel )
+	{
+		BIOS::LCD::Print( x-1, y  , clrBorder, RGBTRANS, szLabel );
+		BIOS::LCD::Print( x  , y+1, clrBorder, RGBTRANS, szLabel );
+		BIOS::LCD::Print( x+1, y  , clrBorder, RGBTRANS, szLabel );
+		BIOS::LCD::Print( x  , y-1, clrBorder, RGBTRANS, szLabel );
+
+		BIOS::LCD::Print( x-1, y-1, clrBorder, RGBTRANS, szLabel );
+		BIOS::LCD::Print( x-1, y+1, clrBorder, RGBTRANS, szLabel );
+		BIOS::LCD::Print( x+1, y-1, clrBorder, RGBTRANS, szLabel );
+		BIOS::LCD::Print( x+1, y+1, clrBorder, RGBTRANS, szLabel );
+
+		BIOS::LCD::Print( x+0, y+0, clrFront, RGBTRANS, szLabel );
+	}
+
+	virtual BOOL IsRunning()
+	{
+		return m_bRunning;
 	}
 
 	virtual void OnKey(ui16 nKey)
 	{
-		if ( nKey & BIOS::KEY::KeyEnter )
+		if ( nKey == BIOS::KEY::KeyDown )
 		{
-			const char* strTarget = NULL;
-			if ( GetFocus() == &m_itmOscilloscope )
-				strTarget = "Oscilloscope"; 
-			if ( GetFocus() == &m_itmSpectrum )
-				strTarget = "Spectrum analyser";
-			if ( GetFocus() == &m_itmGenerator )
-				strTarget = "Generator"; 
-			if ( GetFocus() == &m_itmSettings )
-				strTarget = "Settings"; 
-			if ( GetFocus() == &m_itmAbout )
-				strTarget = "About";
-			
-			if (strTarget)
+			if ( m_nFocus < 2 )
 			{
-				SendMessage( &MainWnd.m_wndModuleSel, ToWord('g', 'o'), (NATIVEPTR)strTaget);
+				m_nFocus++;
+				Invalidate();
 			}
+			return;
 		}
+		if ( nKey == BIOS::KEY::KeyUp )
+		{
+			if ( m_nFocus > 0 )
+			{
+				m_nFocus--;
+				Invalidate();
+			}
+			return;
+		}
+		if ( nKey == BIOS::KEY::KeyEnter )
+		{
+			m_bRunning = FALSE;
+			return;
+		}
+		if ( nKey == BIOS::KEY::KeyLeft || nKey == BIOS::KEY::KeyRight )
+			return;
+
+		m_nFocus = -1;
+		m_bRunning = FALSE;
+	}
+
+	virtual int GetResult()
+	{
+		return m_nFocus;
+	}
+
+	void DoModal()
+	{
+		ui16 buffer[Width*Height];
+		BIOS::LCD::GetImage( m_rcClient, buffer );
+		m_bRunning = true;
+		m_bFirst = true;
+		BIOS::ADC::Enable(false);
+		CWnd* pSafeFocus = GetFocus();
+		SetFocus();
+		ShowWindow( CWnd::SwShow );
+		Invalidate();
+		while ( IsRunning() )
+		{
+			Sleep(20);
+		}
+		ShowWindow( CWnd::SwHide );
+		BIOS::LCD::PutImage( m_rcClient, buffer );
+
+		switch ( GetResult() )
+		{
+		case 0: 
+			// Save bitmap
+			SaveScreenshot();
+			BIOS::Beep(200);
+			break;
+		case 1: 
+			// Save wave TXT
+			_ASSERT(0);
+			break;
+		case 2: 
+			// Save wave SVG
+			_ASSERT(0);
+			break;
+		case -1: break;
+		}
+
+		BIOS::ADC::Enable(true);
+		pSafeFocus->SetFocus();
+	}
+
+	void SaveScreenshot()
+	{
+		char strName[] = "IMG000  BMP";
+		bool bExists = false;
+		FILEINFO f;
+		do {
+			bExists = false;
+			if ( BIOS::DSK::Open( &f, strName, BIOS::DSK::IoRead ) )
+			{
+				BIOS::DSK::Close( &f );
+				if ( ++strName[5] > '9' )
+				{
+					strName[5] = '0';
+					if ( ++strName[4] > '9' )
+					{
+						strName[4] = '0';
+						strName[3]++;
+						_ASSERT( strName[3] <= '9' );
+					}
+				}
+				continue;
+			}
+			break;
+		} while (1);
+
+		// strName contains unique non existent file name 
+		if ( !BIOS::DSK::Open( &f, strName, BIOS::DSK::IoWrite ) )
+		{
+			_ASSERT(0);
+			return;
+		}
+		int nSize = 0, nOffset = 0;
+		ui8* pData = (ui8*)BIOS::DSK::GetSharedBuffer();
+
+		BmpHdr* pHdr = (BmpHdr*)pData;
+		pHdr->wBfType = 'B' | ('M'<<8);
+		pHdr->dwBfSize = sizeof(BmpHdr) + BIOS::LCD::LcdWidth * BIOS::LCD::LcdHeight * 3;  // no need to align row to multiply of 4
+		pHdr->wBfReserved1 = 0;
+		pHdr->wBfReserved2 = 0;
+		pHdr->dwBfOffset = 0x36;
+
+		pHdr->dwBiSize = 0x28;
+		pHdr->dwBiWidth = BIOS::LCD::LcdWidth;
+		pHdr->dwBiHeight = BIOS::LCD::LcdHeight;
+		pHdr->wBiPlanes = 1;
+		pHdr->wBiBitDepth = 24;
+		pHdr->dwBiCompression = 0;
+		pHdr->dwBiSizeImage = BIOS::LCD::LcdWidth * BIOS::LCD::LcdHeight * 3;
+		pHdr->dwBiXPels = 0;
+		pHdr->dwBiYPels = 0;
+		pHdr->dwBiClrUsed = 0;
+		pHdr->dwBiClrImportant = 0;
+
+		nOffset = sizeof(BmpHdr);
+		for ( int y = BIOS::LCD::LcdHeight-1; y >= 0; y-- )
+			for ( int x = 0; x < BIOS::LCD::LcdWidth; x++ )
+			{
+				unsigned char arrColors[3];
+				ui16 wPixel = BIOS::LCD::GetPixel( x, y );
+				if (((x>>2)+(y>>2))&1)
+				{
+					BIOS::LCD::PutPixel( x, y, wPixel^0x18e3);
+				}
+				arrColors[2] = Get565R(wPixel);
+				arrColors[1] = Get565G(wPixel);
+				arrColors[0] = Get565B(wPixel);
+				for ( int c=0; c<3; c++ )
+				{
+					pData[nOffset] = arrColors[c];
+					if ( ++nOffset >= FILEINFO::SectorSize )
+					{
+						nSize += FILEINFO::SectorSize;
+						nOffset = 0;
+						BIOS::DSK::Write( &f, pData );
+					}
+
+				}
+			}
+
+		if ( nOffset > 0 )
+			BIOS::DSK::Write( &f, pData );
+
+		BIOS::DSK::Close( &f, nSize + nOffset );
+		// Display message
+		//Sleep(500);
+
+		for ( int y = BIOS::LCD::LcdHeight-1; y >= 0; y-- )
+			for ( int x = 0; x < BIOS::LCD::LcdWidth; x++ )
+			{
+				if (((x>>2)+(y>>2))&1)
+				{
+					ui16 wPixel = BIOS::LCD::GetPixel( x, y );
+					BIOS::LCD::PutPixel( x, y, wPixel^0x18e3);
+					// ..... ...... .....
+					// ...11 ...111 ...11
+				}
+			}
+
 	}
 };
-*/
+
 class CWndMenuCursor : public CWnd
 {
 public:

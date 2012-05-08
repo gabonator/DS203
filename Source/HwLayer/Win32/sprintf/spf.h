@@ -172,7 +172,9 @@ static int print(char **out, const char *format, va_list args )
 			++format;
 			width = pad = 0;
 			if (*format == '\0') break;
-			if (*format == '%') goto out;
+			if (*format == '%') {
+				goto out;
+			}
 			if (*format == '-') {
 				++format;
 				pad = PAD_RIGHT;

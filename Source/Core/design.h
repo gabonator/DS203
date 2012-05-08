@@ -104,6 +104,11 @@ public:
 		BIOS::LCD::BufferEnd();
 	}
 
+	static void Shadow(const CRect& rcRect, ui32 clr)
+	{
+		BIOS::LCD::Shadow( rcRect.left, rcRect.top, rcRect.right, rcRect.bottom, clr);
+	}
+
 };
 
 class CDesignFast
@@ -146,6 +151,11 @@ public:
 	static void ListItemEnabled(const CRect& rcRect)
 	{
 		BIOS::LCD::Bar(rcRect, RGB565(404040));
+	}
+
+	static void Shadow(const CRect& rcRect, ui32 clr)
+	{
+		BIOS::LCD::Shadow( rcRect.left, rcRect.top, rcRect.right, rcRect.bottom, 0xffffff80);
 	}
 };
 

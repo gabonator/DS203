@@ -1,6 +1,10 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#ifdef _WIN32
+#error Include the folder "HwLayer/ArmM3" only for target device application
+#endif
+
 #include <string.h>
 
 //typedef const unsigned short uc16;

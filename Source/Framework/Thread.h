@@ -1,3 +1,8 @@
+#ifndef __THREAD_H__
+#define __THREAD_H__
+
+#include <Source/Main/Application.h>
+
 class CThread 
 {
 public:
@@ -33,3 +38,5 @@ public:
 
 	}
 };
+
+#endif

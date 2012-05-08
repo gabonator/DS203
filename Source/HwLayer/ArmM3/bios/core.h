@@ -59,4 +59,26 @@ void Assert(const char*msg, int n)
 	BIOS::DelayMs(1000);
 }
 
+/*static*/ int BIOS::GetBattery()
+{
+	// returns value in percents
+  int Vb = __Get(V_BATTERY);
+/*
+  Level =0;
+  if(Vb > 3000 ) Level +=1;
+  if(Vb > 3500 ) Level +=1;
+  if(Vb > 3900 ) Level +=1;
+  if(Vb > 4100 ) Level +=1;
+*/
+                          
+	// 3000 -> 10%
+	// 4300 -> 100%         
+	int nPerc = 10+(Vb-3000)*(100-10)/(4300-3000);
+	if ( nPerc < 0 )
+		return 0;
+	if ( nPerc > 100 )
+		return 100;
+
+	return nPerc;
+}
 #endif

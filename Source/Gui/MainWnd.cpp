@@ -49,6 +49,8 @@ void CMainWnd::Create()
 	m_wndModuleSel.Create(this, WsHidden );
 	m_wndUserCalibration.Create( this, WsHidden );
 
+	m_wndToolbox.Create(this);
+
 	if ( Settings.Runtime.m_nMenuItem != -1 )
 		SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
 	else
@@ -135,3 +137,13 @@ void CMainWnd::Create()
 	*/
 }
 
+/*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
+{
+	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction )
+	{
+		// show toolbox
+		if ( !m_wndToolbox.IsVisible() )
+			m_wndToolbox.DoModal();
+	}
+	CWnd::WindowMessage( nMsg, nParam );
+}

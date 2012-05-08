@@ -323,6 +323,18 @@ bool CWnd::IsWindow()
 	return m_pParent ? true : false;
 }
 
+bool CWnd::IsVisible()
+{
+	CWnd* pWnd = this;
+	while ( pWnd->m_dwFlags & WsVisible )
+	{
+		pWnd = pWnd->GetParent();
+		if ( !pWnd )
+			return true;
+	}
+	return false;
+}
+
 void CWnd::StartModal( CWnd* pwndChildFocus /*= NULL*/ )
 {
 	m_arrModals.Add( CModal() );

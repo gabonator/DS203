@@ -104,6 +104,7 @@ public:
 	void SetFocus();
 	ui8 HasFocus();
 	bool IsWindow();
+	bool IsVisible();
 	CWnd* GetActiveWindow();
 	void Invalidate();
 	void SendMessage(CWnd* pTarget, ui16 code, ui32 data);

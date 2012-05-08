@@ -16,10 +16,44 @@ ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 
+#include <crtdbg.h>
 #include <Source/HwLayer/Win32/device.h>
 
 CDevice *CDevice::m_pInstance = NULL;
-CDevice dev;
+CDevice g_dev;
+CApplication g_app;
+
+HWND g_hwnd = NULL;
+BOOL g_running = FALSE;
+
+DWORD WINAPI ThreadProcDraw(HANDLE handle) 
+{
+	while ( !g_hwnd )
+		Sleep( 10 );
+
+	ShowWindow( g_hwnd, SW_SHOW );
+	HDC hdc = GetDC( g_hwnd );
+
+	while (g_running) 
+	{
+		g_dev.Blit( hdc );
+		Sleep( 10 );
+	}
+	return 0;
+}
+
+DWORD WINAPI ThreadProcApp(HANDLE handle) 
+{
+	while ( !g_hwnd )
+		Sleep( 10 );
+
+	while (g_running) 
+	{
+		g_dev();
+		g_app();	// contains sleep(1);
+	}
+	return 0;
+}
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
 					   HINSTANCE hPrevInstance,
@@ -43,13 +77,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return FALSE;
 	}
 	
-	CApplication app;
-
 	// Main message loop:
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		app();
-		dev();
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -96,10 +126,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-	SetTimer(hWnd, 0, 200, NULL);
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-
+	
+	g_hwnd = hWnd;
+	
 	return TRUE;
 }
 
@@ -113,11 +144,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY	- post a quit message and return
 //
 //
+#include <stdio.h>
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
+	static HANDLE hDrawThread = NULL;
+	static HANDLE hAppThread = NULL;
 
 	switch (message)
 	{
@@ -125,25 +159,46 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_ESCAPE)
 			PostQuitMessage(0);
 		break;
+
 	case WM_KEYDOWN:
-		dev.OnKey( (int)wParam );
+		g_dev.OnKeyDown( (int)wParam );
 		break;
-	case WM_TIMER:
-		InvalidateRect(hWnd, NULL, FALSE);
+
+	case WM_KEYUP:
+		g_dev.OnKeyUp( (int)wParam );
 		break;
+
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
 		break;
+
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		dev.Blit( hdc );
-		// TODO: Add any drawing code here...
+		g_dev.Blit( hdc );
 		EndPaint(hWnd, &ps);
 		break;
+
+	case WM_CREATE:
+	{
+		g_running = TRUE;
+		hDrawThread = CreateThread( NULL, NULL, &ThreadProcDraw, NULL, NULL, NULL );
+		hAppThread = CreateThread( NULL, NULL, &ThreadProcApp, NULL, NULL, NULL );
+		break;
+	}
+
+	case WM_CLOSE:
+		g_running = FALSE;
+		Sleep(10);
+		DestroyWindow(hWnd);
+		break;
+
 	case WM_DESTROY:
+		TerminateThread( hDrawThread, 1 );
+		TerminateThread( hAppThread, 1 );
 		PostQuitMessage(0);
 		break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

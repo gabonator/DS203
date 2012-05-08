@@ -194,7 +194,7 @@ ui16* _GetWave(ui8 nWaveIndex)
 				ui32 nTemp = CPUCLOCK;
 				ui32 nDiv = 20;
 				nDiv *= (Settings.Gen.nArr+1);
-				nDiv *= _GetCount(nWaveIndex); 
+			///	nDiv *= _GetCount(nWaveIndex); 
 				m_nBpm = (si16)( nTemp * 3 / (nDiv/ 20) );
 				nTemp /= nDiv;
 				m_nFreq = (si16)nTemp;

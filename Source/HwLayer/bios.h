@@ -10,6 +10,7 @@ public:
 	static ui32 GetTick();
 	static void Init();
 	static void Beep( int ms );
+	static int GetBattery();
 
 	class DBG {
 	public:
@@ -55,6 +56,7 @@ public:
 		
 		static void GetImage(const CRect& rcRect, ui16* pBuffer );
 		static void PutImage(const CRect& rcRect, ui16* pBuffer );
+		static void Shadow(int x1, int y1, int x2, int y2, unsigned int nColor);
 	};
 
 	class KEY {
@@ -67,6 +69,7 @@ public:
 			KeyDown = 8,
 			KeyEnter = 16,
 			KeyEscape = 32,
+			KeyFunction = 64
 		};
 
 	public:
@@ -79,6 +82,7 @@ public:
 		static unsigned char Ready();
 		static unsigned long Get();
 		static void Restart();
+		static void Enable(bool bEnable);
 		static void Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr);
 		static void ConfigureTrigger(ui16 nTThreshold, ui16 nVThreshold, ui8 nSource, ui8 nType);
 	};
