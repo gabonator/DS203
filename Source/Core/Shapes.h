@@ -58,6 +58,19 @@ static const char updown[] =
   "  ..      ..  "
   "   .      .   ";
 
+static const char leftright[] = 
+  "\x0e"
+  "      .       "
+  "     ...      "
+  "    .....     "
+  "      .       "
+  "      .       "
+  "      .       "
+  "    .....     "
+  "     ...      "
+  "      .       ";
+
+
 static const char cha_base[] = 
   "\x09"
   "........."
@@ -339,6 +352,33 @@ static const char trig_stop[] =
   "    .....     "
   "              ";
 
+static const char curx1[] = 
+  "\x0e"
+  ".. ..    .    "
+  "...     .     "
+  "  ...  ...... "
+  ".. ..         ";
+
+static const char cury1[] = 
+  "\x0e"
+  "..       .    "
+  ".....   .     "
+  "  ...  ...... "
+  "..            ";
+
+static const char curx2[] = 
+  "\x0e"
+  ".. ..  .    . "
+  "...   .    .. "
+  "  ... .   . . "
+  ".. ..  ...  . ";
+
+static const char cury2[] = 
+  "\x0e"
+  "..      .    ."
+  ".....  .    .."
+  "  ...  .   . ."
+  "..      ...  .";
 
 static const char check[] = "check";
 

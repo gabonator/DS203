@@ -134,9 +134,9 @@ public:
 				{
 					int nValue = 0;
 					if ( CCalibration::nChannel == 1 )
-						nValue = BIOS::ADC::Get() & 0xff;
+						nValue = BIOS::ADC::GetAt(i) & 0xff;
 					if ( CCalibration::nChannel == 2 )
-						nValue = (BIOS::ADC::Get() >> 8) & 0xff;
+						nValue = (BIOS::ADC::GetAt(i) >> 8) & 0xff;
 
 					if ( nMax == -1 )
 						nMax = nMin = nValue;

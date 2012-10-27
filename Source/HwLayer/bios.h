@@ -80,11 +80,20 @@ public:
 	public:
 		static void Init();
 		static unsigned char Ready();
+	
+	private:
 		static unsigned long Get();
+	public:
+
 		static void Restart();
 		static void Enable(bool bEnable);
+		static bool Enabled();
 		static void Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr);
 		static void ConfigureTrigger(ui16 nTThreshold, ui16 nVThreshold, ui8 nSource, ui8 nType);
+
+		static void Copy(int nCount);
+		static unsigned long GetCount();
+		static unsigned long GetAt(int i);
 	};
 
 	class GEN {

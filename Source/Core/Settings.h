@@ -5,7 +5,7 @@
 #include <Source/HwLayer/Types.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '2')
+#define _VERSION ToDword('D', 'S', 'C', '3')
 
 class CSettings : public CSerialize
 {
@@ -29,6 +29,10 @@ public:
 			Resolution;
 		enum eProbe { _1X = 0, _10X, _100X, _1000X, _ProbeMax = _1000X }
 			Probe;
+
+		static const float pfValueProbe[];
+		static const float pfValueResolution[];
+
 		ui16 u16Color;
 		si16 u16Position;
 		const char* pszName;
@@ -86,6 +90,9 @@ public:
 		enum {
 			_1, _2, _4, _FULL}
 			Range;
+
+		static const float pfValueResolution[];
+
 		si16 Shift;
 
 
@@ -150,11 +157,50 @@ public:
 			return *this;
 		}
 	};
+	class Marker : public CSerialize
+	{
+	public:
+		static const char* const ppszTextMode[];
+		static const char* const ppszTextSource[];
+		static const char* const ppszTextDisplay[];
+		static const char* const ppszTextFind[];
+
+		enum { _Time, _Voltage }
+			Type; // not necessary to serialize, cannot be changed by user
+		enum { _Off, _On, _Auto, _ModeMaxTime = _On, _ModeMaxVoltage = _Auto }
+			Mode;
+		enum { _CH1, _CH2, _SourceMax = _CH2 }
+			Source;
+		enum { _Raw, _Physical, _DisplayMax = _Physical }
+			Display;
+		enum EFind { _MinFind, _AvgFind, _MaxFind, _FindMax = _MaxFind };
+
+		int nValue;
+		ui16 u16Color;
+
+		PSTR strName;
+		PSTR strFullName;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Mode) << _E(Source) << _E(Display) << nValue;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Mode) >> _E(Source) >> _E(Display) >> nValue;
+			return *this;
+		}
+	};
 	class CRuntime : public CSerialize
 	{
 	public:
 		int m_nMenuItem;
 		int m_nUptime;
+		
+		FLOAT m_fTimeRes;
+		FLOAT m_fCH1Res;
+		FLOAT m_fCH2Res;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
@@ -180,6 +226,10 @@ public:
 	TimeBase Time;
 	Trigger Trig;
 	Generator Gen;
+	Marker		MarkT1;
+	Marker		MarkT2;
+	Marker		MarkY1;
+	Marker		MarkY2;
 
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;
@@ -189,7 +239,8 @@ public:
 	{
 		ui32 dwId = _VERSION;
 		ui32 dwEnd = ToDword('E', 'N', 'D', 27);
-		stream << dwId << Runtime << CH1 << CH2 << CH3 << CH4 << Time << Trig << Gen << dwEnd;
+		stream << dwId << Runtime << CH1 << CH2 << CH3 << CH4 << Time << Trig << Gen
+			<< MarkT1 << MarkT2 << MarkY1 << MarkY2 << dwEnd;
 
 		return *this;
 	}
@@ -202,7 +253,8 @@ public:
 		_ASSERT( dwId == _VERSION );
 		if ( dwId == _VERSION )
 		{
-			stream >> Runtime >> CH1 >> CH2 >> CH3 >> CH4 >> Time >> Trig >> Gen >> dwEnd;
+			stream >> Runtime >> CH1 >> CH2 >> CH3 >> CH4 >> Time >> Trig >> Gen
+				>> MarkT1 >> MarkT2 >> MarkY1 >> MarkY2 >> dwEnd;
 			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
 			Reset();
 		}

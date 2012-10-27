@@ -445,6 +445,11 @@ bool bADCEnabled = false;
 	bADCEnabled = bEnable;
 }
 
+/*static*/ bool BIOS::ADC::Enabled()
+{
+	return bADCEnabled;
+}
+
 /*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBPosition, ui16 nTimePsc, ui16 nTimeArr)
 {
 }
@@ -480,6 +485,28 @@ BOOL bADCReady = FALSE;
 	lCounter++;
 	return da | (db<<8);
 }
+
+#define ADCSIZE 4096
+unsigned long g_ADCMem[ADCSIZE];
+
+/*static*/ void BIOS::ADC::Copy(int nCount)
+{
+	_ASSERT( nCount <= ADCSIZE );
+	for ( int i = 0; i < ADCSIZE; i++ )
+		g_ADCMem[i] = Get();
+}
+
+/*static*/ unsigned long BIOS::ADC::GetCount()
+{
+	return ADCSIZE;
+}
+
+/*static*/ unsigned long BIOS::ADC::GetAt(int i)
+{
+	_ASSERT( i >= 0 && i < ADCSIZE );
+	return g_ADCMem[i];
+}
+
 
 /*static*/ void BIOS::ADC::Restart()
 {

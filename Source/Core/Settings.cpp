@@ -10,8 +10,12 @@ CSettings* CSettings::m_pInstance = NULL;
 		{"AC", "DC", "GND"};
 /*static*/ const char* const CSettings::AnalogChannel::ppszTextResolution[] =
 		{"50mV", "100mV", "200mV", "500mV", "1V", "2V", "5V", "10V"};
+/*static*/ const float CSettings::AnalogChannel::pfValueResolution[] =
+		{0.050f, 0.100f, 0.200f, 0.500f, 1.0f, 2.0f, 5.0f, 10.0f};
 /*static*/ const char* const CSettings::AnalogChannel::ppszTextProbe[] =
 		{"1 x", "10 x", "100 x", "1000 x"};
+/*static*/ const float CSettings::AnalogChannel::pfValueProbe[] =
+		{1.0f, 10.0f, 100.0f, 1000.0f};
 /*static*/ const char* const CSettings::DigitalChannel::ppszTextPolarity[] =
 		{"Positive", "Negative"};
 /*static*/ const char* const CSettings::TimeBase::ppszTextResolution[] =
@@ -19,8 +23,15 @@ CSettings* CSettings::m_pInstance = NULL;
 		"1us", "2us", "5us",
 		"10us", "20us", "50us", "100us", "200us", "500us",
 		"1ms", "2ms", "5ms",
-		"10ms", "20ms", "50ms", "100ms", "200us", "500ms", 
+		"10ms", "20ms", "50ms", "100ms", "200ms", "500ms", 
 		"1s" };
+/*static*/ const float CSettings::TimeBase::pfValueResolution[] =
+		{100e-9f, 200e-9f, 500e-9f,
+		1e-6f, 2e-6f, 5e-6f,
+		10e-6f, 20e-6f, 50e-6f, 100e-6f, 200e-6f, 500e-6f,
+		1e-3f, 2e-3f, 5e-3f,
+		10e-3f, 20e-3f, 50e-3f, 100e-3f, 200e-3f, 500e-3f,
+		1.0f};
 /*static*/ const char* const CSettings::Generator::ppszTextWave[] =
 		{"Sin", "Triangle", "Sawtooth", "Square", "Cardiac"};
 /*static*/ const char* const CSettings::Trigger::ppszTextSync[] =
@@ -29,6 +40,15 @@ CSettings* CSettings::m_pInstance = NULL;
 		{"CH1", "CH2", "CH3", "CH4", "Math"};
 /*static*/ const char* const CSettings::Trigger::ppszTextType[] =
 		{"high", "low"};
+
+/*static*/ const char* const CSettings::Marker::ppszTextMode[] =
+		{"Off", "On", "Auto"};
+/*static*/ const char* const CSettings::Marker::ppszTextSource[] =
+		{ "CH1", "CH2" };
+/*static*/ const char* const CSettings::Marker::ppszTextDisplay[] =
+		{ "Raw", "Units" };
+/*static*/ const char* const CSettings::Marker::ppszTextFind[] =
+		{ "Minimum", "Average", "Maximum" };
 
 CSettings::CSettings()
 {
@@ -88,6 +108,42 @@ void CSettings::Reset()
 	//Gen.nArr = 592; //2000-1;
 	Gen.nPsc = 180-1;
 	Gen.nArr = 5100;
+
+	MarkT1.Mode = Marker::_On;
+	MarkT1.Source = Marker::_CH1;
+	MarkT1.Display = Marker::_Physical;
+	MarkT1.nValue = 100;
+	MarkT1.u16Color = RGB565(707070);
+	MarkT1.Type = Marker::_Time;
+	MarkT1.strName = "X1";
+	MarkT1.strFullName = "Cursor X1";
+
+	MarkT2.Mode = Marker::_On;
+	MarkT2.Source = Marker::_CH1;
+	MarkT2.Display = Marker::_Physical;
+	MarkT2.nValue = 200;
+	MarkT2.u16Color = RGB565(d0d0d0);
+	MarkT2.Type = Marker::_Time;
+	MarkT2.strName = "X2";
+	MarkT2.strFullName = "Cursor X2";
+
+	MarkY1.Mode = Marker::_Auto;
+	MarkY1.Source = Marker::_CH1;
+	MarkY1.Display = Marker::_Physical;
+	MarkY1.nValue = 200;
+	MarkY1.u16Color = RGB565(707070);
+	MarkY1.Type = Marker::_Voltage;
+	MarkY1.strName = "Y1";
+	MarkY1.strFullName = "Cursor Y1";
+
+	MarkY2.Mode = Marker::_Auto;
+	MarkY2.Source = Marker::_CH1;
+	MarkY2.Display = Marker::_Physical;
+	MarkY2.nValue = 200;
+	MarkY2.u16Color = RGB565(d0d0d0);
+	MarkY2.Type = Marker::_Voltage;
+	MarkY2.strName = "Y2";
+	MarkY2.strFullName = "Cursor Y2";
 
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;

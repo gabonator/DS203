@@ -17,9 +17,6 @@ void CMainWnd::Create()
 		CSettings::TimeBase::ppszTextResolution[CSettings::TimeBase::_1s][1] == 's' &&
 		CSettings::TimeBase::ppszTextResolution[CSettings::TimeBase::_1s][2] == 0 );
 
-	//Settings.Save();
-	//Settings.SaveCalibration();
-
 	Settings.Load();
 	Settings.LoadCalibration();
 	
@@ -55,12 +52,6 @@ void CMainWnd::Create()
 		SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
 	else
 		SendMessage( &m_wndToolBar, ToWord('g', 'i'), 1);
-	
-	//m_wndToolBar.SetFocus();
-	//SendMessage( &m_wndToolBar, ToWord('g', 'o'), (ui32)"Meter");
-	//m_wndMenuInput.m_itmCH1.SetFocus();
-	//m_wndMenuGenerator.m_itmBpm.SetFocus();
-	//OnMessage( &m_wndToolBar, ToWord('f', 'c'), 0 ); // force update
 
 	SetTimer(1000);
 }
@@ -124,24 +115,13 @@ void CMainWnd::Create()
 			Invalidate();
 		}
 	}
-/*
-	if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
-	{
-		if ( m_wndGraph.m_dwFlags & WsVisible )
-			m_wndGraph.Invalidate();
-		else if ( m_wndSpectrumGraph.m_dwFlags & WsVisible )
-			m_wndSpectrumGraph.Invalidate();
-		else if ( GetFocus() != this )
-			SendMessage( GetFocus(), code, data );
-	}
-	*/
 }
 
 /*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
 {
 	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction )
 	{
-		// show toolbox
+		// show toolbox	
 		if ( !m_wndToolbox.IsVisible() )
 			m_wndToolbox.DoModal();
 	}

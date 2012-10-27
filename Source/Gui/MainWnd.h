@@ -5,7 +5,9 @@
 
 #include "Toolbar.h"
 #include "Oscilloscope/Oscilloscope.h"
+#include "Windows/WndConfirm.h"
 #include "Others.h"
+#include "ToolBox/ToolBox.h"
 #include "Generator/Generator.h"
 #include "MainMenu.h"
 #include "User/Screensaver.h"

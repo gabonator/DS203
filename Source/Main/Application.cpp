@@ -97,6 +97,7 @@ bool CApplication::operator ()()
 		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
 	if ( BIOS::ADC::Ready() )
 	{
+		BIOS::ADC::Copy( BIOS::ADC::GetCount() );
 		GLOBAL.m_wndMain.WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
 		BIOS::ADC::Restart();
 	}

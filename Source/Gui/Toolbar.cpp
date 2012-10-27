@@ -26,7 +26,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Authors", NULL},
 
 		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Triangle", &MainWnd.m_wndScreenSaver},
+		{ CBarItem::ISub,	"PS2 decod", &MainWnd.m_wndScreenSaver},
 		{ CBarItem::ISub,	"Snake", &MainWnd.m_wndUserGame},
 		{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
 		{ CBarItem::ISub,	"Calib", &MainWnd.m_wndUserCalibration},
@@ -171,6 +171,12 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		}
 		_ASSERT(0);
 	}
+}
+
+CWnd* CWndToolBar::GetCurrentLayout()
+{
+	CWndToolBar::CBarItem* pItems = GetMenuItems();
+	return pItems[m_nFocus].m_pWndMenu;
 }
 
 

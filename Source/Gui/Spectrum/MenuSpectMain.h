@@ -4,8 +4,7 @@
 #include <Source/Core/Controls.h>
 #include <Source/Core/ListItems.h>
 #include <Source/Core/Settings.h>
-#include <Source/Gui/Oscilloscope/Graph.h>
-
+#include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
 #include <Source/Gui/Oscilloscope/Input/ItemAnalog.h>
 
 class CWndMenuSpectMain : public CWnd

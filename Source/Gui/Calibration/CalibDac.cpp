@@ -35,11 +35,11 @@
 	// Selector
 	if ( pSender == &m_itmExecute && code == ToWord('l', 'e') )	// provider selector combo box
 	{
-		Save();
-		StopModal();
-		//MainWnd.m_wndConfirm.Show( this, "Message", "Do you really want to\nsave these settings?", RGB565(ffff00), "Yes", "No");
+//		Save();
+//		StopModal();
+		MainWnd.m_wndConfirm.Show( this, "Message", "Do you really want to\nsave these settings?", RGB565(ffff00), "Yes", "No");
 	}
-	/*
+
 	if ( pSender == &MainWnd.m_wndConfirm && code == ToWord('e', 'd') && data == (ui32)"Yes" )
 	{
 		MainWnd.m_wndConfirm.Hide();
@@ -52,6 +52,6 @@
 	{
 		MainWnd.m_wndConfirm.Hide();
 		StopModal(); // hide this list
-	}*/
+	}
 }
 	

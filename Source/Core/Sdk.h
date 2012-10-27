@@ -66,10 +66,10 @@ public:
 
 			virtual CHAR Get()
 			{
-				if ( m_nPos == 0 )
-					BIOS::ADC::Restart();
+				//if ( m_nPos == 0 )
+				//	BIOS::ADC::Restart();
 				if ( (m_nPos & 3) == 0 )
-					m_LastSample.m_ui32 = BIOS::ADC::Get();
+					m_LastSample.m_ui32 = BIOS::ADC::GetAt(m_nPos >> 2);
 
 				return m_LastSample.m_arr8[ m_nPos++ & 3 ];
 			};

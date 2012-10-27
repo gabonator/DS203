@@ -3,7 +3,7 @@
 
 #include <Source/Framework/Wnd.h>
 #include <Source/Core/Settings.h>
-#include <Source/Gui/Oscilloscope/Graph.h>
+#include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
 #include <string.h>
 
 static const ui16 arrHannWindow[512] = {
@@ -92,9 +92,9 @@ public:
 		if ( en1 || en2 )
 		{
 //			BIOS::ADC::Restart();
-			for(x=0; x<4096; x++)
+			for(x=0; x<BIOS::ADC::GetCount(); x++)
 			{
-				ui32 data = BIOS::ADC::Get();
+				ui32 data = BIOS::ADC::GetAt(x);
 				ui8 val = en1 ? (data & 0xff) : ((data>>8) & 0xff); // CH1
 				if ( x < 1024 )
 				{

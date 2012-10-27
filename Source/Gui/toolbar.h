@@ -39,9 +39,10 @@ public:
 		CWnd::Create("CToolbarWnd", WsVisible, CRect(0, 0, BIOS::LCD::LcdWidth, 16), pParent);
 	}
 
-	virtual void OnKey(ui16 nKey);
-	virtual void OnPaint();
-	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
+	virtual void	OnKey(ui16 nKey);
+	virtual void	OnPaint();
+	virtual void	OnMessage(CWnd* pSender, ui16 code, ui32 data);
+	CWnd*			GetCurrentLayout();
 
 private:
 	CBarItem* GetMenuItems();

@@ -3,6 +3,12 @@
 
 // input
 #include "Input/MenuInput.h"
-#include "Controls.h"
+#include "Marker/MenuMarker.h"
+#include "Controls/LevelRef.h"
+#include "Controls/TimeRef.h"
+#include "Controls/ZoomBar.h"
+#include "Controls/GraphOsc.h"
+#include "Controls/GraphSig.h"
+
 
 #endif

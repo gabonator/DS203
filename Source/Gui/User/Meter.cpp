@@ -113,12 +113,21 @@ void CWndUserMeter::OnWave()
 {
 	if (bTimer)
 		return;
-
+/*
+#ifdef _WIN32
+	m_fAverage = (float)167.27f;
+	m_fVariance = 0.312f;	
+	KillTimer();
+	SetTimer(100);
+	bTimer = true;
+	return;
+#endif
+*/
 	int nSum = 0;
 	int nMax = -1, nMin = -1;
-	for (int i=0; i</*BIOS::ADC::Length()*/ 4096; i++)
+	for (int i=0; i</*BIOS::ADC::Length()*/ (int)BIOS::ADC::GetCount(); i++)
 	{
-		int nValue = BIOS::ADC::Get()&0xff;
+		int nValue = BIOS::ADC::GetAt(i)&0xff;
 		if ( nMax == -1 )
 			nMax = nMin = nValue;
 		else

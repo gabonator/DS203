@@ -61,6 +61,18 @@
     <Filter Include="Source\Gui\Calibration">
       <UniqueIdentifier>{ad0e9f2d-ab5d-4dc0-874a-4b0a52deed3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Marker">
+      <UniqueIdentifier>{5a3d7f5b-4361-41f7-aaf0-6f5521eee447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Controls">
+      <UniqueIdentifier>{7f77a498-8139-429d-9fa5-28d30ca79fbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Windows">
+      <UniqueIdentifier>{753ec957-6c9a-4bd0-8628-ea7fb4cb08a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\ToolBox">
+      <UniqueIdentifier>{8c020046-6076-4572-a9a2-4380cf86186a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -113,12 +125,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Generator\Generator.h">
       <Filter>Source\Gui\Generator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls.h">
-      <Filter>Source\Gui\Oscilloscope</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Graph.h">
-      <Filter>Source\Gui\Oscilloscope</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Oscilloscope.h">
       <Filter>Source\Gui\Oscilloscope</Filter>
@@ -207,6 +213,45 @@
     <ClInclude Include="..\..\Source\Gui\Calibration\Calibration.h">
       <Filter>Source\Gui\Calibration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphBase.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphSig.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\LevelRef.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\TimeRef.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\ZoomBar.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Windows\WndConfirm.h">
+      <Filter>Source\Gui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\ToolBox\Export.h">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -252,9 +297,6 @@
     <ClCompile Include="..\..\Source\Gui\Generator\Generator.cpp">
       <Filter>Source\Gui\Generator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Graph.cpp">
-      <Filter>Source\Gui\Oscilloscope</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp">
       <Filter>Source\Gui\Oscilloscope\Input</Filter>
     </ClCompile>
@@ -284,6 +326,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp">
       <Filter>Source\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

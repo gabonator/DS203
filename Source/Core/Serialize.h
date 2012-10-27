@@ -26,6 +26,12 @@ public:
 		m_nLength = nLength;
 		m_nOffset = 0;
 	}
+	CStream( PSTR strBuffer )
+	{
+		m_pBuffer = strBuffer;
+		m_nLength = strlen(strBuffer);
+		m_nOffset = 0;
+	}
 
 	void Reset()
 	{
@@ -76,6 +82,11 @@ public:
 		for ( int i = 0; i < m_nLength; i++, pBuffer++ )
 			nAux ^= (*pBuffer) << ((i&3)<<3);
 		return nAux;
+	}
+	ui8 operator[](int nIndex)
+	{
+		_ASSERT( nIndex >= 0 && nIndex < GetLength() );
+		return ((ui8*)m_pBuffer)[nIndex];
 	}
 };
 

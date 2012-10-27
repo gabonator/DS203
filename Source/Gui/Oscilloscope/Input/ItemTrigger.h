@@ -67,21 +67,29 @@ public:
 		{
 			BIOS::LCD::Print( x, y, clr, RGBTRANS, CSettings::Trigger::ppszTextSync[Settings.Trig.Sync]);
 		}
+
 		x += 45;
 
-		switch ( Settings.Trig.State )
+		if ( !BIOS::ADC::Enabled() )
 		{
-		case CSettings::Trigger::_Run:
-			x += BIOS::LCD::Draw( x, y, RGB565(00b000), RGBTRANS, trig_run);
-			break;
-		case CSettings::Trigger::_Stop:
 			x += BIOS::LCD::Draw( x, y, RGB565(ff0000), RGBTRANS, trig_stop);
-			break;
-		case CSettings::Trigger::_Wait:
-		case CSettings::Trigger::_Unsync:
-			_ASSERT(0);
+		} else
+		{
+			switch ( Settings.Trig.State )
+			{
+			case CSettings::Trigger::_Run:
+				x += BIOS::LCD::Draw( x, y, RGB565(00b000), RGBTRANS, trig_run);
+				break;
+			case CSettings::Trigger::_Stop:
+				x += BIOS::LCD::Draw( x, y, RGB565(ff0000), RGBTRANS, trig_stop);
+				break;
+			case CSettings::Trigger::_Wait:
+			case CSettings::Trigger::_Unsync:
+				_ASSERT(0);
+			}
 		}
 	}
+
 	virtual void OnKey(ui16 nKey)
 	{
 		if ( nKey & BIOS::KEY::KeyLeft && m_proLevel-1 == CValueProvider::Yes )
@@ -112,20 +120,20 @@ public:
 	virtual void Create(CWnd *pParent) 
 	{
 		CWndMenuItem::Create( "Window", RGB565(b04000), 1, pParent);
-		m_proTime.Create( &Settings.Time.Shift, 0, 4095 );
+		m_proTime.Create( &Settings.Time.Shift, 0, 4096 - CWndGraph::BlkX * CWndGraph::DivsX );
 	}
 
 	virtual void OnKey(ui16 nKey)
 	{
 		if ( nKey & BIOS::KEY::KeyLeft && m_proTime-1 == CValueProvider::Yes )
 		{
-			for (ui8 t=0; t<32; t++)
+			for (ui8 t=0; t<32 && m_proTime-1 == CValueProvider::Yes; t++)
 				m_proTime--;
 			SendMessage(m_pParent, ToWord('w', 'u'), 0);
 		}
 		if ( nKey & BIOS::KEY::KeyRight && m_proTime+1 == CValueProvider::Yes )
 		{
-			for (ui8 t=0; t<32; t++)
+			for (ui8 t=0; t<32 && m_proTime+1 == CValueProvider::Yes; t++)
 				m_proTime++;
 			SendMessage(m_pParent, ToWord('w', 'u'), 0);
 		}
