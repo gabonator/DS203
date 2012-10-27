@@ -9,12 +9,12 @@ CWndMenuCursor::CWndMenuCursor()
 /*virtual*/ void CWndMenuCursor::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	CWnd::Create("CWndMenuCursor", dwFlags | CWnd::WsListener, CRect(320-CWndMenuItem::MarginLeft, 20, 400, 240), pParent);
-	m_itmX1.Create( "X1", &Settings.MarkT1, this );
-	m_itmY1.Create( "Y1", &Settings.MarkY1, this );
-	m_itmX2.Create( "X2", &Settings.MarkT2, this );
-	m_itmY2.Create( "Y2", &Settings.MarkY2, this );
-	m_itmDeltaY.Create("dY", &Settings.MarkY1, &Settings.MarkY2, this);
-	m_itmDeltaX.Create("dX", &Settings.MarkT1, &Settings.MarkT2, this);
+	m_itmX1.Create( (char*)"X1", &Settings.MarkT1, this );
+	m_itmY1.Create( (char*)"Y1", &Settings.MarkY1, this );
+	m_itmX2.Create( (char*)"X2", &Settings.MarkT2, this );
+	m_itmY2.Create( (char*)"Y2", &Settings.MarkY2, this );
+	m_itmDeltaY.Create( (char*)"dY", &Settings.MarkY1, &Settings.MarkY2, this);
+	m_itmDeltaX.Create( (char*)"dX", &Settings.MarkT1, &Settings.MarkT2, this);
 }
 
 /*virtual*/ void CWndMenuCursor::OnMessage(CWnd* pSender, ui16 code, ui32 data)
@@ -48,6 +48,12 @@ CWndMenuCursor::CWndMenuCursor()
 			 data == (NATIVEPTR)&m_itmY2 )
 		{
 			m_itmDeltaY.Invalidate();
+		}
+		if ( !BIOS::ADC::Enabled() )
+		{
+			// we should redraw the graph, but not immediatelly for keeping
+			// keyboard response quick
+			MainWnd.m_wndGraph.Invalidate();
 		}
 		return;
 	}
@@ -98,9 +104,10 @@ CWndMenuCursor::CWndMenuCursor()
 void CWndMenuCursor::Find(CSettings::Marker* pMarker, CSettings::Marker::EFind mode)
 {
 	int nSampleBegin, nSampleEnd;
-	int nMin, nMax, nMinI, nMaxI;
+	int nMin = 0, nMax = 0, nMinI = 0, nMaxI = 0;
 	MainWnd.m_wndGraph.GetCurrentRange( nSampleBegin, nSampleEnd );
-	for ( int i=nSampleBegin; i<nSampleEnd; i++ )
+
+	for ( int i = nSampleBegin; i < nSampleEnd; i++ )
 	{
 		int nAdc = BIOS::ADC::GetAt(i);
 		if ( pMarker->Source == CSettings::Marker::_CH1 )

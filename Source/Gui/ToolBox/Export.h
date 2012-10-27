@@ -1,3 +1,10 @@
+#ifndef __TOOLBOX_EXPORT_H__
+#define __TOOLBOX_EXPORT_H__
+
+#include <Source/Core/Serialize.h>
+#include <Source/Core/Settings.h>
+#include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
+
 class CBufferedWriter : public CSerialize
 {
 	ui8* m_pData;
@@ -21,7 +28,8 @@ public:
 
 	virtual CBufferedWriter& operator <<( PSTR str )
 	{
-		*this << CStream( str );
+		CStream stream(str);
+		*this << stream;
 		return *this;
 	}
 
@@ -265,9 +273,9 @@ public:
 		BIOS::DSK::Close( &f, nSize + nOffset );
 	}
 
-	void SaveCvs()
+	void SaveCsv()
 	{
-		char strName[] = "WAVE000 CVS";
+		char strName[] = "WAVE000 CSV";
 		FindUnusedFile( strName, 4 );
 
 		CBufferedWriter writer;
@@ -297,3 +305,5 @@ public:
 		writer.Close();
 	}
 };
+
+#endif

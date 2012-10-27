@@ -1,3 +1,7 @@
+bool g_bAdcEnabled = false;
+#define ADCSIZE 4096
+unsigned short g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
+
 /*static*/ void BIOS::ADC::Init()
 {
     if(__Get(FPGA_OK)== 0){
@@ -10,7 +14,13 @@
 
 /*static*/ void BIOS::ADC::Enable(bool bEnable)
 {
+		g_bAdcEnabled = bEnable;
     __Set(ADC_CTRL, bEnable ? EN : DN );
+}
+
+/*static*/ bool BIOS::ADC::Enabled()
+{
+	return g_bAdcEnabled;
 }
 
 /*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr)
@@ -86,14 +96,13 @@ CH_D Trigger source & kind select =>
 	__Set(TRIGG_MODE,  (nSource << 3) | nType);
 }
 
-#define ADCSIZE 4096
-unsigned long g_ADCMem[ADCSIZE];
-
 /*static*/ void BIOS::ADC::Copy(int nCount)
 {
 	_ASSERT( nCount <= ADCSIZE );
 	for ( int i = 0; i < ADCSIZE; i++ )
-		g_ADCMem[i] = Get();
+  { 
+		g_ADCMem[i] = Get() & 0xffff;
+  }
 }
 
 /*static*/ unsigned long BIOS::ADC::GetCount()

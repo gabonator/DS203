@@ -29,13 +29,13 @@ public:
 		if ( HasFocus() )
 			x -= 2;
 		x -= 9;
-		if ( m_strId == "X1" )
+		if ( m_strId[0] == 'X' && m_strId[1] == '1' )
 			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, curx1);
-		else if ( m_strId == "Y1" )
+		else if ( m_strId[0] == 'Y' && m_strId[1] == '1' )
 			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, cury1);
-		else if ( m_strId == "X2" )
+		else if ( m_strId[0] == 'X' && m_strId[1] == '2' )
 			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, curx2);
-		else if ( m_strId == "Y2" )
+		else if ( m_strId[0] == 'Y' && m_strId[1] == '2' )
 			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, cury2);
 		else
 			x += BIOS::LCD::Print( x, y, clr, RGBTRANS, m_strId );

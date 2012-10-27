@@ -21,7 +21,7 @@ public:
 	}
 
 	virtual void OnPaint()
-	{/*
+	{
 		const int ax[3] = {20, 380, 200};
 		const int ay[3] = {40, 50, 220};
 		if ( bReset )
@@ -39,40 +39,6 @@ public:
 		y += ay[i];
 		y >>= 1;
 		BIOS::LCD::PutPixel( x, y, (ui16)(n<<2));
-		*/
-		if ( x++ > 10 )
-			return;
-		BIOS::LCD::Bar(m_rcClient, RGB565(FFFFFF));
-		BIOS::LCD::Print(m_rcClient.left+8, m_rcClient.top + 8, RGB565(B00000), RGBTRANS, "Filter: h[0.00] = 1.00, h[-6.11] = 0.79");
-		BIOS::LCD::Print(m_rcClient.left+8, m_rcClient.top + 8+16, RGB565(000000), RGBTRANS, "Signal quality: 36% ");
-		BIOS::LCD::Print(m_rcClient.left+8, m_rcClient.top + 8+16+16, RGB565(000000), RGBTRANS, "Reconstructions: 69, errors: 0 ");//, 21*3+2*3);
-
-		CRect rcDecod( m_rcClient.left + 8, m_rcClient.top + 8+16+16+16+8, m_rcClient.right - 8, m_rcClient.bottom - 16 - 8 );
-		BIOS::LCD::Bar(rcDecod, RGB565(404060));
-		const char *msg = "<LSHIFT>a</LSHIFT>hoj, toto je pokus <LSHIFT>1</LSHIFT>";
-		int xx = rcDecod.left+2;
-		int yy = rcDecod.top+2;
-		const char* pmsg = msg;
-		char ch;
-		int clr = RGB565(ffff00);
-		while (ch = *pmsg++)
-		{
-			if (ch == '<')
-				clr = RGB565(00ff00);
-			BIOS::LCD::Printf(xx, yy, clr, RGBTRANS, "%c", ch);
-			xx += 8;
-			if ( xx >= rcDecod.right-8 )
-			{
-				xx = rcDecod.left+2;
-				yy+= 16;
-			}
-			if (ch == '>')
-				clr = RGB565(ffff00);
-		}
-		//BIOS::LCD::Print(rcDecod.left + 2, rcDecod.top + 2, RGB565(000000), RGBTRANS, "<LSHIFT>A</LSHIFT>hoj, toto je pokus <LSHIFT>1</LSHIFT>");
-
-		BIOS::LCD::Print(m_rcClient.left+8, m_rcClient.bottom-20, RGB565(000000), RGBTRANS, "Code: F0 12");
-		BIOS::LCD::Print(m_rcClient.right-200, m_rcClient.bottom-20, RGB565(00ff00), 0, "Trig waiting...");
 	}
 
 	void OnTick()	

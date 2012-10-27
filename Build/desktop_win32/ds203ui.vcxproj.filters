@@ -120,9 +120,6 @@
     <ClInclude Include="..\..\Source\Gui\toolbar.h">
       <Filter>Source\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\About\ScreenSaver.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Generator\Generator.h">
       <Filter>Source\Gui\Generator</Filter>
     </ClInclude>
@@ -252,6 +249,9 @@
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h">
       <Filter>Source\Gui\ToolBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -332,6 +332,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp">
       <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp">
+      <Filter>Source\Gui\ToolBox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

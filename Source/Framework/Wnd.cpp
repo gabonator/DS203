@@ -275,7 +275,7 @@ CWnd* CWnd::_GetNextActiveWindow()
 CWnd* CWnd::_GetPrevActiveWindow()
 {
 	CWnd *pWnd = GetPrev();
-	while ( pWnd && ((!pWnd->m_dwFlags & WsVisible) || (pWnd->m_dwFlags & WsNoActivate)) )
+	while ( pWnd && ( !(pWnd->m_dwFlags & WsVisible) || (pWnd->m_dwFlags & WsNoActivate)) )
 		pWnd = pWnd->GetPrev();
 
 	if (!pWnd && m_pParent && (m_pParent->m_dwFlags & WsModal))

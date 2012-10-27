@@ -178,8 +178,8 @@ public:
 		int nValue;
 		ui16 u16Color;
 
-		PSTR strName;
-		PSTR strFullName;
+		PCSTR strName;
+		PCSTR strFullName;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{

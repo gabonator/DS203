@@ -26,7 +26,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Authors", NULL},
 
 		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"PS2 decod", &MainWnd.m_wndScreenSaver},
+		{ CBarItem::ISub,	"Demo", &MainWnd.m_wndScreenSaver},
 		{ CBarItem::ISub,	"Snake", &MainWnd.m_wndUserGame},
 		{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
 		{ CBarItem::ISub,	"Calib", &MainWnd.m_wndUserCalibration},

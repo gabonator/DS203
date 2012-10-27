@@ -101,6 +101,7 @@
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h" />
     <ClInclude Include="..\..\Source\Gui\User\Balls.h" />
     <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
+    <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h" />
     <ClInclude Include="..\..\Source\Gui\User\Snake.h" />
     <ClInclude Include="..\..\Source\Gui\Windows\WndConfirm.h" />
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h" />
@@ -118,7 +119,6 @@
     <ClInclude Include="..\..\Source\Gui\MainWndSdk.h" />
     <ClInclude Include="..\..\Source\Gui\Others.h" />
     <ClInclude Include="..\..\Source\Gui\toolbar.h" />
-    <ClInclude Include="..\..\Source\Gui\About\ScreenSaver.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Generator.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Oscilloscope.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ItemAnalog.h" />
@@ -155,6 +155,7 @@
     <ClCompile Include="..\..\Source\Gui\Calibration\Calibration.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
+    <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp" />
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\stdafx.cpp" />

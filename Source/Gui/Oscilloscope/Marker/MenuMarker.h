@@ -5,15 +5,7 @@
 #include <Source/Core/ListItems.h>
 #include <Source/Core/Settings.h>
 #include <Source/Gui/Oscilloscope/Controls/GraphOsc.h>
-/*
-#include "ListAnalog.h"
-#include "ListDigital.h"
-#include "ListTrigger.h"
-#include "ItemAnalog.h"
-#include "ItemDigital.h"
-#include "ItemTime.h"
-#include "ItemTrigger.h"
-*/
+
 #include "ItemMarker.h"
 #include "ItemDelta.h"
 #include "ItemMarker.h"

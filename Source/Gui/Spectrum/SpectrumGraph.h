@@ -6,6 +6,7 @@
 #include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
 #include <string.h>
 
+// FFTLEN=1025
 static const ui16 arrHannWindow[512] = {
   0x0000, 0x0000, 0x0002, 0x0005, 0x0009, 0x000f, 0x0016, 0x001e, 0x0027, 0x0032, 0x003d, 0x004a, 0x0058, 0x0068, 0x0079, 0x008a, 0x009e, 0x00b2, 0x00c8, 0x00de, 0x00f6, 0x0110, 0x012a, 0x0146, 0x0163, 0x0181, 0x01a0, 0x01c1, 0x01e3, 0x0206, 0x022a, 0x0250, 
   0x0276, 0x029e, 0x02c7, 0x02f2, 0x031d, 0x034a, 0x0378, 0x03a7, 0x03d7, 0x0409, 0x043c, 0x0470, 0x04a5, 0x04db, 0x0513, 0x054b, 0x0585, 0x05c0, 0x05fd, 0x063a, 0x0679, 0x06b8, 0x06f9, 0x073b, 0x077f, 0x07c3, 0x0809, 0x084f, 0x0897, 0x08e0, 0x092b, 0x0976, 
@@ -61,8 +62,9 @@ public:
 
 	virtual void OnPaint()
 	{
-		si16 arrBufferIn[1024*2];
-		si16 arrBufferOut[1024*2];
+#define FFTLEN 512
+		si16 arrBufferIn[FFTLEN*2];
+		si16 arrBufferOut[FFTLEN*2];
 		ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
 		ui8 arrDisplay[DivsX*BlkX];
 
@@ -92,19 +94,16 @@ public:
 		if ( en1 || en2 )
 		{
 //			BIOS::ADC::Restart();
-			for(x=0; x<BIOS::ADC::GetCount(); x++)
+			for(x=0; x<FFTLEN; x++)
 			{
 				ui32 data = BIOS::ADC::GetAt(x);
 				ui8 val = en1 ? (data & 0xff) : ((data>>8) & 0xff); // CH1
-				if ( x < 1024 )
-				{
-					arrBufferIn[x<<1] = val<<8;
-					arrBufferIn[(x<<1)|1] = 0;
-				}
+				arrBufferIn[x<<1] = val<<8;
+				arrBufferIn[(x<<1)|1] = 0;
 			}
  	
-			BIOS::FFT::Window(arrBufferIn, arrHannWindow, 1024);
-			BIOS::FFT::Convert(arrBufferOut, arrBufferIn, 1024);
+			BIOS::FFT::Window(arrBufferIn, arrHannWindow, FFTLEN);
+			BIOS::FFT::Convert(arrBufferOut, arrBufferIn, FFTLEN);
  	
 			memset( arrDisplay, 0, sizeof(arrDisplay) );
  	
@@ -114,7 +113,7 @@ public:
 				if (val < 0) val = 0;
 				if (val >= 200) val = 199;
  	
-				int nDispX = x*(DivsX*BlkX)/1024;
+				int nDispX = x*(DivsX*BlkX)/FFTLEN;
 				arrDisplay[nDispX] = max(arrDisplay[nDispX], val);
 			}
 		}
