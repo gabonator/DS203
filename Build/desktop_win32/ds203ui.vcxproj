@@ -91,13 +91,18 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphSig.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\LevelRef.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\OscInfo.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\TimeRef.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\ZoomBar.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\Export.h" />
+    <ClInclude Include="..\..\Source\Gui\ToolBox\Manager.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h" />
     <ClInclude Include="..\..\Source\Gui\User\Balls.h" />
     <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
@@ -155,6 +160,8 @@
     <ClCompile Include="..\..\Source\Gui\Calibration\Calibration.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />
+    <ClCompile Include="..\..\Source\Gui\ToolBox\Manager.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp" />
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp" />

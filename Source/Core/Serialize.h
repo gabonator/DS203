@@ -83,7 +83,7 @@ public:
 			nAux ^= (*pBuffer) << ((i&3)<<3);
 		return nAux;
 	}
-	ui8 operator[](int nIndex)
+	ui8& operator[](int nIndex)
 	{
 		_ASSERT( nIndex >= 0 && nIndex < GetLength() );
 		return ((ui8*)m_pBuffer)[nIndex];

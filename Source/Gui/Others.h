@@ -27,6 +27,7 @@ public:
 	}
 };
 */
+/*
 class CWndMenuMeas : public CWnd
 {
 public:
@@ -48,7 +49,7 @@ public:
 		m_itm6.Create("Avg:\n0.233V", RGB565(00ff00), 2, this);
 	}
 };
-
+*/
 class CWndMenuSettings : public CWnd
 {
 public:

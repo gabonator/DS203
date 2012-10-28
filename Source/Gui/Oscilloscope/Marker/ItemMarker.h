@@ -112,6 +112,7 @@ public:
 		if ( nKey & BIOS::KEY::KeyEnter )
 		{
 			SendMessage(m_pParent, ToWord('m', 'c'), (ui32)(NATIVEPTR)m_pMarker);
+			return;
 		}
 		CWnd::OnKey( nKey );
 	}

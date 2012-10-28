@@ -33,16 +33,21 @@ void CWndToolbox::Create( CWnd* pParent )
 		m_nFocus = 0;
 
 	#define FOC(n) (m_nFocus==n)?RGB565(ffffff):RGB565(808080)
-	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2, FOC(0), RGB565(000000), 
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2, FOC(0), RGB565(000000), "\x10 Waveform manager");
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 16, FOC(1), RGB565(000000), 
 		m_bAdcEnabled ? "\x10 Pause" : "\x10 Resume" );
-	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 16, FOC(1), RGB565(000000), "\x10 Save bitmap");
 	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 32, FOC(2), RGB565(000000), "\x10 Save waveform (BIN)");
 	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 48, FOC(3), RGB565(000000), "\x10 Save waveform (CSV)");
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 64, FOC(4), RGB565(000000), "\x10 Save bitmap");
 
 	char str[32];
 	BIOS::DBG::sprintf(str, "bat %d%%", BIOS::GetBattery());
-	BIOS::LCD::Printf( m_rcClient.left + 8, m_rcClient.top + 2 + 64, RGB565(000000), RGBTRANS, "\x10 Select  \xfe Close");
-	PrintBold( m_rcClient.left + 8 + 120, m_rcClient.top + 2, RGB565(ffff00), RGB565(000000), str);
+	BIOS::LCD::Line( m_rcClient.left + 4, m_rcClient.top + 2 + 80 - 2, 
+		m_rcClient.right - 4, m_rcClient.top + 2 + 80 - 2, RGB565(e0e0e0) );
+	BIOS::LCD::Line( m_rcClient.left + 4, m_rcClient.top + 2 + 80 - 1, 
+		m_rcClient.right - 4, m_rcClient.top + 2 + 80 - 1, RGB565(808080) );
+	BIOS::LCD::Printf( m_rcClient.left + 8, m_rcClient.top + 2 + 80, RGB565(000000), RGBTRANS, "\x10 Select  \xfe Close");
+	PrintBold( m_rcClient.left + 8 + 120, m_rcClient.top + 2 + 64, RGB565(ffff00), RGB565(000000), str);
 	//BIOS::LCD::Printf( m_rcClient.left + 8 + 130, m_rcClient.top + 8, RGB565(000000), RGBTRANS, str);
 }
 
@@ -70,7 +75,7 @@ void CWndToolbox::PrintBold( int x, int y, ui16 clrFront, ui16 clrBorder, PCSTR 
 {
 	if ( nKey == BIOS::KEY::KeyDown )
 	{
-		if ( m_nFocus < 3 )
+		if ( m_nFocus < MenuMax )
 		{
 			m_nFocus++;
 			Invalidate();
@@ -105,7 +110,7 @@ void CWndToolbox::PrintBold( int x, int y, ui16 clrFront, ui16 clrBorder, PCSTR 
 
 void CWndToolbox::DoModal()
 {
-	BIOS::Beep(200);
+	BIOS::Beep(100);
 #ifdef _WIN32
 	// no enough ram for this on ARM M3 :(
 	ui16 buffer[Width*Height];
@@ -118,6 +123,8 @@ void CWndToolbox::DoModal()
 
 	if ( MainWnd.m_wndMenuInput.m_wndListTrigger.IsVisible() )
 		MainWnd.m_wndMenuInput.m_wndListTrigger.Invalidate();
+	if ( MainWnd.m_wndMenuInput.m_itmTrig.IsVisible() )
+		MainWnd.m_wndMenuInput.m_itmTrig.Invalidate();
 
 	CWnd* pSafeFocus = GetFocus();
 	SetFocus();
@@ -127,7 +134,6 @@ void CWndToolbox::DoModal()
 	{
 		Sleep(20);
 	}
-	BIOS::Beep(200);
 	ShowWindow( CWnd::SwHide );
 #ifdef _WIN32
 	BIOS::LCD::PutImage( m_rcClient, buffer );
@@ -135,36 +141,41 @@ void CWndToolbox::DoModal()
 
 	switch ( GetResult() )
 	{
-	case 0: 
+	case MenuPauseResume: 
 		// Resume / Pause
 		m_bAdcEnabled = !m_bAdcEnabled;
 		break;
-	case 1: 
+	case MenuSaveBitmap: 
 		// Save bitmap
 		SaveScreenshot();
 		BIOS::Beep(200);
 		break;
-	case 2: 
+	case MenuSaveBin: 
 		// Save wave BIN
 		SaveBinary();
 		BIOS::Beep(200);
 		break;
-	case 3: 
-		// Save wave SVG
+	case MenuSaveCsv: 
+		// Save wave CSV
 		SaveCsv();
 		BIOS::Beep(200);
+		break;
+	case MenuManager:
+		m_bAdcEnabled = FALSE;
+		// Load wave BIN
 		break;
 	case -1: break;
 	}
 
 	BIOS::ADC::Enable( m_bAdcEnabled );
 
-///		if ( MainWnd.m_wndMenuInput.m_wndListTrigger.IsVisible() )
-///			MainWnd.m_wndMenuInput.m_wndListTrigger.Invalidate();
+	if ( MainWnd.m_wndMenuInput.m_wndListTrigger.IsVisible() )
+		MainWnd.m_wndMenuInput.m_wndListTrigger.Invalidate();
+	if ( MainWnd.m_wndMenuInput.m_itmTrig.IsVisible() )
+		MainWnd.m_wndMenuInput.m_itmTrig.Invalidate();
 
 	pSafeFocus->SetFocus();
 #ifndef _WIN32
 	MainWnd.Invalidate();
 #endif
-
 }

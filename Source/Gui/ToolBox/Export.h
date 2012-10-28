@@ -45,7 +45,6 @@ public:
 			}
 		}
 		m_nSize += stream.GetLength();
-		stream.GetLength();
 		return *this;
 	}
 
@@ -54,6 +53,66 @@ public:
 		if ( m_nOffset > 0 )
 			BIOS::DSK::Write( &m_FileInfo, m_pData );
 		BIOS::DSK::Close( &m_FileInfo, m_nSize );
+	}
+};
+
+class CBufferedReader : public CSerialize
+{
+	ui8* m_pData;
+	int m_nOffset;
+	FILEINFO m_FileInfo;
+
+public:
+	void Open( PSTR strName )
+	{
+		m_pData = (ui8*)BIOS::DSK::GetSharedBuffer();
+		m_nOffset = 0;
+
+		if ( !BIOS::DSK::Open( &m_FileInfo, strName, BIOS::DSK::IoRead ) )
+		{
+			_ASSERT(0);
+			return;
+		}
+		BIOS::DSK::Read( &m_FileInfo, m_pData );
+	}
+
+	virtual CBufferedReader& operator >>( PSTR str )
+	{
+		// unsafe!
+		int i;
+		int nLimit = 32;
+		for ( i = 0; i < nLimit-1; i++ )
+		{
+			str[i] = m_pData[m_nOffset++];
+			if ( m_nOffset == FILEINFO::SectorSize )
+			{
+				m_nOffset = 0;
+				BIOS::DSK::Read( &m_FileInfo, m_pData );
+			}
+			if ( str[i] == '\n' )
+				break;
+		}
+		str[i] = 0;
+		return *this;
+	}
+
+	virtual CBufferedReader& operator >>( CStream& stream )
+	{
+		for (int i = 0; i < stream.GetLength(); i++ )
+		{
+			stream[i] = m_pData[m_nOffset++];
+			if ( m_nOffset == FILEINFO::SectorSize )
+			{
+				m_nOffset = 0;
+				BIOS::DSK::Read( &m_FileInfo, m_pData );
+			}
+		}
+		return *this;
+	}
+
+	void Close()
+	{
+		BIOS::DSK::Close( &m_FileInfo );
 	}
 };
 
@@ -115,29 +174,6 @@ public:
 		char strName[] = "IMG000  BMP";
 		FindUnusedFile( strName, 3 );
 		FILEINFO f;
-		/*
-		bool bExists = false;
-		FILEINFO f;
-		do {
-			bExists = false;
-			if ( BIOS::DSK::Open( &f, strName, BIOS::DSK::IoRead ) )
-			{
-				BIOS::DSK::Close( &f );
-				if ( ++strName[5] > '9' )
-				{
-					strName[5] = '0';
-					if ( ++strName[4] > '9' )
-					{
-						strName[4] = '0';
-						strName[3]++;
-						_ASSERT( strName[3] <= '9' );
-					}
-				}
-				continue;
-			}
-			break;
-		} while (1);
-		*/
 
 		// strName contains unique non existent file name 
 		if ( !BIOS::DSK::Open( &f, strName, BIOS::DSK::IoWrite ) )
@@ -218,29 +254,6 @@ public:
 		char strName[] = "WAVE000 DAT";
 		FindUnusedFile( strName, 4 );
 		FILEINFO f;
-		/*
-		bool bExists = false;
-		FILEINFO f;
-		do {
-			bExists = false;
-			if ( BIOS::DSK::Open( &f, strName, BIOS::DSK::IoRead ) )
-			{
-				BIOS::DSK::Close( &f );
-				if ( ++strName[6] > '9' )
-				{
-					strName[6] = '0';
-					if ( ++strName[5] > '9' )
-					{
-						strName[5] = '0';
-						strName[4]++;
-						_ASSERT( strName[4] <= '9' );
-					}
-				}
-				continue;
-			}
-			break;
-		} while (1);
-		*/
 
 		// strName contains unique non existent file name 
 		if ( !BIOS::DSK::Open( &f, strName, BIOS::DSK::IoWrite ) )

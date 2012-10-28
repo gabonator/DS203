@@ -73,6 +73,9 @@
     <Filter Include="Source\Gui\ToolBox">
       <UniqueIdentifier>{8c020046-6076-4572-a9a2-4380cf86186a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Meas">
+      <UniqueIdentifier>{1a9499cf-879a-4edf-9576-a27a545a0544}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -252,6 +255,21 @@
     <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\ToolBox\Manager.h">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h">
+      <Filter>Source\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h">
+      <Filter>Source\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h">
+      <Filter>Source\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\OscInfo.h">
+      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -335,6 +353,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp">
       <Filter>Source\Gui\ToolBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\ToolBox\Manager.cpp">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp">
+      <Filter>Source\Gui\Oscilloscope\Meas</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

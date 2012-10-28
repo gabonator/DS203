@@ -75,13 +75,19 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	int nPrev1 = -1, nPrev2 = -1;
 
 	int nMarkerT1 = -1, nMarkerT2 = -1, nMarkerY1 = -1, nMarkerY2 = -1;
+	bool bAreaT = false;
 
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuCursor )
 		SetupMarkers( Ch1fast, Ch2fast, nMarkerT1, nMarkerT2, nMarkerY1, nMarkerY2 );
+	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuMeas )
+		SetupSelection( bAreaT, nMarkerT1, nMarkerT2 );
 
 	for (ui16 x=0; x<nMax; x++, nIndex++)
 	{
 		int clrCol = (nTriggerTime != x) ? 0x0101 : 0x00;
+
+		if ( bAreaT && nIndex > nMarkerT1 && nIndex < nMarkerT2 )
+			clrCol = RGB565(4040b0);
 		if ( nMarkerT1 == nIndex )
 			clrCol = Settings.MarkT1.u16Color;
 		if ( nMarkerT2 == nIndex )
@@ -150,6 +156,20 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
  
 		BIOS::LCD::Buffer( m_rcClient.left + x, m_rcClient.top, column, DivsY*BlkY );
 	}
+}
+
+void CWndOscGraph::SetupSelection( bool& bSelection, int& nMarkerT1, int& nMarkerT2 )
+{
+	bSelection = ( Settings.MarkT1.Mode == CSettings::Marker::_On && 
+		Settings.MarkT2.Mode == CSettings::Marker::_On );
+	
+	if ( !bSelection )
+		return;
+	if ( Settings.MarkT1.nValue >= Settings.MarkT2.nValue )
+		return;
+
+	nMarkerT1 = Settings.MarkT1.nValue;
+	nMarkerT2 = Settings.MarkT2.nValue;
 }
 
 void CWndOscGraph::SetupMarkers( CSettings::Calibrator::FastCalc& Ch1fast, CSettings::Calibrator::FastCalc& Ch2fast,

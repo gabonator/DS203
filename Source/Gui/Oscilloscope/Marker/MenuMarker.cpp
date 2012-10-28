@@ -25,6 +25,7 @@ CWndMenuCursor::CWndMenuCursor()
 		MainWnd.m_wndGraph.ShowWindow( SwHide );
 		MainWnd.m_wndLReferences.ShowWindow( SwHide );
 		MainWnd.m_wndTReferences.ShowWindow( SwHide );
+		MainWnd.m_wndInfoBar.ShowWindow( SwHide );
 		return;
 	}
 
@@ -33,6 +34,7 @@ CWndMenuCursor::CWndMenuCursor()
 		MainWnd.m_wndGraph.ShowWindow( SwShow );
 		MainWnd.m_wndLReferences.ShowWindow( SwShow );
 		MainWnd.m_wndTReferences.ShowWindow( SwShow );
+		MainWnd.m_wndInfoBar.ShowWindow( SwShow );
 		return;
 	}
 

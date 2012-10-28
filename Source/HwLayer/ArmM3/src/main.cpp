@@ -6,6 +6,7 @@ extern "C" {
 #include <Source/Main/Application.h>
 
 extern u8 _vectors[];
+int __errno; // required by math.h
 
 int main(void)
 { 

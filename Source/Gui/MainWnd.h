@@ -8,6 +8,7 @@
 #include "Windows/WndConfirm.h"
 #include "Others.h"
 #include "ToolBox/ToolBox.h"
+#include "ToolBox/Manager.h"
 #include "Generator/Generator.h"
 #include "MainMenu.h"
 #include "User/Screensaver.h"
@@ -26,7 +27,7 @@ public:
 	CWndToolBar			m_wndToolBar;
 	CWndOscGraph		m_wndGraph;
 	CWndSigGraph		m_wndSignalGraph;
-	CWndSpectrumGraph		m_wndSpectrumGraph;
+	CWndSpectrumGraph	m_wndSpectrumGraph;
 	CWndMenuInput		m_wndMenuInput;
 	CWndMenuCursor		m_wndMenuCursor;
 	CWndMenuMeas		m_wndMenuMeas;
@@ -36,6 +37,7 @@ public:
 	CWndMenuMath		m_wndMenuMath;
 	CWndMenuTools		m_wndMenuTools;
 	CWndZoomBar			m_wndZoomBar;
+	CWndOscInfo			m_wndInfoBar;
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
 	CWndScreenSaver		m_wndScreenSaver;
@@ -51,6 +53,7 @@ public:
 	CWndConfirm			m_wndConfirm;
 
 	CWndToolbox			m_wndToolbox;
+	CWndManager			m_wndManager;
 
 	void Create();
 	virtual void OnPaint();

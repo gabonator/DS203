@@ -7,9 +7,19 @@
 
 class CWndToolbox : public CWnd, public CThread, public CExport
 {
+public:
 	enum {
 		Width = 200,
-		Height = 80
+		Height = 96
+	};
+
+	enum {
+		MenuPauseResume = 1,
+		MenuSaveBitmap = 4,
+		MenuSaveBin = 2,
+		MenuSaveCsv = 3,
+		MenuManager = 0,
+		MenuMax = MenuSaveBitmap
 	};
 
 public:

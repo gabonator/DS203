@@ -50,6 +50,15 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Marker::ppszTextFind[] =
 		{ "Minimum", "Average", "Maximum" };
 
+/*static*/ const char* const CSettings::Measure::ppszTextEnabled[] =
+		{ "Off", "On" };
+/*static*/ const char* const CSettings::Measure::ppszTextSource[] =
+		{ "CH1", "CH2" };
+/*static*/ const char* const CSettings::Measure::ppszTextType[] =
+		{ "Minimum", "Maximum", "Average", "RMS", "RectAvg", "Vpp", "Freq", "Period", "FormFact", "Sigma", "Variance" };
+/*static*/ const char* const CSettings::Measure::ppszTextRange[] =
+		{ "View", "Selection", "All" };
+
 CSettings::CSettings()
 {
 	m_pInstance = this;
@@ -144,6 +153,42 @@ void CSettings::Reset()
 	MarkY2.Type = Marker::_Voltage;
 	MarkY2.strName = "Y2";
 	MarkY2.strFullName = "Cursor Y2";
+
+	Meas[0].Enabled = Measure::_On;
+	Meas[0].Source = Measure::_CH1;
+	Meas[0].Type = Measure::_Rms;
+	Meas[0].Range = Measure::_View;
+	Meas[0].fValue = 0;
+
+	Meas[1].Enabled = Measure::_On;
+	Meas[1].Source = Measure::_CH1;
+	Meas[1].Type = Measure::_Vpp;
+	Meas[1].Range = Measure::_View;
+	Meas[1].fValue = 0;
+
+	Meas[2].Enabled = Measure::_Off;
+	Meas[2].Source = Measure::_CH1;
+	Meas[2].Type = Measure::_Vpp;
+	Meas[2].Range = Measure::_View;
+	Meas[2].fValue = 0;
+
+	Meas[3].Enabled = Measure::_On;
+	Meas[3].Source = Measure::_CH2;
+	Meas[3].Type = Measure::_Rms;
+	Meas[3].Range = Measure::_View;
+	Meas[3].fValue = 0;
+
+	Meas[4].Enabled = Measure::_On;
+	Meas[4].Source = Measure::_CH2;
+	Meas[4].Type = Measure::_Vpp;
+	Meas[4].Range = Measure::_View;
+	Meas[4].fValue = 0;
+
+	Meas[5].Enabled = Measure::_Off;
+	Meas[5].Source = Measure::_CH2;
+	Meas[5].Type = Measure::_Vpp;
+	Meas[5].Range = Measure::_View;
+	Meas[5].fValue = 0;
 
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;

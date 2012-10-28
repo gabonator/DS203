@@ -192,6 +192,35 @@ public:
 			return *this;
 		}
 	};
+	class Measure : public CSerialize {
+	public:
+		static const char* const ppszTextEnabled[];
+		static const char* const ppszTextSource[];
+		static const char* const ppszTextType[];
+		static const char* const ppszTextRange[];
+
+		enum { _Off, _On, _MaxEnabled = _On }
+			Enabled;
+		enum ESource { _CH1, _CH2, _MaxSource = _CH2 }
+			Source; 
+		enum { _Min, _Max, _Avg, _Rms, _RectAvg, _Vpp, _Freq, _Period, _FormFactor, _Sigma, _Dispersion, _MaxType = _Dispersion }
+			Type;
+		enum ERange { _View, _Selection, _All, _MaxRange = _All }
+			Range;
+		
+		float fValue;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Enabled) << _E(Source) << _E(Type) << _E(Range);
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Enabled) >> _E(Source) >> _E(Type) >> _E(Range);
+			return *this;
+		}
+	};
 	class CRuntime : public CSerialize
 	{
 	public:
@@ -230,6 +259,7 @@ public:
 	Marker		MarkT2;
 	Marker		MarkY1;
 	Marker		MarkY2;
+	Measure		Meas[6];
 
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;
@@ -240,7 +270,9 @@ public:
 		ui32 dwId = _VERSION;
 		ui32 dwEnd = ToDword('E', 'N', 'D', 27);
 		stream << dwId << Runtime << CH1 << CH2 << CH3 << CH4 << Time << Trig << Gen
-			<< MarkT1 << MarkT2 << MarkY1 << MarkY2 << dwEnd;
+			<< MarkT1 << MarkT2 << MarkY1 << MarkY2
+			<< Meas[0] << Meas[1] << Meas[2] << Meas[3] << Meas[4] << Meas[5]
+			<< dwEnd;
 
 		return *this;
 	}
@@ -254,7 +286,9 @@ public:
 		if ( dwId == _VERSION )
 		{
 			stream >> Runtime >> CH1 >> CH2 >> CH3 >> CH4 >> Time >> Trig >> Gen
-				>> MarkT1 >> MarkT2 >> MarkY1 >> MarkY2 >> dwEnd;
+				>> MarkT1 >> MarkT2 >> MarkY1 >> MarkY2
+				>> Meas[0] >> Meas[1] >> Meas[2] >> Meas[3] >> Meas[4] >> Meas[5]
+				>> dwEnd;
 			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
 			Reset();
 		}

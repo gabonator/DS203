@@ -24,19 +24,12 @@ public:
 		CDesign::Window( m_rcClient, m_clrFrame );
 		BIOS::LCD::Print( m_rcClient.CenterX()-((ui8)strlen(m_pszId)<<2), m_rcClient.top+2, 
 			RGB565(000000), RGBTRANS, m_pszId);
-		/*
-		CRect rcClient = m_rcClient;
-		BIOS::RoundRect(rcClient, RGB565(000000));
-		rcClient.Deflate(2, 2, 2, 2);
+	}
 
-		BIOS::RoundRect(rcClient, m_clrFrame);
-
-		BIOS::Print( rcClient.CenterX()-((ui8)strlen(m_pszId)<<2), rcClient.top, 
-			RGB565(000000), RGBTRANS, m_pszId);
-
-		rcClient.Deflate(2, 14, 2, 2);
-		BIOS::RoundRect(rcClient, RGB565(b0b0b0));
-		*/
+	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
+	{
+	   // send in foreign name, not very nice...
+		pSender->SendMessage( GetParent(), code, data );
 	}
 };
 
@@ -73,7 +66,7 @@ public:
 	virtual void OnKey(ui16 nKey)
 	{
 		if ( nKey & BIOS::KEY::KeyEscape )
-			m_pParent->SendMessage( m_pParent->m_pParent, ToWord('e', 'x'), 0 );
+			m_pParent->SendMessage( m_pParent, ToWord('e', 'x'), 0 );
 		CWnd::OnKey(nKey);
 	}
 };
@@ -134,10 +127,12 @@ public:
 		if ( HasFocus() )
 		{
 			CDesign::MenuItemEnabled( m_rcClient, m_clr );
-			BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
+			if ( m_pszId )
+				BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
 		} else {
 			CDesign::MenuItemDisabled( m_rcClient, m_clr );
-			BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
+			if ( m_pszId )
+				BIOS::LCD::Print( m_rcClient.left+12, m_rcClient.top, RGB565(000000), RGBTRANS, m_pszId );
 		}
 		m_rcClient.left -= MarginLeft;
 	}
@@ -268,20 +263,20 @@ public:
 		{
 			(*m_pProvider)--;
 			Invalidate();
-			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
+			SendMessage(m_pParent, ToWord('u', 'p'), 0);
 		}
 		if ( nKey & BIOS::KEY::KeyRight && (*m_pProvider)+1 == CValueProvider::Yes )
 		{
 			(*m_pProvider)++;
 			Invalidate();
-			SendMessage(m_pParent->m_pParent, ToWord('u', 'p'), 0);
+			SendMessage(m_pParent, ToWord('u', 'p'), 0);
 		}
 		if ( nKey & BIOS::KEY::KeyEnter  )
 		{
 			// is that provider enumerator ?
 			if ( m_pProvider->Get() !=	CValueProvider::Invalid )
 			{
-				SendMessage(m_pParent->m_pParent, ToWord('l', 'e'), (ui32)(NATIVEPTR)(m_pProvider));
+				SendMessage(m_pParent, ToWord('l', 'e'), (ui32)(NATIVEPTR)(m_pProvider));
 			}
 		}
 		CListItem::OnKey( nKey );
