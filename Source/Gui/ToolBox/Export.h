@@ -4,117 +4,7 @@
 #include <Source/Core/Serialize.h>
 #include <Source/Core/Settings.h>
 #include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
-
-class CBufferedWriter : public CSerialize
-{
-	ui8* m_pData;
-	int m_nOffset;
-	int m_nSize;
-	FILEINFO m_FileInfo;
-
-public:
-	void Open( PSTR strName )
-	{
-		m_pData = (ui8*)BIOS::DSK::GetSharedBuffer();
-		m_nOffset = 0;
-		m_nSize = 0;
-
-		if ( !BIOS::DSK::Open( &m_FileInfo, strName, BIOS::DSK::IoWrite ) )
-		{
-			_ASSERT(0);
-			return;
-		}
-	}
-
-	virtual CBufferedWriter& operator <<( PSTR str )
-	{
-		CStream stream(str);
-		*this << stream;
-		return *this;
-	}
-
-	virtual CBufferedWriter& operator <<( CStream& stream )
-	{
-		for (int i = 0; i < stream.GetLength(); i++ )
-		{
-			m_pData[m_nOffset++] = stream[i];
-			if ( m_nOffset == FILEINFO::SectorSize )
-			{
-				m_nOffset = 0;
-				BIOS::DSK::Write( &m_FileInfo, m_pData );
-			}
-		}
-		m_nSize += stream.GetLength();
-		return *this;
-	}
-
-	void Close()
-	{
-		if ( m_nOffset > 0 )
-			BIOS::DSK::Write( &m_FileInfo, m_pData );
-		BIOS::DSK::Close( &m_FileInfo, m_nSize );
-	}
-};
-
-class CBufferedReader : public CSerialize
-{
-	ui8* m_pData;
-	int m_nOffset;
-	FILEINFO m_FileInfo;
-
-public:
-	void Open( PSTR strName )
-	{
-		m_pData = (ui8*)BIOS::DSK::GetSharedBuffer();
-		m_nOffset = 0;
-
-		if ( !BIOS::DSK::Open( &m_FileInfo, strName, BIOS::DSK::IoRead ) )
-		{
-			_ASSERT(0);
-			return;
-		}
-		BIOS::DSK::Read( &m_FileInfo, m_pData );
-	}
-
-	virtual CBufferedReader& operator >>( PSTR str )
-	{
-		// unsafe!
-		int i;
-		int nLimit = 32;
-		for ( i = 0; i < nLimit-1; i++ )
-		{
-			str[i] = m_pData[m_nOffset++];
-			if ( m_nOffset == FILEINFO::SectorSize )
-			{
-				m_nOffset = 0;
-				BIOS::DSK::Read( &m_FileInfo, m_pData );
-			}
-			if ( str[i] == '\n' )
-				break;
-		}
-		str[i] = 0;
-		return *this;
-	}
-
-	virtual CBufferedReader& operator >>( CStream& stream )
-	{
-		for (int i = 0; i < stream.GetLength(); i++ )
-		{
-			stream[i] = m_pData[m_nOffset++];
-			if ( m_nOffset == FILEINFO::SectorSize )
-			{
-				m_nOffset = 0;
-				BIOS::DSK::Read( &m_FileInfo, m_pData );
-			}
-		}
-		return *this;
-	}
-
-	void Close()
-	{
-		BIOS::DSK::Close( &m_FileInfo );
-	}
-};
+#include "BufferedIo.h"
 
 class CExport
 {
@@ -169,12 +59,14 @@ public:
 		} while (1);
 	}
 
-	void SaveScreenshot()
+	void SaveScreenshot(char* strName_ = NULL)
 	{
-		char strName[] = "IMG000  BMP";
-		FindUnusedFile( strName, 3 );
+		char strNameUnique[] = "IMG000  BMP";
+		char* strName = strName_ ? strName_ : strNameUnique;
+		if ( !strName_ )
+			FindUnusedFile( strNameUnique, 3 );
+		
 		FILEINFO f;
-
 		// strName contains unique non existent file name 
 		if ( !BIOS::DSK::Open( &f, strName, BIOS::DSK::IoWrite ) )
 		{
@@ -249,10 +141,14 @@ public:
 			}
 
 	}
-	void SaveBinary()
+
+	void SaveBinary(char* strName_ = NULL)
 	{
-		char strName[] = "WAVE000 DAT";
-		FindUnusedFile( strName, 4 );
+		char strNameUnique[] = "WAVE000 DAT";
+		char* strName = strName_ ? strName_ : strNameUnique;
+		if ( !strName_ )
+			FindUnusedFile( strNameUnique, 4 );
+
 		FILEINFO f;
 
 		// strName contains unique non existent file name 
@@ -286,10 +182,12 @@ public:
 		BIOS::DSK::Close( &f, nSize + nOffset );
 	}
 
-	void SaveCsv()
+	void SaveCsv(char* strName_ = NULL)
 	{
-		char strName[] = "WAVE000 CSV";
-		FindUnusedFile( strName, 4 );
+		char strNameUnique[] = "WAVE000 CSV";
+		char* strName = strName_ ? strName_ : strNameUnique;
+		if ( !strName_ )
+			FindUnusedFile( strName, 4 );
 
 		CBufferedWriter writer;
 		writer.Open( strName );

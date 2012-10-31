@@ -49,21 +49,22 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	ui16 clr2 = Settings.CH2.u16Color;
 	ui8 en1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
 	ui8 en2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
-//		CSettings::ChannelCalibrationCurve& cal1 = Settings.calCH1[Settings.CH1.Resolution];
-//		CSettings::ChannelCalibrationCurve& cal2 = Settings.calCH2[Settings.CH2.Resolution];
-
-	int nMax = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
-//		int nMax = min(m_rcClient.Width(), m_nMaxX-m_rcClient.left);
-//		nMax <<= 2;
 
 	ui8 bTrigger = (BIOS::GetTick() - Settings.Trig.nLastChange) < 5000;
 	ui16 nTriggerTime = (Settings.Trig.nTime - Settings.Time.Shift);
 	if (!bTrigger)
 		nTriggerTime = -1;
 
-	//for (i=0; i<Settings.Time.Shift; i++)
-	//	BIOS::ADC::Get();
-	int nIndex = Settings.Time.Shift;
+
+	int nCut = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
+	int nCutTop = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.bottom - m_rcClient.top : 0;
+	if ( nCutTop >= m_rcClient.Height() )
+		nCut = m_rcClient.Width();
+	int nFirstTop = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.top - m_rcClient.top : 0;
+
+	int nMax = m_rcClient.Width(); 
+	if ( CWnd::m_rcOverlay.IsValid() && CWnd::m_rcOverlay.left - m_rcClient.left <= 0 )
+		return;
 
 	CSettings::Calibrator::FastCalc Ch1fast, Ch2fast;
 	Settings.CH1Calib.Prepare( &Settings.CH1, Ch1fast );
@@ -82,12 +83,13 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuMeas )
 		SetupSelection( bAreaT, nMarkerT1, nMarkerT2 );
 
+	int nIndex = Settings.Time.Shift;
 	for (ui16 x=0; x<nMax; x++, nIndex++)
 	{
 		int clrCol = (nTriggerTime != x) ? 0x0101 : 0x00;
 
 		if ( bAreaT && nIndex > nMarkerT1 && nIndex < nMarkerT2 )
-			clrCol = RGB565(4040b0);
+			clrCol = RGB565(101060);
 		if ( nMarkerT1 == nIndex )
 			clrCol = Settings.MarkT1.u16Color;
 		if ( nMarkerT2 == nIndex )
@@ -96,7 +98,6 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 		_PrepareColumn( column, x, clrCol );
 
 		ui32 val = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
-		//nIndex++; 
 
 		if ( en2 )
 		{
@@ -154,7 +155,15 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 		if ( nMarkerY2 > 0 )
 			column[nMarkerY2] = Settings.MarkY2.u16Color;
  
-		BIOS::LCD::Buffer( m_rcClient.left + x, m_rcClient.top, column, DivsY*BlkY );
+		if ( x <= nCut )
+			BIOS::LCD::Buffer( m_rcClient.left + x, m_rcClient.top, column, DivsY*BlkY );
+		else
+		{
+			if ( nCutTop > 0 )
+				BIOS::LCD::Buffer( m_rcClient.left + x, m_rcClient.top + nCutTop, column, DivsY*BlkY - nCutTop);
+			if ( nFirstTop > 0 )
+				BIOS::LCD::Buffer( m_rcClient.left + x, m_rcClient.top, column + DivsY*BlkY - nFirstTop, nFirstTop );
+		}
 	}
 }
 

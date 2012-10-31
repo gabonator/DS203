@@ -75,6 +75,12 @@ void Assert(const char *msg, int n)
 
 /*static*/ int BIOS::LCD::Print (int x, int y, unsigned short clrf, unsigned short clrb, const char *str)
 {
+	/*
+#ifdef _WIN32
+	_ASSERT( (int)str > 0x10000 );
+	const char *xx = str;
+	xx=xx;
+#endif*/
 	if (!str || !*str)
 		return 0;
 	int nAux = 0;
@@ -501,7 +507,7 @@ unsigned long g_ADCMem[ADCSIZE];
 	return ADCSIZE;
 }
 
-/*static*/ unsigned long BIOS::ADC::GetAt(int i)
+/*static*/ unsigned long& BIOS::ADC::GetAt(int i)
 {
 	_ASSERT( i >= 0 && i < ADCSIZE );
 	return g_ADCMem[i];

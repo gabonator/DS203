@@ -380,6 +380,15 @@ static const char cury2[] =
   "  ...  .   . ."
   "..      ...  .";
 
+static const char minus[] = 
+  "\x0e"
+  "              "
+  "      .       "
+  "      .       "
+  "      .       "
+  "      .       "
+  "              ";
+
 static const char check[] = "check";
 
 #endif

@@ -270,6 +270,18 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\OscInfo.h">
       <Filter>Source\Gui\Oscilloscope\Controls</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\ToolBox\BufferedIo.h">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\ToolBox\Import.h">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\ToolBox\LineTabs.h">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.h">
+      <Filter>Source\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

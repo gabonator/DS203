@@ -19,7 +19,7 @@ public:
 public:
 	void Create( CWnd* pParent )
 	{
-		CListBox::Create( "Trigger", WsVisible | WsModal, CRect(120, 30, 319, 201), RGB565(404040), pParent );
+		CListBox::Create( "Trigger", WsVisible | WsModal, CRect(120, 80, 319, 201), RGB565(404040), pParent );
 
 		m_proSync.Create( (const char**)CSettings::Trigger::ppszTextSync,
 			(NATIVEENUM*)&Settings.Trig.Sync, CSettings::Trigger::_SyncMax );

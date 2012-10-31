@@ -197,6 +197,7 @@ public:
 		static const char* const ppszTextEnabled[];
 		static const char* const ppszTextSource[];
 		static const char* const ppszTextType[];
+		static const char* const ppszTextSuffix[];
 		static const char* const ppszTextRange[];
 
 		enum { _Off, _On, _MaxEnabled = _On }

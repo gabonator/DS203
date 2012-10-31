@@ -349,13 +349,12 @@ void CWnd::StartModal( CWnd* pwndChildFocus /*= NULL*/ )
 
 	m_rcOverlay |= m_rcClient;
 
+	ShowWindow( SwShow );
 	Invalidate();	
 }
 
 void CWnd::StopModal()
 {
-//	CWnd* pParent = m_pParent;
-
 	Destroy();
 	m_rcOverlay.Invalidate();
 	m_arrModals.GetLast().m_pPrevFocus->SetFocus();

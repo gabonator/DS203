@@ -94,7 +94,7 @@ public:
 
 		static void Copy(int nCount);
 		static unsigned long GetCount();
-		static unsigned long GetAt(int i);
+		static unsigned long& GetAt(int i);
 	};
 
 	class GEN {

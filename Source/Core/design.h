@@ -6,6 +6,11 @@
 class CDesignNice
 {
 public:
+	enum {
+		MenuItemIndent = 4
+	};
+
+public:
 	static void MenuItemDisabled(const CRect& rcRect, ui16 clr)
 	{
 		BIOS::LCD::RoundRect( rcRect.left, rcRect.top, rcRect.left+12, rcRect.bottom, clr);
@@ -16,6 +21,17 @@ public:
 	{
 		BIOS::LCD::RoundRect( rcRect.left-2, rcRect.top, rcRect.right, rcRect.bottom, clr);
 		BIOS::LCD::RoundRect( rcRect.left+8-2, rcRect.top+1, rcRect.right-1, rcRect.bottom-1, RGB565(ffffff));
+	}
+
+	static void MenuItemClearDisabled(const CRect& rcRect)
+	{
+		BIOS::LCD::Bar(rcRect.left, rcRect.top, rcRect.left + MenuItemIndent + 4, rcRect.bottom, RGB565(000000));
+	}
+
+	static void MenuItemClearEnabled(const CRect& rcRect)
+	{
+		BIOS::LCD::Bar(rcRect.left, rcRect.top, rcRect.left + MenuItemIndent + 4, rcRect.bottom, RGB565(000000));
+		BIOS::LCD::Bar(rcRect.right-4, rcRect.top, rcRect.right, rcRect.bottom, RGB565(000000));
 	}
 
 	static void MenuBlockDisabled(const CRect& rcRect, ui16 clr)
@@ -53,6 +69,7 @@ public:
 			pattern[15-i] = clr;
 		}
 		BIOS::LCD::Pattern(rcRect.left, rcRect.top, rcRect.right, rcRect.bottom, pattern, 16);
+
 /*
 		BIOS::BufferBegin( rcRect, BIOS::BfXY );
 		for (int y=0; y<rcRect.Height(); y++)

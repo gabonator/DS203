@@ -1,6 +1,6 @@
 bool g_bAdcEnabled = false;
 #define ADCSIZE 4096
-unsigned short g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
+unsigned long g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
 
 /*static*/ void BIOS::ADC::Init()
 {
@@ -101,7 +101,7 @@ CH_D Trigger source & kind select =>
 	_ASSERT( nCount <= ADCSIZE );
 	for ( int i = 0; i < ADCSIZE; i++ )
   { 
-		g_ADCMem[i] = Get() & 0xffff;
+		g_ADCMem[i] = Get(); // & 0xffff;
   }
 }
 
@@ -110,7 +110,7 @@ CH_D Trigger source & kind select =>
 	return ADCSIZE;
 }
 
-/*static*/ unsigned long BIOS::ADC::GetAt(int i)
+/*static*/ unsigned long& BIOS::ADC::GetAt(int i)
 {
 	_ASSERT( i >= 0 && i < ADCSIZE );
 	return g_ADCMem[i];

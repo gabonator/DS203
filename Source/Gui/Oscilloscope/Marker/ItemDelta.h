@@ -67,6 +67,7 @@ public:
 					else
 						fValue = 1.0f / fValue;
 					fValue /= 1000.0f; // kHz
+					fValue += 0.0001f; // sprintf rounding 
 					x += BIOS::LCD::Printf( x, y, clr, RGBTRANS, "%f", fValue ) * 8;
 					x += 2;
 					BIOS::LCD::Print( x, y, RGB565(404040), RGBTRANS, "kHz");

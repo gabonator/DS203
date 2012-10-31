@@ -56,6 +56,9 @@ CSettings* CSettings::m_pInstance = NULL;
 		{ "CH1", "CH2" };
 /*static*/ const char* const CSettings::Measure::ppszTextType[] =
 		{ "Minimum", "Maximum", "Average", "RMS", "RectAvg", "Vpp", "Freq", "Period", "FormFact", "Sigma", "Variance" };
+/*static*/ const char* const CSettings::Measure::ppszTextSuffix[] =
+		{ "V", "V", "V", "V", "V", "V", "kHz", "ms", "", "", "" };
+
 /*static*/ const char* const CSettings::Measure::ppszTextRange[] =
 		{ "View", "Selection", "All" };
 

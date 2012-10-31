@@ -101,7 +101,11 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.h" />
+    <ClInclude Include="..\..\Source\Gui\ToolBox\BufferedIo.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\Export.h" />
+    <ClInclude Include="..\..\Source\Gui\ToolBox\Import.h" />
+    <ClInclude Include="..\..\Source\Gui\ToolBox\LineTabs.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\Manager.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h" />
     <ClInclude Include="..\..\Source\Gui\User\Balls.h" />

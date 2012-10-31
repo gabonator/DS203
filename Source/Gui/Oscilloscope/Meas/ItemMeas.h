@@ -21,15 +21,39 @@ public:
 	{
 		bool bEnabled = m_pMeas->Enabled == CSettings::Measure::_On;
 		ui16 clr = bEnabled ? RGB565(000000) : RGB565(808080);
+		ui16 clr2 = RGB565(404040);
+
 		m_color = m_pMeas->Source == CSettings::Measure::_CH1 ? Settings.CH1.u16Color : Settings.CH2.u16Color;
 		
 		CWndMenuItem::OnPaint();
 
-		int x = m_rcClient.left + 12 + MarginLeft;
+		int x = m_rcClient.left + 10 + MarginLeft;
 		int y = m_rcClient.top;
 		BIOS::LCD::Print( x, y, clr, RGBTRANS, CSettings::Measure::ppszTextType[ (int)m_pMeas->Type ] );
+
 		if ( bEnabled )
-			BIOS::LCD::Printf( x, y+16, clr, RGBTRANS, "%3f", m_pMeas->fValue );
+		{
+			y += 16;
+			char str[8];
+			const char* suffix = CSettings::Measure::ppszTextSuffix[ (int)m_pMeas->Type ];
+			float fValue = m_pMeas->fValue;
+			if ( fValue < 0 )
+			{
+				x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, minus);
+				fValue = -fValue;
+			} else
+				x += 6;
+
+			BIOS::DBG::sprintf(str, "%3f", fValue);
+		
+			while ( strlen(str) + strlen(suffix) > 8 )
+				str[strlen(str)-1] = 0;
+		
+			x += BIOS::LCD::Print( x, y, clr, RGBTRANS, str );
+			x += 4;
+			if ( suffix && *suffix )
+				BIOS::LCD::Print( x, y, clr2, RGBTRANS, suffix );
+		}
 	}
 
 	virtual void OnKey(ui16 nKey)

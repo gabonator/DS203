@@ -23,7 +23,7 @@ void CMainWnd::Create()
 	CWnd::Create("CMainWnd", WsVisible, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
 
 	m_wndToolBar.Create( this );
-	m_wndManager.Create( this );
+	//m_wndManager.Create( this );
 	m_wndGraph.Create( this, WsHidden | WsNoActivate );
 	m_wndSignalGraph.Create( this, WsNoActivate );
 	m_wndSpectrumGraph.Create( this, WsNoActivate );
@@ -124,11 +124,12 @@ void CMainWnd::Create()
 	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction )
 	{
 		// show toolbox	
-		if ( !m_wndToolbox.IsVisible() )
+		if ( !m_wndToolbox.IsVisible() && !m_wndManager.IsVisible() )
 		{
 			m_wndToolbox.DoModal();
 			if ( m_wndToolbox.GetResult() == CWndToolbox::MenuManager)
 			{
+				m_wndManager.Create(this);
 				m_wndManager.DoModal();
 			}
 		}

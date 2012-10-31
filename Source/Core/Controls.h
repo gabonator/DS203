@@ -77,7 +77,7 @@ public:
 	enum {
 		Height = 34,
 		Space = 2,
-		MarginLeft = 4
+		MarginLeft = CDesignNice::MenuItemIndent
 	};
 	ui16 m_clr;
 	ui16* m_pClr;
@@ -122,7 +122,14 @@ public:
 	{
 		if ( m_pClr )
 			m_clr = *m_pClr;
-		BIOS::LCD::Bar(m_rcClient, RGB565(000000));
+		
+		//BIOS::LCD::Bar(m_rcClient, RGB565(000000));
+		// reduce annoying blinking
+		if ( HasFocus() )
+			CDesign::MenuItemClearEnabled( m_rcClient );
+		else
+			CDesign::MenuItemClearDisabled( m_rcClient );
+
 		m_rcClient.left += MarginLeft;
 		if ( HasFocus() )
 		{
