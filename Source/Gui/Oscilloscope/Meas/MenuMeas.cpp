@@ -48,6 +48,7 @@ CMeasStatistics		m_Stat;
 	// something was changed in listbox
 	if (code == ToWord('u', 'p') )
 	{
+		_UpdateAll();
 		if ( m_wndListMeas.m_pMeas == m_itmMeas[0].m_pMeas )
 			m_itmMeas[0].Invalidate();
 		if ( m_wndListMeas.m_pMeas == m_itmMeas[1].m_pMeas )

@@ -222,6 +222,49 @@ public:
 			return *this;
 		}
 	};
+	class MathOperand : public CSerialize
+	{
+	public:
+		static const char* const ppszTextType[];
+		// = {"CH1 raw", "CH1", "CH2 raw", "CH2", "Constant"}
+		enum { _Ch1Raw, _CH1Corrected, _Ch2Raw, _Ch2Corrected, _Constant, _Fx, _TypeMax = _Fx }
+			Type;
+		int nScale;
+		int nConstant;
+		PCSTR strName;
+	//	ui16 uiColor;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Type) << nConstant << nScale;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Type) >> nConstant >> nScale;
+			return *this;
+		}
+	};
+	class MathOperator : public CSerialize
+	{
+	public:
+		static const char* const ppszTextType[];
+		// = {"Off", "A", "B", "A+B+C", "A+B-C", "B-A+C"}
+		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, _TypeMax = _BminusAplusC }
+			Type;
+		ui16 uiColor;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Type) << uiColor;
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Type) >> uiColor;
+			return *this;
+		}
+	};
 	class CRuntime : public CSerialize
 	{
 	public:
@@ -261,6 +304,11 @@ public:
 	Marker		MarkY1;
 	Marker		MarkY2;
 	Measure		Meas[6];
+
+	MathOperand MathA;
+	MathOperand MathB;
+	MathOperand MathC;
+	MathOperator Math;
 
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;

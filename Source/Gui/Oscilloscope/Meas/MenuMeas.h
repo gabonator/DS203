@@ -9,7 +9,6 @@
 #include "ItemMeas.h"
 #include "ListMeas.h"
 
-
 class CWndMenuMeas : public CWnd
 {
 public:

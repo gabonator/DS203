@@ -55,7 +55,6 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	if (!bTrigger)
 		nTriggerTime = -1;
 
-
 	int nCut = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
 	int nCutTop = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.bottom - m_rcClient.top : 0;
 	if ( nCutTop >= m_rcClient.Height() )
@@ -73,15 +72,24 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	// if window is outside...
 	int nMaxIndex = BIOS::ADC::GetCount();
 	bool bLines = true;
-	int nPrev1 = -1, nPrev2 = -1;
+	int nPrev1 = -1, nPrev2 = -1, nPrevm = -1;
 
 	int nMarkerT1 = -1, nMarkerT2 = -1, nMarkerY1 = -1, nMarkerY2 = -1;
 	bool bAreaT = false;
+	bool enmath = false;
 
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuCursor )
 		SetupMarkers( Ch1fast, Ch2fast, nMarkerT1, nMarkerT2, nMarkerY1, nMarkerY2 );
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuMeas )
 		SetupSelection( bAreaT, nMarkerT1, nMarkerT2 );
+	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuMath && 
+		 Settings.Math.Type != CSettings::MathOperator::_Off)
+	{
+		enmath = true;
+		MathSetup( &Ch1fast, &Ch2fast );
+	}
+
+	ui16 clrm = Settings.Math.uiColor;
 
 	int nIndex = Settings.Time.Shift;
 	for (ui16 x=0; x<nMax; x++, nIndex++)
@@ -142,6 +150,27 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 				for ( int _y = min(y, nPrev1); _y <= max(y, nPrev1); _y++)
 					column[_y] = clr1;
 				nPrev1 = y;
+			}
+		}
+
+		if ( enmath )
+		{
+			int chm = MathCalc( val );
+			if ( chm < 0 ) 
+				chm = 0;
+			if ( chm > 255 ) 
+				chm = 255;
+			ui16 y = (chm*(DivsY*BlkY))>>8;
+
+			if ( !bLines )
+				column[y] = clrm;
+			else
+			{
+				if ( nPrevm == -1 )
+					nPrevm = y;
+				for ( int _y = min(y, nPrevm); _y <= max(y, nPrevm); _y++)
+					column[_y] = clrm;
+				nPrevm = y;
 			}
 		}
 
@@ -272,3 +301,5 @@ void CWndOscGraph::UpdateResolutions()
 		CSettings::AnalogChannel::pfValueResolution[ Settings.CH2.Resolution ] *
 		CSettings::AnalogChannel::pfValueProbe[ Settings.CH2.Probe ];
 }
+
+

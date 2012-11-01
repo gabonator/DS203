@@ -28,7 +28,7 @@ public:
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{
-	   // send in foreign name, not very nice...
+		// send in foreign name, not very nice...
 		pSender->SendMessage( GetParent(), code, data );
 	}
 };

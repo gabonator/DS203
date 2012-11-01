@@ -62,6 +62,11 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Measure::ppszTextRange[] =
 		{ "View", "Selection", "All" };
 
+/*static*/ const char* const CSettings::MathOperator::ppszTextType[] = 
+		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C"};
+/*static*/ const char* const CSettings::MathOperand::ppszTextType[] = 
+		{"CH1raw", "CH1", "CH2raw", "CH2", "Const", "Fx"};
+
 CSettings::CSettings()
 {
 	m_pInstance = this;
@@ -192,6 +197,27 @@ void CSettings::Reset()
 	Meas[5].Type = Measure::_Vpp;
 	Meas[5].Range = Measure::_View;
 	Meas[5].fValue = 0;
+
+	MathA.nConstant = 0;
+	MathA.nScale = 100;
+	MathA.Type = MathOperand::_CH1Corrected;
+	MathA.strName = "A:";
+	//MathA.uiColor = RGB565(808080);
+
+	MathB.nConstant = 0;
+	MathB.nScale = 100;
+	MathB.Type = MathOperand::_Ch2Corrected;
+	MathB.strName = "B:";
+	//MathB.uiColor = RGB565(808080);
+
+	MathC.nConstant = 0;
+	MathC.nScale = 100;
+	MathC.Type = MathOperand::_Constant;
+	MathC.strName = "C:";
+	//MathC.uiColor = RGB565(808080);
+
+	Math.Type = MathOperator::_AplusBplusC;
+	Math.uiColor = RGB565(ff8080);
 
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;

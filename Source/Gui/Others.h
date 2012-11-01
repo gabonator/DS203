@@ -92,6 +92,7 @@ public:
 	}
 };
 
+/*
 class CWndMenuMath : public CWnd
 {
 public:
@@ -109,7 +110,7 @@ public:
 		m_itmOperation.Create("Operator\nMultiply", RGB565(808080), 2, this);
 	}
 };
-
+*/
 class CWndMenuTools : public CWnd
 {
 public:

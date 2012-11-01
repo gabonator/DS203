@@ -1,3 +1,5 @@
+#include <math.h>
+
 class CMeasStatistics
 {
 	float m_fMin, m_fMax, m_fSum, m_fSumR, m_fSum2;

@@ -3,8 +3,9 @@
 
 #include "GraphBase.h"
 #include <Source/Core/Settings.h>
+#include <Source/Gui/Oscilloscope/Math/ChannelMath.h>
 
-class CWndOscGraph : public CWndGraph
+class CWndOscGraph : public CWndGraph, public CMathChannel
 {
 	void			_PrepareColumn( ui16 *column, ui16 n, ui16 clr );
 
