@@ -150,6 +150,192 @@ public:
 		return (m_fSum2 - m_fSum*m_fSum/2) / m_nCount;
 	}
 
+	float GetBaud()
+	{
+		class _Iterate
+		{
+		public:
+			typedef bool (_Iterate::* TProcessFunc)(int, int);
+
+		private:
+			int nBegin, nEnd;
+			int nLast, nThresh, nTrigMin, nTrigMax, nTrigState, nNewState;
+			int nBit;
+			
+			bool bDecodeFirst;
+			int nDecodeIndex;
+			int nDecoded;
+
+		public:
+			int nMinPeriod;
+			CMeasStatistics* m_pThis;
+			int nTotalBits, nTotalTime;
+			char strDecode[32];
+
+		public:
+			CMeasStatistics* This()
+			{
+				return m_pThis;
+			}
+			bool Prepare()
+			{
+				if ( !This()->GetRange( nBegin, nEnd, This()->m_curRange ) )
+					return false;
+				if ( This()->m_nRawMax - This()->m_nRawMin < 16 )
+					return false;
+		
+				nThresh = ( This()->m_nRawMax - This()->m_nRawMin ) / 4;
+				nTrigMin = This()->m_nRawMin + nThresh;
+				nTrigMax = This()->m_nRawMax - nThresh;
+				nTrigState = -1, nNewState = -1;
+				nLast = -1;
+				nMinPeriod = -1;
+
+				nTotalBits = 0;
+				nTotalTime = 0;
+
+				bDecodeFirst = true;
+				nDecodeIndex = -1;
+				nDecoded = 0;
+				strDecode[nDecoded] = 0;
+				return true;
+			}
+
+			bool Do(TProcessFunc ProcessEdge)
+			{
+				for ( int i = nBegin; i < nEnd; i++ )
+				{
+					int nSample = BIOS::ADC::GetAt(i);
+					if ( This()->m_curSrc == CSettings::Measure::_CH1 )
+						nSample = (ui8)((nSample) & 0xff);
+					else
+						nSample = (ui8)((nSample>>8) & 0xff);
+
+					if ( nSample > nTrigMax )
+						nNewState = 1;
+					if ( nSample < nTrigMin )
+						nNewState = 0;
+
+					if ( nTrigState != -1 && nNewState != nTrigState )
+					{
+						if ( nLast != -1 )
+							if ( !(this->*ProcessEdge)( i-nLast, nNewState ) )
+								return false;
+						nLast = i;
+					}
+ 					nTrigState = nNewState;
+				}
+				return true;
+			}
+			
+			bool FindSmallest(int nCount, int nRising)
+			{
+				if ( nCount <= 2 )
+					return true; // noise!?
+				if ( nMinPeriod == -1 )
+					nMinPeriod = nCount;
+				if ( nCount < nMinPeriod )
+					nMinPeriod = nCount;
+				return true;
+			}
+			
+			bool Sum(int nCount, int nRising)
+			{
+				if ( nCount <= 2 )
+					return true;
+
+				int nBits = 0;
+				if ( nCount >= nMinPeriod*9 )
+					return false;
+				else if ( nCount >= nMinPeriod*8 )
+					nBits = 8;
+				else if ( nCount >= nMinPeriod*7 )
+					nBits = 7;
+				else if ( nCount >= nMinPeriod*6 )
+					nBits = 6;
+				else if ( nCount >= nMinPeriod*5 )
+					nBits = 5;
+				else if ( nCount >= nMinPeriod*4 )
+					nBits = 4;
+				else if ( nCount >= nMinPeriod*3 )
+					nBits = 3;
+				else if ( nCount >= nMinPeriod*2 )
+					nBits = 2;
+				else if ( nCount >= nMinPeriod*1 )
+					nBits = 1;
+				else
+					return false;
+				//int nMin = nMinPeriod;
+				nTotalBits += nBits;
+				nTotalTime += nCount;
+				//BIOS::DBG::Print( "rel=%f %d/%d => %d\n", nCount/(float)nMinPeriod, nCount, nMinPeriod, nBits);
+				return true;	
+			}
+			bool Decode(int nCount, int nRising)
+			{
+				if ( nCount <= 2 )
+					return true;
+
+				if ( bDecodeFirst )
+				{
+					// push single idle bit
+					Push( nRising );
+					bDecodeFirst = false;
+				}
+				int nMin = nMinPeriod;
+				for ( int i = 0; i <= nCount-nMin; i += nMin )
+					if ( !Push( 1-nRising ) )
+						return false;
+				return true;
+			}
+
+			bool Push(int nBit)
+			{
+				static int nPrev = 0;
+				static int nByte = 0;
+
+				// waiting for start bit
+				if ( nDecodeIndex == -1 )
+				{
+					if ( nPrev == 0 && nBit == 1 )
+						nDecodeIndex = 0;
+					nPrev = nBit;
+					return true;
+				}
+
+				//BIOS::DBG::Print("%d", nBit);
+				nByte >>= 1;
+				if ( !nBit )
+					nByte |= 128;
+				if ( ++nDecodeIndex >= 8 )
+				{
+					strDecode[nDecoded++] = nByte;
+					strDecode[nDecoded] = 0;
+					if ( nDecoded >= (int)sizeof(strDecode) )
+						return false;
+
+					//BIOS::DBG::Print(" -> decod=%d '%c'\n", nByte, nByte);
+					nDecodeIndex = -1;
+				}
+				return true;
+			}
+		} Iterate;
+
+		//BIOS::DBG::Print( "Begin------\n");
+		Iterate.m_pThis = this;
+		if ( !Iterate.Prepare() )
+			return 0.0f;
+		Iterate.Do(&_Iterate::FindSmallest);
+		Iterate.Do(&_Iterate::Sum);
+		Iterate.Do(&_Iterate::Decode);
+
+		if ( Iterate.strDecode[0] )
+			BIOS::LCD::Print(20, 30 + ((int)m_curSrc)*16, RGB565(ff0000), RGBTRANS, Iterate.strDecode );
+		float fBaudPeriod = (Iterate.nTotalTime / (float) Iterate.nTotalBits) * Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
+		float fBaud = 1.0f / fBaudPeriod;
+		return fBaud;
+	}
+
 	float GetMin() { return m_fMin; }
 	float GetMax() { return m_fMax; }
 	float GetAvg() { return m_fSum/m_nCount; }

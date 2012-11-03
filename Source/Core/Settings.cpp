@@ -55,9 +55,9 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Measure::ppszTextSource[] =
 		{ "CH1", "CH2" };
 /*static*/ const char* const CSettings::Measure::ppszTextType[] =
-		{ "Minimum", "Maximum", "Average", "RMS", "RectAvg", "Vpp", "Freq", "Period", "FormFact", "Sigma", "Variance" };
+		{ "Minimum", "Maximum", "Average", "RMS", "RectAvg", "Vpp", "Freq", "Period", "FormFact", "Sigma", "Variance", "Baud" };
 /*static*/ const char* const CSettings::Measure::ppszTextSuffix[] =
-		{ "V", "V", "V", "V", "V", "V", "kHz", "ms", "", "", "" };
+		{ "V", "V", "V", "V", "V", "V", "kHz", "ms", "", "", "", "" };
 
 /*static*/ const char* const CSettings::Measure::ppszTextRange[] =
 		{ "View", "Selection", "All" };
@@ -128,14 +128,14 @@ void CSettings::Reset()
 	Trig.Source = Trigger::_CH1;
 	Trig.State = Trigger::_Run;
 	Trig.nLevel = 128;
-	Trig.nTime = 30*4;
+	Trig.nTime = 30*5;
 	Trig.nLastChange = 0;
 
-	Gen.Wave = Generator::_Cardiac;
+	Gen.Wave = Generator::_Sin;
 	//Gen.nPsc = 180-1;
 	//Gen.nArr = 592; //2000-1;
 	Gen.nPsc = 180-1;
-	Gen.nArr = 5100;
+	Gen.nArr = 24;
 
 	MarkT1.Mode = Marker::_On;
 	MarkT1.Source = Marker::_CH1;

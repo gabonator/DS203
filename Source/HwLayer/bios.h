@@ -70,7 +70,8 @@ public:
 			KeyDown = 8,
 			KeyEnter = 16,
 			KeyEscape = 32,
-			KeyFunction = 64
+			KeyFunction = 64,
+			KeyFunction2 = 128
 		};
 
 	public:

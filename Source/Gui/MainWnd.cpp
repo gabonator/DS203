@@ -130,5 +130,11 @@ void CMainWnd::Create()
 			}
 		}
 	}
+	/*
+	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction2 )
+	{
+		m_wndToolbox.SaveScreenshot();
+	}*/
+
 	CWnd::WindowMessage( nMsg, nParam );
 }

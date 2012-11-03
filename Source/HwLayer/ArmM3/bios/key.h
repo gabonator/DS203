@@ -10,5 +10,6 @@
     if (status & KEY1_STATUS ) out |= KeyEnter;
     if (status & KEY2_STATUS ) out |= KeyEscape;
     if (status & KEY3_STATUS ) out |= KeyFunction;
+    if (status & KEY4_STATUS ) out |= KeyFunction2;
 	return out;
 }

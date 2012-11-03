@@ -50,7 +50,7 @@ ui16 pRamWave[128*4];
 
 const SWaveData Waves[] = 
 	{
-		{"sine", 36, pSineWave, 0 },
+		{"sine", 36, pSineWave, 2 },
 		{"triangle", 36, pTriangleWave, 0 },
 		{"sawtooth", 36, pSawWave, 0 },
 		{"square", 2, pSquareWave, 0 },
@@ -149,6 +149,9 @@ ui16* _GetWave(ui8 nWaveIndex)
 	ui8 bWaveChanged = ( pSender == &m_itmWave );
 	if ( code == ToWord('i', 'u') && pSender == &m_itmBpm )
 	{
+		// 480
+		// f = CPUCLOCK / 20 / (Settings.Gen.nArr+1) / nCount
+
 		// bpm = CPUCLOCK * 60 / 20 / (Settings.Gen.nArr+1) / nCount
 		// Settings.Gen.nArr = CPUCLOCK * 3 / (bpm * nCount) -1
 
