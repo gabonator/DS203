@@ -1,6 +1,14 @@
 #include "GraphOsc.h"
 #include <Source/Gui/MainWnd.h>
 
+
+CWndOscGraph::CWndOscGraph()
+{
+	ClearAverage();
+	m_bPersistReset = false;
+	m_bNeedRedraw = true;
+}
+
 void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 {
 	for (ui16 y=0; y<DivsY*BlkY; y++)
@@ -20,6 +28,20 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 	}
 }
 
+ui16 CWndOscGraph::_Interpolate( ui16 clrA, ui16 clrB )
+{
+	int ar = Get565R(clrA);
+	int ag = Get565G(clrA);
+	int ab = Get565B(clrA);
+	int br = Get565R(clrB);
+	int bg = Get565G(clrB);
+	int bb = Get565B(clrB);
+	ar = (ar+br)/2;
+	ag = (ag+bg)/2;
+	ab = (ab+bb)/2;
+	return RGB565RGB(ar, ag, ab);
+}
+
 /*virtual*/ void CWndOscGraph::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	CWndGraph::Create( pParent, dwFlags | CWnd::WsListener );
@@ -33,22 +55,111 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 		UpdateResolutions();
 		return;
 	}
+	if ( pSender == this && code == ToWord('S', 'H') && data == 1 )
+	{
+		m_bNeedRedraw = true;
+	}
 }
 
 /*virtual*/ void CWndOscGraph::OnPaint()
 {
-	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
-	if ( !CWnd::m_rcOverlay.IsValid() )
+	if ( Settings.Disp.Axes == CSettings::Display::_TY )
+		OnPaintTY();
+	else
+		OnPaintXY();
+}
+
+void CWndOscGraph::OnPaintXY()
+{
+	if ( CWnd::m_rcOverlay.IsValid() )
+	{
+		return;
+	}
+
+	// input channels
+	ui8 bEnabled1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
+	ui8 bEnabled2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
+	ui16 clrPoint = _Interpolate( Settings.CH1.u16Color, Settings.CH2.u16Color );
+
+	// calibration
+	CSettings::Calibrator::FastCalc calCh1, calCh2;
+	Settings.CH1Calib.Prepare( &Settings.CH1, calCh1 );
+	Settings.CH2Calib.Prepare( &Settings.CH2, calCh2 );
+
+	// range
+	int nMaxIndex = BIOS::ADC::GetCount();
+	int nIndex = Settings.Time.Shift;
+	int nColMax = m_rcClient.Width(); 
+
+	//if ( m_bNeedRedraw ) // does not work reliably
 	{
 		CRect rc = m_rcClient;
 		rc.Inflate( 1, 1, 1, 1 );
 		BIOS::LCD::Rectangle( rc, RGB565(b0b0b0) );
 	}
 
+	if ( Settings.Disp.Persist == CSettings::Display::_PerNo || m_bPersistReset || m_bNeedRedraw )
+		BIOS::LCD::Bar( m_rcClient, 0x0101 );
+
+	m_bPersistReset = false;
+	m_bNeedRedraw = false;
+
+	if ( !bEnabled1 || !bEnabled2 ) 
+	{
+		BIOS::LCD::Print( m_rcClient.left, m_rcClient.top, RGB565(ffffff), RGBTRANS, (char*)"Enable both channels" );
+		return;
+	}
+
+	for (ui16 x=0; x<nColMax; x++, nIndex++)
+	{
+		ui32 ui32Sample = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
+		int nSampleY2 = 0, nSampleY1 = 0;
+
+		if ( bEnabled1 )
+		{
+			si16 ch1 = (ui8)((ui32Sample) & 0xff);
+			ch1 = Settings.CH1Calib.Correct( calCh1, ch1 );
+			if ( ch1 < 0 ) 
+				ch1 = 0;
+			if ( ch1 > 255 ) 
+				ch1 = 255;
+			nSampleY1 = (ch1*(DivsY*BlkY))>>8;
+		}
+		if ( bEnabled2 )
+		{
+			si16 ch2 = (ui8)((ui32Sample>>8) & 0xff);
+			ch2 = Settings.CH2Calib.Correct( calCh2, ch2 );
+			if ( ch2 < 0 ) 
+				ch2 = 0;
+			if ( ch2 > 255 ) 
+				ch2 = 255;
+			nSampleY2 = (ch2*(DivsY*BlkY))>>8;
+		}
+		if ( Settings.Disp.Axes == CSettings::Display::_XY )
+			BIOS::LCD::PutPixel( m_rcClient.left + nSampleY1 + BlkX, m_rcClient.bottom - nSampleY2, clrPoint );
+		else
+			BIOS::LCD::PutPixel( m_rcClient.left + nSampleY2 + BlkX, m_rcClient.bottom - nSampleY1, clrPoint );
+	}
+
+}
+
+void CWndOscGraph::OnPaintTY()
+{
+	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
+	if ( !CWnd::m_rcOverlay.IsValid() /*&& m_bNeedRedraw*/ )
+	{
+		CRect rc = m_rcClient;
+		rc.Inflate( 1, 1, 1, 1 );
+		BIOS::LCD::Rectangle( rc, RGB565(b0b0b0) );
+		m_bNeedRedraw = false;
+	}
+
 	ui16 clr1 = Settings.CH1.u16Color;
 	ui16 clr2 = Settings.CH2.u16Color;
 	ui8 en1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
 	ui8 en2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
+
+	ui16 clrShade1 = 0, clrShade2 = 0, clrShade12 = 0;
 
 	ui8 bTrigger = (BIOS::GetTick() - Settings.Trig.nLastChange) < 5000;
 	ui16 nTriggerTime = (Settings.Trig.nTime - Settings.Time.Shift);
@@ -71,12 +182,23 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 
 	// if window is outside...
 	int nMaxIndex = BIOS::ADC::GetCount();
-	bool bLines = true;
+	bool bLines = Settings.Disp.Draw != CSettings::Display::_Points;
+	bool bFill = Settings.Disp.Draw == CSettings::Display::_Fill;
+	bool bAverage1 = Settings.Disp.Average == CSettings::Display::_AvgCh1;
+	bool bAverage2 = Settings.Disp.Average == CSettings::Display::_AvgCh2;
 	int nPrev1 = -1, nPrev2 = -1, nPrevm = -1;
 
 	int nMarkerT1 = -1, nMarkerT2 = -1, nMarkerY1 = -1, nMarkerY2 = -1;
 	bool bAreaT = false;
 	bool enmath = false;
+	int nSampleY2 = 0, nSampleY1 = 0;
+
+	if ( bFill )
+	{
+		clrShade1 = _Interpolate( clr1, 0x0101 );
+		clrShade2 = _Interpolate( clr2, 0x0101 );
+		clrShade12 = _Interpolate( _Interpolate(clr2, 0x0101), clr1 );
+	}
 
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuCursor )
 		SetupMarkers( Ch1fast, Ch2fast, nMarkerT1, nMarkerT2, nMarkerY1, nMarkerY2 );
@@ -107,49 +229,106 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 
 		ui32 val = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
 
-		if ( en2 )
-		{
-			si16 ch2 = (ui8)((val>>8) & 0xff);
-			//ch2 = CSettings::Correct(Settings.CH1.u16Position, ch2);
-			ch2 = Settings.CH2Calib.Correct( Ch2fast, ch2 );
-			if ( ch2 < 0 ) 
-				ch2 = 0;
-			if ( ch2 > 255 ) 
-				ch2 = 255;
-			ui16 y = (ch2*(DivsY*BlkY))>>8;
-				
-			if ( !bLines )
-				column[y] = clr2;
-			else
-			{
-				if ( nPrev2 == -1 )
-					nPrev2 = y;
-				for ( int _y = min(y, nPrev2); _y <= max(y, nPrev2); _y++)
-					column[_y] = clr2;
-				nPrev2 = y;
-			}
-		}
-
 		if ( en1 )
 		{
 			si16 ch1 = (ui8)((val) & 0xff);
-//				ch1 = CSettings::Correct(Settings.CH1.u16Position, ch1);
 			ch1 = Settings.CH1Calib.Correct( Ch1fast, ch1 );
 			if ( ch1 < 0 ) 
 				ch1 = 0;
 			if ( ch1 > 255 ) 
 				ch1 = 255;
-			ui16 y = (ch1*(DivsY*BlkY))>>8;
 
+			if ( bAverage1 )
+			{
+				ui16& nMemory = m_arrAverageBuf[x];
+				int nNew = (nMemory*7 + (ch1<<8)*1)/8;  // 7:1
+				nMemory = (ui16)nNew;
+				ch1 = nMemory >> 8;
+			}
+
+			nSampleY1 = (ch1*(DivsY*BlkY))>>8;
+		}
+		if ( en2 )
+		{
+			si16 ch2 = (ui8)((val>>8) & 0xff);
+			ch2 = Settings.CH2Calib.Correct( Ch2fast, ch2 );
+			if ( ch2 < 0 ) 
+				ch2 = 0;
+			if ( ch2 > 255 ) 
+				ch2 = 255;
+
+			if ( bAverage2 )
+			{
+				ui16& nMemory = m_arrAverageBuf[x];
+				int nNew = (nMemory*7 + (ch2<<8)*1)/8;
+				nMemory = (ui16)nNew;
+				ch2 = nMemory >> 8;
+			}
+
+			nSampleY2 = (ch2*(DivsY*BlkY))>>8;
+		}
+
+		if ( bFill )
+		{
+			if ( en1 && en2 )
+			{
+				if ( nSampleY1 > nSampleY2 )
+				{
+					int _y;
+					for ( _y = 0; _y < nSampleY2; _y++ )
+						column[_y] = clrShade12;
+					for (; _y < nSampleY1; _y++ )
+						column[_y] = clrShade1;
+				} else
+				{
+					int _y;
+					for (_y = 0; _y < nSampleY1; _y++)
+						column[_y] = clrShade12;
+					for (; _y < nSampleY2; _y++ )
+						column[_y] = clrShade2;
+				}
+			} else 
+			if ( en1 )
+			{
+				for ( int _y = 0; _y < nSampleY1; _y++ )
+					column[_y] = clrShade1;
+			} else
+			if ( en2 )
+			{
+				for ( int _y = 0; _y < nSampleY2; _y++ )
+					column[_y] = clrShade2;
+			} 
+		}
+
+		if ( en2 )
+		{
 			if ( !bLines )
-				column[y] = clr1;
+				column[nSampleY2] = clr2;
+			else
+			{
+				if ( nPrev2 == -1 )
+					nPrev2 = nSampleY2;
+				int nBottom = min(nSampleY2, nPrev2);
+				int nTop = max(nSampleY2, nPrev2);
+				for ( int _y = nBottom; _y <= nTop; _y++)
+					column[_y] = clr2;
+				nPrev2 = nSampleY2;
+			}
+		}
+
+		if ( en1 )
+		{
+			if ( !bLines )
+				column[nSampleY1] = clr1;
 			else
 			{
 				if ( nPrev1 == -1 )
-					nPrev1 = y;
-				for ( int _y = min(y, nPrev1); _y <= max(y, nPrev1); _y++)
+					nPrev1 = nSampleY1;
+				int nBottom = min(nSampleY1, nPrev1);
+				int nTop = max(nSampleY1, nPrev1);
+				for ( int _y = nBottom; _y <= nTop; _y++)
 					column[_y] = clr1;
-				nPrev1 = y;
+				nPrev1 = nSampleY1;
 			}
 		}
 
@@ -302,4 +481,12 @@ void CWndOscGraph::UpdateResolutions()
 		CSettings::AnalogChannel::pfValueProbe[ Settings.CH2.Probe ];
 }
 
+void CWndOscGraph::ClearAverage()
+{
+	memset(m_arrAverageBuf, 0, sizeof(m_arrAverageBuf));
+}
+void CWndOscGraph::ClearPersist()
+{
+	m_bPersistReset = true;
+}
 

@@ -71,7 +71,7 @@ public:
 		m_itmAbout.Create("About", RGB565(808080), 1, this);
 	}
 };
-
+/*
 class CWndMenuDisplay : public CWnd
 {
 public:
@@ -91,7 +91,7 @@ public:
 		m_itmPersist.Create("Persist\nOff", RGB565(808080), 2, this);
 	}
 };
-
+*/
 /*
 class CWndMenuMath : public CWnd
 {

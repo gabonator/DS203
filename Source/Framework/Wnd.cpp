@@ -248,9 +248,17 @@ void CWnd::SendMessage(CWnd* pTarget, ui16 code, ui32 data)
 void CWnd::ShowWindow(ui8 sh)
 {
 	if ( sh == SwShow )
+	{
+		if ( !(m_dwFlags & WsVisible) )
+			OnMessage( this, ToWord('S', 'H'), 1 ); 
 		m_dwFlags |= WsVisible;
+	}
 	else
+	{
+		if ( m_dwFlags & WsVisible )
+			OnMessage( this, ToWord('S', 'H'), 0 ); 
 		m_dwFlags &= ~WsVisible;
+	}
 }
 
 CWnd* CWnd::_GetNextActiveWindow()

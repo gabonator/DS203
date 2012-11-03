@@ -5,7 +5,7 @@
 #include <Source/HwLayer/Types.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '3')
+#define _VERSION ToDword('D', 'S', 'C', '4')
 
 class CSettings : public CSerialize
 {
@@ -250,7 +250,7 @@ public:
 	public:
 		static const char* const ppszTextType[];
 		// = {"Off", "A", "B", "A+B+C", "A+B-C", "B-A+C"}
-		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, _TypeMax = _BminusAplusC }
+		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, _AgreaterBplusC, _AlessBplusC, _TypeMax = _AlessBplusC }
 			Type;
 		ui16 uiColor;
 
@@ -262,6 +262,42 @@ public:
 		virtual CSerialize& operator >>( CStream& stream )
 		{
 			stream >> _E(Type) >> uiColor;
+			return *this;
+		}
+	};
+	class Display : public CSerialize 
+	{
+	public:
+		static const char* const ppszTextAxes[];
+		// = {"T-Y", "X-Y"};
+		static const char* const ppszTextDraw[];
+		// = {"Points", "Lines", "Fill"};
+		static const char* const ppszTextAverage[];
+		// = {"No", "Yes"};
+		static const char* const ppszTextPersist[];
+		// = {"No", "Yes"};
+		static const char* const ppszTextGrid[];
+		// = {"None", "Dots", "Lines"};
+
+		enum { _TY, _XY, _YX, _AxesMax = _YX }
+			Axes;
+		enum { _Points, _Lines, _Fill, _DrawMax = _Fill }
+			Draw;
+		enum { _AvgNo, _AvgCh1, _AvgCh2, _AverageMax = _AvgCh2 }
+			Average;
+		enum { _PerNo, _PerYes, _PersistMax = _PerYes }
+			Persist;
+		enum { _GridNone, _GridDots, _GridLines, _GridMax = _GridLines }
+			Grid;
+
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Axes) << _E(Draw) << _E(Average) << _E(Persist) << _E(Grid);
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Axes) >> _E(Draw) >> _E(Average) >> _E(Persist) >> _E(Grid);
 			return *this;
 		}
 	};
@@ -310,6 +346,8 @@ public:
 	MathOperand MathC;
 	MathOperator Math;
 
+	Display	Disp;
+
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;
 	LinApprox	DacCalib;
@@ -321,6 +359,7 @@ public:
 		stream << dwId << Runtime << CH1 << CH2 << CH3 << CH4 << Time << Trig << Gen
 			<< MarkT1 << MarkT2 << MarkY1 << MarkY2
 			<< Meas[0] << Meas[1] << Meas[2] << Meas[3] << Meas[4] << Meas[5]
+			<< MathA << MathB << MathC << Math
 			<< dwEnd;
 
 		return *this;
@@ -331,21 +370,23 @@ public:
 		ui32 dwId = 0, dwEnd = 0;
 		
 		stream >> dwId;
-		_ASSERT( dwId == _VERSION );
+		//_ASSERT( dwId == _VERSION );
 		if ( dwId == _VERSION )
 		{
 			stream >> Runtime >> CH1 >> CH2 >> CH3 >> CH4 >> Time >> Trig >> Gen
 				>> MarkT1 >> MarkT2 >> MarkY1 >> MarkY2
 				>> Meas[0] >> Meas[1] >> Meas[2] >> Meas[3] >> Meas[4] >> Meas[5]
+				>> MathA >> MathB >> MathC >> Math
 				>> dwEnd;
 			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
+		} else
 			Reset();
-		}
 		return *this;
 	}
 
 	CSettings();
 	ui32 GetChecksum();
+	ui32 GetStaticChecksum();
 	void Save();
 	void Load();
 	void Reset();

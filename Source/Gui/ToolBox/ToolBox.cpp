@@ -33,9 +33,10 @@ void CWndToolbox::Create( CWnd* pParent )
 		m_nFocus = 0;
 
 	#define FOC(n) (m_nFocus==n)?RGB565(ffffff):RGB565(808080)
-	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2, FOC(0), RGB565(000000), "\x10 Waveform manager");
-	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 16, FOC(1), RGB565(000000), 
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 0*16, FOC(0), RGB565(000000), "\x10 Waveform manager");
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 1*16, FOC(1), RGB565(000000), 
 		m_bAdcEnabled ? "\x10 Pause" : "\x10 Resume" );
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 2*16, FOC(2), RGB565(000000), "\x10 Reset setings");
 
 	char str[32];
 	BIOS::DBG::sprintf(str, "bat %d%%", BIOS::GetBattery());
@@ -148,6 +149,9 @@ void CWndToolbox::DoModal()
 	case MenuManager:
 		m_bAdcEnabled = FALSE;
 		// Load wave BIN
+		break;
+	case MenuReset:
+		Settings.Reset();
 		break;
 	case -1: break;
 	}

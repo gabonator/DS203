@@ -74,12 +74,8 @@ void CMainWnd::Create()
 	if ( ++nSeconds >= 120 )
 	{
 		nSeconds = 0;
-		
-		int nUptime = Settings.Runtime.m_nUptime;
-		Settings.Runtime.m_nUptime = 0;
-		ui32 nNewChecksum = Settings.GetChecksum();
-		Settings.Runtime.m_nUptime = nUptime;
-
+	
+		ui32 nNewChecksum = Settings.GetStaticChecksum();
 		if ( nNewChecksum != nChecksum )
 		{
 			//m_wndMessage.Show(this, "Information", "Saving settings...", RGB565(ffff00));

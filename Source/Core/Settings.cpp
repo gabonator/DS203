@@ -63,9 +63,20 @@ CSettings* CSettings::m_pInstance = NULL;
 		{ "View", "Selection", "All" };
 
 /*static*/ const char* const CSettings::MathOperator::ppszTextType[] = 
-		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C"};
+		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C"};
 /*static*/ const char* const CSettings::MathOperand::ppszTextType[] = 
 		{"CH1raw", "CH1", "CH2raw", "CH2", "Const", "Fx"};
+
+/*static*/ const char* const CSettings::Display::ppszTextAxes[]
+		 = {"T-Y", "X-Y", "Y-X"};
+/*static*/ const char* const CSettings::Display::ppszTextDraw[]
+		 = {"Dots", "Lines", "Fill"};
+/*static*/ const char* const CSettings::Display::ppszTextAverage[]
+		 = {"Off", "CH1", "CH2"};
+/*static*/ const char* const CSettings::Display::ppszTextPersist[]
+		 = {"No", "Yes"};
+/*static*/ const char* const CSettings::Display::ppszTextGrid[]
+		 = {"None", "Dots", "Lines"};
 
 CSettings::CSettings()
 {
@@ -217,8 +228,14 @@ void CSettings::Reset()
 	//MathC.uiColor = RGB565(808080);
 
 	Math.Type = MathOperator::_AplusBplusC;
-	Math.uiColor = RGB565(ff8080);
+	Math.uiColor = RGB565(ff80ff);
 
+	Disp.Axes = Display::_TY;
+	Disp.Draw = Display::_Lines;
+	Disp.Average = Display::_AvgNo;
+	Disp.Persist = Display::_PerNo;
+	Disp.Grid = Display::_GridDots;
+	
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;
 }
@@ -376,4 +393,46 @@ bool CSettings::LoadCalibration()
 
 	BIOS::DSK::Close(&f);
 	return true;
+}
+
+ui32 CSettings::GetStaticChecksum()
+{
+	ui8* pSharedBuffer = (ui8*)BIOS::DSK::GetSharedBuffer();
+	memset( pSharedBuffer, 0, FILEINFO::SectorSize );
+
+	CStream bufStream( pSharedBuffer, FILEINFO::SectorSize );
+
+	int nUptime = Settings.Runtime.m_nUptime;
+	float arrMeasValues[6];
+	int arrMarkY[2] = {0, 0};
+
+	if ( MarkY1.Mode == Marker::_Auto )
+	{
+		arrMarkY[0] = MarkY1.nValue;
+		MarkY1.nValue = 0;
+	}
+	if ( MarkY2.Mode == Marker::_Auto )
+	{
+		arrMarkY[1] = MarkY2.nValue;
+		MarkY2.nValue = 0;
+	}
+
+	for (int i=0; i<6; i++)
+	{
+		arrMeasValues[i] = Meas[i].fValue;
+		Meas[i].fValue = 0;
+	}
+
+	Settings.Runtime.m_nUptime = 0;
+	bufStream << *this;
+	Settings.Runtime.m_nUptime = nUptime;
+
+	for (int i=0; i<6; i++)
+		Meas[i].fValue = arrMeasValues[i];
+	if ( MarkY1.Mode == Marker::_Auto )
+		MarkY1.nValue = arrMarkY[0];
+	if ( MarkY2.Mode == Marker::_Auto )
+		MarkY2.nValue = arrMarkY[1];
+	
+	return bufStream.GetChecksum();
 }

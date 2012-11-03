@@ -10,13 +10,14 @@ class CWndToolbox : public CWnd, public CThread, public CExport
 public:
 	enum {
 		Width = 200,
-		Height = 60
+		Height = 88
 	};
 
 	enum {
 		MenuPauseResume = 1,
 		MenuManager = 0,
-		MenuMax = MenuPauseResume
+		MenuReset = 2,
+		MenuMax = MenuReset
 	};
 
 public:

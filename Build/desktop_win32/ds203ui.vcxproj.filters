@@ -79,6 +79,9 @@
     <Filter Include="Source\Gui\Oscilloscope\Math">
       <UniqueIdentifier>{7aff0440-9f26-4b03-ae7e-f5dd0850fad7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Disp">
+      <UniqueIdentifier>{505902dc-6a9e-4968-924c-1cd9c4087399}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -303,6 +306,12 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.h">
       <Filter>Source\Gui\Oscilloscope\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Disp\ItemDisp.h">
+      <Filter>Source\Gui\Oscilloscope\Disp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.h">
+      <Filter>Source\Gui\Oscilloscope\Disp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -398,6 +407,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp">
       <Filter>Source\Gui\Oscilloscope\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp">
+      <Filter>Source\Gui\Oscilloscope\Disp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

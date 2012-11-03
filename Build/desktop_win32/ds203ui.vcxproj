@@ -94,6 +94,8 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\OscInfo.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\TimeRef.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\ZoomBar.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Disp\ItemDisp.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h" />
@@ -169,6 +171,7 @@
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp" />
     <ClCompile Include="..\..\Source\Gui\Calibration\Calibration.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />

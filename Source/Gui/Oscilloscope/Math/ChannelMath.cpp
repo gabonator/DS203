@@ -34,6 +34,15 @@ int CMathChannel::MathCalc(ui32 nSample)
 			MathGet(Settings.MathB, nSample) -
 			MathGet(Settings.MathA, nSample) +
 			MathGet(Settings.MathC, nSample);
+	case CSettings::MathOperator::_AgreaterBplusC:
+		return (MathGet(Settings.MathA, nSample) > 
+			MathGet(Settings.MathB, nSample) ? 32 : 0) +
+			MathGet(Settings.MathC, nSample);
+	case CSettings::MathOperator::_AlessBplusC:
+		return (MathGet(Settings.MathA, nSample) <
+			MathGet(Settings.MathB, nSample) ? 32 : 0) +
+			MathGet(Settings.MathC, nSample);
+
 	default:
 		_ASSERT(0);
 		return 0;
