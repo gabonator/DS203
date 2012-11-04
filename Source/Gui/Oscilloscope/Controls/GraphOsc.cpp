@@ -156,8 +156,12 @@ void CWndOscGraph::OnPaintTY()
 
 	ui16 clr1 = Settings.CH1.u16Color;
 	ui16 clr2 = Settings.CH2.u16Color;
+	ui16 clr3 = Settings.CH3.u16Color;
+	ui16 clr4 = Settings.CH4.u16Color;
 	ui8 en1 = Settings.CH1.Enabled == CSettings::AnalogChannel::_YES;
 	ui8 en2 = Settings.CH2.Enabled == CSettings::AnalogChannel::_YES;
+	ui8 en3 = Settings.CH3.Enabled == CSettings::DigitalChannel::_YES;
+	ui8 en4 = Settings.CH4.Enabled == CSettings::DigitalChannel::_YES;
 
 	ui16 clrShade1 = 0, clrShade2 = 0, clrShade12 = 0;
 
@@ -186,12 +190,39 @@ void CWndOscGraph::OnPaintTY()
 	bool bFill = Settings.Disp.Draw == CSettings::Display::_Fill;
 	bool bAverage1 = Settings.Disp.Average == CSettings::Display::_AvgCh1;
 	bool bAverage2 = Settings.Disp.Average == CSettings::Display::_AvgCh2;
-	int nPrev1 = -1, nPrev2 = -1, nPrevm = -1;
+	int nPrev1 = -1, nPrev2 = -1, nPrevm = -1, nPrev3 = -1, nPrev4 = -1;
 
 	int nMarkerT1 = -1, nMarkerT2 = -1, nMarkerY1 = -1, nMarkerY2 = -1;
 	bool bAreaT = false;
 	bool enmath = false;
 	int nSampleY2 = 0, nSampleY1 = 0;
+
+	int nY3High = 0;
+	int nY3Low = 0;
+	int nY4High = 0;
+	int nY4Low = 0;
+	int nSampleY3 = 0, nSampleY4 = 0;
+
+	if ( en3 )
+	{
+		nY3Low = Settings.CH3.u16Position;
+		nY3High = Settings.CH3.Polarity == CSettings::DigitalChannel::_POS ? 
+			nY3Low + 32 : nY3Low - 32;
+		UTILS.Clamp<int>( nY3Low, 0, 255 );
+		UTILS.Clamp<int>( nY3High, 0, 255 );
+		nY3Low = (nY3Low*(DivsY*BlkY))>>8;
+		nY3High = (nY3High*(DivsY*BlkY))>>8;
+	}
+	if ( en4 )
+	{
+		nY4Low = Settings.CH4.u16Position;
+		nY4High = Settings.CH4.Polarity == CSettings::DigitalChannel::_POS ? 
+			nY4Low + 32 : nY4Low - 32;
+		UTILS.Clamp<int>( nY4Low, 0, 255 );
+		UTILS.Clamp<int>( nY4High, 0, 255 );
+		nY4Low = (nY4Low*(DivsY*BlkY))>>8;
+		nY4High = (nY4High*(DivsY*BlkY))>>8;
+	}
 
 	if ( bFill )
 	{
@@ -227,16 +258,14 @@ void CWndOscGraph::OnPaintTY()
 			
 		_PrepareColumn( column, x, clrCol );
 
-		ui32 val = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
+		BIOS::ADC::SSample Sample;
+		Sample.nValue = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
 
 		if ( en1 )
 		{
-			si16 ch1 = (ui8)((val) & 0xff);
+			si16 ch1 = Sample.CH1;
 			ch1 = Settings.CH1Calib.Correct( Ch1fast, ch1 );
-			if ( ch1 < 0 ) 
-				ch1 = 0;
-			if ( ch1 > 255 ) 
-				ch1 = 255;
+			UTILS.Clamp<si16>( ch1, 0, 255 );
 
 			if ( bAverage1 )
 			{
@@ -250,12 +279,9 @@ void CWndOscGraph::OnPaintTY()
 		}
 		if ( en2 )
 		{
-			si16 ch2 = (ui8)((val>>8) & 0xff);
+			si16 ch2 = Sample.CH2;
 			ch2 = Settings.CH2Calib.Correct( Ch2fast, ch2 );
-			if ( ch2 < 0 ) 
-				ch2 = 0;
-			if ( ch2 > 255 ) 
-				ch2 = 255;
+			UTILS.Clamp<si16>( ch2, 0, 255 );
 
 			if ( bAverage2 )
 			{
@@ -266,6 +292,14 @@ void CWndOscGraph::OnPaintTY()
 			}
 
 			nSampleY2 = (ch2*(DivsY*BlkY))>>8;
+		}
+		if ( en3 )
+		{
+			nSampleY3 = Sample.CH3 ? nY3High : nY3Low;		
+		}
+		if ( en4 )
+		{
+			nSampleY4 = Sample.CH4 ? nY4High : nY4Low;
 		}
 
 		if ( bFill )
@@ -300,6 +334,36 @@ void CWndOscGraph::OnPaintTY()
 			} 
 		}
 
+		if ( en3 )
+		{
+			if ( !bLines )
+				column[nSampleY3] = clr3;
+			else
+			{
+				if ( nPrev3 == -1 )
+					nPrev3 = nSampleY3;
+				int nBottom = min(nSampleY3, nPrev3);
+				int nTop = max(nSampleY3, nPrev3);
+				for ( int _y = nBottom; _y <= nTop; _y++)
+					column[_y] = clr3;
+				nPrev3 = nSampleY3;
+			}
+		}
+		if ( en4 )
+		{
+			if ( !bLines )
+				column[nSampleY4] = clr4;
+			else
+			{
+				if ( nPrev4 == -1 )
+					nPrev4 = nSampleY4;
+				int nBottom = min(nSampleY4, nPrev4);
+				int nTop = max(nSampleY4, nPrev4);
+				for ( int _y = nBottom; _y <= nTop; _y++)
+					column[_y] = clr4;
+				nPrev4 = nSampleY4;
+			}
+		}
 		if ( en2 )
 		{
 			if ( !bLines )
@@ -334,11 +398,8 @@ void CWndOscGraph::OnPaintTY()
 
 		if ( enmath )
 		{
-			int chm = MathCalc( val );
-			if ( chm < 0 ) 
-				chm = 0;
-			if ( chm > 255 ) 
-				chm = 255;
+			int chm = MathCalc( Sample.nValue );
+			UTILS.Clamp<int>( chm, 0, 255 );
 			ui16 y = (chm*(DivsY*BlkY))>>8;
 
 			if ( !bLines )

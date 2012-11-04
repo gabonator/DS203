@@ -159,10 +159,9 @@ public:
 
 		private:
 			int nBegin, nEnd;
-			int nLast, nThresh, nTrigMin, nTrigMax, nTrigState, nNewState;
+			int nLast, nThresh, nTrigMin, nTrigMax;
 			int nBit;
 			
-			bool bDecodeFirst;
 			int nDecodeIndex;
 			int nDecoded;
 
@@ -171,6 +170,7 @@ public:
 			CMeasStatistics* m_pThis;
 			int nTotalBits, nTotalTime;
 			char strDecode[32];
+			int nIdle;
 
 		public:
 			CMeasStatistics* This()
@@ -187,22 +187,40 @@ public:
 				nThresh = ( This()->m_nRawMax - This()->m_nRawMin ) / 4;
 				nTrigMin = This()->m_nRawMin + nThresh;
 				nTrigMax = This()->m_nRawMax - nThresh;
-				nTrigState = -1, nNewState = -1;
 				nLast = -1;
 				nMinPeriod = -1;
 
 				nTotalBits = 0;
 				nTotalTime = 0;
 
-				bDecodeFirst = true;
 				nDecodeIndex = -1;
 				nDecoded = 0;
 				strDecode[nDecoded] = 0;
 				return true;
 			}
 
+			void Average()
+			{
+				int nHigh = 0, nLow = 0;
+				for ( int i = nBegin; i < nEnd; i++ )
+				{
+					int nSample = BIOS::ADC::GetAt(i);
+					if ( This()->m_curSrc == CSettings::Measure::_CH1 )
+						nSample = (ui8)((nSample) & 0xff);
+					else
+						nSample = (ui8)((nSample>>8) & 0xff);
+
+					if ( nSample > nTrigMax )
+						nHigh++;
+					if ( nSample < nTrigMin )
+						nLow++;
+				}
+				nIdle = nHigh > nLow ? 1 : 0;
+			}
+
 			bool Do(TProcessFunc ProcessEdge)
 			{
+				int nNewState = -1, nTrigState = -1;
 				for ( int i = nBegin; i < nEnd; i++ )
 				{
 					int nSample = BIOS::ADC::GetAt(i);
@@ -225,6 +243,8 @@ public:
 					}
  					nTrigState = nNewState;
 				}
+				//if ( !(this->*ProcessEdge)( nEnd-nLast, 1-nNewState ) )
+				//	return false;
 				return true;
 			}
 			
@@ -276,15 +296,9 @@ public:
 				if ( nCount <= 2 )
 					return true;
 
-				if ( bDecodeFirst )
-				{
-					// push single idle bit
-					Push( nRising );
-					bDecodeFirst = false;
-				}
 				int nMin = nMinPeriod;
-				for ( int i = 0; i <= nCount-nMin; i += nMin )
-					if ( !Push( 1-nRising ) )
+				for ( int i = nMin; i <= nCount; i += nMin )
+					if ( !Push( nIdle ? 1-nRising : nRising) )
 						return false;
 				return true;
 			}
@@ -297,7 +311,7 @@ public:
 				// waiting for start bit
 				if ( nDecodeIndex == -1 )
 				{
-					if ( nPrev == 0 && nBit == 1 )
+					if ( nPrev == 1 && nBit == 0 )
 						nDecodeIndex = 0;
 					nPrev = nBit;
 					return true;
@@ -305,7 +319,7 @@ public:
 
 				//BIOS::DBG::Print("%d", nBit);
 				nByte >>= 1;
-				if ( !nBit )
+				if ( nBit )
 					nByte |= 128;
 				if ( ++nDecodeIndex >= 8 )
 				{
@@ -325,12 +339,17 @@ public:
 		Iterate.m_pThis = this;
 		if ( !Iterate.Prepare() )
 			return 0.0f;
+		Iterate.Average();
 		Iterate.Do(&_Iterate::FindSmallest);
 		Iterate.Do(&_Iterate::Sum);
+		
+		Iterate.Push(1);	// idle before start bit
 		Iterate.Do(&_Iterate::Decode);
+		for ( int i = 0; i < 8; i++ )
+			Iterate.Push(0);	// finish byte when only single byte sent
 
 		if ( Iterate.strDecode[0] )
-			BIOS::LCD::Print(20, 30 + ((int)m_curSrc)*16, RGB565(ff0000), RGBTRANS, Iterate.strDecode );
+			BIOS::LCD::Print(20, 30 + ((int)m_curSrc)*16, RGB565(ff0000), 0x0101, Iterate.strDecode );
 		float fBaudPeriod = (Iterate.nTotalTime / (float) Iterate.nTotalBits) * Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
 		float fBaud = 1.0f / fBaudPeriod;
 		return fBaud;

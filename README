@@ -1,119 +1,42 @@
-DS203 customized firmware by Gabriel Valky
+﻿DS203 customized firmware by Gabriel Valky
 
-DS203 is a nice open source oscilloscope. And this is an attempt to design improved GUI for the scope offering rich functions than the original not-so-user-friendly firmware. The source code is in C++ for better code organisation and it is possible to compile it on Windows and Linux machine. For speeding up the design process, you can compile this application as native Win32 app, this offers you the possibility to test new features on PC before final upload to the DS203 device. For windows users, there is a Visual Studio 2005 project file (Build/desktop_win32). For compiling the firmware for ARM Cortex M3 target device, there is a script in "Build" folder (arm_win32 for win32 platform, arm_linux for linux platform)
+DS203 is a nice open source oscilloscope. And this is an attempt to design improved GUI for the scope offering rich functions, better than those provided by original not-so-user-friendly firmware. The source code is in C++ for better code organisation and it is possible to compile it on Windows and Linux machine. For speeding up the development process, you can compile this application as native Win32 app, this offers you the ability to test new features on PC before compiling and uploading the firmware onto DS203 device. For windows users, there is a Visual Studio 2010 project file (Build/desktop_win32). For compiling the firmware for ARM Cortex M3 target device, there is a script in "Build" folder (arm_win32 for win32 platform, arm_linux for linux platform)
 
-For owners of DS203 that would like to try this firmware:
+For owners of DS203 who would like to try this firmware:
 1. download hex file from Bin/APP_G251.hex
 2. power on your oscilloscope while holding the first button
-3. on device's display, there should be displayed "DFU tool" and a new USB disk should
-appear in "My computer"
+3. on device's display, there should be displayed "DFU tool" and a new USB disk should appear in "My computer"
 4. copy the hex file to your oscilloscope
-5. after successful upload, on the USB disk will disconnect and reconnect again. Sometimes it will show some error message during uploading (don't worry, the computer has probably uploaded the file successfully, there is probably some bug in the DFU program) 
+5. after successful upload, on the USB disk will disconnect itself and reconnect again. Sometimes it will show some error message during uploading (don't worry, the computer has probably uploaded the file successfully, there is probably some bug in the DFU program) 
 5. turn off
-6. turn on
+6. turn on without holding any button
 
 For developers that want to build the firmware, but don't want to use github:
 1. download whole repository: https://github.com/gabonator/DS203/zipball/master
 2. follow instructions in /Man/ folder
 
-For developers that would like to participate in this project:
-1. I am new to git, so here is your turn to clone the repository, make branches and then tell me how to review your changes and patch my repository with them…
+For developers that would like to contribute to this project:
+Just contact me, or make a modification of the source code and push me a request.
 
 Controls:
-For controlling the oscilloscope, first two buttons are used as enter/exit and
-both cursor keys (don't know whats the correct name of that slidable buttons) are used for moving up/down and changing values.
+The DS203 device has 4 push buttons and two slide buttons. The function of first three buttons are following:
+ >||  Enter
+ []   Escape
+ ()   Show toolbox
+The two slider buttons are used for navigation and value change.
 
-GUI Tree:
-	MainWindow
-	- Input 
-		- Channel 1 (Analog Input)
-			- Enabled [Yes/No]
-			- Coupling [AC/DC/GND]
-			- Resolution 
-			- Probe
-			- V. Position
-			- Colour [RGB]
-		- Channel 2 (Analog Input)
-			- (the same as above)
-		- Channel 3 (Digital Input)
-			- Enabled
-			- Polarity (for displaying the signal inverted)
-			- V. Position
-			- Colour [RGB]
-		- Channel 4 (Digital Input)
-			- (the same as above)
-		- Timebase
-			- (can be changed with arrow keys)
-		- Window
-			- (scrolling with arrow keys)
-		- Trigger
-			- Mode [Auto/Norm/Single/None]
-			- Type (Edge trigger type) [high/low]
-			- Source [CH1/CH2/CH3/CH4/Math]
-			- Threshold (can be changed without accessing the list)
-			- Time (how many samples to show before triggering)
-	- Cursor (not implemented)
-		- X1
-		- X2
-		- Y1
-		- Y2
-		- dX
-		- dY
-		- Mode
-	- Meas (not implemented)
-	- Math (not implemented)
-		- On/Off/Colour
-		- Operand1 (constant, channel)
-		- Operand2 (constant, channel)
-		- Operator (add/sub/mul)
-	- Disp (not implemented)
-		- Mode (XT/XY)
-		- Display (Points, Lines, Filled polygon)
-		- Domain (Time, Frequency-FFT)
-		- Persist
-	- Gen (in development)
-		- Wave (sin/triangle/sawtooth/square/cardiac)
-		- Frequency (in Hz)
-		- BPM
-		- Psc (hw configuration)
-		- Arr (hw configuration)
-	- Set (not implemented)
-		- Save settings
-		- Backlight
-		- Volume
-		- Language
-		- Auto off
-		- About
-	- Toolkit (not implemented)
-		- Baudrate detector (will be removed, available from Meas)
-		- Uart (uart decoder with onscreen display of ascii messages)
-		- Area (signal conformity testing)	
+Screenshots:
+![Image 1](gabonator.github.com/DS203/Man/Screenshot/uart_decoder_1.png)
+![Image 2](gabonator.github.com/DS203/Man/Screenshot/cursor.png)
+![Image 3](gabonator.github.com/DS203/Man/Screenshot/waveman_meas.png)
 
-
-Features implemented:
-Displaying analog waveforms from analog channels. Time resolution will not probably correspond to the displayed information on Input/time panel. Scrolling and investigating whole 4K point waveform. Trigger level and edge trigger should work, Trigger time shift not implemented yet.
-
-Core Todo list:
-Custom LCD driver and new font - flipping the display upside down, rewrite the drawing functions to use "goto xy function" only when necessary, try to draw everything in rectangular blocks (much faster) 
- 
-Finish CWnd class - implementation of modal dialogs, preventing of overdrawing from underlying windows, delayed screen redraw (Invalidate currently calls the OnPaint function, Invalidate should only set some flag and drawing process should be done later) to achieve better and faster key response.
-
-Constructors of globally instantiated classes are not called. This problem disallows me to use global classes, every class has to be placed in some function. (See Application.cpp and function Run(). Probably the linker is not configured correctly. Some GCC guru needed.
-
-Maintain some notation on file names, rename files and use correct names in includes for linux users.
-
-Compatibility with Mac OSX using http://pixhawk.ethz.ch/wiki/imu_toolchain/sourcery toolchain. Use makefile or applescript for the building process?
-
-Hardware Todo list:
-some changes to the FPGA for accessing the ADC values without filling the cache - suitable for low speed displaying (e.g. 1second per div should be updating the graph window in realtime, not waiting for the FPGA to fill the buffers)
-
-Application Todo list:
-correct the x axis on graph to match the resolution in input/time panel
-display digital channels
-add new display modes - lines, filled polygons, XY
-cursors
+Feature highlights:
+  UART decoder
+  Advanced mathematical operators
+  Cursors with lock-to-channel function
+  Export to CSV file
 
 References:
-Authors webpage - www.valky.eu
-Seeedstudio forums - http://www.seeedstudio.com/forum/viewtopic.php?f=10&t=2362
-DSO Quad wiki pages - http://www.seeedstudio.com/wiki/DSO_Quad
+  Authors webpage - www.valky.eu
+  Seeedstudio forums - http://www.seeedstudio.com/forum/viewtopic.php?f=10&t=2362
+  DSO Quad wiki pages - http://www.seeedstudio.com/wiki/DSO_Quad

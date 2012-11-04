@@ -62,6 +62,10 @@ public:
 	virtual void WindowMessage(int nMsg, int nParam =0);
 
 private:
+	// auto trigger
+	long				m_lLastAcquired;
+
+private:
 	void SdkProc();
 };
 

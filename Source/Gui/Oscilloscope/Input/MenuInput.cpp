@@ -95,8 +95,24 @@ CWndMenuInput::CWndMenuInput()
 	{
 		if ( pSender == &m_wndListTrigger.m_itmLevel )
 			MainWnd.m_wndLReferences.Invalidate();
-		if ( pSender == &m_wndListTrigger.m_itmTime )
-			MainWnd.m_wndTReferences.Invalidate();
+//		if ( pSender == &m_wndListTrigger.m_itmTime )
+//			MainWnd.m_wndTReferences.Invalidate();
+		// first 150 samples in buffer are for storing pre-trigger
+		// samples. When no trigger is set, these samples are invalid.
+		int nInvalid = Settings.Trig.Sync == CSettings::Trigger::_None ? 150 : 30;
+		Settings.Time.InvalidFirst = nInvalid;
+		if ( Settings.Time.Shift < nInvalid )
+			Settings.Time.Shift = nInvalid;
+		MainWnd.m_wndZoomBar.Invalidate();
+
+		if ( pSender == &m_wndListTrigger.m_itmSync )
+		{
+			BIOS::ADC::Enable( true );
+			BIOS::ADC::Restart();
+		}
+
+		Settings.Trig.State = (Settings.Trig.Sync == CSettings::Trigger::_Single) ? 
+			CSettings::Trigger::_Wait : CSettings::Trigger::_Run;;
 
 		ConfigureTrigger();
 		Settings.Trig.nLastChange = BIOS::GetTick();

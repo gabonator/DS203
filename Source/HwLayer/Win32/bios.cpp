@@ -507,7 +507,7 @@ unsigned long g_ADCMem[ADCSIZE];
 	return ADCSIZE;
 }
 
-/*static*/ unsigned long& BIOS::ADC::GetAt(int i)
+/*static*/ BIOS::ADC::TSample& BIOS::ADC::GetAt(int i)
 {
 	_ASSERT( i >= 0 && i < ADCSIZE );
 	return g_ADCMem[i];

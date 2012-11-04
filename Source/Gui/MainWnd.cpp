@@ -20,7 +20,7 @@ void CMainWnd::Create()
 	Settings.Load();
 	Settings.LoadCalibration();
 	
-	CWnd::Create("CMainWnd", WsVisible, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
+	CWnd::Create("CMainWnd", WsVisible | WsListener, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
 
 	m_wndToolBar.Create( this );
 	//m_wndManager.Create( this );
@@ -55,7 +55,8 @@ void CMainWnd::Create()
 	else
 		SendMessage( &m_wndToolBar, ToWord('g', 'i'), 1);
 
-	SetTimer(1000);
+	m_lLastAcquired = -1;
+	SetTimer(200);
 }
 
 /*virtual*/ void CMainWnd::OnTimer()
@@ -71,7 +72,7 @@ void CMainWnd::Create()
 		Settings.Runtime.m_nUptime = nUptime;
 	}
 
-	if ( ++nSeconds >= 120 )
+	if ( ++nSeconds >= 120*5 )
 	{
 		nSeconds = 0;
 	
@@ -83,8 +84,22 @@ void CMainWnd::Create()
 			nChecksum = nNewChecksum;
 		}
 	}
-
-	SdkProc();
+	if ( (nSeconds & 7) == 0 )
+		SdkProc();
+	
+	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )
+	{
+		long lTick = BIOS::GetTick();
+		if ( m_lLastAcquired != -1 && lTick - m_lLastAcquired > 150 )
+		{
+			// whatever is in buffer, just process it. 250ms should be 
+			// sufficient to grab samples for one screen,
+			BIOS::ADC::Copy( BIOS::ADC::GetCount() );
+			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
+			// force update
+			BIOS::ADC::Restart();
+		}
+	}
 }
 
 /*virtual*/ void CMainWnd::OnPaint()
@@ -94,6 +109,18 @@ void CMainWnd::Create()
 
 /*virtual*/ void CMainWnd::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
+	if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
+	{
+		m_lLastAcquired = BIOS::GetTick();
+		if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Single )
+		{
+			BIOS::ADC::Enable( false );
+			Settings.Trig.State = CSettings::Trigger::_Stop;
+			if ( m_wndMenuInput.m_itmTrig.IsVisible() )
+				m_wndMenuInput.m_itmTrig.Invalidate();
+		}
+		return;
+	}
 	if ( pSender == &m_wndToolBar )
 	{
 		if ( code == ToWord('L', 'D') && data )	// Layout disable
@@ -112,6 +139,7 @@ void CMainWnd::Create()
 		{
 			Invalidate();
 		}
+		return;
 	}
 }
 

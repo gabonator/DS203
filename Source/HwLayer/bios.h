@@ -80,6 +80,21 @@ public:
 
 	class ADC {
 	public:
+		typedef unsigned long TSample;
+		union SSample {
+			struct
+			{
+				ui8 CH1 : 8;
+				ui8 CH2 : 8;
+				ui8 CH3 : 1;
+				ui8 CH4 : 1;
+				ui8 dummy0 : 6;
+				ui8 dummy1 : 8;
+			};
+			ui32 nValue;
+		};
+
+	public:
 		static void Init();
 		static unsigned char Ready();
 	
@@ -95,7 +110,7 @@ public:
 
 		static void Copy(int nCount);
 		static unsigned long GetCount();
-		static unsigned long& GetAt(int i);
+		static TSample& GetAt(int i);
 	};
 
 	class GEN {

@@ -59,7 +59,7 @@ public:
 			if ( m_pMarker->Type == CSettings::Marker::_Time )
 			{ 
 				float fTimeRes = Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
-				float fValue = fTimeRes * ( m_pMarker->nValue - ( Settings.Trig.nTime - Settings.Time.Shift ) );
+				float fValue = fTimeRes * ( m_pMarker->nValue - ( Settings.Trig.nTime - Settings.Time.Shift) );
 				x += BIOS::LCD::Printf( x, y, clr, RGBTRANS, "%f", fValue*1000 ) * 8;
 				if (!HasFocus())
 				{

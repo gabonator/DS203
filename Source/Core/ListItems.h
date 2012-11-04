@@ -103,6 +103,15 @@ public:
 	{
 		return (ui16)strlen( CUtils::itoa( *m_pVal ) )<<3;
 	}
+	
+	void SetMin( si16 nMin )
+	{
+		m_nMin = nMin;
+	}
+	void SetMax( si16 nMax )
+	{
+		m_nMax = nMax;
+	}
 };
 
 template <class T>

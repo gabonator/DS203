@@ -1,6 +1,6 @@
 bool g_bAdcEnabled = false;
 #define ADCSIZE 4096
-unsigned long g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
+BIOS::ADC::TSample g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
 
 /*static*/ void BIOS::ADC::Init()
 {
@@ -25,7 +25,7 @@ unsigned long g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :
 
 /*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr)
 {      
-    __Set(TRIGG_MODE, UNCONDITION);
+//    __Set(TRIGG_MODE, UNCONDITION);
 
     // init channel
 //    __Set(ADC_CTRL, EN);       
@@ -91,6 +91,12 @@ CH_D Trigger source & kind select =>
 0x20~0xFF  =>  Unconditional trigger
 
 */
+  if ( nType == -1 )
+	{
+    __Set(TRIGG_MODE, UNCONDITION);
+    return;
+  }
+  
 	__Set(T_THRESHOLD, nTThreshold);  
 	__Set(V_THRESHOLD, nVThreshold);  
 	__Set(TRIGG_MODE,  (nSource << 3) | nType);
@@ -110,7 +116,7 @@ CH_D Trigger source & kind select =>
 	return ADCSIZE;
 }
 
-/*static*/ unsigned long& BIOS::ADC::GetAt(int i)
+/*static*/ BIOS::ADC::TSample& BIOS::ADC::GetAt(int i)
 {
 	_ASSERT( i >= 0 && i < ADCSIZE );
 	return g_ADCMem[i];

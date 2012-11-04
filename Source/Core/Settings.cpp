@@ -121,9 +121,11 @@ void CSettings::Reset()
 	
 	Time.Resolution = TimeBase::_500us;
 	Time.Range = TimeBase::_4;
-	Time.Shift = 0;
+	Time.InvalidFirst = 30; 
+	// first samples are some noise, cut them out, length matching one div
+	Time.Shift = Time.InvalidFirst;
 
-	Trig.Sync = Trigger::_None;
+	Trig.Sync = Trigger::_Auto;
 	Trig.Type = Trigger::_EdgeLH;
 	Trig.Source = Trigger::_CH1;
 	Trig.State = Trigger::_Run;

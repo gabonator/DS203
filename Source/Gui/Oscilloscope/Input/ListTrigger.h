@@ -8,13 +8,14 @@ public:
 	CProviderEnum	m_proType;
 	CProviderEnum	m_proSource;
 	CProviderNum	m_proLevel;
-	CProviderNum	m_proTime;
+	//CProviderNum	m_proTime;
 
 	CLPItem			m_itmSync;
 	CLPItem			m_itmType;
 	CLPItem			m_itmSource;
 	CLPItem			m_itmLevel;
-	CLPItem			m_itmTime;
+	//CLPItem			m_itmTime;
+	// DSO does not allow to change the time offset
 
 public:
 	void Create( CWnd* pParent )
@@ -28,13 +29,13 @@ public:
 		m_proSource.Create( (const char**)CSettings::Trigger::ppszTextSource,
 			(NATIVEENUM*)&Settings.Trig.Source, CSettings::Trigger::_SourceMax );
 		m_proLevel.Create( &Settings.Trig.nLevel, 0, 255 );
-		m_proTime.Create( &Settings.Trig.nTime, 0, 4096 );
+		//m_proTime.Create( &Settings.Trig.nTime, 0, 4096 );
 
 		m_itmSync.Create( "Mode", CWnd::WsVisible, &m_proSync, this );
 		m_itmType.Create( "Type", CWnd::WsVisible, &m_proType, this );
 		m_itmSource.Create( "Source", CWnd::WsVisible, &m_proSource, this );
 		m_itmLevel.Create( "Threshold", CWnd::WsVisible, &m_proLevel, this );
-		m_itmTime.Create( "Time", CWnd::WsVisible, &m_proTime, this );
+		//m_itmTime.Create( "Time", CWnd::WsVisible, &m_proTime, this );
 	}
 };
 

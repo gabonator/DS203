@@ -94,8 +94,8 @@ public:
 		static const float pfValueResolution[];
 
 		si16 Shift;
-
-
+		int InvalidFirst;
+		
 		virtual CSerialize& operator <<( CStream& stream )
 		{
 			stream << _E(Resolution) << _E(Range) << Shift; 
