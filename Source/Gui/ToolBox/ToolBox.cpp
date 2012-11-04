@@ -157,6 +157,12 @@ void CWndToolbox::DoModal()
 	}
 
 	BIOS::ADC::Enable( m_bAdcEnabled );
+  if ( m_bAdcEnabled )
+  {
+    BIOS::ADC::Restart();
+		if ( Settings.Trig.Sync == CSettings::Trigger::_Single )
+			Settings.Trig.State = CSettings::Trigger::_Wait;
+  }
 
 	if ( MainWnd.m_wndMenuInput.m_wndListTrigger.IsVisible() )
 		MainWnd.m_wndMenuInput.m_wndListTrigger.Invalidate();

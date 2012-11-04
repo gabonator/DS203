@@ -4,13 +4,15 @@
 class CItemTrigger : public CWndMenuItem
 {
 	CProviderNum	m_proLevel;
-
+	int						m_nTimer;
 public:
 	virtual void Create(CWnd *pParent) 
 	{
 		CWndMenuItem::Create( "Trig", RGB565(404040), 2, pParent);
 
 		m_proLevel.Create( &Settings.Trig.nLevel, 0, 255 );
+		SetTimer(500);
+		m_nTimer = 0;
 	}
 
 	virtual void OnPaint()
@@ -112,40 +114,20 @@ public:
 		CWnd::OnKey( nKey );
 	}
 
-};
-
-class CItemWindow : public CWndMenuItem
-{
-	CProviderNum	m_proTime;
-
-public:
-	virtual void Create(CWnd *pParent) 
+	virtual void OnTimer()
 	{
-		CWndMenuItem::Create( "Window", RGB565(ffffff), 1, pParent);
-		m_proTime.Create( &Settings.Time.Shift, Settings.Time.InvalidFirst, 4096 - CWndGraph::BlkX * CWndGraph::DivsX );
-	}
-
-	virtual void OnKey(ui16 nKey)
-	{
-		int nMin = Settings.Time.InvalidFirst;
-		m_proTime.SetMin(nMin);
-
-		if ( nKey & BIOS::KEY::KeyLeft && m_proTime-1 == CValueProvider::Yes )
+		if ( BIOS::ADC::Enabled() && Settings.Trig.State == CSettings::Trigger::_Wait )
 		{
-			for (ui8 t=0; t<32 && m_proTime-1 == CValueProvider::Yes; t++)
-				m_proTime--;
-			SendMessage(m_pParent, ToWord('w', 'u'), 0);
+			int x = m_rcClient.left + 12 + MarginLeft;
+			int y = m_rcClient.top;
+			x += 52;
+			y += 16;
+			if ( m_nTimer++ & 1 )
+				BIOS::LCD::Print( x, y, RGB565(b00000), RGBTRANS, "W");
+			else
+				BIOS::LCD::Print( x, y, RGB565(00b000), RGBTRANS, "W");
 		}
-		if ( nKey & BIOS::KEY::KeyRight && m_proTime+1 == CValueProvider::Yes )
-		{
-			for (ui8 t=0; t<32 && m_proTime+1 == CValueProvider::Yes; t++)
-				m_proTime++;
-			SendMessage(m_pParent, ToWord('w', 'u'), 0);
-		}
-
-		CWnd::OnKey( nKey );
 	}
-
 };
 
 #endif

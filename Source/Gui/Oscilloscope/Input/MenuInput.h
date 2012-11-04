@@ -13,6 +13,7 @@
 #include "ItemDigital.h"
 #include "ItemTime.h"
 #include "ItemTrigger.h"
+#include "ItemWindow.h"
 
 class CWndMenuInput : public CWnd
 {

@@ -41,13 +41,24 @@ Screenshots:
 
 Feature highlights:
 ======================
-  UART decoder
-  Advanced mathematical operators
-  Cursors with lock-to-channel function
-  Export to CSV file
+
+- UART decoder
+- Advanced mathematical operators
+- Cursors with lock-to-channel function
+- Export to CSV file
+- Remote control (SDK) with WebSockets, easy developing with javascript/html
+
+Todo list:
+======================
+- finish oscilloscope module
+- calibration
+- fft view
+- signal generator with modulations
+- connection with android tablet/phone
 
 References:
 ======================
-  Authors webpage - www.valky.eu
-  Seeedstudio forums - http://www.seeedstudio.com/forum/viewtopic.php?f=10&t=2362
-  DSO Quad wiki pages - http://www.seeedstudio.com/wiki/DSO_Quad
+
+- Authors webpage - www.valky.eu
+- Seeedstudio forums - http://www.seeedstudio.com/forum/viewtopic.php?f=10&t=2362
+- DSO Quad wiki pages - http://www.seeedstudio.com/wiki/DSO_Quad
