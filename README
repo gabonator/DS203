@@ -26,9 +26,9 @@ The DS203 device has 4 push buttons and two slide buttons. The function of first
 The two slider buttons are used for navigation and value change.
 
 Screenshots:
-![Image 1](gabonator.github.com/DS203/Man/Screenshot/uart_decoder_1.png)
-![Image 2](gabonator.github.com/DS203/Man/Screenshot/cursor.png)
-![Image 3](gabonator.github.com/DS203/Man/Screenshot/waveman_meas.png)
+![Image 1](raw.github.com/gabonator/DS203/Man/Screenshot/uart_decoder_1.png)
+![Image 2](raw.github.com/gabonator/DS203/Man/Screenshot/cursor.png)
+![Image 3](raw.github.com/gabonator/DS203/Man/Screenshot/waveman_meas.png)
 
 Feature highlights:
   UART decoder
