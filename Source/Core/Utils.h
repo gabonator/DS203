@@ -11,6 +11,8 @@ public:
 	static char* itoa(si16 n);
 	static char tohex(ui8 n);
 	static char* clrhex(ui16 c);
+	static char* FormatVoltage( float fV, int nChars=8 );
+	static char* FormatFrequency( float fF, int nChars=8 );
 	template <class T>
 	inline void Clamp(T& nVariable, T nMin, T nMax)
 	{

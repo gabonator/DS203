@@ -389,6 +389,16 @@ static const char minus[] =
   "      .       "
   "              ";
 
+static const char markerX[] = 
+  "\x04" 
+  ".   "
+  "..  "
+  "... "
+  "...."
+  "... "
+  "..  "
+  ".   ";
+
 static const char check[] = "check";
 
 #endif

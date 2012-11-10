@@ -38,6 +38,8 @@ Screenshots:
            
 ![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/waveman_meas.png)
 
+![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
+
 
 Feature highlights:
 ======================
@@ -62,3 +64,11 @@ References:
 - Authors webpage - www.valky.eu
 - Seeedstudio forums - http://www.seeedstudio.com/forum/viewtopic.php?f=10&t=2362
 - DSO Quad wiki pages - http://www.seeedstudio.com/wiki/DSO_Quad
+
+Alternative firmwares and useful resouces:
+======================
+
+ - Petteri Aimonen - http://essentialscrap.com/dsoquad/
+ - Pedro Simoes - https://github.com/pmos69/dso203_gcc
+ - Marco Sinatti - https://sites.google.com/site/marcosinatti/elettronica/dso
+

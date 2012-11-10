@@ -19,6 +19,8 @@ void CMainWnd::Create()
 
 	Settings.Load();
 	Settings.LoadCalibration();
+	m_wndGraph.UpdateResolutions();
+
 	
 	CWnd::Create("CMainWnd", WsVisible | WsListener, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
 
@@ -27,6 +29,9 @@ void CMainWnd::Create()
 	m_wndGraph.Create( this, WsHidden | WsNoActivate );
 	m_wndSignalGraph.Create( this, WsNoActivate );
 	m_wndSpectrumGraph.Create( this, WsNoActivate );
+	m_wndSpectrumMiniFD.Create( this, WsNoActivate );
+	m_wndSpectrumMiniTD.Create( this, WsNoActivate );
+	m_wndSpectrumMiniSG.Create( this, WsNoActivate );
 
 	m_wndMenuInput.Create( this, WsHidden );
 	m_wndMenuCursor.Create( this, WsHidden );
@@ -41,6 +46,8 @@ void CMainWnd::Create()
 	m_wndLReferences.Create( this, WsHidden );
 	m_wndTReferences.Create( this, WsHidden );
 	m_wndSpectrumMain.Create( this, WsHidden );
+	m_wndSpectrumMarker.Create( this, WsHidden );
+	m_wndSpectrumAnnot.Create( this, WsHidden );
 	m_wndScreenSaver.Create( this, WsHidden );
 	m_wndUserGame.Create( this, WsHidden );
 	m_wndUserBalls.Create( this, WsHidden );
@@ -55,7 +62,7 @@ void CMainWnd::Create()
 	else
 		SendMessage( &m_wndToolBar, ToWord('g', 'i'), 1);
 
-	m_lLastAcquired = -1;
+	m_lLastAcquired = 0;
 	SetTimer(200);
 }
 
@@ -85,7 +92,14 @@ void CMainWnd::Create()
 		}
 	}
 	if ( (nSeconds & 7) == 0 )
+	{
 		SdkProc();
+		BIOS::SERIAL::Send("Ready.\n");
+
+		int ch = BIOS::SERIAL::Getch();
+		if (ch >= 0)
+			BIOS::SERIAL::Send("Mam znak!!!\n");
+	}
 	
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )
 	{
@@ -94,6 +108,7 @@ void CMainWnd::Create()
 		{
 			// whatever is in buffer, just process it. 250ms should be 
 			// sufficient to grab samples for one screen,
+			// in first pass it will copy nonintialzed buffer!
 			BIOS::ADC::Copy( BIOS::ADC::GetCount() );
 			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
 			// force update

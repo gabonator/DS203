@@ -29,6 +29,7 @@ extern vu16 Beep_mS;
 	DelayMs(500);
 	LCD::Init();
 	ADC::Init();
+	SERIAL::Init();
 }
 
 char ttp[8]; // TODO: cannot use static char ttp[8] in itoa() scope !

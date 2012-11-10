@@ -5,7 +5,7 @@
 #include <Source/HwLayer/Types.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '4')
+#define _VERSION ToDword('D', 'S', 'C', '5')
 
 class CSettings : public CSerialize
 {
@@ -250,7 +250,8 @@ public:
 	public:
 		static const char* const ppszTextType[];
 		// = {"Off", "A", "B", "A+B+C", "A+B-C", "B-A+C"}
-		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, _AgreaterBplusC, _AlessBplusC, _TypeMax = _AlessBplusC }
+		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, 
+			_AgreaterBplusC, _AlessBplusC, _minAB, _maxAB, _TypeMax = _maxAB }
 			Type;
 		ui16 uiColor;
 
@@ -301,6 +302,48 @@ public:
 			return *this;
 		}
 	};
+	class Spectrum : public CSerialize
+	{
+	public:
+		static const char* const ppszTextWindow[];
+		// = {"Rect", "Hann"};
+		static const char* const ppszTextDisplay[];
+		// = {"FFT", "FFT&Time"};
+		static const char* const ppszTextScale[];
+		// = {"Lin", "Log"};
+		static const char* const ppszTextSource[];
+		// = {"Off", "CH1", "CH2"};
+		static const char* const ppszTextMode[];
+		// = {"Manual", "Find max"};
+
+		enum { _Rectangular, _Hann, _WindowMax = _Hann }
+			Window;
+		enum { _Fft, _FftTime, _Spectrograph, _DisplayMax = _Spectrograph }
+			Display;
+		enum { _Lin, _Log, _ScaleMax = _Log }
+			YScale;
+		enum { _Off, _SrcCh1, _SrcCh2, _SourceMax = _SrcCh2 }
+			MarkerSource;
+		enum { _Manual, _FindMax, _ModeMax = _FindMax }
+			MarkerMode;
+	
+		int nWindowLength;
+		int		nMarkerX;
+
+		float	fMarkerY;
+		float fMarkerX;
+		
+		virtual CSerialize& operator <<( CStream& stream )
+		{
+			stream << _E(Window) << _E(Display) << _E(YScale) << _E(MarkerSource) << nMarkerX << _E(MarkerMode);
+			return *this;
+		}
+		virtual CSerialize& operator >>( CStream& stream )
+		{
+			stream >> _E(Window) >> _E(Display) >> _E(YScale) >> _E(MarkerSource) >> nMarkerX >> _E(MarkerMode);
+			return *this;
+		}
+	};
 	class CRuntime : public CSerialize
 	{
 	public:
@@ -347,6 +390,8 @@ public:
 	MathOperator Math;
 
 	Display	Disp;
+	
+	Spectrum Spec;
 
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;
@@ -360,6 +405,7 @@ public:
 			<< MarkT1 << MarkT2 << MarkY1 << MarkY2
 			<< Meas[0] << Meas[1] << Meas[2] << Meas[3] << Meas[4] << Meas[5]
 			<< MathA << MathB << MathC << Math
+			<< Spec
 			<< dwEnd;
 
 		return *this;
@@ -377,7 +423,9 @@ public:
 				>> MarkT1 >> MarkT2 >> MarkY1 >> MarkY2
 				>> Meas[0] >> Meas[1] >> Meas[2] >> Meas[3] >> Meas[4] >> Meas[5]
 				>> MathA >> MathB >> MathC >> Math
+				>> Spec
 				>> dwEnd;
+			// Dont forget to change version when the serialization order was changed!
 			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
 		} else
 			Reset();

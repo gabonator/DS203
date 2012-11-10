@@ -51,8 +51,8 @@ ui16 pRamWave[128*4];
 const SWaveData Waves[] = 
 	{
 		{"sine", 36, pSineWave, 2 },
-		{"triangle", 36, pTriangleWave, 0 },
-		{"sawtooth", 36, pSawWave, 0 },
+		{"triangle", 36, pTriangleWave, 2 },
+		{"sawtooth", 36, pSawWave, 2 },
 		{"square", 2, pSquareWave, 0 },
 		{"cardio", 128, pCardiac128Wave, 2 },
 		{NULL, 0, NULL, 0}		

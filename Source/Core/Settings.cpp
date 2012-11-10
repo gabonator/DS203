@@ -63,7 +63,7 @@ CSettings* CSettings::m_pInstance = NULL;
 		{ "View", "Selection", "All" };
 
 /*static*/ const char* const CSettings::MathOperator::ppszTextType[] = 
-		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C"};
+		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C", "min(A,B)", "max(A,B)"};
 /*static*/ const char* const CSettings::MathOperand::ppszTextType[] = 
 		{"CH1raw", "CH1", "CH2raw", "CH2", "Const", "Fx"};
 
@@ -77,6 +77,16 @@ CSettings* CSettings::m_pInstance = NULL;
 		 = {"No", "Yes"};
 /*static*/ const char* const CSettings::Display::ppszTextGrid[]
 		 = {"None", "Dots", "Lines"};
+/*static*/ const char* const CSettings::Spectrum::ppszTextWindow[]
+		= {"Rect", "Hann"};
+/*static*/ const char* const CSettings::Spectrum::ppszTextDisplay[]
+		= {"FFT", "FFT&Time", "Spectrog"};
+/*static*/ const char* const CSettings::Spectrum::ppszTextScale[]
+		= {"Linear", "Log."};
+/*static*/ const char* const CSettings::Spectrum::ppszTextSource[]
+		= {"Off", "CH1", "CH2"};
+/*static*/ const char* const CSettings::Spectrum::ppszTextMode[]
+		= {"Manual", "Find max"};
 
 CSettings::CSettings()
 {
@@ -237,6 +247,16 @@ void CSettings::Reset()
 	Disp.Average = Display::_AvgNo;
 	Disp.Persist = Display::_PerNo;
 	Disp.Grid = Display::_GridDots;
+
+	Spec.Window = Spectrum::_Hann;
+	Spec.Display = Spectrum::_Fft;
+	Spec.YScale = Spectrum::_Lin;
+	Spec.MarkerSource = Spectrum::_SrcCh1;
+	Spec.nWindowLength = 512;
+	Spec.MarkerMode = Spectrum::_FindMax;
+	Spec.nMarkerX = 0;
+	Spec.fMarkerX = 0;
+	Spec.fMarkerY = 0;
 	
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;

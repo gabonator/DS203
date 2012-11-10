@@ -143,6 +143,13 @@ public:
 		static ui32 Sqrt( ui32 value );
 	};
 
+	class SERIAL
+	{
+	public:
+		static void Init();
+		static void Send(const char* strBuf);
+		static int Getch();
+	};
 };
 
 #endif

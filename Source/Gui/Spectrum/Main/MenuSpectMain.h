@@ -6,6 +6,10 @@
 #include <Source/Core/Settings.h>
 #include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
 #include <Source/Gui/Oscilloscope/Input/ItemAnalog.h>
+#include <Source/Gui/Oscilloscope/Input/ItemTime.h>
+
+#include "ItemWindow.h"
+#include "ItemDisplay.h"
 
 class CWndMenuSpectMain : public CWnd
 {
@@ -13,7 +17,11 @@ public:
 	// Menu items
 	CItemAnalog		m_itmCH1;
 	CItemAnalog		m_itmCH2;
-	CWndMenuItem	m_itmWindow;
+	CItemTime		m_itmTime;
+
+	CItemSpecWindow	m_itmWindow;
+	CItemSpecDisplay	m_itmDisplay;
+	CWndMenuItem	m_itmMarker;
 
 	CWndMenuSpectMain();
 

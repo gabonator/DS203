@@ -182,7 +182,7 @@ public:
 		int nY = Random() % (m_rcClient.Height()-m_Gen.h) + m_rcClient.top;
 		int nR = Random();
 
-		ui32 nColor = RGB( (nR&3) * 85, ((nR>>2&3)) * 85, ((nR>>4&3)) * 85 );
+		ui32 nColor = RGB32( (nR&3) * 85, ((nR>>2&3)) * 85, ((nR>>4&3)) * 85 );
 
 		CRect rcImage( nX, nY, nX + m_Gen.w, nY + m_Gen.h );
 

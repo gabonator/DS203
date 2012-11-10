@@ -110,6 +110,14 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\Annot.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\FFT.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Main\ItemDisplay.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Main\ItemWindow.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Main\MenuSpectMain.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Marker\ItemMarker.h" />
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\BufferedIo.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\Export.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\Import.h" />
@@ -146,9 +154,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ListDigital.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\ListTrigger.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.h" />
-    <ClInclude Include="..\..\Source\Gui\Spectrum\MenuSpectMain.h" />
     <ClInclude Include="..\..\Source\Gui\Spectrum\Spectrum.h" />
-    <ClInclude Include="..\..\Source\Gui\Spectrum\SpectrumGraph.h" />
     <ClInclude Include="..\..\Source\HwLayer\Bios.h" />
     <ClInclude Include="..\..\Source\HwLayer\Types.h" />
     <ClInclude Include="..\..\Source\HwLayer\Win32\device.h" />
@@ -176,6 +182,10 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\Annot.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Main\MenuSpectMain.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\Manager.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp" />
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp" />
@@ -190,7 +200,6 @@
     <ClCompile Include="..\..\Source\Gui\Toolbar.cpp" />
     <ClCompile Include="..\..\Source\Gui\Generator\Generator.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp" />
-    <ClCompile Include="..\..\Source\Gui\Spectrum\MenuSpectMain.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\bios.cpp" />
     <ClCompile Include="..\..\Source\Main\Application.cpp" />
   </ItemGroup>

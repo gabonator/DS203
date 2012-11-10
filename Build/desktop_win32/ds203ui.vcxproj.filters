@@ -82,6 +82,15 @@
     <Filter Include="Source\Gui\Oscilloscope\Disp">
       <UniqueIdentifier>{505902dc-6a9e-4968-924c-1cd9c4087399}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Spectrum\Main">
+      <UniqueIdentifier>{2f7d3b51-4727-4fd1-8eb3-3cb09a28e451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Spectrum\Controls">
+      <UniqueIdentifier>{822d875e-777a-417a-8c90-395a0ba7b815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Spectrum\Marker">
+      <UniqueIdentifier>{d6fee762-b962-4b2c-91f5-7982d8b0b83f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -159,13 +168,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.h">
       <Filter>Source\Gui\Oscilloscope\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Spectrum\MenuSpectMain.h">
-      <Filter>Source\Gui\Spectrum</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Spectrum\Spectrum.h">
-      <Filter>Source\Gui\Spectrum</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Spectrum\SpectrumGraph.h">
       <Filter>Source\Gui\Spectrum</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\HwLayer\Bios.h">
@@ -219,15 +222,6 @@
     <ClInclude Include="..\..\Source\Gui\Calibration\Calibration.h">
       <Filter>Source\Gui\Calibration</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h">
-      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h">
-      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h">
-      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphBase.h">
       <Filter>Source\Gui\Oscilloscope\Controls</Filter>
     </ClInclude>
@@ -248,9 +242,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Windows\WndConfirm.h">
       <Filter>Source\Gui\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h">
-      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\ToolBox\Export.h">
       <Filter>Source\Gui\ToolBox</Filter>
@@ -312,6 +303,42 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.h">
       <Filter>Source\Gui\Oscilloscope\Disp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Main\MenuSpectMain.h">
+      <Filter>Source\Gui\Spectrum\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.h">
+      <Filter>Source\Gui\Spectrum\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\FFT.h">
+      <Filter>Source\Gui\Spectrum\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Main\ItemDisplay.h">
+      <Filter>Source\Gui\Spectrum\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Main\ItemWindow.h">
+      <Filter>Source\Gui\Spectrum\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.h">
+      <Filter>Source\Gui\Spectrum\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\Annot.h">
+      <Filter>Source\Gui\Spectrum\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Marker\ItemMarker.h">
+      <Filter>Source\Gui\Spectrum\Marker</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -360,9 +387,6 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp">
       <Filter>Source\Gui\Oscilloscope\Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\Spectrum\MenuSpectMain.cpp">
-      <Filter>Source\Gui\Spectrum</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\HwLayer\Win32\bios.cpp">
       <Filter>Source\HwLayer\Win32</Filter>
     </ClCompile>
@@ -387,9 +411,6 @@
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp">
       <Filter>Source\Gui\Calibration</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp">
-      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp">
       <Filter>Source\Gui\Oscilloscope\Controls</Filter>
     </ClCompile>
@@ -410,6 +431,21 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp">
       <Filter>Source\Gui\Oscilloscope\Disp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Main\MenuSpectMain.cpp">
+      <Filter>Source\Gui\Spectrum\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.cpp">
+      <Filter>Source\Gui\Spectrum\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.cpp">
+      <Filter>Source\Gui\Spectrum\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\Annot.cpp">
+      <Filter>Source\Gui\Spectrum\Controls</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

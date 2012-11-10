@@ -13,10 +13,11 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Disp", &MainWnd.m_wndMenuDisplay},
 
 		{ CBarItem::IMain,	"Spectrum", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Main", &MainWnd.m_wndSpectrumMain},
+		{ CBarItem::ISub,	"FFT", &MainWnd.m_wndSpectrumMain},
+		{ CBarItem::ISub,	"Marker", &MainWnd.m_wndSpectrumMarker},
 
 		{ CBarItem::IMain,	"Generator", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Settings", &MainWnd.m_wndMenuGenerator},
+		{ CBarItem::ISub,	"Wave", &MainWnd.m_wndMenuGenerator},
 		
 		{ CBarItem::IMain,	"Settings", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Main", &MainWnd.m_wndMenuSettings},

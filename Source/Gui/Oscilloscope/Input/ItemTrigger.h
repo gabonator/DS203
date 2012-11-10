@@ -116,7 +116,8 @@ public:
 
 	virtual void OnTimer()
 	{
-		if ( BIOS::ADC::Enabled() && Settings.Trig.State == CSettings::Trigger::_Wait )
+		if ( IsVisible() && 
+			BIOS::ADC::Enabled() && Settings.Trig.State == CSettings::Trigger::_Wait )
 		{
 			int x = m_rcClient.left + 12 + MarginLeft;
 			int y = m_rcClient.top;

@@ -1,16 +1,19 @@
-#ifndef __ITEMDISP_H__
-#define __ITEMDISP_H__
+#ifndef __MENUITESPECWINDOW_H__
+#define __MENUITESPECWINDOW_H__
+#include <Source/Gui/Oscilloscope/Disp/ItemDisp.h>
 
-class CMPItem : public CWndMenuItem
+class CItemSpecWindow : public CMPItem
 {
-protected:
-	CValueProvider* m_pProvider;
+	CProviderEnum	m_proWindow;
 
 public:
-	void Create(const char* pszId, ui16 clr, CValueProvider* pProvider, CWnd* pParent)
+	virtual void Create(CWnd *pParent) 
 	{
-		m_pProvider = pProvider;
-		CWndMenuItem::Create( pszId, clr, 2, pParent);
+		CWndMenuItem::Create( NULL, RGB565(8080b0), 3, pParent);
+
+		m_proWindow.Create( (const char**)CSettings::Spectrum::ppszTextWindow,
+			(NATIVEENUM*)&Settings.Spec.Window, CSettings::Spectrum::_WindowMax );
+		m_pProvider = &m_proWindow; // for CMPItem
 	}
 
 	virtual void OnPaint()
@@ -20,7 +23,8 @@ public:
 		CWndMenuItem::OnPaint();
 		int x = m_rcClient.left + 12 + MarginLeft;
 		int y = m_rcClient.top;
-		BIOS::LCD::Print( x, y, clr, RGBTRANS, m_pszId );
+		int _x = x;
+		BIOS::LCD::Print( x, y, clr, RGBTRANS, "Window" );
 		y += 16;
 		if ( HasFocus() )
 		{
@@ -35,8 +39,13 @@ public:
 			CRect rcRect(x, y, x + m_pProvider->GetWidth(), y + 14);
 			m_pProvider->OnPaint( rcRect, HasFocus() );
 		}
-	}
 
+		x = _x;
+		y += 16;
+		x += BIOS::LCD::Print( x, y, clr, RGBTRANS, "N=" );
+		BIOS::LCD::Print( x, y, clr, RGBTRANS, CUtils::itoa(Settings.Spec.nWindowLength) );
+	}
+/*
 	virtual void OnKey(ui16 nKey)
 	{
 		if ( nKey & BIOS::KEY::KeyLeft && (*m_pProvider)-1 == CValueProvider::Yes )
@@ -61,6 +70,8 @@ public:
 		}
 		CWndMenuItem::OnKey( nKey );
 	}
+*/
 };
 
 #endif
+

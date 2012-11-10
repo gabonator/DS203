@@ -12,6 +12,15 @@ u8   Volume=20, Light;
 vu16 Delay_Cnt, Beep_mS, Key_Status_Last, Sec_Cnt, PD_Cnt;
 vu32 Wait_Cnt; 
 
+//void BIOS__USART__HANDLER();
+#include "Source\HwLayer\ArmM3\stm32f10x\inc\stm32f10x_usart.h"
+#define USART1              ((USART_TypeDef *) USART1_BASE)
+
+int usartch = -1;
+/*void BIOS__USART__HANDLER()
+{
+}*/
+
 void NMIException(void)
 {}
 
@@ -201,7 +210,17 @@ void SPI2_IRQHandler(void)
 {}
 
 void USART1_IRQHandler(void)
-{}
+{
+//  if ((USART1->SR & USART_IT_RXNE) != /*(u16)RESET*/ 0)
+	{		
+	__Set(BEEP_VOLUME, 50);
+	Beep_mS = 200;
+  	usartch = (u16)(USART1->DR & (u16)0x01FF);
+//			usartch = USART_ReceiveData(USART1);
+	}	
+
+//	BIOS__USART__Handler();
+}
 
 void USART2_IRQHandler(void)
 {}

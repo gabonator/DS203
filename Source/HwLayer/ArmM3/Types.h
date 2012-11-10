@@ -48,7 +48,7 @@ typedef ui32 UINT;
 #define COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 #define RGBTRANS (RGB565(ff00ff)-1)
 
-#define RGB(r,g,b) ((r) | ((g)<<8) | ((b)<<16))
+#define RGB32(r,g,b) ((r) | ((g)<<8) | ((b)<<16))
 #define DecEnum(e) *((ui8*)&(e))-=1
 #define IncEnum(e) *((ui8*)&(e))+=1
 

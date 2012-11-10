@@ -483,7 +483,8 @@ BOOL bADCReady = FALSE;
 	if (lCounter == 4096)
 		lCounter = 0;
 
-	FLOAT a = cos(lCounter*0.035f)*0.8f+0.2f;
+	FLOAT fa = 0.035f + (GetTickCount()%2000)/2000.0f*0.04f;
+	FLOAT a = cos(lCounter*(fa)*10)*0.8f+0.2f;
 	FLOAT b = sin(lCounter*0.011f+1)*0.5f;
 	unsigned long da = (ui32)((a+1.0f)*127);
 	unsigned long db = (ui32)((b+1.0f)*127);
@@ -704,4 +705,22 @@ return nv;
 /*static*/ int BIOS::GetBattery()
 {
 	return 85;
+}
+
+
+/*static*/ void BIOS::SERIAL::Init()
+{
+
+}
+
+/*static*/ void BIOS::SERIAL::Send(const char* strBuf)
+{
+	OutputDebugString( "Serial:" );
+	OutputDebugString( strBuf );
+	OutputDebugString( "\n" );
+}
+
+/*static*/ int BIOS::SERIAL::Getch()
+{
+	return -1;
 }

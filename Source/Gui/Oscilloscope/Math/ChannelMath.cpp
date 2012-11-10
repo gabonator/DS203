@@ -42,7 +42,18 @@ int CMathChannel::MathCalc(ui32 nSample)
 		return (MathGet(Settings.MathA, nSample) <
 			MathGet(Settings.MathB, nSample) ? 32 : 0) +
 			MathGet(Settings.MathC, nSample);
-
+	case CSettings::MathOperator::_minAB:
+		{
+			int fA = MathGet(Settings.MathA, nSample);
+			int fB = MathGet(Settings.MathB, nSample);
+			return min(fA, fB);
+		}
+	case CSettings::MathOperator::_maxAB:
+		{
+			int fA = MathGet(Settings.MathA, nSample);
+			int fB = MathGet(Settings.MathB, nSample);
+			return max(fA, fB);
+		}
 	default:
 		_ASSERT(0);
 		return 0;
