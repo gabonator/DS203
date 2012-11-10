@@ -720,7 +720,49 @@ return nv;
 	OutputDebugString( "\n" );
 }
 
+BOOL Is64BitWindows()
+{
+#if defined(_WIN64)
+ return TRUE;  // 64-bit programs run only on Win64
+#elif defined(_WIN32)
+ // 32-bit programs run on both 32-bit and 64-bit Windows
+ // so must sniff
+ BOOL f64 = FALSE;
+ return IsWow64Process(GetCurrentProcess(), &f64) && f64;
+#else
+ return FALSE; // Win64 does not support Win16
+#endif
+}
+
 /*static*/ int BIOS::SERIAL::Getch()
 {
 	return -1;
+}
+
+const char* BIOS::VER::GetHardwareVersion()
+{
+	return Is64BitWindows ? "x64" : "x86";
+}
+
+const char* BIOS::VER::GetSystemVersion()
+{
+	return "WIN32";
+}
+
+const char* BIOS::VER::GetFpgaVersion()
+{
+	return "0.00";
+}
+
+const char* BIOS::VER::GetDfuVersion()
+{
+	return "0.00";
+}
+
+ui32 BIOS::VER::GetSerialNumber()
+{
+	return 0x0006ab0;
+}
+void BIOS::VER::DrawLogo(int x, int y)
+{
 }

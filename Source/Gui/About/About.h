@@ -17,8 +17,8 @@ public:
 	
 	virtual void OnPaint()
 	{
-			const ui16 clrA = RGB565(b0b0b0);
-			const ui16 clrB = RGB565(808080);
+			const ui16 clrB = RGB565(b0b0b0);
+			const ui16 clrA = RGB565(808080);
 
 			BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
 

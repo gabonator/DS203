@@ -12,14 +12,112 @@ u8   Volume=20, Light;
 vu16 Delay_Cnt, Beep_mS, Key_Status_Last, Sec_Cnt, PD_Cnt;
 vu32 Wait_Cnt; 
 
-//void BIOS__USART__HANDLER();
-#include "Source\HwLayer\ArmM3\stm32f10x\inc\stm32f10x_usart.h"
-#define USART1              ((USART_TypeDef *) USART1_BASE)
 
-int usartch = -1;
-/*void BIOS__USART__HANDLER()
+#define __IO
+#define __I
+#define __O
+#define __INLINE inline
+typedef u32 uint32_t;
+typedef u8 uint8_t;
+
+/* memory mapping struct for Nested Vectored Interrupt Controller (NVIC) */
+typedef struct
 {
-}*/
+  __IO uint32_t ISER[8];                      /*!< Interrupt Set Enable Register            */
+       uint32_t RESERVED0[24];
+  __IO uint32_t ICER[8];                      /*!< Interrupt Clear Enable Register          */
+       uint32_t RSERVED1[24];
+  __IO uint32_t ISPR[8];                      /*!< Interrupt Set Pending Register           */
+       uint32_t RESERVED2[24];
+  __IO uint32_t ICPR[8];                      /*!< Interrupt Clear Pending Register         */
+       uint32_t RESERVED3[24];
+  __IO uint32_t IABR[8];                      /*!< Interrupt Active bit Register            */
+       uint32_t RESERVED4[56];
+  __IO uint8_t  IP[240];                      /*!< Interrupt Priority Register, 8Bit wide   */
+       uint32_t RESERVED5[644];
+  __O  uint32_t STIR;                         /*!< Software Trigger Interrupt Register      */
+}  gNVIC_Type;
+
+
+/* memory mapping struct for System Control Block */
+typedef struct
+{
+  __I  uint32_t CPUID;                        /*!< CPU ID Base Register                                     */
+  __IO uint32_t ICSR;                         /*!< Interrupt Control State Register                         */
+  __IO uint32_t VTOR;                         /*!< Vector Table Offset Register                             */
+  __IO uint32_t AIRCR;                        /*!< Application Interrupt / Reset Control Register           */
+  __IO uint32_t SCR;                          /*!< System Control Register                                  */
+  __IO uint32_t CCR;                          /*!< Configuration Control Register                           */
+  __IO uint8_t  SHP[12];                      /*!< System Handlers Priority Registers (4-7, 8-11, 12-15)    */
+  __IO uint32_t SHCSR;                        /*!< System Handler Control and State Register                */
+  __IO uint32_t CFSR;                         /*!< Configurable Fault Status Register                       */
+  __IO uint32_t HFSR;                         /*!< Hard Fault Status Register                               */
+  __IO uint32_t DFSR;                         /*!< Debug Fault Status Register                              */
+  __IO uint32_t MMFAR;                        /*!< Mem Manage Address Register                              */
+  __IO uint32_t BFAR;                         /*!< Bus Fault Address Register                               */
+  __IO uint32_t AFSR;                         /*!< Auxiliary Fault Status Register                          */
+  __I  uint32_t PFR[2];                       /*!< Processor Feature Register                               */
+  __I  uint32_t DFR;                          /*!< Debug Feature Register                                   */
+  __I  uint32_t ADR;                          /*!< Auxiliary Feature Register                               */
+  __I  uint32_t MMFR[4];                      /*!< Memory Model Feature Register                            */
+  __I  uint32_t ISAR[5];                      /*!< ISA Feature Register                                     */
+} gSCB_Type;
+
+#define gSCS_BASE            (0xE000E000)                              /*!< System Control Space Base Address    */
+#define gNVIC_BASE           (SCS_BASE +  0x0100)  
+#define gSCB_BASE            (SCS_BASE +  0x0D00)
+
+#define gSCB                 ((gSCB_Type *)           gSCB_BASE)         /*!< SCB configuration struct             */
+#define gNVIC                ((gNVIC_Type *)          gNVIC_BASE)   	
+
+#define __NVIC_PRIO_BITS    4               /*!< standard definition for NVIC Priority Bits */
+
+typedef enum {
+  USART1_IRQn                 = 37
+} IRQn_Type;
+
+static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
+{
+  gNVIC->ISER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F)); /* enable interrupt */
+}
+
+static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
+{
+  if(IRQn < 0) {
+    gSCB->SHP[((uint32_t)(IRQn) & 0xF)-4] = ((priority << (8 - __NVIC_PRIO_BITS)) & 0xff); } /* set Priority for Cortex-M3 System Interrupts */
+  else {
+    gNVIC->IP[(uint32_t)(IRQn)] = ((priority << (8 - __NVIC_PRIO_BITS)) & 0xff);    }        /* set Priority for device specific Interrupts      */
+}   
+
+
+void UsartInit()
+{
+	NVIC_EnableIRQ(USART1_IRQn);
+	NVIC_SetPriority(USART1_IRQn, 14);
+}
+
+#define nUsartLength 32
+char aUsartBuf[nUsartLength];
+int nUsartWrite = 0;
+int nUsartRead = 0;
+
+void UsartPush(int nChar)
+{
+	aUsartBuf[nUsartWrite++] = nChar;
+	nUsartWrite &= nUsartLength-1;
+}
+int UsartGet()
+{
+	if (nUsartRead == nUsartWrite)
+		return -1;
+	char ch = aUsartBuf[nUsartRead++];
+	nUsartRead &= nUsartLength-1;
+	return ch;
+}
+int UsartEmpty()
+{
+	return (nUsartRead == nUsartWrite);
+}
 
 void NMIException(void)
 {}
@@ -211,15 +309,7 @@ void SPI2_IRQHandler(void)
 
 void USART1_IRQHandler(void)
 {
-//  if ((USART1->SR & USART_IT_RXNE) != /*(u16)RESET*/ 0)
-	{		
-	__Set(BEEP_VOLUME, 50);
-	Beep_mS = 200;
-  	usartch = (u16)(USART1->DR & (u16)0x01FF);
-//			usartch = USART_ReceiveData(USART1);
-	}	
-
-//	BIOS__USART__Handler();
+	UsartPush( (u16)(USART1->DR & (u16)0x01FF) );
 }
 
 void USART2_IRQHandler(void)

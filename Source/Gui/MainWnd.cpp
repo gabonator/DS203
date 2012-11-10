@@ -95,11 +95,12 @@ void CMainWnd::Create()
 	if ( (nSeconds & 7) == 0 )
 	{
 		SdkProc();
-		BIOS::SERIAL::Send("Ready.\n");
 
-		int ch = BIOS::SERIAL::Getch();
-		if (ch >= 0)
-			BIOS::SERIAL::Send("Mam znak!!!\n");
+		// UART test
+		BIOS::SERIAL::Send("Ready.\n");
+		int ch;
+		while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
+			BIOS::DBG::Print("%c", ch);
 	}
 	
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )

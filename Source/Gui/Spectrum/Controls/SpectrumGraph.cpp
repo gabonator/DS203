@@ -304,8 +304,9 @@ void CWndTimeGraphTempl::OnPaint()
 			int nLength_ = Int_sqrt( nLengthSq );
 			// nLength = 4095 zodpoveda amplitude 128
 			// div 32, bitshift 5
-			//int nLength = nLength_ * DivsY * m_nBlkY / 32 / 256;
-			int nLength = nLength_ / 16;
+	
+			//int nLength = nLength_ / 16;
+			int nLength = nLength_ / 8;	// amplify it 2x
 			UTILS.Clamp<int>( nLength, 0, 255);
 
 			// store vector lengths in column
@@ -349,7 +350,7 @@ void CWndTimeGraphTempl::OnPaint()
 
 	// blit
 	BIOS::LCD::PutImage( CRect( m_rcClient.left, m_rcClient.top + m_nY, m_rcClient.right, m_rcClient.top + m_nY + 1 ), column );
-	//BIOS::LCD::Buffer( m_rcClient.left, m_rcClient.top + m_nY, column, 256 );
+
 	if ( ++m_nY >= m_nHeight )
 		m_nY = 0;
 }

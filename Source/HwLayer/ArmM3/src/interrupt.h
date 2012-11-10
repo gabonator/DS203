@@ -8,6 +8,10 @@
 
 #include "stm32f10x_lib.h"
 
+void UsartInit();
+int UsartGet();
+int UsartEmpty();
+
 extern vu8  Cursor_Cnt, Key_Wait_Cnt, Key_Repeat_Cnt, Key_Buffer, Cnt_mS, Cnt_20mS;
 extern vu8  Twink, Blink;
 extern u8   Volume, Light;

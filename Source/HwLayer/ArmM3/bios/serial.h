@@ -21,9 +21,10 @@
 
 #define USART1              ((USART_TypeDef *) USART1_BASE)
 
-extern "C" int usartch;
-//int usartch = -1;
-
+extern "C" {
+	int UsartGet();
+	int UsartEmpty();
+}
 /*static*/ void BIOS::SERIAL::Init()
 {
   // Enable USART1:
@@ -67,7 +68,5 @@ extern "C" int usartch;
 }
 /*static*/ int BIOS::SERIAL::Getch()
 {
-	int ch = usartch;
-	usartch = -1;
-  return ch;
+  return UsartGet();
 }

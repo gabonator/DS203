@@ -339,6 +339,9 @@
     <ClInclude Include="..\..\Source\Gui\Spectrum\Marker\ItemMarker.h">
       <Filter>Source\Gui\Spectrum\Marker</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\About\About.h">
+      <Filter>Source\Gui\About</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

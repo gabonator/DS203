@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Calibration.h" />
     <ClInclude Include="..\..\Source\Core\Serialize.h" />
+    <ClInclude Include="..\..\Source\Gui\About\About.h" />
     <ClInclude Include="..\..\Source\Gui\Calibration\CalibAnalog.h" />
     <ClInclude Include="..\..\Source\Gui\Calibration\CalibCore.h" />
     <ClInclude Include="..\..\Source\Gui\Calibration\CalibDac.h" />
