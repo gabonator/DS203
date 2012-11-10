@@ -52,6 +52,7 @@ void CMainWnd::Create()
 	m_wndUserGame.Create( this, WsHidden );
 	m_wndUserBalls.Create( this, WsHidden );
 	m_wndUserMeter.Create( this, WsHidden );
+	m_wndAbout.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
 	m_wndUserCalibration.Create( this, WsHidden );
 
@@ -173,11 +174,11 @@ void CMainWnd::Create()
 			}
 		}
 	}
-	/*
+
 	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction2 )
 	{
 		m_wndToolbox.SaveScreenshot();
-	}*/
+	}
 
 	CWnd::WindowMessage( nMsg, nParam );
 }

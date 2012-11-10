@@ -40,6 +40,8 @@ Screenshots:
 
 ![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
 
+![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/about.png)
+
 
 Feature highlights:
 ======================

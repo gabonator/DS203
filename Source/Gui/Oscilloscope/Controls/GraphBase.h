@@ -2,7 +2,6 @@
 #define __GRAPHBASE_H__
 
 #include <Source/Core/Controls.h>
-#define VERSION COMMITID
 
 class CWndGraph : public CWnd
 {

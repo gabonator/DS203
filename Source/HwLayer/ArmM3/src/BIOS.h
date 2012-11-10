@@ -218,8 +218,8 @@ extern T_attr *T_Attr;
  u8   __Ident(u32 Dev_ID, u32 Proj_ID, u32 Lic_No);
  
  void __Set(u8 Object, u32 Value);
- u32  __Get(u8 Object);
- 
+// u32  __Get(u8 Object);
+ u32	__Get(u8 Object, u32 Value);
  void __ExtFlash_PageRD(u8* pBuffer, u32 ReadAddr, u16 NumByteToRead);
  void __ExtFlash_PageWR(u8* pBuffer, u32 WriteAddr);
  u8   __ReadDiskData(u8* pBuffer, u32 ReadAddr, u16 Lenght);

@@ -14,6 +14,7 @@
 #include "User/Screensaver.h"
 #include "User/Snake.h"
 #include "User/Balls.h"
+#include "About/About.h"
 #include "Calibration/Calibration.h"
 #include "User/Meter.h"
 #include "Spectrum/Spectrum.h"
@@ -48,6 +49,7 @@ public:
 	CWndScreenSaver		m_wndScreenSaver;
 	CWndSnake			m_wndUserGame;
 	CWndBalls			m_wndUserBalls;
+	CWndAbout			m_wndAbout;
 	//CWndCalibration		m_wndUserCalibration;
 	CWndMenuCalibration	m_wndUserCalibration;
 	CWndUserMeter		m_wndUserMeter;

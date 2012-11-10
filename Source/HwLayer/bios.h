@@ -150,6 +150,17 @@ public:
 		static void Send(const char* strBuf);
 		static int Getch();
 	};
+
+	class VER
+	{
+	public:
+			static const char* GetHardwareVersion();
+			static const char* GetSystemVersion();
+			static const char* GetFpgaVersion();
+			static const char* GetDfuVersion();
+			static ui32 GetSerialNumber();
+			static void DrawLogo(int x, int y);
+	};
 };
 
 #endif

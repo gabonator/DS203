@@ -23,8 +23,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Main", &MainWnd.m_wndMenuSettings},
 		
 		{ CBarItem::IMain,	"About", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Device", NULL},
-		{ CBarItem::ISub,	"Authors", NULL},
+		{ CBarItem::ISub,	"Device", &MainWnd.m_wndAbout},
 
 		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Demo", &MainWnd.m_wndScreenSaver},

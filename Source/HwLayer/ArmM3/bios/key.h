@@ -1,7 +1,7 @@
 
 /*static*/ ui16 BIOS::KEY::GetKeys()
 {
-    ui16 status = ~__Get(KEY_STATUS);
+    ui16 status = ~__Get(KEY_STATUS, 0);
     ui16 out=0;
     if (status & K_INDEX_D_STATUS ) out |=KeyLeft;
     if (status & K_INDEX_I_STATUS ) out |=KeyRight;

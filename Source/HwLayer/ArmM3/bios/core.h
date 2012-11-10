@@ -63,7 +63,7 @@ void Assert(const char*msg, int n)
 /*static*/ int BIOS::GetBattery()
 {
 	// returns value in percents
-  int Vb = __Get(V_BATTERY);
+  int Vb = __Get(V_BATTERY, 0);
 /*
   Level =0;
   if(Vb > 3000 ) Level +=1;

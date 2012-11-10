@@ -4,7 +4,7 @@ BIOS::ADC::TSample g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted mem
 
 /*static*/ void BIOS::ADC::Init()
 {
-    if(__Get(FPGA_OK)== 0){
+    if(__Get(FPGA_OK, 0)== 0){
       BIOS::LCD::Print(6*8, 30, RGB565(ff0000), RGB565(ffffff), "FPGA configuration error");
       while (1){};
     }
@@ -46,7 +46,7 @@ BIOS::ADC::TSample g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted mem
 
 /*static*/ unsigned char BIOS::ADC::Ready()
 {
-	return __Get(FIFO_FULL);
+	return __Get(FIFO_FULL, 0);
 }
 
 /*static*/ unsigned long BIOS::ADC::Get()
