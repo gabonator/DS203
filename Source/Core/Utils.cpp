@@ -83,3 +83,8 @@ char tmp[16];
 		strcat( tmp, strUnits );
 		return tmp;
 	}
+	/*static*/ char* CUtils::ftoa(float f)
+	{
+		BIOS::DBG::sprintf( tmp, "%f", f );
+		return tmp;
+	}

@@ -29,6 +29,13 @@ public:
 		return *this;
 	}
 
+	virtual CBufferedWriter& operator <<( PCSTR str )
+	{
+		CStream stream((char*)str);
+		*this << stream;
+		return *this;
+	}
+
 	virtual CBufferedWriter& operator <<( CStream& stream )
 	{
 		for (int i = 0; i < stream.GetLength(); i++ )
@@ -38,6 +45,9 @@ public:
 			{
 				m_nOffset = 0;
 				BIOS::DSK::Write( &m_FileInfo, m_pData );
+#ifdef _WIN32
+				memset( m_pData, 0x20, FILEINFO::SectorSize );
+#endif
 			}
 		}
 		m_nSize += stream.GetLength();

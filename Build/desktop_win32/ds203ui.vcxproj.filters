@@ -450,5 +450,8 @@
     <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\Annot.cpp">
       <Filter>Source\Gui\Spectrum\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\ToolBox\Export.cpp">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

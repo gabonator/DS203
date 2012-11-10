@@ -148,7 +148,9 @@ bool CWndManager::Exists(char *strName)
 				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
 				break;
 			case 3: // Svg
-				MainWnd.m_wndMessage.Show(&MainWnd, "Sorry...", "This feature is not implemented yet", RGB565(ffff00));
+				CExport::SaveSvg( strName );
+				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
+//				MainWnd.m_wndMessage.Show(&MainWnd, "Sorry...", "This feature is not implemented yet", RGB565(ffff00));
 				break;
 		}
 	}

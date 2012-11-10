@@ -5,6 +5,7 @@
 #include <Source/Core/Settings.h>
 #include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
 #include "BufferedIo.h"
+#include <Source/Core/Utils.h>
 
 class CExport
 {
@@ -215,6 +216,74 @@ public:
 
 		writer.Close();
 	}
+
+	void SaveSvg(char* strName_ = NULL);
+		/*
+	{
+		char strNameUnique[] = "WAVE000 SVG";
+		char* strName = strName_ ? strName_ : strNameUnique;
+		if ( !strName_ )
+			FindUnusedFile( strName, 4 );
+
+		CBufferedWriter writer;
+		writer.Open( strName );
+
+		float fTimeRes = Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
+	
+		CSettings::Calibrator::FastCalc fastCalc1, fastCalc2;
+		Settings.CH1Calib.Prepare( &Settings.CH1, fastCalc1 );
+		Settings.CH2Calib.Prepare( &Settings.CH2, fastCalc2 );
+
+		int nBegin = 0;
+		int nEnd = 0;
+		MainWnd.m_wndGraph.GetCurrentRange( nBegin, nEnd );
+
+		int nCount = (int)BIOS::ADC::GetCount();
+		writer << "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
+		writer << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n";
+		writer << "<svg width=\"" << CUtils::itoa(nCount) << "\" height=\"256\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
+		writer << "<g>\n";
+		writer << "<path stroke=\"white\" fill=\"black\" stroke-width=\"2\" d=\"M0,0 H" << CUtils::itoa(nCount) << " V256 H0 V0\"/>\n";
+		writer << "<path stroke=\"white\" fill=\"black\" stroke-width=\"2\" d=\"M" << 
+			CUtils::itoa(nBegin) << ",0 H" << CUtils::itoa(nEnd) << " V256 H" <<
+			CUtils::itoa(nEnd) << " V0\"/>\n";
+		for (int y=0; y<=256; y+=32)
+			writer << "<path stroke=\"white\" stroke-width=\"0.1\" d=\"M0," << CUtils::itoa(y) << " H" << CUtils::itoa(nCount) << "\"/>\n";
+		for (int x=0; x<nCount; x+=32)
+			writer << "<path stroke=\"white\" stroke-width=\"0.1\" d=\"M" << CUtils::itoa(x) << ",0 V256\"/>\n";
+
+		writer << "<path stroke=\"yellow\" fill=\"none\" stroke-width=\"1\" d=\"";
+		for (int i=0; i<(int)BIOS::ADC::GetCount(); i++)
+		{
+			char line[64];
+			unsigned int nValue = BIOS::ADC::GetAt(i);
+			int nCH1 = (ui8)((nValue) & 0xff);
+			int nCH2 = (ui8)((nValue>>8) & 0xff);
+
+			BIOS::DBG::sprintf(line, i==0 ? "M%d,%d " : "L%d,%d", i, 256-nCH2);
+			writer << line;
+		}
+		writer << "\"/>\n";
+
+		writer << "<path stroke=\"cyan\" fill=\"none\" stroke-width=\"1\" d=\"";
+		for (int i=0; i<(int)BIOS::ADC::GetCount(); i++)
+		{
+			char line[64];
+			unsigned int nValue = BIOS::ADC::GetAt(i);
+			int nCH1 = (ui8)((nValue) & 0xff);
+			int nCH2 = (ui8)((nValue>>8) & 0xff);
+
+			BIOS::DBG::sprintf(line, i==0 ? "M%d,%d " : "L%d,%d", i, 256-nCH2);
+			writer << line;
+		}
+		writer << "\"/>\n";
+
+		writer << "</g>\n";
+		writer << "</svg>\n";
+
+		writer.Close();
+	}
+	*/
 };
 
 #endif

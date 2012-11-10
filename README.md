@@ -38,9 +38,11 @@ Screenshots:
            
 ![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/waveman_meas.png)
 
-![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
+![Image 4](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
 
-![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/about.png)
+![Image 5](/gabonator/DS203/raw/master/Man/Screenshot/about.png)
+
+![Image 6](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
 
 
 Feature highlights:
@@ -49,16 +51,18 @@ Feature highlights:
 - UART decoder
 - Advanced mathematical operators
 - Cursors with lock-to-channel function
+- Spectral analysis
 - Export to CSV file
+- Export to interactive SVG
 - Remote control (SDK) with WebSockets, easy developing with javascript/html
 
 Todo list:
 ======================
-- finish oscilloscope module
-- calibration
-- fft view
-- signal generator with modulations
-- connection with android tablet/phone
+- finish oscilloscope module - 90% done
+- calibration - 20% done
+- fft view - 80% done
+- signal generator with modulations - 20% done
+- connection with android tablet/phone - 20% done
 
 References:
 ======================
