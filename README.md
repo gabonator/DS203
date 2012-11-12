@@ -68,6 +68,25 @@ Todo list:
 - signal generator with modulations - 20% done
 - connection with android tablet/phone - 20% done
 
+Calibration:
+======================
+This firmware finally implements a simple method for analog channel calibration.  It's good idea to calibrate the DAC (wave out) first, it can be handy if you dont have regulated power supply. The device should be connected to a PC during calibration.
+ - Calibrating Adc: 
+   1. Go to User app/Calib tab, select Adc menu item
+   2. Connect volt meter to Waveout
+   3. Change the value (four digits) next to 0.5V label until you get exactly 0.5V on your voltmeter or multimeter.
+   4. Do the same for 1.5V value
+   5. Click on "Use labels", the dialog will hide
+   6. Now you can check proper DAC calibration by changing the voltage shown on Adc menu item with navigation buttons, the voltage shown on display shoud match the voltage measured on the WaveOut connector within the error +-0.001V
+ - Calibrating analog channel
+   1. Enter "Analog-Simple" calibration dialog
+   2. Select desired channel and resolution
+   3. Connect the probe to selected channel and connect tip of the probe with the crocodile (ground).
+   4. Select "Reset Vpos" and wait a few seconds
+   5. Connect the probe to a precise power supply and by changing the K value, try to match Vin value with the real voltage of power supply. If you dont have any regulated PSU, you can connect the probe with WaveOut 
+   6. Hit save and try changing the input voltage and check whether you get correct reading at the Vin value. Use a sensible voltage while matching the K value, for example - if you are calibrating 200mV range, use 4x200mV = 800mV at input.
+ - After finishing, select "Save calib data"
+
 References:
 ======================
 
