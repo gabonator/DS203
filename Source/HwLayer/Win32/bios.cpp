@@ -741,7 +741,7 @@ BOOL Is64BitWindows()
 
 const char* BIOS::VER::GetHardwareVersion()
 {
-	return Is64BitWindows ? "x64" : "x86";
+	return Is64BitWindows() ? "x64" : "x86";
 }
 
 const char* BIOS::VER::GetSystemVersion()
@@ -763,6 +763,12 @@ ui32 BIOS::VER::GetSerialNumber()
 {
 	return 0x0006ab0;
 }
+
+ui32 BIOS::VER::GetDisplayType()
+{
+	return ToDword('v', 'g', 'a', 0);
+}
+
 void BIOS::VER::DrawLogo(int x, int y)
 {
 }

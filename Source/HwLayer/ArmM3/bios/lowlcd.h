@@ -11,6 +11,9 @@
 
 extern vu16 Delay_Cnt;
 
+void InitILI9327();
+void InitR61509V();
+
 //
 ui32 LCD_Type;
 
@@ -56,8 +59,15 @@ void LCD_Init()
   LCD_nRST_HIGH(); 
   LCD_DelayMs(50);          //RST=1£¬Delay 5 ms  
   LCD_RD_Type();
-  _ASSERT( LCD_Type == 0x02049327 );
+  //_ASSERT( LCD_Type == 0x02049327 );
+  if ( LCD_Type == 0x02049327 )
+		InitILI9327();
+	else
+		InitR61509V();
+}
 
+void InitILI9327()
+{
   // ILI9327
   LCD_WR_Ctrl(0xE9); 
   LCD_PORT =  0x20; 
@@ -152,6 +162,68 @@ void LCD_Init()
 
   while (1);
 */
+}
+
+void InitR61509V()
+{
+//----------------R61509V_CPT30 Internal Register Initial------------//
+    LCD_WR_REG(0x0000, 0x0000);
+    LCD_WR_REG(0x0000, 0x0000);
+    LCD_WR_REG(0x0000, 0x0000);
+    LCD_WR_REG(0x0000, 0x0000);
+    LCD_DelayMs(10);
+    LCD_WR_REG(0x0600, 0x0001);
+    LCD_DelayMs(10);
+    LCD_WR_REG(0x06f0, 0x0040);
+    LCD_DelayMs(10);
+    LCD_WR_REG(0x0400, 0x6200);
+    LCD_WR_REG(0x0008, 0x0808);
+    LCD_WR_REG(0x0001, 0x0100);
+    LCD_WR_REG(0x0002, 0x0100);
+    LCD_WR_REG(0x0003, 0x0030); //LCD_WR_REG(0x0003, 0x1030);
+    LCD_WR_REG(0x0009, 0x0001);
+    LCD_WR_REG(0x000C, 0x0000);
+    LCD_WR_REG(0x0090, 0x8000);
+    LCD_WR_REG(0x000F, 0x0000);
+    LCD_WR_REG(0x0010, 0x0016);
+    LCD_WR_REG(0x0011, 0x0101);
+    LCD_WR_REG(0x0012, 0x0000);
+    LCD_WR_REG(0x0013, 0x0001);
+    LCD_WR_REG(0x0100, 0x0330);
+    LCD_WR_REG(0x0101, 0x0237);
+    LCD_WR_REG(0x0103, 0x0F00);
+    LCD_WR_REG(0x0280, 0x6B00);
+    LCD_WR_REG(0x0102, 0xC1B0);
+    LCD_DelayMs(100);
+    LCD_WR_REG(0x0300, 0x0C00);
+    LCD_WR_REG(0x0301, 0x5A0B);
+    LCD_WR_REG(0x0302, 0x0906);
+    LCD_WR_REG(0x0303, 0x1017);
+    LCD_WR_REG(0x0304, 0x2300);
+    LCD_WR_REG(0x0305, 0x1700);
+    LCD_WR_REG(0x0306, 0x6309);
+    LCD_WR_REG(0x0307, 0x0C09);
+    LCD_WR_REG(0x0308, 0x100C);
+    LCD_WR_REG(0x0309, 0x2232);
+  
+    LCD_WR_REG(0x0210, 0x0000);
+    LCD_WR_REG(0x0211, 0x00EF);
+    LCD_WR_REG(0x0212, 0x0000);
+    LCD_WR_REG(0x0213, 0x018F);
+    LCD_WR_REG(0x0500, 0x0000);
+    LCD_WR_REG(0x0501, 0x0000);
+    LCD_WR_REG(0x0502, 0x0005);
+    LCD_WR_REG(0x0401, 0x0001);
+    LCD_WR_REG(0x0404, 0x0000);
+    LCD_DelayMs(100);
+    LCD_WR_REG(0x0007, 0x0100);
+    LCD_DelayMs(100);
+    LCD_WR_REG(0x0200, 0x0000);
+    LCD_WR_REG(0x0201, 0x0000);
+
+    LCD_RS_LOW();
+    LCD_PORT = 0x0202; //Reg. Addr.
+    LCD_RS_HIGH();
 }
 
 u16 LCD_GetPixel(void)

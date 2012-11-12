@@ -99,6 +99,9 @@ int	CMathChannel::MathFx( int nParam, int nScale )
 {
 	int nTotal = CWndGraph::BlkX*CWndGraph::DivsX;
 	int nValue = (int)(128+127*nScale/100.0f*sin( 2*3.141592653f * nParam * (m_nTemp / (float)nTotal)));
+#ifdef _WIN32
+	_ASSERT( m_nTemp < nTotal );
+#endif
 	m_nTemp++;
 	return nValue;
 }

@@ -65,6 +65,9 @@ typedef ui32 UINT;
 #define NATIVEPTR ui32
 #define NATIVEENUM unsigned char
 
+#define MAXUINT     ((UINT)~((UINT)0))
+#define MAXINT      ((INT)(MAXUINT >> 1))
+#define MININT      ((INT)~MAXINT)
 
 #ifndef NULL
 #	define NULL 0

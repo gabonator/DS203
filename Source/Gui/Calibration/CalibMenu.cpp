@@ -13,6 +13,11 @@
 		m_wndListAnalog.StopModal();
 		return;
 	}
+	if ( pSender == &m_wndListSimple && code == ToWord('e', 'x')  )
+	{
+		m_wndListSimple.StopModal();
+		return;
+	}
 	if ( pSender == &m_wndListAdc && code == ToWord('e', 'x')  )
 	{
 		m_wndListAdc.StopModal();
@@ -86,10 +91,17 @@
 		return;
 	}
 
-	if ( code == ToWord('m', 'o') && pSender == &m_itmAnalog )
+	if ( code == ToWord('m', 'o') && pSender == &m_itmComplex )
 	{
 		m_wndListAnalog.Create( this );
 		m_wndListAnalog.StartModal( &m_wndListAnalog.m_itmResolution );
+		return;
+	}
+
+	if ( code == ToWord('m', 'o') && pSender == &m_itmSimple )
+	{
+		m_wndListSimple.Create( this );
+		m_wndListSimple.StartModal( &m_wndListSimple.m_itmResolution );
 		return;
 	}
 
@@ -107,7 +119,12 @@
 		return;
 	}
 
-	if ( code == ToWord('L', 'E') || code == ToWord('L', 'D') || code == ToWord('L', 'R') )
+	if ( code == ToWord('L', 'E') )
+	{
+		m_itmAdc.UpdateAdc();
+		return;
+	}
+	if ( code == ToWord('L', 'D') || code == ToWord('L', 'R') )
 	{
 		return;
 	}

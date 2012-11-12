@@ -87,7 +87,7 @@ CMeasStatistics		m_Stat;
 
 void CWndMenuMeas::_UpdateAll()
 {
-	for ( int nFilter = CSettings::Measure::_CH1; nFilter <= CSettings::Measure::_CH2; nFilter++ )
+	for ( int nFilter = CSettings::Measure::_CH1; nFilter <= CSettings::Measure::_Math; nFilter++ )
 	{
 		int nLastRange = -1;
 

@@ -158,6 +158,7 @@ public:
 		static const char* GetSystemVersion();
 		static const char* GetFpgaVersion();
 		static const char* GetDfuVersion();
+		static ui32 GetDisplayType();
 		static ui32 GetSerialNumber();
 		static void DrawLogo(int x, int y);
 	};

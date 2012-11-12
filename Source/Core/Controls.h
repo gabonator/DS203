@@ -221,6 +221,33 @@ public:
 	}	
 };
 
+class CLSpacer : public CListItem
+{
+public:
+	void Create(CWnd* pParent)
+	{
+		ui8 nHeight = 4;
+		CRect rcRect;
+
+		if ( pParent->GetLast() )
+		{
+			rcRect = pParent->GetLast()->m_rcClient;
+			rcRect.top = rcRect.bottom;
+			rcRect.bottom = rcRect.top + nHeight;
+		} else
+		{
+			rcRect = pParent->m_rcClient;
+			rcRect.top += 20;
+			rcRect.bottom = rcRect.top + nHeight;
+			rcRect.Deflate(4, 0, 4, 0);
+		}
+		CWnd::Create( NULL, CWnd::WsHidden | CWnd::WsNoActivate, rcRect, pParent );
+	}
+	virtual void OnPaint()
+	{
+	}	
+};
+
 class CLPItem : public CListItem
 {
 	CValueProvider* m_pProvider;

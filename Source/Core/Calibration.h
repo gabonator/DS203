@@ -37,7 +37,9 @@
 				else
 					e = m;
 			}
-
+#ifdef _WIN32
+			_ASSERT( b != e );
+#endif
 			Tcalc nTmp = (Tcalc)(i - inp[b]);
 			nTmp *= out[e] - out[b];
 			nTmp /= inp[e] - inp[b];
@@ -56,7 +58,9 @@
 				else
 					e = m;
 			}
-
+#ifdef _WIN32
+			_ASSERT( b != e );
+#endif
 			Tcalc nTmp = (Tcalc)(i - inp[b]);
 			nTmp *= out[e] - out[b];
 			nTmp /= inp[e] - inp[b];
@@ -108,7 +112,7 @@
 			float fMultiplier;
 			int K, Q, Zero;
 		};
-
+#if 1
 		// potrebujem vediet rozlisenie a vertikalnu polohu
 		void Prepare(AnalogChannel* pSource, FastCalc& fast)
 		{
@@ -122,6 +126,17 @@
 			fast.Q = InterpolatorQ::Get( pCurCurve.m_arrCurveQin, pCurCurve.m_arrCurveQout, nVert );
 			fast.Zero = fast.Q / fast.K;
 			fast.fMultiplier = arrMultipliers[pSource->Resolution];
+		}
+
+		static void Prepare(int nRes, int nVert, LinCalibCurve& pCurCurve, FastCalc& fast)
+		{
+			const static float arrMultipliers[AnalogChannel::_ResolutionMax+1] = 
+				{50e-3f, 100e-3f, 200e-3f, 500e-3f, 1.0f, 2.0f, 5.0f, 10.0f};
+
+			fast.K = InterpolatorK::Get( pCurCurve.m_arrCurveKin, pCurCurve.m_arrCurveKout, nVert );
+			fast.Q = InterpolatorQ::Get( pCurCurve.m_arrCurveQin, pCurCurve.m_arrCurveQout, nVert );
+			fast.Zero = fast.Q / fast.K;
+			fast.fMultiplier = arrMultipliers[nRes];
 		}
 
 		int Correct( FastCalc& fast, int nAdc )
@@ -147,9 +162,49 @@
 
 // *32/0.2
 		}
-
+#endif
 		int GetZero(FastCalc& fast)
 		{
 			return -fast.Zero;
 		}
+
+#if 0
+		void Prepare(AnalogChannel* pSource, FastCalc& fast)
+		{
+			const static float arrMultipliers[AnalogChannel::_ResolutionMax+1] = 
+				{50e-3f, 100e-3f, 200e-3f, 500e-3f, 1.0f, 2.0f, 5.0f, 10.0f};
+
+			LinCalibCurve& pCurCurve = CalData[ pSource->Resolution ];
+			si16& nVert = pSource->u16Position;
+
+			fast.K = InterpolatorK::Get( pCurCurve.m_arrCurveKin, pCurCurve.m_arrCurveKout, nVert );
+			fast.Q = InterpolatorQ::Get( pCurCurve.m_arrCurveQin, pCurCurve.m_arrCurveQout, nVert );
+			fast.Zero = fast.Q / 2048;
+			fast.fMultiplier = arrMultipliers[pSource->Resolution];
+		}
+		static void Prepare(int nRes, int nVert, LinCalibCurve& pCurCurve, FastCalc& fast)
+		{
+			const static float arrMultipliers[AnalogChannel::_ResolutionMax+1] = 
+				{50e-3f, 100e-3f, 200e-3f, 500e-3f, 1.0f, 2.0f, 5.0f, 10.0f};
+
+			fast.K = InterpolatorK::Get( pCurCurve.m_arrCurveKin, pCurCurve.m_arrCurveKout, nVert );
+			fast.Q = InterpolatorQ::Get( pCurCurve.m_arrCurveQin, pCurCurve.m_arrCurveQout, nVert );
+			fast.Zero = fast.Q / 2048;
+			fast.fMultiplier = arrMultipliers[nRes];
+		}
+		int Correct( FastCalc& fast, int nAdc )
+		{
+			return -fast.Zero + ( ( (fast.Zero + nAdc) * fast.K) >> 11 );
+		}
+		float Voltage(FastCalc& fast, float fAdc)
+		{	
+			return ( (fast.Q / 2048.0f + fAdc) * fast.K) * fast.fMultiplier / 65536.0f;
+		}
+		float Correct(FastCalc& fast, float fAdc)
+		{
+			float fZero = (float)fast.Q / 2048.0f;
+			return -fZero + ( ((fZero + fAdc) * fast.K) / 65536.0f / 32.0f );   
+		}
+#endif
+
 	};

@@ -31,20 +31,40 @@ public:
 //			BIOS::LCD::Print (   4, 240-8*16, clrA, 0, "Firmware version:" );
 //			BIOS::LCD::Printf( 160, 240-8*16, clrB, 0, "%c%c%c%c", strVer[3], strVer[2], strVer[1], strVer[0] );
 
-			BIOS::LCD::Print (   4, 240-7*16, clrA, 0, "Firmware built:" );
-			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, __DATE__ " " __TIME__ );
+			BIOS::LCD::Print (   4, 240-8*16, clrA, 0, "Firmware built:" );
+			BIOS::LCD::Print ( 160, 240-8*16, clrB, 0, __DATE__ " " __TIME__ );
 
-			BIOS::LCD::Print (   4, 240-6*16, clrA, 0, "Hardware version:" );
-			BIOS::LCD::Print ( 160, 240-6*16, clrB, 0, BIOS::VER::GetHardwareVersion() );
+			BIOS::LCD::Print (   4, 240-7*16, clrA, 0, "Hardware version:" );
+			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, BIOS::VER::GetHardwareVersion() );
 
-			BIOS::LCD::Print (   4, 240-5*16, clrA, 0, "System version:" );
-			BIOS::LCD::Print ( 160, 240-5*16, clrB, 0, BIOS::VER::GetSystemVersion() );
+			BIOS::LCD::Print (   4, 240-6*16, clrA, 0, "System version:" );
+			BIOS::LCD::Print ( 160, 240-6*16, clrB, 0, BIOS::VER::GetSystemVersion() );
 
-			BIOS::LCD::Print (   4, 240-4*16, clrA, 0, "FPGA version:" );
-			BIOS::LCD::Print ( 160, 240-4*16, clrB, 0, BIOS::VER::GetFpgaVersion() );
+			BIOS::LCD::Print (   4, 240-5*16, clrA, 0, "FPGA version:" );
+			BIOS::LCD::Print ( 160, 240-5*16, clrB, 0, BIOS::VER::GetFpgaVersion() );
 
-			BIOS::LCD::Print (   4, 240-3*16, clrA, 0, "DFU version:" );
-			BIOS::LCD::Print ( 160, 240-3*16, clrB, 0, BIOS::VER::GetDfuVersion() );
+			BIOS::LCD::Print (   4, 240-4*16, clrA, 0, "DFU version:" );
+			BIOS::LCD::Print ( 160, 240-4*16, clrB, 0, BIOS::VER::GetDfuVersion() );
+
+			ui32 dwDriver = BIOS::VER::GetDisplayType();
+
+			BIOS::LCD::Print (   4, 240-3*16, clrA, 0, "Display driver:" );
+			switch (dwDriver)
+			{
+				case ToDword('v', 'g', 'a', 0):
+					BIOS::LCD::Print ( 160, 240-3*16, clrB, 0, "VGA" );
+					break;
+
+				case 0x02049327:
+					BIOS::LCD::Print ( 160, 240-3*16, clrB, 0, "ILI9327" );
+					break;
+
+				case 0x00000000:
+					BIOS::LCD::Print ( 160, 240-3*16, clrB, 0, "R61509V" );
+
+				default:
+					BIOS::LCD::Printf( 160, 240-3*16, clrB, 0, "%08x", dwDriver );
+			}
 
 			BIOS::LCD::Print (   4, 240-2*16, clrA, 0, "Serial number:" );
 			BIOS::LCD::Printf( 160, 240-2*16, clrB, 0, "%08x", BIOS::VER::GetSerialNumber() );

@@ -53,7 +53,7 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Measure::ppszTextEnabled[] =
 		{ "Off", "On" };
 /*static*/ const char* const CSettings::Measure::ppszTextSource[] =
-		{ "CH1", "CH2" };
+		{ "CH1", "CH2", "Math" };
 /*static*/ const char* const CSettings::Measure::ppszTextType[] =
 		{ "Minimum", "Maximum", "Average", "RMS", "RectAvg", "Vpp", "Freq", "Period", "FormFact", "Sigma", "Variance", "Baud" };
 /*static*/ const char* const CSettings::Measure::ppszTextSuffix[] =

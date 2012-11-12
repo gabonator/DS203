@@ -37,7 +37,7 @@ public:
 	void Create( CWnd* pParent )
 	{
 		Load();
-		CListBox::Create( "ADC Calibration", WsVisible | WsModal, CRect(20, 30, 280, 201), RGB565(00ff40), pParent );
+		CListBox::Create( "ADC Calibration", WsVisible | WsModal, CRect(20, 30, 280, 201), RGB565(8080b0), pParent );
 
 		m_itmStaticA.Create( "Set the numbers to get", CWnd::WsVisible | CWnd::WsNoActivate, this);
 		m_itmStaticB.Create( "following voltage on wave out", CWnd::WsVisible | CWnd::WsNoActivate, this);
@@ -76,7 +76,7 @@ public:
 		Settings.DacCalib.m_arrCurveOut[0] = m_nValueA;
 		Settings.DacCalib.m_arrCurveOut[1] = m_nValueB;
 		Settings.DacCalib.m_arrCurveIn[0] = 0.5f;
-		Settings.DacCalib.m_arrCurveIn[1] = 1.0f;
+		Settings.DacCalib.m_arrCurveIn[1] = 1.5f;
 	}
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);

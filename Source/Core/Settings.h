@@ -3,6 +3,7 @@
 
 #define Settings (*CSettings::m_pInstance)
 #include <Source/HwLayer/Types.h>
+#include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
 #define _VERSION ToDword('D', 'S', 'C', '5')
@@ -202,7 +203,7 @@ public:
 
 		enum { _Off, _On, _MaxEnabled = _On }
 			Enabled;
-		enum ESource { _CH1, _CH2, _MaxSource = _CH2 }
+		enum ESource { _CH1, _CH2, _Math, _MaxSource = _Math }
 			Source; 
 		enum { _Min, _Max, _Avg, _Rms, _RectAvg, _Vpp, _Freq, _Period, _FormFactor, _Sigma, _Dispersion, _Baud, _MaxType = _Baud }
 			Type;

@@ -34,15 +34,19 @@ Screenshots:
 ======================
 ![Image 1](/gabonator/DS203/raw/master/Man/Screenshot/uart_decoder_1.png)
 
-![Image 2](/gabonator/DS203/raw/master/Man/Screenshot/cursor.png)
+![Image 2](/gabonator/DS203/raw/master/Man/Screenshot/midi.png)
+
+![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/cursor.png)
            
-![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/waveman_meas.png)
+![Image 4](/gabonator/DS203/raw/master/Man/Screenshot/waveman_meas.png)
 
-![Image 4](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
+![Image 5](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
 
-![Image 5](/gabonator/DS203/raw/master/Man/Screenshot/about.png)
+![Image 6](/gabonator/DS203/raw/master/Man/Screenshot/about.png)
 
-![Image 6](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
+![Image 7](/gabonator/DS203/raw/master/Man/Screenshot/calibration.png)
+
+![Image 8](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
 
 
 Feature highlights:

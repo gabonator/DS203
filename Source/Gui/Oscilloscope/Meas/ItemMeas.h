@@ -23,7 +23,12 @@ public:
 		ui16 clr = bEnabled ? RGB565(000000) : RGB565(808080);
 		ui16 clr2 = RGB565(404040);
 
-		m_color = m_pMeas->Source == CSettings::Measure::_CH1 ? Settings.CH1.u16Color : Settings.CH2.u16Color;
+		switch ( m_pMeas->Source )
+		{
+		case CSettings::Measure::_CH1: m_color = Settings.CH1.u16Color; break;
+		case CSettings::Measure::_CH2: m_color = Settings.CH2.u16Color; break;
+		case CSettings::Measure::_Math: m_color = Settings.Math.uiColor; break;
+		}
 		
 		CWndMenuItem::OnPaint();
 
@@ -34,7 +39,7 @@ public:
 		if ( bEnabled )
 		{
 			y += 16;
-			char str[16];
+			char str[16]; 
 			const char* suffix = CSettings::Measure::ppszTextSuffix[ (int)m_pMeas->Type ];
 			float fValue = m_pMeas->fValue;
 			if ( fValue < 0 )

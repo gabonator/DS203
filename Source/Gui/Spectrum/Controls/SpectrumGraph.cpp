@@ -90,7 +90,7 @@ void CWndSpectrumGraphTempl::OnPaint()
 				nLength /= 2;
 			UTILS.Clamp<int>( nLength, 0, DivsY*m_nBlkY);
 
-			if ( i > 8 && nLength_ > nMarkerMax && nLength > 5 )
+			if ( i > 3 && nLength_ > nMarkerMax && nLength > 5 )
 			{
 				nMarkerMax = nLength_;
 				nMarkerX = i;
@@ -104,9 +104,16 @@ void CWndSpectrumGraphTempl::OnPaint()
 		}
 	}
 
-	Settings.Spec.nMarkerX = nMarkerX;
-	Settings.Spec.fMarkerX = nMarkerX / 256.0f * (1.0f/(Settings.Runtime.m_fTimeRes/30.0f)) * 0.5f;
-	Settings.Spec.fMarkerY = nMarkerMax/32.0f/32.0f*Settings.Runtime.m_fCH1Res;
+	if ( nMarkerX == nLength )
+	{
+		Settings.Spec.nMarkerX = 0;
+		Settings.Spec.fMarkerX = 0;
+		Settings.Spec.fMarkerY = 0;
+	} else {	
+		Settings.Spec.nMarkerX = nMarkerX;
+		Settings.Spec.fMarkerX = nMarkerX / 256.0f * (1.0f/(Settings.Runtime.m_fTimeRes/30.0f)) * 0.5f;	
+		Settings.Spec.fMarkerY = nMarkerMax/32.0f/32.0f*Settings.Runtime.m_fCH1Res;
+	}
 
 	if ( nMarkerY > DivsY*m_nBlkY - 4 )
 		nMarkerY = DivsY*m_nBlkY - 4;

@@ -8,6 +8,106 @@
 #include <Source/Core/Settings.h>
 #include "CalibCore.h"
 
+class CWndListCalSimple : public CListBox
+{
+public:
+	NATIVEENUM m_calChannel;
+	NATIVEENUM m_calRange;
+	CSettings::LinCalibCurve	m_calCurve;
+	CSettings::Calibrator::FastCalc m_calFast;
+
+	CLSpacer		m_itmSpacerA;
+	CLSpacer		m_itmSpacerB;
+	CLSpacer		m_itmSpacerC;
+
+	CLStaticItem	m_itmStaticB;
+	CLStaticItem	m_itmStaticC;
+	CLStaticItem	m_itmStaticE;
+	CLStaticItem	m_itmStaticF;
+	CLStaticItem	m_itmStaticG;
+	CLStaticItem	m_itmStaticH;
+	
+	CProviderEnum	m_proSource;
+	CLPItem			m_itmSource;
+
+	CProviderEnum	m_proResolution;
+	CLPItem			m_itmResolution;
+ 
+	CProviderBtn	m_proSave;
+	CLPItem			m_itmSave;
+
+	CProviderBtn	m_proReset;
+	CLPItem			m_itmReset;
+
+	CProviderDigit	m_proDigit1000;
+	CProviderDigit	m_proDigit100;
+	CProviderDigit	m_proDigit10;
+	CProviderDigit	m_proDigit1;
+	CDigitsItem<4>	m_itmNumber;
+	int				m_nValue;
+
+	char			m_strQ0[32];
+	char			m_strQ1[32];
+	char			m_strV[32];
+
+	int				m_nResetPhase;
+	int				m_nQ0;
+	int				m_nQ1;
+
+public:
+	void Create( CWnd* pParent )
+	{
+		m_nValue = 1234;
+		m_nResetPhase = -1;
+
+		m_calChannel = CSettings::Trigger::_CH1;
+		m_calRange = CSettings::AnalogChannel::_200mV;
+
+		CListBox::Create( "Simple Calibration", WsVisible | WsModal | CWnd::WsListener, CRect(20, 20, 280, 221), RGB565(8080b0), pParent );
+
+		m_proSource.Create( (const char**)CSettings::Trigger::ppszTextSource,
+			&m_calChannel, CSettings::Trigger::_CH2 );
+		m_itmSource.Create( "Source", CWnd::WsVisible, &m_proSource, this );
+
+		m_proResolution.Create( (const char**)CSettings::AnalogChannel::ppszTextResolution,
+			&m_calRange, CSettings::AnalogChannel::_ResolutionMax );
+		m_itmResolution.Create( "Resolution", CWnd::WsVisible, &m_proResolution, this );
+
+		m_itmSpacerA.Create( this);
+		m_itmStaticB.Create( " Vavg(   0) = 1723", CWnd::WsVisible | CWnd::WsNoActivate, this);
+		m_itmStaticC.Create( " Vavg( 200) = 4000", CWnd::WsVisible | CWnd::WsNoActivate, this);
+		m_itmSpacerB.Create( this);
+
+		m_proReset.Create( "Ok!" );
+		m_itmReset.Create( "Reset Vpos", CWnd::WsVisible, &m_proReset, this );
+
+		m_itmSpacerC.Create( this);
+		m_itmStaticE.Create( "Change coefficient to", CWnd::WsVisible | CWnd::WsNoActivate, this);
+		m_itmStaticF.Create( "get correct reading", CWnd::WsVisible | CWnd::WsNoActivate, this);
+
+		m_proDigit1000.Create( &m_nValue, 1000 );
+		m_proDigit100.Create( &m_nValue, 100 );
+		m_proDigit10.Create( &m_nValue, 10 );
+		m_proDigit1.Create( &m_nValue, 1 );
+		CValueProvider* arrDigits[4] = {&m_proDigit1000, &m_proDigit100, &m_proDigit10, &m_proDigit1};
+		m_itmNumber.Create(" K         =", CWnd::WsVisible, this, arrDigits);
+
+		m_itmStaticH.Create( " Vin       = 1.4242V", CWnd::WsVisible | CWnd::WsNoActivate, this); // nebude static
+
+		m_proSave.Create( "Save" );
+		m_itmSave.Create( NULL, CWnd::WsVisible, &m_proSave, this );
+
+		LoadCalib();
+		UpdateZero();
+	}
+	void LoadCalib();
+	void _UpdateCalib(int nK, int nVert);
+	void SaveCalib();
+	void UpdateZero();
+	void OnWave();
+	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
+};
+
 class CWndListCalAnalog : public CListBox, public CCalibration
 {
 public:
@@ -36,7 +136,7 @@ public:
 		m_calChannel = CSettings::Trigger::_CH1;
 		m_calRange = CSettings::AnalogChannel::_200mV;
 
-		CListBox::Create( "Analog Calibration", WsVisible | WsModal | CWnd::WsListener, CRect(20, 30, 280, 201), RGB565(00ff40), pParent );
+		CListBox::Create( "Analog Calib. - deprecated", WsVisible | WsModal | CWnd::WsListener, CRect(20, 30, 280, 201), RGB565(00ff40), pParent );
 
 		m_itmStaticA.Create( "Select source channel and range", CWnd::WsVisible | CWnd::WsNoActivate, this);
 		m_itmStaticB.Create( "", CWnd::WsVisible | CWnd::WsNoActivate, this);
@@ -107,7 +207,9 @@ public:
 			for (int i = 0; i < CSettings::LinCalibCurve::eKPoints; i++ )
 				BIOS::LCD::Printf( 30, y += 16, RGB565(ffffff), RGB565(000000), "K%d: %4d -> %d (%f)", 
 					i, calCurve.m_arrCurveKin[i], calCurve.m_arrCurveKout[i], calCurve.m_arrCurveKout[i] * fInv );
+			return;
 		}
+		CListBox::OnMessage(pSender, code, data);
 	}
 
 	void Finished();

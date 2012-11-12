@@ -42,6 +42,10 @@ typedef signed short si16;
 #define NATIVEPTR ULONGLONG
 #define NATIVEENUM LONG
 
+#define MAXUINT     ((UINT)~((UINT)0))
+#define MAXINT      ((INT)(MAXUINT >> 1))
+#define MININT      ((INT)~MAXINT)
+
 #define ToWord(a, b) (((a)<<8)|(b))
 #define ToDword(a, b, c, d) ((ToWord(a, b)<<16)|ToWord(c,d))
 

@@ -2,6 +2,8 @@
 #define PRM_BASE BIN_BASE + 68*1024 // Size = 2KB
 #define INF_BASE BIN_BASE + 70*1024 // Size < 10KB 
 
+extern ui32 LCD_Type;
+
 /*static*/ const char* BIOS::VER::GetDfuVersion()
 {
 	return (const char*)__Get(DFUVER, 0);//__Chk_DFU();
@@ -25,6 +27,11 @@
 /*static*/ ui32 BIOS::VER::GetSerialNumber()
 {
 	return __GetDev_SN();
+}
+
+/*static*/ ui32 BIOS::VER::GetDisplayType()
+{
+	return LCD_Type;
 }
 
 /*static*/ void BIOS::VER::DrawLogo(int x0, int y0)
