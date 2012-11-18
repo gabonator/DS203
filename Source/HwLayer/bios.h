@@ -11,6 +11,8 @@ public:
 	static void Init();
 	static void Beep( int ms );
 	static int GetBattery();
+	static void SetBacklight(int nLevel); // 0..100
+	static void SetVolume(int nLevel); // 0..100
 
 	class DBG {
 	public:

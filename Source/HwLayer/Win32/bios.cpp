@@ -772,3 +772,11 @@ ui32 BIOS::VER::GetDisplayType()
 void BIOS::VER::DrawLogo(int x, int y)
 {
 }
+
+/*static*/ void BIOS::SetBacklight(int nLevel) // 0..100
+{
+}
+
+/*static*/ void BIOS::SetVolume(int nLevel) // 0..100
+{
+}

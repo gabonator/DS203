@@ -18,6 +18,8 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 
 		{ CBarItem::IMain,	"Generator", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Wave", &MainWnd.m_wndMenuGenerator},
+		{ CBarItem::ISub,	"Modulation", &MainWnd.m_wndMenuGeneratorMod},
+		{ CBarItem::ISub,	"Edit", &MainWnd.m_wndMenuGeneratorEdit},
 		
 		{ CBarItem::IMain,	"Settings", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Main", &MainWnd.m_wndMenuSettings},

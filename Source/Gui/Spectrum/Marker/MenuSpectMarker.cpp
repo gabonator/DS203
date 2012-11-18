@@ -9,8 +9,8 @@ CWndMenuSpectMarker::CWndMenuSpectMarker()
 /*virtual*/ void CWndMenuSpectMarker::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	CWnd::Create("CWndMenuSpectMain", dwFlags | CWnd::WsListener, CRect(316-CWndMenuItem::MarginLeft, 20, 400, 240), pParent);
-	m_itmSource.Create("Source\nCH1", RGB565(ffff00), 2, this);
-	m_itmTrack.Create("Position\nAuto", RGB565(8080b0), 2, this);
+	m_itmSource.Create("~Source\nCH1", RGB565(ffff00), 2, this);
+	m_itmTrack.Create("~Position\nAuto", RGB565(8080b0), 2, this);
 	m_itmValue.Create(this);
 }
 

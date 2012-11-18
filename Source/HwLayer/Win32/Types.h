@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <crtdbg.h>
 #include <stdio.h>
+#include <math.h>
 
 typedef unsigned char ui8;
 typedef unsigned char ui8;
@@ -35,6 +36,18 @@ typedef signed short si16;
 #define RGBTRANS (RGB565(ff00ff)-1)
 
 #define RGB32(r,g,b) ((r) | ((g)<<8) | ((b)<<16))
+
+/*
+#ifndef min 
+#	define min(a, b) ((a)<(b)?(a):(b))
+#endif
+#ifndef max
+#	define max(a, b) ((a)>(b)?(a):(b))
+#endif
+#ifndef abs
+#	define abs(a) ((a)>0?(a):(-(a)))
+#endif
+*/
 
 #define DecEnum(e) *((ui8*)&(e))-=1
 #define IncEnum(e) *((ui8*)&(e))+=1

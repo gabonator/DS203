@@ -6,7 +6,7 @@
 #include "Toolbar.h"
 #include "Oscilloscope/Oscilloscope.h"
 #include "Windows/WndConfirm.h"
-#include "Others.h"
+#include "Windows/MessageBox.h"
 #include "ToolBox/ToolBox.h"
 #include "ToolBox/Manager.h"
 #include "Generator/Generator.h"
@@ -15,6 +15,7 @@
 #include "User/Snake.h"
 #include "User/Balls.h"
 #include "About/About.h"
+#include "Settings/Settings.h"
 #include "Calibration/Calibration.h"
 #include "User/Meter.h"
 #include "Spectrum/Spectrum.h"
@@ -40,8 +41,9 @@ public:
 	CWndMenuSettings	m_wndMenuSettings;
 	CWndMenuDisplay		m_wndMenuDisplay;
 	CWndMenuGenerator	m_wndMenuGenerator;
+	CWndMenuGeneratorMod	m_wndMenuGeneratorMod;
+	CWndMenuGeneratorEdit	m_wndMenuGeneratorEdit;
 	CWndMenuMath		m_wndMenuMath;
-	CWndMenuTools		m_wndMenuTools;
 	CWndZoomBar			m_wndZoomBar;
 	CWndOscInfo			m_wndInfoBar;
 	CWndLevelReferences	m_wndLReferences;

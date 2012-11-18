@@ -21,7 +21,7 @@
 	m_itmDraw.Create("Display", RGB565(808080), &m_proDraw, this);
 	m_itmAverage.Create("Average", RGB565(808080), &m_proAverage, this);
 	m_itmPersist.Create("Persist", RGB565(808080), &m_proPersist, this);
-	m_itmGrid.Create("Grid", RGB565(808080), &m_proGrid, this);
+	m_itmGrid.Create("~Grid", RGB565(808080), &m_proGrid, this);
 }
 
 /*virtual*/ void CWndMenuDisplay::OnMessage(CWnd* pSender, ui16 code, ui32 data)

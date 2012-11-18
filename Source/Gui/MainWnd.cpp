@@ -20,6 +20,7 @@ void CMainWnd::Create()
 	Settings.Load();
 	Settings.LoadCalibration();
 	m_wndGraph.UpdateResolutions();
+	CCoreSettings::Update();
 
 	
 	CWnd::Create("CMainWnd", WsVisible | WsListener, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
@@ -40,7 +41,8 @@ void CMainWnd::Create()
 	m_wndMenuSettings.Create( this, WsHidden );
 	m_wndMenuDisplay.Create( this, WsHidden );
 	m_wndMenuGenerator.Create( this, WsHidden );
-	m_wndMenuTools.Create( this, WsHidden );
+	m_wndMenuGeneratorMod.Create( this, WsHidden );
+	m_wndMenuGeneratorEdit.Create( this, WsHidden );
 	m_wndZoomBar.Create( this, WsHidden, &m_wndGraph );
 	m_wndInfoBar.Create( this, WsHidden, &m_wndGraph );
 	m_wndLReferences.Create( this, WsHidden );

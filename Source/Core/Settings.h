@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '5')
+#define _VERSION ToDword('D', 'S', 'C', '6')
 
 class CSettings : public CSerialize
 {
@@ -142,19 +142,24 @@ public:
 	{
 	public:
 		static const char* const ppszTextWave[];
-		enum { _Sin = 0, _Tri, _Saw, _Sq, _Cardiac, _WaveMax = _Cardiac }
+		enum { _Dc = 0, _SinHq, _SinLq, _Tri, _Saw, _Square, _Cardiac, _Volatile, _WaveMax = _Volatile }
 			Wave;
 		int nPsc;
 		int nArr;
+		int nScale; // 65536 - full
+
+		int nSamples;
+		float nFrequency; 
+		float fAmplitude; // 65536 -> full
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Wave) << nPsc << nArr;
+			stream << _E(Wave) << nPsc << nArr << nScale;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Wave) >> nPsc >> nArr;
+			stream >> _E(Wave) >> nPsc >> nArr >> nScale;
 			return *this;
 		}
 	};
@@ -350,6 +355,8 @@ public:
 	public:
 		int m_nMenuItem;
 		int m_nUptime;
+		int m_nBacklight;
+		int m_nVolume;
 		
 		FLOAT m_fTimeRes;
 		FLOAT m_fCH1Res;
@@ -357,12 +364,12 @@ public:
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << m_nMenuItem << m_nUptime;
+			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> m_nMenuItem >> m_nUptime;
+			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume;
 			return *this;
 		}
 	};
@@ -428,6 +435,10 @@ public:
 				>> dwEnd;
 			// Dont forget to change version when the serialization order was changed!
 			_ASSERT( dwEnd == ToDword('E', 'N', 'D', 27) );
+			if ( dwEnd != ToDword('E', 'N', 'D', 27) )
+			{
+				Reset();
+			}
 		} else
 			Reset();
 		return *this;

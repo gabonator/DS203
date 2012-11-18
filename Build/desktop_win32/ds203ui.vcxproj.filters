@@ -91,6 +91,30 @@
     <Filter Include="Source\Gui\Spectrum\Marker">
       <UniqueIdentifier>{d6fee762-b962-4b2c-91f5-7982d8b0b83f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Generator\Core">
+      <UniqueIdentifier>{85d4baf7-54d4-49c0-8a62-3cc1da9f8352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Generator\Controls">
+      <UniqueIdentifier>{321bb77e-7ed7-4acf-8460-44ac12417759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Generator\Main">
+      <UniqueIdentifier>{eb57ddb8-fec2-4ed0-9909-b1dd1b434dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Generator\Modulation">
+      <UniqueIdentifier>{f9aa2132-e691-4c00-b857-3ef3f51fd75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Generator\Edit">
+      <UniqueIdentifier>{eca9326a-1570-4be8-b453-0b4d2386fc9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Settings">
+      <UniqueIdentifier>{d5a4316b-427c-4d4a-9c89-f6bfd34c0c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Settings\Core">
+      <UniqueIdentifier>{7247868e-c1e1-491b-b2db-359a67de8679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Settings\Controls">
+      <UniqueIdentifier>{27ce1fd2-174a-4c74-be5c-0ed7274d5dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -131,15 +155,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\MainWndSdk.h">
       <Filter>Source\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Others.h">
-      <Filter>Source\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\toolbar.h">
-      <Filter>Source\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Generator\Generator.h">
-      <Filter>Source\Gui\Generator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Oscilloscope.h">
       <Filter>Source\Gui\Oscilloscope</Filter>
@@ -226,9 +241,6 @@
       <Filter>Source\Gui\Oscilloscope\Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.h">
-      <Filter>Source\Gui\Oscilloscope\Controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphSig.h">
       <Filter>Source\Gui\Oscilloscope\Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\LevelRef.h">
@@ -342,6 +354,57 @@
     <ClInclude Include="..\..\Source\Gui\About\About.h">
       <Filter>Source\Gui\About</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Core\CoreGenerator.h">
+      <Filter>Source\Gui\Generator\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Controls\GraphSig.h">
+      <Filter>Source\Gui\Generator\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenAmplitude.h">
+      <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenFrequency.h">
+      <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenWaveform.h">
+      <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Generator.h">
+      <Filter>Source\Gui\Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Main\MenuGenMain.h">
+      <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Modulation\MenuGenModulation.h">
+      <Filter>Source\Gui\Generator\Modulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Edit\MenuGenEdit.h">
+      <Filter>Source\Gui\Generator\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Toolbar.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\Settings.h">
+      <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Windows\MessageBox.h">
+      <Filter>Source\Gui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Windows\WndButton.h">
+      <Filter>Source\Gui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\Core\SettingsCore.h">
+      <Filter>Source\Gui\Settings\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\Controls\Slider.h">
+      <Filter>Source\Gui\Settings\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemBacklight.h">
+      <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemVolume.h">
+      <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -383,9 +446,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Toolbar.cpp">
       <Filter>Source\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\Generator\Generator.cpp">
-      <Filter>Source\Gui\Generator</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp">
       <Filter>Source\Gui\Oscilloscope\Input</Filter>
@@ -452,6 +512,18 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\ToolBox\Export.cpp">
       <Filter>Source\Gui\ToolBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Generator\Core\CoreGenerator.cpp">
+      <Filter>Source\Gui\Generator\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Generator\Main\MenuGenMain.cpp">
+      <Filter>Source\Gui\Generator\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Generator\Modulation\MenuGenModulation.cpp">
+      <Filter>Source\Gui\Generator\Modulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Generator\Edit\MenuGenEdit.cpp">
+      <Filter>Source\Gui\Generator\Edit</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

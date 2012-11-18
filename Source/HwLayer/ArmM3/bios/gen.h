@@ -14,6 +14,16 @@
 
 /*static*/ void BIOS::GEN::ConfigureWave(ui16* pData, ui16 cnt)
 {
+/*
+    DMA2_Channel4->CCR &= ~DMA_CCR1_EN;
+    __Set(ANALOG_PSC,  A_Tab[_Frqn].PSC);
+    __Set(ANALOG_CNT, 72);
+    __Set(ANALOG_PTR, (u32)ATT_DATA);
+    DMA2_Channel4->CCR |= DMA_CCR1_EN;
+    __Set(ANALOG_ARR, A_Tab[_Frqn].ARR);
+*/
+
+
 	#define DMA2_CMAR4  (*((vu32 *)(0x40020400+0x50)))
 	#define DMA2_CNDTR4 (*((vu32 *)(0x40020400+0x48)))
 	#define DMA2_CCR4   (*((vu32 *)(0x40020400+0x44)))

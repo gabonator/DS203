@@ -24,17 +24,17 @@
 	rcItem = _ITEM(1, 0);
 	m_itmSpectrum.Create( "Spectrum\nanalyser", RGB565(ffffff), rcItem, this );
 	rcItem = _ITEM(2, 0);
-	m_itmResponse.Create( "Frequency\nresponse", RGB565(808080), rcItem, this );
-	rcItem = _ITEM(0, 1);
-	m_itmLogic.Create( "Logic\nanalyser", RGB565(808080), rcItem, this );
-	rcItem = _ITEM(1, 1);
 	m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(2, 1);
+	rcItem = _ITEM(0, 1);
 	m_itmSettings.Create( "Settings", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(0, 2);
+	rcItem = _ITEM(1, 1);
 	m_itmUser.Create( "User\napplications", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(1, 2);
+	rcItem = _ITEM(2, 1);
 	m_itmAbout.Create( "About", RGB565(ffffff), rcItem, this );
+	rcItem = _ITEM(0, 2);
+	m_itmResponse.Create( "Frequency\nresponse", RGB565(808080), rcItem, this );
+	rcItem = _ITEM(1, 2);
+	m_itmLogic.Create( "Logic\nanalyser", RGB565(808080), rcItem, this );
 }
 
 /*virtual*/ void CWndModuleSelector::OnPaint()

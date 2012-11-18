@@ -4,6 +4,7 @@
 extern vu32 vu32Tick;
 extern vu16 Delay_Cnt;
 extern vu16 Beep_mS;
+int m_nBeepVolume = 50;
 
 /*static*/ ui32 BIOS::GetTick()
 {
@@ -18,7 +19,7 @@ extern vu16 Beep_mS;
 
 /*static*/ void BIOS::Beep( int ms )
 {
-	__Set(BEEP_VOLUME, 50);
+	__Set(BEEP_VOLUME, m_nBeepVolume);
 	Beep_mS = ms;
 //	if ( vol > -1 )
 //		__Set( BEEP_VOLUME, vol ); // 0..100
@@ -82,4 +83,18 @@ void Assert(const char*msg, int n)
 
 	return nPerc;
 }
+
+/*static*/ void BIOS::SetBacklight(int nLevel) // 0..100
+{
+	if (nLevel < 1)
+		nLevel = 1;
+	__Set(BACKLIGHT, nLevel);
+}
+
+/*static*/ void BIOS::SetVolume(int nLevel) // 0..100
+{
+	nLevel /= 2;
+  m_nBeepVolume = nLevel;
+}
+
 #endif

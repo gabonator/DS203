@@ -13,7 +13,6 @@
 #include "Controls/ZoomBar.h"
 #include "Controls/OscInfo.h"
 #include "Controls/GraphOsc.h"
-#include "Controls/GraphSig.h"
 
 
 #endif

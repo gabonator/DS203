@@ -33,7 +33,7 @@ CSettings* CSettings::m_pInstance = NULL;
 		10e-3f, 20e-3f, 50e-3f, 100e-3f, 200e-3f, 500e-3f,
 		1.0f};
 /*static*/ const char* const CSettings::Generator::ppszTextWave[] =
-		{"Sin", "Triangle", "Sawtooth", "Square", "Cardiac"};
+		{"DC", "Sin HQ", "Sin LQ", "Triangle", "Sawtooth", "Square", "Cardiac", "Volatile"};
 /*static*/ const char* const CSettings::Trigger::ppszTextSync[] =
 		{"Auto", "Norm", "Single", "None"};
 /*static*/ const char* const CSettings::Trigger::ppszTextSource[] =
@@ -143,11 +143,12 @@ void CSettings::Reset()
 	Trig.nTime = 30*5;
 	Trig.nLastChange = 0;
 
-	Gen.Wave = Generator::_Sin;
+	Gen.Wave = Generator::_SinHq;
 	//Gen.nPsc = 180-1;
 	//Gen.nArr = 592; //2000-1;
 	Gen.nPsc = 180-1;
 	Gen.nArr = 24;
+	Gen.nScale = 0x10000;
 
 	MarkT1.Mode = Marker::_On;
 	MarkT1.Source = Marker::_CH1;
@@ -260,6 +261,8 @@ void CSettings::Reset()
 	
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;
+	Runtime.m_nBacklight = 50;
+	Runtime.m_nVolume = 50;
 }
 
 ui32 CSettings::GetChecksum()
