@@ -3,8 +3,8 @@
 
 
 const char* const CWndManager::tabs[] = {"Wave", "Bmp", "Csv", "Svg", NULL};
-const char* const CWndManager::strTemplateDisplay[] = {"    WAVE%03d.DAT", "    IMAGE%03d.BMP", "    WAVE%03d.CSV", "    WAVE%03d.SVG"};
-const char* const CWndManager::strTemplateFile[] = {"WAVE%03d DAT", "IMAGE%03dBMP", "WAVE%03d CSV", "WAVE%03d SVG"};
+const char* const CWndManager::strTemplateDisplay[] = {"    WAVE%03d.WAV", "    IMAGE%03d.BMP", "    WAVE%03d.CSV", "    WAVE%03d.SVG"};
+const char* const CWndManager::strTemplateFile[] = {"WAVE%03d WAV", "IMAGE%03dBMP", "WAVE%03d CSV", "WAVE%03d SVG"};
 
 CWndManager::CWndManager()
 {
@@ -112,9 +112,12 @@ bool CWndManager::Exists(char *strName)
 		switch ( m_itmTabs.GetFocus() )
 		{
 			case 0:	// Wave
-				CImport::LoadBinary( strName );
+				if ( !CImport::LoadWave( strName ) )
+					MainWnd.m_wndMessage.Show(&MainWnd, "Sorry...", "Import failed!", RGB565(ffff00));
+				else
 				{
 					CRect rcSafe = m_rcOverlay;
+					m_rcOverlay.Invalidate();
 					MainWnd.Invalidate(); // to redraw the graph
 					m_rcOverlay = rcSafe;
 				}
@@ -136,7 +139,7 @@ bool CWndManager::Exists(char *strName)
 		switch ( m_itmTabs.GetFocus() )
 		{
 			case 0:	// Wave
-				CExport::SaveBinary( strName );
+				CExport::SaveWav( strName );
 				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
 				break;
 			case 1: // Bmp

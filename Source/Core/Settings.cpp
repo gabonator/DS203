@@ -344,10 +344,10 @@ void CSettings::ResetCalibration()
 		const static type CONCAT(tmp,__LINE__)[] = __VA_ARGS__; \
 		memcpy( target, CONCAT(tmp,__LINE__), sizeof(CONCAT(tmp,__LINE__)) );
 
-	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQin, {-20, 280} );
-	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQout, {9380*5, -154816*5} );
-	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKin, {-20, 15, 75, 90, 245, 280} );
-	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKout, {581*5, 580*5, 581*5, 582*5, 584*5, 580*5} );
+//	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQin, {-20, 280} );
+//	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQout, {9380*5, -154816*5} );
+//	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKin, {-20, 15, 75, 90, 245, 280} );
+//	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKout, {581*5, 580*5, 581*5, 582*5, 584*5, 580*5} );
 }
 
 void CSettings::SaveCalibration()

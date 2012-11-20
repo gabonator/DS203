@@ -81,8 +81,8 @@ extern void Assert(const char* msg, int n);
 
 #define _ASSERT_VALID(a) if(!(a)) { Assert(__FILE__, __LINE__); }
 
-#define ToWord(a, b) (((a)<<8)|(b))
-#define ToDword(a, b, c, d) ((ToWord(a, b)<<16)|ToWord(c,d))
+#define ToWord(a, b) (ui16)(((a)<<8)|(b))
+#define ToDword(a, b, c, d) (ui32)((ToWord(d, c)<<16)|ToWord(b,a))
 
 struct FILEINFO {
 	enum {

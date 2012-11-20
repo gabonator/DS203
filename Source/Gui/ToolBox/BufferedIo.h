@@ -36,8 +36,22 @@ public:
 		return *this;
 	}
 
-	virtual CBufferedWriter& operator <<( CStream& stream )
+	virtual CBufferedWriter& operator <<( ui32 dwData )
 	{
+		*this << CStream(dwData);
+		return *this;
+	}
+
+	virtual CBufferedWriter& operator <<( ui8 dwData )
+	{
+		*this << CStream(dwData);
+		return *this;
+	}
+
+	virtual CBufferedWriter& operator <<( const CStream& stream_ )
+	{
+		// ugly conversion, GCC requires const
+		CStream& stream = *(CStream*)&stream_;
 		for (int i = 0; i < stream.GetLength(); i++ )
 		{
 			m_pData[m_nOffset++] = stream[i];
@@ -69,7 +83,7 @@ class CBufferedReader : public CSerialize
 	FILEINFO m_FileInfo;
 
 public:
-	void Open( PSTR strName )
+	bool Open( PSTR strName )
 	{
 		m_pData = (ui8*)BIOS::DSK::GetSharedBuffer();
 		m_nOffset = 0;
@@ -77,9 +91,10 @@ public:
 		if ( !BIOS::DSK::Open( &m_FileInfo, strName, BIOS::DSK::IoRead ) )
 		{
 			_ASSERT(0);
-			return;
+			return false;
 		}
 		BIOS::DSK::Read( &m_FileInfo, m_pData );
+		return true;
 	}
 
 	CBufferedReader& operator >>( PSTR str )
@@ -108,8 +123,23 @@ public:
 		return *this >> stream;
 	}
 
-	virtual CBufferedReader& operator >>( CStream& stream )
+	CBufferedReader& operator >>( ui8 &i )
 	{
+		CStream stream(i);
+		return *this >> stream;
+	}
+
+	CBufferedReader& operator >>( const ui8 &i )
+	{
+		// ugly! but MSVC requires const...
+		CStream stream(*(ui8*)&i);
+		return *this >> stream;
+	}
+
+	virtual CBufferedReader& operator >>( const CStream& stream_ )
+	{
+		// ugly conversion, GCC requires const
+		CStream& stream = *(CStream*)&stream_;
 		for (int i = 0; i < stream.GetLength(); i++ )
 		{
 			stream[i] = m_pData[m_nOffset++];

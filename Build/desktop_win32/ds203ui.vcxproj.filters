@@ -525,5 +525,8 @@
     <ClCompile Include="..\..\Source\Gui\Generator\Edit\MenuGenEdit.cpp">
       <Filter>Source\Gui\Generator\Edit</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\ToolBox\Import.cpp">
+      <Filter>Source\Gui\ToolBox</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

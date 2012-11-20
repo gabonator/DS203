@@ -114,3 +114,86 @@ void CExport::SaveSvg(char* strName_ /*= NULL*/)
 
 	writer.Close();
 }
+
+
+void CExport::SaveWav(char* strName_ /*= NULL*/)
+{
+	char strNameUnique[] = "WAVE000 WAV";
+	char* strName = strName_ ? strName_ : strNameUnique;
+	if ( !strName_ )
+		FindUnusedFile( strName, 4 );
+
+	CBufferedWriter writer;
+	writer.Open( strName );
+	
+	typedef ui16 WORD;
+	typedef ui32 DWORD;
+	struct WAVEFORMATEX 
+	{
+	  WORD  wFormatTag;
+	  WORD  nChannels;
+	  DWORD nSamplesPerSec;
+	  DWORD nAvgBytesPerSec;
+	  WORD  nBlockAlign;
+	  WORD  wBitsPerSample;
+	  WORD  cbSize;
+	} WaveFormat;
+
+	int nSamplingSpeed = (int)( CWndGraph::BlkX / Settings.Runtime.m_fTimeRes + 0.5f );
+
+	WaveFormat.wFormatTag = 1; // WAVE_FORMAT_PCM
+	WaveFormat.nChannels = 2;
+	WaveFormat.nSamplesPerSec = nSamplingSpeed;	
+	WaveFormat.wBitsPerSample = 8;
+	WaveFormat.cbSize = 0;
+
+	WaveFormat.nAvgBytesPerSec = WaveFormat.nSamplesPerSec * WaveFormat.wBitsPerSample / 8;
+	WaveFormat.nBlockAlign = WaveFormat.nChannels * WaveFormat.wBitsPerSample / 8;
+
+	int nJunkSize = 14*4;
+
+	ui32 dwSize = sizeof( WAVEFORMATEX ) + 4096*2 + 6*4 + nJunkSize;
+
+	writer 
+		<< ToDword('R', 'I', 'F', 'F')
+		<< dwSize
+			<< ToDword('W', 'A', 'V', 'E')
+				<< ToDword('f', 'm', 't', ' ')
+				<< (ui32)sizeof(WaveFormat)
+				<< CStream( &WaveFormat, sizeof(WAVEFORMATEX) )
+
+				<< ToDword('d', 'a', 't', 'a')
+				<< (ui32)BIOS::ADC::GetCount()*2;
+
+	for (int i=0; i< (int)BIOS::ADC::GetCount(); i++)
+	{
+		BIOS::ADC::SSample Sample;
+		Sample.nValue = BIOS::ADC::GetAt(i);
+		writer 
+			<< Sample.CH1 
+			<< Sample.CH2;
+	}
+
+	writer 
+			<< ToDword('J', 'U', 'N', 'K')
+			<< (ui32)nJunkSize;
+
+	writer << ToDword('D', 'S', 'W', '1');
+	writer << ToDword('C', 'H', '1', ' ');
+	writer << (ui32)Settings.CH1.Resolution;
+	writer << (ui32)Settings.CH1.Coupling;
+	writer << (ui32)Settings.CH1.u16Position;
+
+	writer << ToDword('C', 'H', '2', ' ');
+	writer << (ui32)Settings.CH2.Resolution;
+	writer << (ui32)Settings.CH2.Coupling;
+	writer << (ui32)Settings.CH2.u16Position;
+
+	writer << ToDword('T', 'I', 'M', 'E');
+	writer << (ui32)Settings.Time.Resolution;
+
+	writer << ToDword('E', 'N', 'D', 27);
+
+
+	writer.Close();
+}

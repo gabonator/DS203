@@ -218,6 +218,7 @@ public:
 	}
 
 	void SaveSvg(char* strName_ = NULL);
+	void SaveWav(char* strName_ = NULL);
 		/*
 	{
 		char strNameUnique[] = "WAVE000 SVG";

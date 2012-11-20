@@ -59,8 +59,8 @@ typedef signed short si16;
 #define MAXINT      ((INT)(MAXUINT >> 1))
 #define MININT      ((INT)~MAXINT)
 
-#define ToWord(a, b) (((a)<<8)|(b))
-#define ToDword(a, b, c, d) ((ToWord(a, b)<<16)|ToWord(c,d))
+#define ToWord(a, b) (ui16)(((a)<<8)|(b))
+#define ToDword(a, b, c, d) (ui32)((ToWord(d, c)<<16)|ToWord(b,a))
 
 #define _ASSERT_VALID(a) if(!(a)) { _ASSERT(#a); }
 

@@ -21,6 +21,7 @@ public:
 		}
 		reader.Close();
 	}
+	bool LoadWave(char* strName);
 };
 
 #endif

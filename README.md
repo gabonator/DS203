@@ -48,6 +48,10 @@ Screenshots:
 
 ![Image 8](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
 
+![Image 9](/gabonator/DS203/raw/master/Man/Screenshot/wave_export.png)
+
+![Image 10](/gabonator/DS203/raw/master/Man/Screenshot/wave_export_ac.png)
+
 
 Feature highlights:
 ======================
@@ -56,6 +60,7 @@ Feature highlights:
 - Advanced mathematical operators
 - Cursors with lock-to-channel function
 - Spectral analysis
+- Export to Wave (use your favourite sound editing program)
 - Export to CSV file
 - Export to interactive SVG
 - Remote control (SDK) with WebSockets, easy developing with javascript/html

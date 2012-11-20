@@ -80,7 +80,7 @@ public:
 	{
 	public:
 		static const char* const ppszTextResolution[];
-		enum { 
+		enum EResolution { 
 			_100ns, _200ns, _500ns, 
 			_1us, _2us, _5us,
 			_10us, _20us, _50us, _100us, _200us, _500us,

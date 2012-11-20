@@ -43,6 +43,8 @@ public:
 	CStream( si32& n ) : m_pBuffer( &n ), m_nOffset( 0 ), m_nLength( sizeof(si32) ) {}
 	CStream( ui16& n ) : m_pBuffer( &n ), m_nOffset( 0 ), m_nLength( sizeof(ui16) ) {}
 	CStream( si16& n ) : m_pBuffer( &n ), m_nOffset( 0 ), m_nLength( sizeof(si16) ) {}
+	CStream( ui8& n ) : m_pBuffer( &n ), m_nOffset( 0 ), m_nLength( sizeof(ui8) ) {}
+	CStream( si8& n ) : m_pBuffer( &n ), m_nOffset( 0 ), m_nLength( sizeof(si8) ) {}
 	CStream( int& n ) : m_pBuffer( &n ), m_nOffset( 0 ), m_nLength( sizeof(int) ) {}
 	
 	CStream& operator <<( const CStream& data )

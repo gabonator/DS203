@@ -93,6 +93,7 @@ public:
 				ui8 dummy0 : 6;
 				ui8 dummy1 : 8;
 			};
+			ui8 CH[4];
 			ui32 nValue;
 		};
 
