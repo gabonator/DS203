@@ -60,6 +60,16 @@ const ui16 pCardiac128Wave[] = {
 	return m_nRamLen;
 }
 
+/*static*/ ui8* CCoreGenerator::GetVolatile()
+{
+	return m_pVolatile;
+}
+
+/*static*/ int& CCoreGenerator::GetVolatileLen()
+{
+	return m_nVolatileLen;
+}
+
 ui16 CCoreGenerator::_GetCount(ui8 nWaveIndex)
 {
 	if ( nWaveIndex == CSettings::Generator::_Volatile )
@@ -82,14 +92,22 @@ ui16* CCoreGenerator::_GetWave(ui8 nWaveIndex)
 	_ASSERT( _GetCount(nWaveIndex) <= COUNT( m_pRamWave ) );
 	int nLen = nCount << nSmooth;
 
+	int nScale = Settings.Gen.nScale;
+	int nOffset = Settings.Gen.nOffset >> 4;
+
 	if ( nWaveIndex == CSettings::Generator::_Volatile )
 	{
-		int nScale = Settings.Gen.nScale;
 		int nLen = m_nVolatileLen;
 		for (int i=0; i<nLen; i++)
 		{
 			int nSample = m_pVolatile[i];
+			nSample -= 128;
 			nSample = ( nSample * nScale ) >> (16-4);
+			nSample += nOffset;
+			if ( nSample < 0 )
+				nSample = 0;
+			if ( nSample > 0xfff )
+				nSample = 0xfff;
 			m_pRamWave[i] = nSample;
 		}
 		m_nRamLen = nLen;
@@ -119,17 +137,19 @@ ui16* CCoreGenerator::_GetWave(ui8 nWaveIndex)
 		}
 	}
 
-	// scaling
-	if ( Settings.Gen.nScale != 0x10000 )
+	// scaling & offset
+	if ( nScale != 0x10000 || nOffset != 0x8000 )
 	{
-		_ASSERT( Settings.Gen.nScale < 0x10000 );
-		int nScale = Settings.Gen.nScale;
 		for (int i=0; i<nLen; i++)
 		{
 			int nSample = m_pRamWave[i];
 			nSample -= 0x800;
 			nSample = ( nSample * nScale ) >> 16;
-			nSample += 0x800;
+			nSample += nOffset;
+			if ( nSample < 0 )
+				nSample = 0;
+			if ( nSample > 0xfff )
+				nSample = 0xfff;
 			m_pRamWave[i] = nSample;
 		}
 	}
@@ -145,7 +165,7 @@ void CCoreGenerator::Update()
 	switch (Settings.Gen.Wave)
 	{
 		case CSettings::Generator::_Dc:
-			BIOS::GEN::ConfigureDc( Settings.Gen.nScale );
+			BIOS::GEN::ConfigureDc( Settings.Gen.nOffset >> 4 );
 			break;
 
 		case CSettings::Generator::_Volatile:
@@ -158,11 +178,11 @@ void CCoreGenerator::Update()
 					const ui16* pData = Waves[CSettings::Generator::_SinLq].pWave;
 					for ( int i = 0; i < m_nVolatileLen; i++, pData++ )
 						m_pVolatile[i] = *pData >> 4;
-
 				}
 			}
 
 			BIOS::GEN::ConfigureWave( _GetWave(nWaveIndex), _GetCount(nWaveIndex) );
+			BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
 			break;
 
 		// Too lazy to implement custom code for square generator

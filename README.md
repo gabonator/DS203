@@ -26,8 +26,9 @@ Controls:
 The DS203 device has 4 push buttons and two slide buttons. The function of first three buttons are following:
 
 - PlayPause button - Enter
-- Rectangular button - Escape
+- Square button - Escape
 - Circle button - Show toolbox
+- Triagle button - User assignable button, currently creates screenshot
 - The two slider buttons are used for navigation and value change.
 
 Screenshots:
@@ -48,9 +49,7 @@ Screenshots:
 
 ![Image 8](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
 
-![Image 9](/gabonator/DS203/raw/master/Man/Screenshot/wave_export.png)
-
-![Image 10](/gabonator/DS203/raw/master/Man/Screenshot/wave_export_ac.png)
+![Image 9](/gabonator/DS203/raw/master/Man/Screenshot/wave_export_ac.png)
 
 
 Feature highlights:
@@ -68,13 +67,14 @@ Feature highlights:
 Todo list:
 ======================
 - finish oscilloscope module - 90% done
-- calibration - 20% done
+- calibration - 70% done
 - fft view - 80% done
 - signal generator with modulations - 20% done
 - connection with android tablet/phone - 20% done
 
 Calibration:
 ======================
+
 This firmware finally implements a simple method for analog channel calibration.  It's good idea to calibrate the DAC (wave out) first, it can be handy if you dont have regulated power supply. The device should be connected to a PC during calibration.
  - Calibrating Adc: 
    1. Go to User app/Calib tab, select Adc menu item
@@ -91,6 +91,11 @@ This firmware finally implements a simple method for analog channel calibration.
    5. Connect the probe to a precise power supply and by changing the K value, try to match Vin value with the real voltage of power supply. If you dont have any regulated PSU, you can connect the probe with WaveOut 
    6. Hit save and try changing the input voltage and check whether you get correct reading at the Vin value. Use a sensible voltage while matching the K value, for example - if you are calibrating 200mV range, use 4x200mV = 800mV at input.
  - After finishing, select "Save calib data"
+
+Development:
+======================
+
+If you want to build your own firmware, follow the instructions in man/Readme.txt.
 
 References:
 ======================

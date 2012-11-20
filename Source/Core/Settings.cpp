@@ -149,6 +149,7 @@ void CSettings::Reset()
 	Gen.nPsc = 180-1;
 	Gen.nArr = 24;
 	Gen.nScale = 0x10000;
+	Gen.nOffset = 0x8000;
 
 	MarkT1.Mode = Marker::_On;
 	MarkT1.Source = Marker::_CH1;

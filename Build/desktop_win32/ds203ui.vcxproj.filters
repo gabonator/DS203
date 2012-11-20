@@ -405,6 +405,9 @@
     <ClInclude Include="..\..\Source\Gui\Settings\ItemVolume.h">
       <Filter>Source\Gui\Settings</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenOffset.h">
+      <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

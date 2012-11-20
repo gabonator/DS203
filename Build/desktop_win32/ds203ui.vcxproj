@@ -92,6 +92,7 @@
     <ClInclude Include="..\..\Source\Gui\Generator\Core\CoreGenerator.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Edit\MenuGenEdit.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Generator.h" />
+    <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenOffset.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Main\MenuGenMain.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenAmplitude.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenFrequency.h" />

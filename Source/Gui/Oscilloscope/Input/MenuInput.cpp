@@ -208,6 +208,7 @@ CWndMenuInput::CWndMenuInput()
 	if ( code == ToWord('l', 'e') )	// provider selector combo box
 	{
 		CValueProvider* pProvider = (CValueProvider*)(NATIVEPTR)data;
+		/*
 		if ( pProvider->Get() == 0 )
 		{
 			// TODO: remove? used only for button element testing
@@ -215,10 +216,10 @@ CWndMenuInput::CWndMenuInput()
 			MainWnd.m_wndMessage.Show( this, "Message", ((CProviderBtn*)pProvider)->m_pName, RGB565(ffff00));
 			return;
 		} else
-		{
+		{*/
 			m_wndComboSelector.Create( GetFocus()->m_pszId, WsVisible | WsModal, 
 				CRect( 30, 100, 370, 140), RGB565(ffffff), pProvider, this);
-		}
+		//}
 		m_wndComboSelector.StartModal();
 	}
 	if ( code == ToWord('o', 'k') && pSender == &m_wndComboSelector )

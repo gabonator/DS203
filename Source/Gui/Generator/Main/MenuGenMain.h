@@ -10,6 +10,7 @@
 #include "ItemGenWaveform.h"
 #include "ItemGenFrequency.h"
 #include "ItemGenAmplitude.h"
+#include "ItemGenOffset.h"
 
 class CWndMenuGenerator : public CCoreGenerator, public CWnd
 {
@@ -17,6 +18,7 @@ public:
 	CItemGenWaveform	m_itmWave;
 	CItemFrequency	m_itmFreq;
 	CItemAmplitude	m_itmAmpl;
+	CItemOffset		m_itmOffset;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);

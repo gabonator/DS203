@@ -24,11 +24,14 @@ class CCoreGenerator
 public:
 	static ui16*	GetRamDac();
 	static int		GetRamLen();
-	void Update();
+	static void Update();
+
+	static ui8*		GetVolatile();
+	static int&		GetVolatileLen();
 
 protected:
-	ui16 _GetCount(ui8 nWaveIndex);
-	ui16* _GetWave(ui8 nWaveIndex);
+	static ui16 _GetCount(ui8 nWaveIndex);
+	static ui16* _GetWave(ui8 nWaveIndex);
 };
 
 #endif

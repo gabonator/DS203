@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '6')
+#define _VERSION ToDword('D', 'S', 'C', '7')
 
 class CSettings : public CSerialize
 {
@@ -147,6 +147,7 @@ public:
 		int nPsc;
 		int nArr;
 		int nScale; // 65536 - full
+		int nOffset; // 0..65536
 
 		int nSamples;
 		float nFrequency; 

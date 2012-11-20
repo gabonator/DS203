@@ -45,6 +45,17 @@ void CWndSpectrumGraphTempl::OnPaint()
 	bool bHann = Settings.Spec.Window == CSettings::Spectrum::_Hann;
 	int nOffset = Settings.Time.InvalidFirst;
 
+	int nSum[] = {0, 0};
+	for ( int i = 0; i < 512; i++ )
+	{
+		BIOS::ADC::SSample Sample;
+		Sample.nValue = BIOS::ADC::GetAt( nOffset + i );
+		nSum[0] += Sample.CH1;
+		nSum[1] += Sample.CH2;
+	}
+	nSum[0] /= 512;
+	nSum[1] /= 512;
+
 	for ( int nInput = 2; nInput >= 1; nInput-- )
 	{
 		if ( nInput == 1 && !en1 )
@@ -61,6 +72,7 @@ void CWndSpectrumGraphTempl::OnPaint()
 			float f = 10.0f; //(GetTickCount()/1000)&1 ? 30.0f : 60.0f;
 			nSample = (int)(sin(i/512.0f*2.0f*3.141592*f)*128.0f+64);
 #endif
+			nSample -= nSum[nInput-1];
 			// range -32768..32767
 			int nWindow = Hann<512>( i );
 			if ( bHann )
@@ -179,6 +191,18 @@ void CWndTimeGraphTempl::OnPaint()
 	int nSampleIndex = 0;
 	int nLastY1 = 0;
 	int nLastY2 = 0;
+
+	int nSum[] = {0, 0};
+	for ( int i = 0; i < 512; i++ )
+	{
+		BIOS::ADC::SSample Sample;
+		Sample.nValue = BIOS::ADC::GetAt( nOffset + i );
+		nSum[0] += Sample.CH1;
+		nSum[1] += Sample.CH2;
+	}
+	nSum[0] /= 512;
+	nSum[1] /= 512;
+
 	for (i=0; i<nPixels; i++)
 	{
 		int nCurSampleIndex = i*nLength/nPixels;
@@ -216,7 +240,11 @@ void CWndTimeGraphTempl::OnPaint()
 			{
 				int y2 = Sample.CH2;
 				if ( bHann )
+				{
+					y2 -= nSum[0];
 					y2 = (y2 * nWindow) >> 16;
+					y2 += nSum[0];
+				}
 				y2 = (y2*(DivsY*m_nBlkY))>>8;
 				LineTo( column, y2, nLastY2, clr2 );
 			}
@@ -225,7 +253,11 @@ void CWndTimeGraphTempl::OnPaint()
 			{
 				int y1 = Sample.CH1;
 				if ( bHann )
+				{
+					y1 -= nSum[1];
 					y1 = (y1 * nWindow) >> 16;
+					y1 += nSum[1];
+				}
 				y1 = (y1*(DivsY*m_nBlkY))>>8;
 				LineTo( column, y1, nLastY1, clr1 );
 			}
