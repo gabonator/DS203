@@ -9,8 +9,8 @@ class CCoreSettings
 public:
 	static void Update()
 	{
-		BIOS::SetBacklight( Settings.Runtime.m_nBacklight );
-		BIOS::SetVolume( Settings.Runtime.m_nVolume );
+		BIOS::SYS::SetBacklight( Settings.Runtime.m_nBacklight );
+		BIOS::SYS::SetVolume( Settings.Runtime.m_nVolume );
 	}
 };
 

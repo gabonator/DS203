@@ -2,7 +2,7 @@
 #define __CALIBCORE_H__
 
 #include <Source/Framework/Thread.h>
-#include <Source/Gui/Oscilloscope/Input/MenuInput.h>
+#include <Source/Gui/Oscilloscope/Core/CoreOscilloscope.h>
 #define _F(a) a
 
 class CStatistics 
@@ -313,7 +313,7 @@ public:
 		for ( nVertPos = EVertMin; nVertPos <= EVertMax; nVertPos += EVertStep )
 		{
 			SetVertPos();
-			CWndMenuInput::ConfigureAdc();
+			CCoreOscilloscope::ConfigureAdc();
 
 			CArray <MeasPair> arrMeas( arrMeas_, COUNT(arrMeas_));
 
@@ -350,9 +350,9 @@ public:
 					nDownload = 1;
 					if ( ++nPass >= 10 )
 					{
-						BIOS::Beep(500);
+						BIOS::SYS::Beep(500);
 						BIOS::DBG::Print("Calibration failed: Signal too noisy, exiting...\n");
-						BIOS::DelayMs(500);
+						BIOS::SYS::DelayMs(500);
 						OnError();
 						return;
 					}
@@ -381,9 +381,9 @@ public:
 
 			if ( linApprox.r < 0.99 )
 			{
-				BIOS::Beep(500);
+				BIOS::SYS::Beep(500);
 				BIOS::DBG::Print("Calibration failed: part not linear (nVertPos=%d, r=%f) \n", nVertPos, _F(linApprox.r));
-				BIOS::DelayMs(500);
+				BIOS::SYS::DelayMs(500);
 				OnError();
 				return;
 				//return FALSE;

@@ -20,7 +20,7 @@ public:
 
 		CWnd::Create(strCaption, CWnd::WsVisible, CRect(40, 100, 360, 160), pParent);
 		StartModal();
-		BIOS::Beep(100);
+		BIOS::SYS::Beep(100);
 		SetTimer(3000);
 	}
 

@@ -1,6 +1,6 @@
 #ifndef __BALLS_H__
 #define __BALLS_H__
-
+#if 0
 #include <Source/Framework/Wnd.h>
 
 class CBallGenerator 
@@ -245,5 +245,5 @@ private:
 		return nSeed & 32767;
 	}
 };
-
+#endif
 #endif

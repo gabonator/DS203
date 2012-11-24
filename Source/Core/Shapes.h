@@ -399,6 +399,16 @@ static const char markerX[] =
   "..  "
   ".   ";
 
+static const char triangle[] = 
+  "\x04" 
+  "   ."
+  "  .."
+  " ..."
+  "...."
+  " ..."
+  "  .."
+  "   .";
+
 static const char check[] = "check";
 
 #endif

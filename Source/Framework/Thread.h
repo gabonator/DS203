@@ -30,11 +30,11 @@ public:
 	}
 	void Sleep(int nTime)
 	{
-		ui32 nLastTime = BIOS::GetTick() + nTime;
+		ui32 nLastTime = BIOS::SYS::GetTick() + nTime;
 		do 
 		{
 			Application.operator()();
-		} while ( BIOS::GetTick() < nLastTime);
+		} while ( BIOS::SYS::GetTick() < nLastTime);
 
 	}
 };

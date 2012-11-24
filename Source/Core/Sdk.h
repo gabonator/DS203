@@ -129,7 +129,7 @@ public:
 
 	static CEvalOperand _ALL_Setup( CArray<CEvalOperand>& arrOperands )
 	{
-		CWndMenuInput::ConfigureAdc();
+		CCoreOscilloscope::ConfigureAdc();
 		return CEvalOperand( CEvalOperand::eoNone );
 	}
 
@@ -235,7 +235,7 @@ public:
 		_SAFE( arrOperands.GetSize() == 1 );
 		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
 
-		BIOS::Beep( arrOperands.RemoveLast().GetInteger() );
+		BIOS::SYS::Beep( arrOperands.RemoveLast().GetInteger() );
 
 		return CEvalOperand(CEvalOperand::eoNone);
 	}
@@ -245,7 +245,7 @@ public:
 		_SAFE( arrOperands.GetSize() == 1 );
 		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
 
-		BIOS::DelayMs( arrOperands.RemoveLast().GetInteger() );
+		BIOS::SYS::DelayMs( arrOperands.RemoveLast().GetInteger() );
 
 		return CEvalOperand(CEvalOperand::eoNone);
 	}

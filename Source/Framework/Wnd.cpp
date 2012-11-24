@@ -312,7 +312,7 @@ void CWnd::KillTimer()
 
 void CWnd::_UpdateTimers()
 {
-	ui32 nTick = BIOS::GetTick();
+	ui32 nTick = BIOS::SYS::GetTick();
 
 	for ( int i = 0; i < m_arrTimers.GetSize(); i++ )
 	{
@@ -321,7 +321,7 @@ void CWnd::_UpdateTimers()
 		{
 			_ASSERT( timer.m_pWnd->m_dwFlags & CWnd::WsVisible );
 			timer.m_pWnd->OnTimer();
-			timer.m_nNext = BIOS::GetTick() + timer.m_nInterval;
+			timer.m_nNext = BIOS::SYS::GetTick() + timer.m_nInterval;
 		}
 	}
 }

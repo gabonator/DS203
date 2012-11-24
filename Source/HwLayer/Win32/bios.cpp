@@ -15,6 +15,7 @@
 CRect m_rcBuffer;
 CPoint m_cpBuffer;
 int m_nKeys;
+int g_nBufferLen = 4096;
 
 #define RGB565RGB(r, g, b) (((r)>>3)|(((g)>>2)<<5)|(((b)>>3)<<11))
 
@@ -28,7 +29,7 @@ void Assert(const char *msg, int n)
 	_ASSERT_EXPR((0), NULL);
 }
 
-/*static*/ void BIOS::Init()
+/*static*/ void BIOS::SYS::Init()
 {
 }
 
@@ -372,7 +373,7 @@ void Assert(const char *msg, int n)
 		PutPixel(x, --y, *pBuffer++);
 }
 
-/*static*/ ui32 BIOS::GetTick()
+/*static*/ ui32 BIOS::SYS::GetTick()
 {
 	return GetTickCount();
 }
@@ -483,10 +484,10 @@ BOOL bADCReady = FALSE;
 	if (lCounter == 4096)
 		lCounter = 0;
 
-	FLOAT fa = 0.035f + (GetTickCount()%2000)/2000.0f*0.04f;
+	FLOAT fa = 0.035f + (GetTickCount()%20000)/20000.0f*0.04f;
 	FLOAT a = cos(lCounter*(fa)*10)*0.8f+0.2f;
 	FLOAT b = sin(lCounter*0.011f+1)*0.5f;
-	unsigned long da = (ui32)((a+1.0f)*127);
+	unsigned long da = (ui32)((a+1.0f)*20)+67;
 	unsigned long db = (ui32)((b+1.0f)*127);
 	da |= rand()&3;
 	lCounter++;
@@ -594,7 +595,7 @@ unsigned long g_ADCMem[ADCSIZE];
 	return TRUE;
 }
 
-void BIOS::Beep(int)
+void BIOS::SYS::Beep(int)
 {
 }
 
@@ -656,7 +657,7 @@ void BIOS::Beep(int)
 	return print( &bbuf, format, args );
 }
 
-/*static*/ void BIOS::DelayMs(unsigned short l)
+/*static*/ void BIOS::SYS::DelayMs(unsigned short l)
 {
 	Sleep(l);
 }
@@ -702,7 +703,7 @@ return nv;
 }
 
 
-/*static*/ int BIOS::GetBattery()
+/*static*/ int BIOS::SYS::GetBattery()
 {
 	return 85;
 }
@@ -773,10 +774,21 @@ void BIOS::VER::DrawLogo(int x, int y)
 {
 }
 
-/*static*/ void BIOS::SetBacklight(int nLevel) // 0..100
+/*static*/ void BIOS::SYS::SetBacklight(int nLevel) // 0..100
 {
 }
 
-/*static*/ void BIOS::SetVolume(int nLevel) // 0..100
+/*static*/ void BIOS::SYS::SetVolume(int nLevel) // 0..100
 {
+}
+
+void BIOS::ADC::ConfigureBuffer(int nLength)
+{
+	g_nBufferLen = nLength;
+}
+
+void BIOS::ADC::GetBufferRange(int& nBegin, int& nEnd)
+{
+	nBegin = 8;
+	nEnd = g_nBufferLen;
 }

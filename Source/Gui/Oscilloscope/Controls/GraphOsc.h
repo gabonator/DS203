@@ -23,7 +23,6 @@ public:
 		int& nMarkerT1, int& nMarkerT2, int& nMarkerY1, int& nMarkerY2 );
 	void			SetupSelection( bool& bSelection, int& nMarkerT1, int& nMarkerT2 );
 	void			GetCurrentRange(int& nBegin, int& nEnd);
-	void			UpdateResolutions();
 	void			ClearAverage();
 	void			ClearPersist();
 

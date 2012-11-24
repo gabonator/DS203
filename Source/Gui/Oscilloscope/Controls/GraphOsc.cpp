@@ -52,7 +52,7 @@ ui16 CWndOscGraph::_Interpolate( ui16 clrA, ui16 clrB )
 	if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
 	{
 		Invalidate();
-		UpdateResolutions();
+		CCoreOscilloscope::UpdateConstants();
 		return;
 	}
 	if ( pSender == this && code == ToWord('S', 'H') && data == 1 )
@@ -165,7 +165,7 @@ void CWndOscGraph::OnPaintTY()
 
 	ui16 clrShade1 = 0, clrShade2 = 0, clrShade12 = 0;
 
-	ui8 bTrigger = (BIOS::GetTick() - Settings.Trig.nLastChange) < 5000;
+	ui8 bTrigger = (BIOS::SYS::GetTick() - Settings.Trig.nLastChange) < 5000;
 	ui16 nTriggerTime = (Settings.Trig.nTime - Settings.Time.Shift);
 	if (!bTrigger)
 		nTriggerTime = -1;
@@ -531,16 +531,6 @@ void CWndOscGraph::GetCurrentRange(int& nBegin, int& nEnd)
 }
 
 // Move to better place
-void CWndOscGraph::UpdateResolutions()
-{
-	Settings.Runtime.m_fTimeRes = CSettings::TimeBase::pfValueResolution[ Settings.Time.Resolution ];
-	Settings.Runtime.m_fCH1Res  = 
-		CSettings::AnalogChannel::pfValueResolution[ Settings.CH1.Resolution ] *
-		CSettings::AnalogChannel::pfValueProbe[ Settings.CH1.Probe ];
-	Settings.Runtime.m_fCH2Res  = 
-		CSettings::AnalogChannel::pfValueResolution[ Settings.CH2.Resolution ] *
-		CSettings::AnalogChannel::pfValueProbe[ Settings.CH2.Probe ];
-}
 
 void CWndOscGraph::ClearAverage()
 {

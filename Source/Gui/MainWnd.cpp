@@ -19,7 +19,7 @@ void CMainWnd::Create()
 
 	Settings.Load();
 	Settings.LoadCalibration();
-	m_wndGraph.UpdateResolutions();
+	CCoreOscilloscope::ConfigureAdc();
 	CCoreSettings::Update();
 
 	
@@ -52,7 +52,8 @@ void CMainWnd::Create()
 	m_wndSpectrumAnnot.Create( this, WsHidden );
 	m_wndScreenSaver.Create( this, WsHidden );
 	m_wndUserGame.Create( this, WsHidden );
-	m_wndUserBalls.Create( this, WsHidden );
+	//m_wndUserBalls.Create( this, WsHidden );
+	m_wndUserTuner.Create( this, WsHidden );
 	m_wndUserMeter.Create( this, WsHidden );
 	m_wndAbout.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
@@ -107,13 +108,15 @@ void CMainWnd::Create()
 	
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )
 	{
-		long lTick = BIOS::GetTick();
+		long lTick = BIOS::SYS::GetTick();
 		if ( m_lLastAcquired != -1 && lTick - m_lLastAcquired > 150 )
 		{
 			// whatever is in buffer, just process it. 250ms should be 
 			// sufficient to grab samples for one screen,
 			// in first pass it will copy nonintialzed buffer!
-			BIOS::ADC::Copy( BIOS::ADC::GetCount() );
+			int nBegin, nEnd;
+			BIOS::ADC::GetBufferRange( nBegin, nEnd );
+			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
 			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
 			// force update
 			BIOS::ADC::Restart();
@@ -128,18 +131,6 @@ void CMainWnd::Create()
 
 /*virtual*/ void CMainWnd::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
-	if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
-	{
-		m_lLastAcquired = BIOS::GetTick();
-		if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Single )
-		{
-			BIOS::ADC::Enable( false );
-			Settings.Trig.State = CSettings::Trigger::_Stop;
-			if ( m_wndMenuInput.m_itmTrig.IsVisible() )
-				m_wndMenuInput.m_itmTrig.Invalidate();
-		}
-		return;
-	}
 	if ( pSender == &m_wndToolBar )
 	{
 		if ( code == ToWord('L', 'D') && data )	// Layout disable
@@ -164,6 +155,34 @@ void CMainWnd::Create()
 
 /*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
 {
+	if ( nMsg == WmTick )
+	{
+		// timers update
+		CWnd::WindowMessage( nMsg, nParam );
+
+		if ( BIOS::ADC::Enabled() && BIOS::ADC::Ready() )	
+		{
+			int nBegin, nEnd;
+			BIOS::ADC::GetBufferRange( nBegin, nEnd );
+			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
+			BIOS::ADC::Restart();
+
+			// trig stuff
+			m_lLastAcquired = BIOS::SYS::GetTick();
+			if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Single )
+			{
+				BIOS::ADC::Enable( false );
+				Settings.Trig.State = CSettings::Trigger::_Stop;
+				if ( m_wndMenuInput.m_itmTrig.IsVisible() )
+					m_wndMenuInput.m_itmTrig.Invalidate();
+			}
+
+			// broadcast message for windows that process waveform data
+			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
+		}
+		return;
+	}
+
 	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction )
 	{
 		// show toolbox	

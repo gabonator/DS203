@@ -6,18 +6,18 @@ extern vu16 Delay_Cnt;
 extern vu16 Beep_mS;
 int m_nBeepVolume = 50;
 
-/*static*/ ui32 BIOS::GetTick()
+/*static*/ ui32 BIOS::SYS::GetTick()
 {
 	return vu32Tick;
 }
 
-/*static*/ void BIOS::DelayMs(unsigned short ms)
+/*static*/ void BIOS::SYS::DelayMs(unsigned short ms)
 {
     Delay_Cnt = ms;
     while (Delay_Cnt > 0){}
 }
 
-/*static*/ void BIOS::Beep( int ms )
+/*static*/ void BIOS::SYS::Beep( int ms )
 {
 	__Set(BEEP_VOLUME, m_nBeepVolume);
 	Beep_mS = ms;
@@ -25,9 +25,9 @@ int m_nBeepVolume = 50;
 //		__Set( BEEP_VOLUME, vol ); // 0..100
 }
 
-/*static*/ void BIOS::Init()
+/*static*/ void BIOS::SYS::Init()
 {
-	DelayMs(500);
+	SYS::DelayMs(500);
 	LCD::Init();
 	ADC::Init();
 	SERIAL::Init();
@@ -58,10 +58,10 @@ void Assert(const char*msg, int n)
 	BIOS::LCD::Print(40, 16*3, 0xffff, 0x001f, (char*)"Assertion failed!");
 	BIOS::LCD::Print(40, 16*2, 0xffff, 0x001f, (char*)msg);
 	BIOS::LCD::Print(40, 16*1, 0xffff, 0x001f, (char*)itoa(n));
-	BIOS::DelayMs(1000);
+	BIOS::SYS::DelayMs(1000);
 }
 
-/*static*/ int BIOS::GetBattery()
+/*static*/ int BIOS::SYS::GetBattery()
 {
 	// returns value in percents
   int Vb = __Get(V_BATTERY, 0);
@@ -84,17 +84,48 @@ void Assert(const char*msg, int n)
 	return nPerc;
 }
 
-/*static*/ void BIOS::SetBacklight(int nLevel) // 0..100
+/*static*/ void BIOS::SYS::SetBacklight(int nLevel) // 0..100
 {
 	if (nLevel < 1)
 		nLevel = 1;
 	__Set(BACKLIGHT, nLevel);
 }
 
-/*static*/ void BIOS::SetVolume(int nLevel) // 0..100
+/*static*/ void BIOS::SYS::SetVolume(int nLevel) // 0..100
 {
 	nLevel /= 2;
   m_nBeepVolume = nLevel;
+}
+
+#define APP4_BASE ((u32)(0x08024000)) // Size = 32KB
+#define APP3_BASE ((u32)(0x0801C000)) // Size = 32KB
+#define APP2_BASE ((u32)(0x08014000)) // Size = 32KB
+#define APP1_BASE ((u32)(0x0800C000)) // Size = 32KB
+#define SYS_BASE ((u32)(0x08004000)) // Size = 32KB
+#define DFU_BASE ((u32)(0x08000000)) // Size = 16KB 
+
+void BIOS::SYS::Execute( int nCode )
+{
+	u32 dwGotoAddr = NULL;
+	switch ( nCode )
+	{
+		case BIOS::SYS::EApp1: dwGotoAddr = APP1_BASE; break;
+		case BIOS::SYS::EApp2: dwGotoAddr = APP2_BASE; break;
+		case BIOS::SYS::EApp3: dwGotoAddr = APP3_BASE; break;
+		case BIOS::SYS::EApp4: dwGotoAddr = APP4_BASE; break;
+		case BIOS::SYS::ESys: dwGotoAddr = SYS_BASE; break;
+		case BIOS::SYS::EDfu: dwGotoAddr = DFU_BASE; break;
+	}
+	// what about interrupt handlers? NVIC?
+	if ( !dwGotoAddr )
+		return;
+
+	u32 dwGotoBase = *(vu32*)(dwGotoAddr/*+4*/);
+	typedef void (*pFunc)(void);
+	pFunc GotoApp = (pFunc)(dwGotoBase);
+
+	__MSR_MSP(dwGotoAddr);
+	GotoApp();
 }
 
 #endif

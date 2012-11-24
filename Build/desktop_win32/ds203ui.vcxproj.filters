@@ -115,6 +115,12 @@
     <Filter Include="Source\Gui\Settings\Controls">
       <UniqueIdentifier>{27ce1fd2-174a-4c74-be5c-0ed7274d5dad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Core">
+      <UniqueIdentifier>{e2993f90-10b1-4364-8d87-59a7fe99de64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gui\Spectrum\Core">
+      <UniqueIdentifier>{b5f16496-1d8f-4b2f-a853-9bb20683239e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -321,9 +327,6 @@
     <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.h">
       <Filter>Source\Gui\Spectrum\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\FFT.h">
-      <Filter>Source\Gui\Spectrum\Controls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Spectrum\Main\ItemDisplay.h">
       <Filter>Source\Gui\Spectrum\Main</Filter>
     </ClInclude>
@@ -407,6 +410,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenOffset.h">
       <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.h">
+      <Filter>Source\Gui\Oscilloscope\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\Tuner.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Spectrum\Core\FFT.h">
+      <Filter>Source\Gui\Spectrum\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Bitmap.h">
+      <Filter>Source\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +545,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\ToolBox\Import.cpp">
       <Filter>Source\Gui\ToolBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.cpp">
+      <Filter>Source\Gui\Oscilloscope\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Spectrum\Core\FFT.cpp">
+      <Filter>Source\Gui\Spectrum\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
+      <Filter>Source\Gui\User</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #include <Source\Core\Utils.h>
 #include "SpectrumGraph.h"
-#include "fft.h"
+#include "../Core/FFT.h"
 
 #ifdef _TESTSIGNAL
 #include <math.h> // for testing
@@ -56,6 +56,8 @@ void CWndSpectrumGraphTempl::OnPaint()
 	nSum[0] /= 512;
 	nSum[1] /= 512;
 
+	CFft<512> fft;
+
 	for ( int nInput = 2; nInput >= 1; nInput-- )
 	{
 		if ( nInput == 1 && !en1 )
@@ -74,7 +76,7 @@ void CWndSpectrumGraphTempl::OnPaint()
 #endif
 			nSample -= nSum[nInput-1];
 			// range -32768..32767
-			int nWindow = Hann<512>( i );
+			int nWindow = fft.Hann( i );
 			if ( bHann )
 				nSample = ( nSample * nWindow ) >> (16-7);
 			else
@@ -85,15 +87,14 @@ void CWndSpectrumGraphTempl::OnPaint()
 			pWaveformI[i] = 0;
 		}
 
-		_ASSERT( 512 == N_WAVE );
-		fix_fft( pWaveformR, pWaveformI, N_WAVE );
+		fft.Forward( pWaveformR, pWaveformI );
 
 		for ( int i = 0; i < 512/2; i++ )
 		{
 			int nR = pWaveformR[i];
 			int nI = pWaveformI[i];
 			int nLengthSq = nR*nR + nI*nI;
-			int nLength_ = Int_sqrt( nLengthSq );
+			int nLength_ = fft.Sqrt( nLengthSq );
 			// nLength = 4095 zodpoveda amplitude 128
 			// div 32, bitshift 5
 			//int nLength = nLength_ * DivsY * m_nBlkY / 32 / 256;
@@ -203,12 +204,14 @@ void CWndTimeGraphTempl::OnPaint()
 	nSum[0] /= 512;
 	nSum[1] /= 512;
 
+	CFft<512> fft;
+
 	for (i=0; i<nPixels; i++)
 	{
 		int nCurSampleIndex = i*nLength/nPixels;
 		int nWindow = 0x10000;
 		if ( bHann )
-			nWindow = Hann<512>(nCurSampleIndex);
+			nWindow = fft.Hann(nCurSampleIndex);
 
 		bool bSatur = false;
 
@@ -304,6 +307,8 @@ void CWndTimeGraphTempl::OnPaint()
 	bool bHann = Settings.Spec.Window == CSettings::Spectrum::_Hann;
 	int nOffset = Settings.Time.InvalidFirst;
 
+	CFft<512> fft;
+
 	memset( column, 0, sizeof(column) );
 	for ( int nInput = 2; nInput >= 1; nInput-- )
 	{
@@ -322,7 +327,7 @@ void CWndTimeGraphTempl::OnPaint()
 			//nSample = (int)(sin(i/512.0f*2.0f*3.141592*f)*128.0f+128);
 
 			// range -32768..32767
-			int nWindow = Hann<512>( i );
+			int nWindow = fft.Hann( i );
 			if ( bHann )
 				nSample = ( nSample * nWindow ) >> (16-7);
 			else
@@ -333,14 +338,13 @@ void CWndTimeGraphTempl::OnPaint()
 			pWaveformI[i] = 0;
 		}
 
-		_ASSERT( 512 == N_WAVE );
-		fix_fft( pWaveformR, pWaveformI, N_WAVE );
+		fft.Forward( pWaveformR, pWaveformI );
 		for ( int i = 0; i < 512/2; i++ )
 		{
 			int nR = pWaveformR[i];
 			int nI = pWaveformI[i];
 			int nLengthSq = nR*nR + nI*nI;
-			int nLength_ = Int_sqrt( nLengthSq );
+			int nLength_ = fft.Sqrt( nLengthSq );
 			// nLength = 4095 zodpoveda amplitude 128
 			// div 32, bitshift 5
 	

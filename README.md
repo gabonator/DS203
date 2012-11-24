@@ -51,6 +51,8 @@ Screenshots:
 
 ![Image 9](/gabonator/DS203/raw/master/Man/Screenshot/wave_export_ac.png)
 
+![Image 10](/gabonator/DS203/raw/master/Man/Screenshot/tuner.png)
+
 
 Feature highlights:
 ======================
@@ -62,6 +64,7 @@ Feature highlights:
 - Export to Wave (use your favourite sound editing program)
 - Export to CSV file
 - Export to interactive SVG
+- Chromatic tuner utility with very precise frequency counter
 - Remote control (SDK) with WebSockets, easy developing with javascript/html
 
 Todo list:
@@ -69,8 +72,9 @@ Todo list:
 - finish oscilloscope module - 90% done
 - calibration - 70% done
 - fft view - 80% done
-- signal generator with modulations - 20% done
+- signal generator with modulations - 40% done
 - connection with android tablet/phone - 20% done
+- optimize ROM usage (many bitmaps are stored as 8bits per pixel) - 0%
 
 Calibration:
 ======================

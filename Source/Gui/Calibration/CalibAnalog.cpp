@@ -25,8 +25,8 @@ void CWndListCalSimple::LoadCalib()
 		Settings.CH2.Coupling = CSettings::AnalogChannel::_DC;
 	}
 	Settings.Time.Resolution = CSettings::TimeBase::_1ms;
-	MainWnd.m_wndMenuInput.ConfigureAdc();
-	MainWnd.m_wndMenuInput.ConfigureTrigger();
+	CCoreOscilloscope::ConfigureAdc();
+	CCoreOscilloscope::ConfigureTrigger();
 
 	m_calCurve.m_arrCurveKin[0] = 0;
 	m_calCurve.m_arrCurveKin[1] = 300;
@@ -148,7 +148,7 @@ void CWndListCalSimple::OnWave()
 		{
 			Settings.CH1.u16Position = V_LEVEL_LO;
 			Settings.CH2.u16Position = V_LEVEL_LO;
-			MainWnd.m_wndMenuInput.ConfigureAdc();
+			CCoreOscilloscope::ConfigureAdc();
 		}
 		if ( m_nResetPhase == 11 )
 		{
@@ -162,7 +162,7 @@ void CWndListCalSimple::OnWave()
 		{
 			Settings.CH1.u16Position = V_LEVEL_HI;
 			Settings.CH2.u16Position = V_LEVEL_HI;
-			MainWnd.m_wndMenuInput.ConfigureAdc();
+			CCoreOscilloscope::ConfigureAdc();
 		}
 		if ( m_nResetPhase == 31 )
 		{
@@ -174,7 +174,7 @@ void CWndListCalSimple::OnWave()
 			Settings.CH1.u16Position = V_LEVEL_LO;
 			Settings.CH2.u16Position = V_LEVEL_LO;
 
-			MainWnd.m_wndMenuInput.ConfigureAdc();
+			CCoreOscilloscope::ConfigureAdc();
 
 			_UpdateCalib( m_nValue, V_LEVEL_LO );
 			UpdateZero();

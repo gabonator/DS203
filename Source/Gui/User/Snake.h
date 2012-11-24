@@ -413,7 +413,7 @@ public:
 
 			CMapPos posDiamond = SetDiamond();
 			DrawBlock( posDiamond.nX, posDiamond.nY );
-			BIOS::Beep(5);
+			BIOS::SYS::Beep(5);
 			UpdateTimer();
 		} else
 		if ( blk == eTail )
@@ -424,7 +424,7 @@ public:
 		} else
 		{
 			//MainWnd.m_wndMessage.Show(&MainWnd, "Snake", "Game Over!", RGB565(FFFF00));
-			BIOS::Beep(200);
+			BIOS::SYS::Beep(200);
 			KillTimer();
 			m_bReset = true;
 			return;

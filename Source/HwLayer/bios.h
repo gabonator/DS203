@@ -6,19 +6,32 @@
 
 class BIOS {
 public:
-	static void DelayMs(unsigned short ms);
-	static ui32 GetTick();
-	static void Init();
-	static void Beep( int ms );
-	static int GetBattery();
-	static void SetBacklight(int nLevel); // 0..100
-	static void SetVolume(int nLevel); // 0..100
-
 	class DBG {
 	public:
 		static void Print (const char* format, ...);
 		// move to utils?
 		static int sprintf(char* buf, const char * format, ...);
+	};
+
+	class SYS {
+	public:
+		enum {
+			EApp1,
+			EApp2,
+			EApp3,
+			EApp4,
+			ESys,
+			EDfu
+		};
+
+		static void DelayMs(unsigned short ms);
+		static ui32 GetTick();
+		static void Init();
+		static void Beep( int ms );
+		static int GetBattery();
+		static void SetBacklight(int nLevel); // 0..100
+		static void SetVolume(int nLevel); // 0..100
+		static void Execute( int nCode );
 	};
 
 	class LCD {
@@ -110,6 +123,8 @@ public:
 		static bool Enabled();
 		static void Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr);
 		static void ConfigureTrigger(ui16 nTThreshold, ui16 nVThreshold, ui8 nSource, ui8 nType);
+		static void ConfigureBuffer(int nLength);
+		static void GetBufferRange(int& nBegin, int& nEnd);
 
 		static void Copy(int nCount);
 		static unsigned long GetCount();

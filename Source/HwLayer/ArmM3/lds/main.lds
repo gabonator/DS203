@@ -141,6 +141,13 @@ SECTIONS
 		_sidata = _etext;
 	} >ROM
     
+
+/* experiment with extra ROM - https://svn.kapsi.fi/jpa/dsoquad/test_flash_size/linker_scripts/main.lds */
+    . = 0x08040000;
+
+    .extra : {
+        *(.extra)
+    } >extra
     
     .  = 0x20000000;   /* From 0x20000000 */      
 

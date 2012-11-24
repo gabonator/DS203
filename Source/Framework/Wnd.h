@@ -14,7 +14,7 @@ public:
 		CTimer( CWnd* pWnd, ui32 nInterval ) :
 			m_pWnd( pWnd ), m_nInterval( nInterval )
 		{
-			m_nNext = BIOS::GetTick() + nInterval;
+			m_nNext = BIOS::SYS::GetTick() + nInterval;
 		}
 		CTimer()
 		{
@@ -98,7 +98,6 @@ public:
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	virtual void WindowMessage(int nMsg, int nParam = 0);
 	virtual void OnTimer();
-	//virtual void OnTick();
 	virtual void Update();
 
 	void SetFocus();

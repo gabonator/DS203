@@ -9,7 +9,7 @@ public:
 	{
 		Settings.Runtime.m_nVolume = nValue * 4;
 		CCoreSettings::Update();
-		BIOS::Beep(100);
+		BIOS::SYS::Beep(100);
 	}
 	virtual int GetMin()
 	{

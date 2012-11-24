@@ -33,14 +33,6 @@ public:
 	CComboSelector	m_wndComboSelector;
 	CWndListTrigger	m_wndListTrigger;
 
-	// modal
-//	CWnd*			m_pListSource;
-//	CWnd*			m_pComboSource;
-
-	// dev
-	static void ConfigureAdc();
-	static void ConfigureTrigger();
-
 	CWndMenuInput();
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);

@@ -44,8 +44,7 @@ CWndMenuSpectMain::CWndMenuSpectMain()
 	if ( code == ToWord('i', 'u') && 
 		( pSender == &m_itmCH1 || pSender == &m_itmCH2 || pSender == &m_itmTime ) )
 	{
-		MainWnd.m_wndMenuInput.ConfigureAdc();
-		MainWnd.m_wndGraph.UpdateResolutions();
+		CCoreOscilloscope::ConfigureAdc();
 		MainWnd.m_wndSpectrumAnnot.Invalidate();
 		return;
 	}

@@ -11,7 +11,7 @@ class CKeyProcessor
 public:
 	CKeyProcessor()
 	{
-		last = BIOS::GetTick();
+		last = BIOS::SYS::GetTick();
 		delay = 301;
 	}
 	void operator <<(const ui16& in)
@@ -22,7 +22,7 @@ public:
 	}
 	void operator >>(ui16& out)
 	{
-		ui32 now = BIOS::GetTick();
+		ui32 now = BIOS::SYS::GetTick();
 		if (now-last > delay && keys)
 		{
 			out = keys;
@@ -61,13 +61,15 @@ CApplication::CApplication()
 {
 	m_pInstance = this;
 
-	BIOS::Init();
+	BIOS::SYS::Init();
 
 	GLOBAL.m_wndMain.Create();
 	GLOBAL.m_wndMain.WindowMessage( CWnd::WmPaint );
 
-	GLOBAL.m_wndMain.m_wndMenuInput.ConfigureAdc();
-	GLOBAL.m_wndMain.m_wndMenuInput.ConfigureTrigger();
+	CCoreOscilloscope::ConfigureAdc();
+	CCoreOscilloscope::ConfigureTrigger();
+	CCoreGenerator::Update();
+
 	BIOS::ADC::Restart();
 }
 
@@ -78,7 +80,7 @@ CApplication::~CApplication()
 bool CApplication::operator ()()
 {
 	static ui32 lLastTick = (ui32)-1;
-	ui32 lCurTick = BIOS::GetTick();
+	ui32 lCurTick = BIOS::SYS::GetTick();
 	if ( lLastTick == (ui32)-1 )
 		lLastTick = lCurTick;
 	if ( lCurTick - lLastTick > 1000 )
@@ -95,13 +97,9 @@ bool CApplication::operator ()()
 
 	if ( nKeys )
 		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
-	if ( BIOS::ADC::Enabled() && BIOS::ADC::Ready() )
-	{
-		BIOS::ADC::Copy( BIOS::ADC::GetCount() );
-		GLOBAL.m_wndMain.WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
-		BIOS::ADC::Restart();
-	}
+
 	GLOBAL.m_wndMain.WindowMessage( CWnd::WmTick, 0 );
+
 #ifdef _WIN32
 	Sleep(1);
 #endif

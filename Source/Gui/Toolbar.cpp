@@ -28,9 +28,10 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Device", &MainWnd.m_wndAbout},
 
 		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	"Tuner", &MainWnd.m_wndUserTuner},
 		{ CBarItem::ISub,	"Demo", &MainWnd.m_wndScreenSaver},
 		{ CBarItem::ISub,	"Snake", &MainWnd.m_wndUserGame},
-		{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
+		//{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
 		{ CBarItem::ISub,	"Calib", &MainWnd.m_wndUserCalibration},
 		{ CBarItem::ISub,	"Meter", &MainWnd.m_wndUserMeter},
 

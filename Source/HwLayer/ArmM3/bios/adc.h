@@ -1,6 +1,7 @@
 bool g_bAdcEnabled = false;
 #define ADCSIZE 4096
 BIOS::ADC::TSample g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
+int g_nBufferLength = ADCSIZE;
 
 /*static*/ void BIOS::ADC::Init()
 {
@@ -96,16 +97,35 @@ CH_D Trigger source & kind select =>
     __Set(TRIGG_MODE, UNCONDITION);
     return;
   }
-  
 	__Set(T_THRESHOLD, nTThreshold);  
 	__Set(V_THRESHOLD, nVThreshold);  
 	__Set(TRIGG_MODE,  (nSource << 3) | nType);
 }
 
+#define DepthL               32+6       //[ 7:0] <= DataBuff;   4k,2k,1k,512,360      
+#define DepthH               32+7       //[11:8] <= DataBuff;      
+
+void BIOS::ADC::ConfigureBuffer(int nLength)
+{
+	// only compatible with new SYS version
+	_ASSERT( nLength <= ADCSIZE );
+	g_nBufferLength = nLength;
+	__Set(DepthL, nLength & 0xff);
+	__Set(DepthH, (nLength >> 8) & 0xff);
+}
+
+void BIOS::ADC::GetBufferRange(int& nBegin, int& nEnd)
+{
+	nBegin = 8;
+	nEnd = g_nBufferLength;
+}
+
 /*static*/ void BIOS::ADC::Copy(int nCount)
 {
 	_ASSERT( nCount <= ADCSIZE );
-	for ( int i = 0; i < ADCSIZE; i++ )
+//	__Set(FIFO_CLR, R_PTR);
+
+	for ( int i = 0; i < g_nBufferLength; i++ )
   { 
 		g_ADCMem[i] = Get(); // & 0xffff;
   }

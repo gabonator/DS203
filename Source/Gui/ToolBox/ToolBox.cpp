@@ -39,7 +39,7 @@ void CWndToolbox::Create( CWnd* pParent )
 	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 2*16, FOC(2), RGB565(000000), "\x10 Reset setings");
 
 	char str[32];
-	BIOS::DBG::sprintf(str, "bat %d%%", BIOS::GetBattery());
+	BIOS::DBG::sprintf(str, "bat %d%%", BIOS::SYS::GetBattery());
 	BIOS::LCD::Line( m_rcClient.left + 4, m_rcClient.bottom - 20, 
 		m_rcClient.right - 4, m_rcClient.bottom - 20, RGB565(e0e0e0) );
 	BIOS::LCD::Line( m_rcClient.left + 4, m_rcClient.bottom - 19, 
@@ -108,7 +108,7 @@ void CWndToolbox::PrintBold( int x, int y, ui16 clrFront, ui16 clrBorder, PCSTR 
 
 void CWndToolbox::DoModal()
 {
-	BIOS::Beep(100);
+	BIOS::SYS::Beep(100);
 	/*
 #ifdef _WIN32
 	// no enough ram for this on ARM M3 :(
