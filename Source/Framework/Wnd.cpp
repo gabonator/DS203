@@ -225,22 +225,7 @@ void CWnd::Invalidate()
 	// TODO: najprv iba nastavit flag tomuto oknu a vsetkym childom, je nejake okno (dialog) nadomnou !?
 	WindowMessage(WmPaint);
 }
-void CWnd::Update()
-{
-	// TODO: a potom rekurzivne prejst stromom a refreshnut potrebne	
-	if ( m_dwFlags & WsModal )
-		WindowMessage(WmPaint);
-	else
-	{
-		CWnd *pChild = m_pFirst;
-		while (pChild)
-		{
-			if ( pChild->m_dwFlags & WsVisible )
-				pChild->Update();
-			pChild = pChild->m_pNext;
-		}
-	}
-}
+
 void CWnd::SendMessage(CWnd* pTarget, ui16 code, ui32 data)
 {
 	pTarget->OnMessage(this, code, data);

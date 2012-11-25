@@ -30,24 +30,24 @@ public:
 			x -= 2;
 		x -= 9;
 		if ( m_strId[0] == 'X' && m_strId[1] == '1' )
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, curx1);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::curx1);
 		else if ( m_strId[0] == 'Y' && m_strId[1] == '1' )
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, cury1);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::cury1);
 		else if ( m_strId[0] == 'X' && m_strId[1] == '2' )
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, curx2);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::curx2);
 		else if ( m_strId[0] == 'Y' && m_strId[1] == '2' )
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, cury2);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::cury2);
 		else
 			x += BIOS::LCD::Print( x, y, clr, RGBTRANS, m_strId );
 
 		if ( HasFocus() )
 		{
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, sel_left);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::sel_left);
 			if ( m_pMarker->Mode == CSettings::Marker::_Auto )
 				x += BIOS::LCD::Print(x, y+1, RGBTRANS, clr, "A");
 			else
-				x += BIOS::LCD::Draw(x, y+1, RGBTRANS, clr, leftright);
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, sel_right);
+				x += BIOS::LCD::Draw(x, y+1, RGBTRANS, clr, CShapes::leftright);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::sel_right);
 			x -= 2;
 		} else
 			x += 4;

@@ -7,7 +7,7 @@ int g_nBufferLength = ADCSIZE;
 {
     if(__Get(FPGA_OK, 0)== 0){
       BIOS::LCD::Print(6*8, 30, RGB565(ff0000), RGB565(ffffff), "FPGA configuration error");
-      while (1){};
+//      while (1){};
     }
 //    __Set(ADC_CTRL, EN );
     __Set(STANDBY, DN);          // ÍË³öÊ¡µç×´Ì¬

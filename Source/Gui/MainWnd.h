@@ -53,7 +53,8 @@ public:
 	CWndSnake			m_wndUserGame;
 //	CWndBalls			m_wndUserBalls;
 	CWndTuner			m_wndUserTuner;
-	CWndAbout			m_wndAbout;
+	CWndAboutFirmware			m_wndAboutFirmware;
+	CWndAboutDevice	m_wndAboutDevice;
 	//CWndCalibration		m_wndUserCalibration;
 	CWndMenuCalibration	m_wndUserCalibration;
 	CWndUserMeter		m_wndUserMeter;

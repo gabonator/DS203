@@ -25,5 +25,4 @@ public:
 		//if ( code == ToWord('m', 'o') && pSender == &m_itmReboot )
 		//	BIOS::SYS::Execute( BIOS::SYS::EDfu );
 	}
-
 };

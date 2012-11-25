@@ -55,7 +55,8 @@ void CMainWnd::Create()
 	//m_wndUserBalls.Create( this, WsHidden );
 	m_wndUserTuner.Create( this, WsHidden );
 	m_wndUserMeter.Create( this, WsHidden );
-	m_wndAbout.Create( this, WsHidden );
+	m_wndAboutFirmware.Create( this, WsHidden );
+	m_wndAboutDevice.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
 	m_wndUserCalibration.Create( this, WsHidden );
 

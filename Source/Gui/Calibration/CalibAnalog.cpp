@@ -243,6 +243,7 @@ void CWndListCalSimple::OnWave()
 	CListBox::OnMessage( pSender, code, data );
 }
 
+#if 0
 void CWndListCalAnalog::Finished()
 {
 	// calibration finished
@@ -261,3 +262,5 @@ void CWndListCalAnalog::Aborted()
 	MainWnd.Invalidate();
 	MainWnd.m_wndMessage.Show( &MainWnd, "Information", "Error or calibration aborted", RGB565(ffff00));
 }
+
+#endif

@@ -423,6 +423,15 @@
     <ClInclude Include="..\..\Source\Core\Bitmap.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemBeepOnOff.h">
+      <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemShortcut.h">
+      <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Settings\KeySettings.h">
+      <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -554,6 +563,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
       <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Shapes.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

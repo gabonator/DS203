@@ -274,9 +274,9 @@ public:
 		CValueProvider::VPNavigate next = (*m_pProvider)+1;
 
 		if (prev == CValueProvider::Yes)
-			BIOS::LCD::Draw( x-8, m_rcClient.top, clr, RGBTRANS, more_left );
+			BIOS::LCD::Draw( x-8, m_rcClient.top, clr, RGBTRANS, CShapes::more_left );
 		else if (prev == CValueProvider::No)
-			BIOS::LCD::Draw( x-8, m_rcClient.top, RGB565(808080), RGBTRANS, more_left );
+			BIOS::LCD::Draw( x-8, m_rcClient.top, RGB565(808080), RGBTRANS, CShapes::more_left );
 
 		CRect rcItem;
 		rcItem = m_rcClient;
@@ -286,9 +286,9 @@ public:
 		m_pProvider->OnPaint(rcItem, HasFocus());
 		x += m_pProvider->GetWidth();
 		if (next == CValueProvider::Yes)
-			x += BIOS::LCD::Draw( x, m_rcClient.top, clr, RGBTRANS, more_right );
+			x += BIOS::LCD::Draw( x, m_rcClient.top, clr, RGBTRANS, CShapes::more_right );
 		else if (next == CValueProvider::No)
-			x += BIOS::LCD::Draw( x, m_rcClient.top, RGB565(808080), RGBTRANS, more_right );
+			x += BIOS::LCD::Draw( x, m_rcClient.top, RGB565(808080), RGBTRANS, CShapes::more_right );
 	}	
 
 	virtual void OnKey(ui16 nKey)
@@ -344,8 +344,8 @@ public:
 
 		BIOS::LCD::Print( rcClient.CenterX()-((ui8)strlen(m_pszId)<<2), rcClient.top+2, 
 			RGB565(000000), RGBTRANS, m_pszId);
-		BIOS::LCD::Draw( m_rcClient.left + 6, m_rcClient.top+20, RGB565(000000), RGBTRANS, more_left );
-		BIOS::LCD::Draw( m_rcClient.right - 3 - 6, m_rcClient.top+20, RGB565(000000), RGBTRANS, more_right );
+		BIOS::LCD::Draw( m_rcClient.left + 6, m_rcClient.top+20, RGB565(000000), RGBTRANS, CShapes::more_left );
+		BIOS::LCD::Draw( m_rcClient.right - 3 - 6, m_rcClient.top+20, RGB565(000000), RGBTRANS, CShapes::more_right );
 
 		rcClient.Deflate(2+12+4, 2+14+2, 2+12+4, 2+2+0);
 
@@ -404,14 +404,14 @@ public:
 				rcBack.right = rcBack.left + nWidth;
 				rcBack.bottom = rcBack.top + 14;
 				BIOS::LCD::Bar( rcBack, RGB565(000000) );
-				BIOS::LCD::Draw( rcClient.left-8, rcClient.top, RGB565(000000), RGBTRANS, sel_left );
+				BIOS::LCD::Draw( rcClient.left-8, rcClient.top, RGB565(000000), RGBTRANS, CShapes::sel_left );
 			}
 				
 			m_pProvider->OnPaint( rcClient, bFocus );
 			rcClient.left += nWidth;
 
 			if ( bFocus )
-				BIOS::LCD::Draw( rcClient.left, rcClient.top, RGB565(000000), RGBTRANS, sel_right );
+				BIOS::LCD::Draw( rcClient.left, rcClient.top, RGB565(000000), RGBTRANS, CShapes::sel_right );
 
 			rcClient.left += 8;
 
@@ -474,14 +474,14 @@ public:
 		if ( HasFocus() )
 		{
 			rcItem.left -= 8;
-			rcItem.left += BIOS::LCD::Draw(rcItem.left, rcItem.top, RGB565(0000000), RGBTRANS, sel_left);
+			rcItem.left += BIOS::LCD::Draw(rcItem.left, rcItem.top, RGB565(0000000), RGBTRANS, CShapes::sel_left);
 			
 			ui16 nWidth = m_pProvider->GetWidth();
 			BIOS::LCD::Bar( rcItem.left, rcItem.top, rcItem.left + nWidth, rcItem.top + 14, RGB565(000000));
 			
 			m_pProvider->OnPaint( rcItem, 1 );
 			rcItem.left += nWidth;
-			rcItem.left += BIOS::LCD::Draw(rcItem.left, rcItem.top, RGB565(0000000), RGBTRANS, sel_right);
+			rcItem.left += BIOS::LCD::Draw(rcItem.left, rcItem.top, RGB565(0000000), RGBTRANS, CShapes::sel_right);
 
 		} else
 		{
@@ -531,13 +531,13 @@ public:
 		}
 
 		if ( HasFocus() )
-			BIOS::LCD::Draw( m_rcClient.left-7, m_rcClient.top, clr, RGBTRANS, more_left );
+			BIOS::LCD::Draw( m_rcClient.left-7, m_rcClient.top, clr, RGBTRANS, CShapes::more_left );
 
 		m_pProvider->OnPaint(m_rcClient, HasFocus());
 		int x = m_rcClient.left + m_pProvider->GetWidth() + 1;
 
 		if ( HasFocus() )
-			BIOS::LCD::Draw( x, m_rcClient.top, clr, RGBTRANS, more_right );
+			BIOS::LCD::Draw( x, m_rcClient.top, clr, RGBTRANS, CShapes::more_right );
 	}	
 
 	virtual void OnKey(ui16 nKey)

@@ -27,13 +27,13 @@ public:
 		x += 8;
 		
 		if ( m_pInfo->Coupling == CSettings::AnalogChannel::_DC )
-			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, sig_dc );
+			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, CShapes::sig_dc );
 
 		if ( m_pInfo->Coupling == CSettings::AnalogChannel::_AC )
-			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, sig_ac );
+			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, CShapes::sig_ac );
 
 		if ( m_pInfo->Coupling == CSettings::AnalogChannel::_GND )
-			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, sig_gnd );
+			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, CShapes::sig_gnd );
 
 		x = m_rcClient.left + 12 + MarginLeft;
 		y += 16;
@@ -41,15 +41,15 @@ public:
 		{
 			x += BIOS::LCD::Print( x, y, clr, RGBTRANS, 
 				CSettings::AnalogChannel::ppszTextResolution[ m_pInfo->Resolution ] );
-			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, per_div);
+			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, CShapes::per_div);
 		} else
 		{
 			x -= 8;
-			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, sel_left);
+			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, CShapes::sel_left);
 			x += BIOS::LCD::Print(x, y, RGB565(ffffff), clr, 
 				CSettings::AnalogChannel::ppszTextResolution[ m_pInfo->Resolution ] );
-			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, sel_right);
-			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, per_div);
+			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, CShapes::sel_right);
+			x += BIOS::LCD::Draw(x, y, clr, RGBTRANS, CShapes::per_div);
 		}
 	}
 

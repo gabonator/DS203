@@ -42,11 +42,11 @@ public:
 				clrLabel = RGB565(000000);
 				clrTab = RGB565(ffffff);
 			}
-			x += BIOS::LCD::Draw( x, y, clrTab, m_clrBack, corner_left);
+			x += BIOS::LCD::Draw( x, y, clrTab, m_clrBack, CShapes::corner_left);
 			int _x = x;
 			x += BIOS::LCD::Print( x, y, clrLabel, clrTab, m_arrItems[i]);
 			BIOS::LCD::Bar( _x, y+14, x, y+16, clrTab);
-			x += BIOS::LCD::Draw( x, y, clrTab, m_clrBack, corner_right);
+			x += BIOS::LCD::Draw( x, y, clrTab, m_clrBack, CShapes::corner_right);
 		}
 	}
 

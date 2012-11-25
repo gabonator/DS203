@@ -3,16 +3,12 @@
 
 #include <Source/Framework/Wnd.h>
 
-class CWndAbout : public CWnd
+class CWndAboutDevice : public CWnd
 {
 public:
-	CWndAbout()
-	{
-	}
-	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndAbout", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
+		CWnd::Create("CWndAboutDevice", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
 	
 	virtual void OnPaint()
@@ -21,18 +17,6 @@ public:
 			const ui16 clrA = RGB565(808080);
 
 			BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
-
-			// logo 256x64
-			BIOS::VER::DrawLogo((m_rcClient.Width()-256)/2, m_rcClient.top + 8 + 16 );
-
-//			ui32 dwVersion = _Version;
-//			char* strVer = (char*)dwVersion;
-
-//			BIOS::LCD::Print (   4, 240-8*16, clrA, 0, "Firmware version:" );
-//			BIOS::LCD::Printf( 160, 240-8*16, clrB, 0, "%c%c%c%c", strVer[3], strVer[2], strVer[1], strVer[0] );
-
-			BIOS::LCD::Print (   4, 240-8*16, clrA, 0, "Firmware built:" );
-			BIOS::LCD::Print ( 160, 240-8*16, clrB, 0, __DATE__ " " __TIME__ );
 
 			BIOS::LCD::Print (   4, 240-7*16, clrA, 0, "Hardware version:" );
 			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, BIOS::VER::GetHardwareVersion() );
@@ -68,20 +52,57 @@ public:
 
 			BIOS::LCD::Print (   4, 240-2*16, clrA, 0, "Serial number:" );
 			BIOS::LCD::Printf( 160, 240-2*16, clrB, 0, "%08x", BIOS::VER::GetSerialNumber() );
+
+			// logo 256x64
+			BIOS::VER::DrawLogo((m_rcClient.Width()-256)/2, m_rcClient.top + 8 + 16 );
 	}
+};
 
-	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
+class CWndAboutFirmware : public CWnd
+{
+public:
+	virtual void Create(CWnd *pParent, ui16 dwFlags)
+	{                        
+		CWnd::Create("CWndAboutFw", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
+	}
+	
+	virtual void OnPaint()
 	{
-		// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
-		if (code == ToWord('L', 'D') )
-		{
-			return;
-		}
+			const ui16 clrB = RGB565(b0b0b0);
+			const ui16 clrA = RGB565(808080);
 
-		if (code == ToWord('L', 'E') )
-		{
-			return;
-		}
+			BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
+
+			BIOS::LCD::Print (   4, 240-7*16, clrA, 0, "Firmware version:" );
+#ifdef GIT_REVISION
+			BIOS::LCD::Printf( 160, 240-7*16, clrB, 0, "1.0 rev. %d", GIT_REVISION );
+#else
+			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, "1.0" );
+#endif
+
+#ifdef GIT_HASH
+			BIOS::LCD::Print (   4, 240-6*16, clrA, 0, "Git hash:" );
+			BIOS::LCD::Print ( 160, 240-6*16, clrB, 0, GIT_HASH );
+#endif
+
+#ifdef GIT_BUILDER
+			BIOS::LCD::Print (   4, 240-5*16, clrA, 0, "Builded by:" );
+			BIOS::LCD::Print ( 160, 240-5*16, clrB, 0, GIT_BUILDER );
+#endif
+
+			BIOS::LCD::Print (   4, 240-4*16, clrA, 0, "Firmware built:" );
+			BIOS::LCD::Print ( 160, 240-4*16, clrB, 0, __DATE__ " " __TIME__ );
+
+			BIOS::LCD::Print (   4, 240-3*16, clrA, 0, "Compiler version:" );
+#ifdef __GNUC__
+			BIOS::LCD::Printf( 160, 240-3*16, clrB, 0, "GCC %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
+#endif
+#ifdef _WIN32_
+			BIOS::LCD::Print ( 160, 240-3*16, clrB, 0, "MSVC %d", _MSC_VER );
+#endif
+
+			// logo 256x64
+			BIOS::VER::DrawLogo((m_rcClient.Width()-256)/2, m_rcClient.top + 8 + 16 );
 	}
 };
 

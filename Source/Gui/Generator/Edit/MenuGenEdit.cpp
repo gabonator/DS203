@@ -4,11 +4,12 @@
 /*virtual*/ void CWndMenuGeneratorEdit::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	CWnd::Create("CWndMenuGeneratorEdit", dwFlags, CRect(280-CWndMenuItem::MarginLeft, 20, 400, 240), pParent);
-	m_itm[0].Create("Copy\nCH1", RGB565(b00040), 2, this );
-	m_itm[1].Create("Normalize", RGB565(b00040), 1, this );
-	m_itm[2].Create("~Edit", RGB565(b00040), 1, this );
-	m_itm[3].Create("~Load", RGB565(b00040), 1, this );
-	m_itm[4].Create("~Save", RGB565(b00040), 1, this );
+	m_itmCopy.Create("Copy\nCH1", RGB565(b00040), 2, this );
+	m_itmNormalize.Create("Normalize", RGB565(b00040), 1, this );
+	m_itmInvert.Create("Invert", RGB565(b00040), 1, this );
+	m_itmEdit.Create("Edit", RGB565(b00040), 1, this );
+	m_itmLoad.Create("~Load", RGB565(b00040), 1, this );
+	m_itmSave.Create("~Save", RGB565(b00040), 1, this );
 }
 
 /*virtual*/ void CWndMenuGeneratorEdit::OnMessage(CWnd* pSender, ui16 code, ui32 data)
@@ -26,7 +27,7 @@
 	}
 
 	// copy from oscilloscope
-	if ( code == ToWord('m', 'o') && pSender == &m_itm[0] )
+	if ( code == ToWord('m', 'o') && pSender == &m_itmCopy )
 	{
 		int nBegin, nEnd;
 
@@ -59,7 +60,7 @@
 	}
 
 	// normalize
-	if ( code == ToWord('m', 'o') && pSender == &m_itm[1] )
+	if ( code == ToWord('m', 'o') && pSender == &m_itmNormalize )
 	{
 		int nLength = CCoreGenerator::GetVolatileLen();
 		ui8* pVolatile = CCoreGenerator::GetVolatile();
@@ -86,6 +87,38 @@
 			*pVolatile++ = nValue;
 		}
 		CCoreGenerator::Update();
+		MainWnd.m_wndSignalGraph.Invalidate();
+	}
+
+	// invert
+	if ( code == ToWord('m', 'o') && pSender == &m_itmInvert )
+	{
+		int nLength = CCoreGenerator::GetVolatileLen();
+		ui8* pVolatile = CCoreGenerator::GetVolatile();
+		for ( int i = 0; i < nLength; i++, pVolatile++ )
+			*pVolatile = 255-*pVolatile;
+
+		CCoreGenerator::Update();
+		MainWnd.m_wndSignalGraph.Invalidate();
+	}
+
+	// edit
+	if ( code == ToWord('m', 'o') && pSender == &m_itmEdit )
+	{
+		Settings.Gen.Wave = CSettings::Generator::_Volatile;
+		CCoreGenerator::Update();
+		MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetRamDac(), CCoreGenerator::GetRamLen() );
+		MainWnd.m_wndSignalGraph.m_dwFlags &= ~CWnd::WsNoActivate;
+		MainWnd.m_wndSignalGraph.SetFocus();
+		MainWnd.m_wndSignalGraph.Invalidate();
+		MainWnd.m_wndSignalGraph.ExitHandler( this );
+		m_itmEdit.Invalidate();
+	}
+	if ( code == ToWord('e', 'x') && pSender == &MainWnd.m_wndSignalGraph )
+	{
+		m_itmEdit.SetFocus();
+		m_itmEdit.Invalidate();
+		MainWnd.m_wndSignalGraph.m_dwFlags |= CWnd::WsNoActivate;
 		MainWnd.m_wndSignalGraph.Invalidate();
 	}
 }

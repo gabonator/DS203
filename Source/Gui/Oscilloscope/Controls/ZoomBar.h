@@ -27,8 +27,8 @@ public:
 
 		rc.top++;
 		rc.bottom--;
-		rc.left = m_rcClient.left + nXBegin;
-		rc.right = m_rcClient.left + nXEnd;
+		rc.left = m_rcClient.left + (si16)nXBegin;
+		rc.right = m_rcClient.left + (si16)nXEnd;
 
 		if ( rc.right > rcBorder.right )
 			rc.right = rcBorder.right;

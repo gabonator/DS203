@@ -183,6 +183,7 @@ static const ui8 levels[] = {
 */
 
 #include <Source/Framework/Wnd.h>
+#include <Source/Core/Utils.h>
 
 class CWndSnake : public CWnd
 {
@@ -252,8 +253,8 @@ public:
 		int x, y;
 		do 
 		{
-			x = Random() % 25;
-			y = Random() % 14;
+			x = CUtils::Random() % 25;
+			y = CUtils::Random() % 14;
 		} while ( GetBlock(x, y) != eGround );
 		GetBlock(x, y) = eDiamond;
 
@@ -265,8 +266,8 @@ public:
 		m_nDir = eDirRight;
 		do 
 		{
-			m_nX = Random() % 25;
-			m_nY = Random() % 14;
+			m_nX = CUtils::Random() % 25;
+			m_nY = CUtils::Random() % 14;
 		} while ( GetBlock(m_nX, m_nY) != eGround );
 		GetBlock(m_nX, m_nY) = eHead;
 	}
@@ -462,24 +463,6 @@ public:
 			m_bReset = true;
 			return;
 		}
-	}
-
-private:
-	unsigned int Random()
-	{
-		// our initial starting seed is 5323
-		static unsigned int nSeed = 5323;
-		static unsigned int nX = 0;
-
-		// Take the current seed and generate a new value from it
-		// Due to our use of large constants and overflow, it would be
-		// very hard for someone to predict what the next number is
-		// going to be from the previous one.
-		nSeed = (8253729 * nSeed + 2396403);
-		nSeed += nX++;
-
-		// Take the seed and return a value between 0 and 32767
-		return nSeed & 32767;
 	}
 };
 

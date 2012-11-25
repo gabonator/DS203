@@ -25,7 +25,8 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Main", &MainWnd.m_wndMenuSettings},
 		
 		{ CBarItem::IMain,	"About", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Device", &MainWnd.m_wndAbout},
+		{ CBarItem::ISub,	"Device", &MainWnd.m_wndAboutDevice},
+		{ CBarItem::ISub,	"Firmware", &MainWnd.m_wndAboutFirmware},
 
 		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	"Tuner", &MainWnd.m_wndUserTuner},
@@ -59,11 +60,11 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 	
 	if ( nFocus == nMenu && HasFocus() )
 	{
-		x += BIOS::LCD::Draw(x, 0, RGB565(ffffff), RGB565(000000), corner_left);
+		x += BIOS::LCD::Draw(x, 0, RGB565(ffffff), RGB565(000000), CShapes::corner_left);
 		BIOS::LCD::Bar( x, m_rcClient.top, x + nExtentx, m_rcClient.bottom, RGB565(FFFFFF));	
 		x += BIOS::LCD::Print(x, 0, RGB565(000000), RGBTRANS, pItems[nMenu].m_pName);
 	} else {
-		x += BIOS::LCD::Draw(x, 0, RGB565(0020ff), RGB565(000000), corner_left);
+		x += BIOS::LCD::Draw(x, 0, RGB565(0020ff), RGB565(000000), CShapes::corner_left);
 		BIOS::LCD::Bar( x, m_rcClient.top, x + nExtentx, m_rcClient.bottom, RGB565(0020ff));
 		x += BIOS::LCD::Print(x, 0, RGB565(ffffff), RGBTRANS, pItems[nMenu].m_pName);
 	}
@@ -75,9 +76,9 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 	CDesign::GradientTop( rcSub );
 
 	if ( nFocus == nMenu && HasFocus() )
-		x += BIOS::LCD::Draw(x, 0, RGB565(ffffff), RGBTRANS, corner_right);
+		x += BIOS::LCD::Draw(x, 0, RGB565(ffffff), RGBTRANS, CShapes::corner_right);
 	else
-		x += BIOS::LCD::Draw(x, 0, RGB565(0020ff), RGBTRANS, corner_right);
+		x += BIOS::LCD::Draw(x, 0, RGB565(0020ff), RGBTRANS, CShapes::corner_right);
 	x += 10;
 
 	for (int i=nMenu+1; pItems[i].m_eType == CBarItem::ISub; i++)
@@ -93,7 +94,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		}
 		
 		if ( bSelected )
-			x += BIOS::LCD::Draw( x, m_rcClient.top, bgr, RGBTRANS, corner_left);
+			x += BIOS::LCD::Draw( x, m_rcClient.top, bgr, RGBTRANS, CShapes::corner_left);
 		else
 			x += 8;
 		
@@ -103,7 +104,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		x += BIOS::LCD::Print( x, m_rcClient.top, clr, bgr, pItems[i].m_pName);
 
 		if ( bSelected )
-			x += BIOS::LCD::Draw( x, m_rcClient.top, bgr, RGBTRANS, corner_right);
+			x += BIOS::LCD::Draw( x, m_rcClient.top, bgr, RGBTRANS, CShapes::corner_right);
 		else
 			x += 8;
 	}

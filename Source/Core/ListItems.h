@@ -183,10 +183,10 @@ public:
 		ui16 clr = *m_pVal;
 		ui16 x = rcRect.left;
 		x -= 8;
-		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, sel_left );
+		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, CShapes::sel_left );
 		x += BIOS::LCD::Print( x, rcRect.top, RGBTRANS, clr, 
 			CUtils::clrhex( clr ) );
-		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, sel_right );
+		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, CShapes::sel_right );
 	}	
 	
 	virtual ui16 GetWidth()
@@ -217,9 +217,9 @@ public:
 
 		ui16 x = rcRect.left;
 		x -= 8;
-		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, sel_left );
+		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, CShapes::sel_left );
 		x += BIOS::LCD::Print( x, rcRect.top, RGBTRANS, clr, m_pName );
-		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, sel_right );
+		x += BIOS::LCD::Draw( x, rcRect.top, clr, RGBTRANS, CShapes::sel_right );
 	}	
 	
 	virtual ui16 GetWidth()

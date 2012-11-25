@@ -9,6 +9,7 @@ public:
 	{
 		Settings.Runtime.m_nBacklight = nValue * 4;
 		CCoreSettings::Update();
+//		Settings.Save();
 	}
 	virtual int GetMin()
 	{

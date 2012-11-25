@@ -66,5 +66,5 @@
 	strFreq = CUtils::FormatFrequency(fSample);
 	x = rcTarget.left;
 	x += BIOS::LCD::Print(x, rcTarget.bottom + 2, RGB565(808080), RGB565(000000), strFreq);
-	x += BIOS::LCD::Draw(x, rcTarget.bottom + 2, RGB565(808080), RGB565(000000), per_div);
+	x += BIOS::LCD::Draw(x, rcTarget.bottom + 2, RGB565(808080), RGB565(000000), CShapes::per_div);
 }

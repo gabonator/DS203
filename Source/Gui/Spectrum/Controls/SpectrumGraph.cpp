@@ -148,7 +148,7 @@ void CWndSpectrumGraphTempl::OnPaint()
 		BIOS::LCD::Buffer( m_rcClient.left + i, m_rcClient.top, column, DivsY*m_nBlkY );
 		if ( i == nMarkerX+3 )
 		{
-			BIOS::LCD::Draw( m_rcClient.left+nMarkerX-3, m_rcClient.bottom-nMarkerY-4, RGB565(ff0000), RGBTRANS, markerX);
+			BIOS::LCD::Draw( m_rcClient.left+nMarkerX-3, m_rcClient.bottom-nMarkerY-4, RGB565(ff0000), RGBTRANS, CShapes::markerX);
 		}
 	}
 }

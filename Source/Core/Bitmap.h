@@ -16,7 +16,9 @@ public:
 		x = 0;
 		y = 0;
 		naccum = -1;
-		_ASSERT( pData[0] == 'G' && pData[1] == 'B' );
+		if ( pData[0] != 'G' || pData[1] != 'B' )
+			return;
+
 		m_p = pData+2;
 		w = getvlc8();
 		h = getvlc8();

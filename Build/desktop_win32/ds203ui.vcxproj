@@ -125,7 +125,10 @@
     <ClInclude Include="..\..\Source\Gui\Settings\Controls\Slider.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\Core\SettingsCore.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\ItemBacklight.h" />
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemBeepOnOff.h" />
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemShortcut.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\ItemVolume.h" />
+    <ClInclude Include="..\..\Source\Gui\Settings\KeySettings.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\Settings.h" />
     <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\Annot.h" />
     <ClInclude Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.h" />
@@ -190,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\Serialize.cpp" />
+    <ClCompile Include="..\..\Source\Core\Shapes.cpp" />
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibAnalog.cpp" />
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibDac.cpp" />
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp" />

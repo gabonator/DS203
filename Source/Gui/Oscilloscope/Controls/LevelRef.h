@@ -15,7 +15,7 @@ public:
 			ui16 y = Settings.Trig.nLevel;
 			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
 			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
-				RGB565(606060), RGBTRANS, trig_base );
+				RGB565(606060), RGBTRANS, CShapes::trig_base );
 		}
 		if ( Settings.CH2.Enabled )
 		{
@@ -27,7 +27,7 @@ public:
 			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
 
 			BIOS::LCD::Draw( m_rcClient.left, m_rcClient.bottom - y-5, 
-				Settings.CH2.u16Color, RGBTRANS, chb_base );
+				Settings.CH2.u16Color, RGBTRANS, CShapes::chb_base );
 		}
 		if ( Settings.CH1.Enabled )
 		{
@@ -42,7 +42,7 @@ public:
 			if ( nScrY >= 0 && nScrY+7 < BIOS::LCD::LcdHeight ) 
 			{
 				BIOS::LCD::Draw( m_rcClient.left, nScrY, 
-					Settings.CH1.u16Color, RGBTRANS, cha_base );
+					Settings.CH1.u16Color, RGBTRANS, CShapes::cha_base );
 			}
 		}
 	}

@@ -108,6 +108,7 @@ public:
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 };
 
+#if 0
 class CWndListCalAnalog : public CListBox, public CCalibration
 {
 public:
@@ -257,5 +258,6 @@ public:
 	}
 
 };
+#endif
 
 #endif

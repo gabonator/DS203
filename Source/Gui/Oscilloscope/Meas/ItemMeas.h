@@ -44,7 +44,7 @@ public:
 			float fValue = m_pMeas->fValue;
 			if ( fValue < 0 )
 			{
-				x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, minus);
+				x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, CShapes::minus);
 				fValue = -fValue;
 			} else
 				x += 6;

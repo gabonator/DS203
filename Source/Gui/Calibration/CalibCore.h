@@ -1,6 +1,8 @@
 #ifndef __CALIBCORE_H__
 #define __CALIBCORE_H__
 
+#if 0
+
 #include <Source/Framework/Thread.h>
 #include <Source/Gui/Oscilloscope/Core/CoreOscilloscope.h>
 #define _F(a) a
@@ -530,4 +532,5 @@ public:
 	*/
 };
 
+#endif
 #endif

@@ -60,7 +60,7 @@ public:
 	CWndMenuItem	m_itmReset;
 
 	CWndListCalDac	m_wndListAdc;
-	CWndListCalAnalog	m_wndListAnalog;
+//	CWndListCalAnalog	m_wndListAnalog;
 	CWndListCalSimple	m_wndListSimple;
 
 	CWndMenuCalibration()
@@ -75,7 +75,7 @@ public:
 		m_itmLoad.Create("Load\ncalib data", RGB565(ffffff), 2, this);
 		m_itmSave.Create("Save\ncalib data", RGB565(ffffff), 2, this);
 		m_itmReset.Create("Reset\ncalib data", RGB565(ffffff), 2, this);
-		m_itmComplex.Create("Analog-Compl.", RGB565(404040), 1, this);
+//		m_itmComplex.Create("Analog-Compl.", RGB565(404040), 1, this);
 	}
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);

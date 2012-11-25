@@ -24,12 +24,12 @@ public:
 		y += 16;
 		if ( HasFocus() )
 		{
-			x += BIOS::LCD::Draw(x, y, RGB565(000000), RGBTRANS, sel_left);
+			x += BIOS::LCD::Draw(x, y, RGB565(000000), RGBTRANS, CShapes::sel_left);
 			CRect rcRect(x, y, x + m_pProvider->GetWidth(), y + 14);
 			BIOS::LCD::Bar( rcRect, RGB565(0000000) );
 			m_pProvider->OnPaint( rcRect, HasFocus() );
 			x = rcRect.right;
-			x += BIOS::LCD::Draw(x, y, RGB565(000000), RGBTRANS, sel_right);
+			x += BIOS::LCD::Draw(x, y, RGB565(000000), RGBTRANS, CShapes::sel_right);
 		} else
 		{
 			CRect rcRect(x, y, x + m_pProvider->GetWidth(), y + 14);

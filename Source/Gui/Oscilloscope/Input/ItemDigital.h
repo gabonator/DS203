@@ -27,17 +27,17 @@ public:
 		x += 8;
 		
 		if ( m_pInfo->Polarity == CSettings::DigitalChannel::_POS )
-			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, sig_dig );
+			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, CShapes::sig_dig );
 
 		if ( m_pInfo->Polarity == CSettings::DigitalChannel::_NEG )
-			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, sig_dign );
+			x += BIOS::LCD::Draw( x, y, clr, RGBTRANS, CShapes::sig_dign );
 
 		if ( HasFocus() )
 		{
 			//x -= 8;
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, sel_left);
-			x += BIOS::LCD::Draw(x, y+1, RGBTRANS, clr, updown);
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, sel_right);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::sel_left);
+			x += BIOS::LCD::Draw(x, y+1, RGBTRANS, clr, CShapes::updown);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::sel_right);
 		}
 	}
 

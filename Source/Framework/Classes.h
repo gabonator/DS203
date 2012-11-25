@@ -92,7 +92,8 @@ public:
 		bottom = max(bottom, rcUnion.bottom);
 	}
 
-	int left, top, right, bottom;
+	// RAM optimization int->short
+	short left, top, right, bottom;
 };
 
 template <class TYPE>

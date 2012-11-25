@@ -10,6 +10,8 @@ public:
 		Settings.Runtime.m_nVolume = nValue * 4;
 		CCoreSettings::Update();
 		BIOS::SYS::Beep(100);
+// TODO: delayed save
+//		Settings.Save();
 	}
 	virtual int GetMin()
 	{

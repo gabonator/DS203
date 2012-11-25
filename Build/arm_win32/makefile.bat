@@ -5,7 +5,7 @@ rem DS203 Win32 GCC support by valky.eu ver 2.0
 rem USER DEFINED VALUES
 rem ===================================================
 set CBASE=C:\Programs\Devel\Gcc\arm-2011.03\bin\
-set TARGET=g:\
+set TARGET=h:\
 set TFILE=APP_G251
 set APP=1
 rem ===================================================
@@ -29,10 +29,16 @@ if not exist !CC!.* (
   goto :eof
 )
 
-
 FOR /F "eol=# tokens=1,* delims=:= " %%i in (../common/build.mk) do (
   set %%i=%%j
 )
+
+echo Getting GIT revision...
+FOR /F "eol=# tokens=1,* delims==" %%i in ('revision.bat') do (
+  set %%i=%%j
+)
+
+set REVISION=-DGIT_REVISION=%GIT_REVNUMBER% -DGIT_HASH=\"!GIT_REVHASH!\" -DGIT_BUILDER=\"!GIT_BUILDPC!\"
 
 cd ../../
 set BIN=Bin
@@ -44,12 +50,15 @@ if not exist !BIN! (
 )
 
 cd !BIN!
+rem goto link
+
 echo Compiling...
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC1! -o !ASM_OUT1!
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC2! -o !ASM_OUT2!
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC3! -o !ASM_OUT3!
 !CC! !WIN32_ARM_GCC_CFLAGS! !WIN32_ARM_GCC_INCLUDES! -c !C_SRCS!
-!CPP! !WIN32_ARM_GCC_GPPFLAGS! !WIN32_ARM_GCC_INCLUDES! -c !CPP_SRCS!
+!CPP! !WIN32_ARM_GCC_GPPFLAGS! !WIN32_ARM_GCC_INCLUDES! !REVISION! -c !CPP_SRCS!
+:link
 echo Linking...
 !CC! -o !TFILE!_!APP!.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app!APP!.lds !OBJS!
 !OBJCOPY! -O binary !TFILE!_!APP!.elf !TFILE!.bin

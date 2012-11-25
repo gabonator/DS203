@@ -22,6 +22,10 @@
 		bmp.Blit ( 70, 32, bitmapTuner );
 		DrawPiano();
 		DrawScale();
+
+		CRect rcScale(200, 120, 340, 132);
+		BIOS::LCD::Print( rcScale.CenterX()-5*4, rcScale.bottom + 2, RGB565(000000), RGBTRANS, "cents");
+		BIOS::LCD::Print( 240, BIOS::LCD::LcdHeight-41, RGB565(ff0000), RGBTRANS, "Spectrum");
 	}
 
 	float fBestFreq = GetFundamental();
@@ -130,14 +134,13 @@ void CWndTuner::DrawScale()
 		BIOS::LCD::Bar( rcSegment, clr );
 
 	}
-	BIOS::LCD::Print( rcScale.CenterX()-5*4, rcScale.bottom + 10, RGB565(000000), RGBTRANS, "cents");
 }
 
 void CWndTuner::DrawCents(int nCents, bool bShow )
 {
 	CRect rcScale(200, 120, 340, 132);
 	int x = rcScale.left+(nCents+50)*rcScale.Width()/100;
-	BIOS::LCD::Draw(x-4, rcScale.bottom, bShow ? RGB565(000000) : RGB565(ffffff), RGBTRANS, triangle);
+	BIOS::LCD::Draw(x-4, rcScale.bottom, bShow ? RGB565(000000) : RGB565(ffffff), RGBTRANS, CShapes::triangle);
 }
 
 void CWndTuner::DrawKey(int nKey, bool bEnabled)
@@ -249,6 +252,9 @@ float CWndTuner::GetFundamental()
 
 	CFft<1024> fft;
 
+	CRect rcSpec(200, 150, 340, 200 );
+	//BIOS::LCD::Bar(rcSpec, RGB565(808080));
+
 	int nOffset = Settings.Time.InvalidFirst;
 
 	for ( int i = 0; i < nLength; i++ )
@@ -279,13 +285,20 @@ float CWndTuner::GetFundamental()
 	int nBestIndex = nIndexBegin;
 	int nBestAmplSq = 0;
 	int nAmplSq[3] = {0, 0, 0};
+	const ui16 arrPattern[] = { RGB565(ff8080), RGB565(ff0000), RGB565(ff1010), RGB565(ffd0d0) };
 
 	_ASSERT( nIndexBegin > 5 && nIndexEnd - nIndexBegin > 200 );
 
 	int nAverage = 0;
+	int nSpecPrevX = 0;
+	int nSpecMax = 0;
 
 	for (int i=nIndexBegin-2; i<nIndexEnd; i++)
 	{
+		/*
+			Searching peak value max(Z[i]), for better location of fundamental we should
+			search for max(Z[i]+Z[i*2]+Z[i*4]) 
+		*/
 		nAmplSq[0] = nAmplSq[1];
 		nAmplSq[1] = nAmplSq[2];
 		nAmplSq[2] = pWaveformR[i+1]*pWaveformR[i+1] + pWaveformI[i+1]*pWaveformI[i+1];
@@ -296,6 +309,25 @@ float CWndTuner::GetFundamental()
 		UTILS.Clamp<int>(nY, 0, 150);
 		BIOS::LCD::Line(nX, BIOS::LCD::LcdHeight-1, nX, BIOS::LCD::LcdHeight-nY-1, RGB565(ff0000));
 		*/
+
+		int nSpecDispX = (i-nIndexBegin)*rcSpec.Width()/(nIndexEnd-nIndexBegin);
+		nSpecDispX = max( nSpecDispX, 0 );
+		nSpecMax = max(nSpecMax, nAmplSq[1]);
+		if ( nSpecPrevX <= nSpecDispX-4 )
+		{
+			int nSpecY = fft.Sqrt( nSpecMax );
+			nSpecY /= 16;
+			nSpecY += 1;
+			UTILS.Clamp<int>(nSpecY, 0, rcSpec.Height() );
+			for (int x=nSpecPrevX+1; x<nSpecDispX; x++)
+			{
+				int _x = rcSpec.left + x;
+				BIOS::LCD::Line( _x, rcSpec.top, _x, rcSpec.bottom-nSpecY, RGB565(ffffff));
+				BIOS::LCD::Pattern( _x, rcSpec.bottom-nSpecY, _x+1, rcSpec.bottom, arrPattern, COUNT(arrPattern) );
+			}
+			nSpecMax = 0;
+			nSpecPrevX = nSpecDispX;
+		}
 
 		if ( i > nIndexBegin && nAmplSq[0] < nAmplSq[1] && nAmplSq[2] < nAmplSq[1] )
 		{
@@ -331,10 +363,7 @@ float CWndTuner::GetFundamental()
 	return fBestIndex/nLength*(fSampling);
 }
 
-#ifndef _WIN32
-__attribute__((section(".extra")))
-#endif
-
+LINKERSECTION(".extra")
 /*const*/ const unsigned char CWndTuner::bitmapTuner[] = {
 	0x47, 0x42, 0xed, 0x01, 0x32, 0xff, 0xff, 0xff, 0xff, 0x10, 0x17, 0x10, 0x30, 0x41, 0xb4, 0x08, 0x24, 0x73, 0x56, 0x7b, 0xd0, 0x9c, 0xd3, 0xad, 0x76, 0xbd, 0xf8, 0xf7, 0x9e, 0xde, 0xdb, 0xce, 
 	0x79, 0xff, 0xdf, 0xe7, 0x3c, 0xa9, 0xf1, 0x01, 0xa7, 0x25, 0x0a, 0x1e, 0x01, 0x21, 0x00, 0xd8, 0x20, 0x09, 0x37, 0x05, 0x81, 0x50, 0xd1, 0xe0, 0x12, 0x10, 0x08, 0xb1, 0x00, 0x11, 0xe3, 0xbb, 

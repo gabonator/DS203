@@ -8,11 +8,13 @@
 
 /*virtual*/ void CWndMenuCalibration::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
+#if 0
 	if ( pSender == &m_wndListAnalog && code == ToWord('e', 'x')  )
 	{
 		m_wndListAnalog.StopModal();
 		return;
 	}
+#endif
 	if ( pSender == &m_wndListSimple && code == ToWord('e', 'x')  )
 	{
 		m_wndListSimple.StopModal();
@@ -73,6 +75,7 @@
 		m_wndListAdc.m_itmExecute.SendMessage( &m_wndListAdc, code, 0 );
 		return;
 	}
+#if 0
 	if ( data == (ui32)&m_wndListAnalog.m_proExecute && code == ToWord('l', 'e' ) )
 	{
 		m_wndListAnalog.m_itmExecute.SendMessage( &m_wndListAnalog, code, 0 );
@@ -83,21 +86,21 @@
 		m_wndListAnalog.m_itmInfo.SendMessage( &m_wndListAnalog, code, 0 );
 		return;
 	}
-
+#endif
 	if ( code == ToWord('m', 'o') && pSender == &m_itmAdc )
 	{
 		m_wndListAdc.Create( this );
 		m_wndListAdc.StartModal( &m_wndListAdc.m_itmExecute );
 		return;
 	}
-
+#if 0
 	if ( code == ToWord('m', 'o') && pSender == &m_itmComplex )
 	{
 		m_wndListAnalog.Create( this );
 		m_wndListAnalog.StartModal( &m_wndListAnalog.m_itmResolution );
 		return;
 	}
-
+#endif
 	if ( code == ToWord('m', 'o') && pSender == &m_itmSimple )
 	{
 		m_wndListSimple.Create( this );

@@ -9,7 +9,12 @@
 class CWndMenuGeneratorEdit : public CWnd
 {
 public:
-	CWndMenuItem	m_itm[5];
+	CWndMenuItem	m_itmCopy;
+	CWndMenuItem	m_itmNormalize;
+	CWndMenuItem	m_itmInvert;
+	CWndMenuItem	m_itmEdit;
+	CWndMenuItem	m_itmSave;
+	CWndMenuItem	m_itmLoad;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);

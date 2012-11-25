@@ -147,7 +147,7 @@ SECTIONS
 
     .extra : {
         *(.extra)
-    } >extra
+    } >EXTRA
     
     .  = 0x20000000;   /* From 0x20000000 */      
 

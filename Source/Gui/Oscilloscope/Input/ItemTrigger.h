@@ -47,22 +47,22 @@ public:
 
 		if ( Settings.Trig.Type == CSettings::Trigger::_EdgeLH )
 		{
-			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, trig_pos_ );
-			x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, trig_pos );
+			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, CShapes::trig_pos_ );
+			x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, CShapes::trig_pos );
 		}
 		else
 		{
-			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, trig_neg_ );
-			x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, trig_neg );
+			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, CShapes::trig_neg_ );
+			x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, CShapes::trig_neg );
 		}
 		
 		x = m_rcClient.left + 12 + MarginLeft;
 		y += 16;
 		if ( HasFocus() )
 		{
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, sel_left);
-			x += BIOS::LCD::Draw(x, y+1, RGBTRANS, clr, updown);
-			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, sel_right);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::sel_left);
+			x += BIOS::LCD::Draw(x, y+1, RGBTRANS, clr, CShapes::updown);
+			x += BIOS::LCD::Draw(x, y+1, clr, RGBTRANS, CShapes::sel_right);
 
 			x = m_rcClient.left + 12 + MarginLeft;
 		} else
@@ -74,16 +74,16 @@ public:
 
 		if ( !BIOS::ADC::Enabled() )
 		{
-			x += BIOS::LCD::Draw( x, y, RGB565(ff0000), RGBTRANS, trig_stop);
+			x += BIOS::LCD::Draw( x, y, RGB565(ff0000), RGBTRANS, CShapes::trig_stop);
 		} else
 		{
 			switch ( Settings.Trig.State )
 			{
 			case CSettings::Trigger::_Run:
-				x += BIOS::LCD::Draw( x, y, RGB565(00b000), RGBTRANS, trig_run);
+				x += BIOS::LCD::Draw( x, y, RGB565(00b000), RGBTRANS, CShapes::trig_run);
 				break;
 			case CSettings::Trigger::_Stop:
-				x += BIOS::LCD::Draw( x, y, RGB565(ff0000), RGBTRANS, trig_stop);
+				x += BIOS::LCD::Draw( x, y, RGB565(ff0000), RGBTRANS, CShapes::trig_stop);
 				break;
 			case CSettings::Trigger::_Wait:
 				x += BIOS::LCD::Print( x, y, RGB565(ff0000), RGBTRANS, "W");
