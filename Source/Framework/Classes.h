@@ -3,7 +3,8 @@
 
 class CPoint {
 public:
-	int x, y;
+	// RAM optimization int->short
+	short x, y;
 	CPoint()
 	{
 	}
