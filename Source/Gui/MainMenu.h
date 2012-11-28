@@ -15,6 +15,7 @@ public:
 	CWndMenuBlock	m_itmSettings;
 	CWndMenuBlock	m_itmUser;
 	CWndMenuBlock	m_itmAbout;
+	CWndMenuBlock	m_itmDmm;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnPaint();

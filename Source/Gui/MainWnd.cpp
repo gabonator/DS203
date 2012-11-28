@@ -60,6 +60,7 @@ void CMainWnd::Create()
 	m_wndAboutDevice.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
 	m_wndUserCalibration.Create( this, WsHidden );
+	m_wndUserDmm.Create( this, WsHidden );
 
 	m_wndToolbox.Create(this);
 

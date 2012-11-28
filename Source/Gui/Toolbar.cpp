@@ -38,8 +38,8 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 		{ CBarItem::ISub,	"Calib", &MainWnd.m_wndUserCalibration, 5},		// 23
 		{ CBarItem::ISub,	"Meter", &MainWnd.m_wndUserMeter, 5},			// 24
 
-//		{ CBarItem::IMain,	"Dmm", &MainWnd.m_wndModuleSel, 6},				// 25
-//		{ CBarItem::ISub,	"Meas", &MainWnd.m_wndUserDmm, 6},			// 26
+		{ CBarItem::IMain,	"Dmm", &MainWnd.m_wndModuleSel, 6},				// 25
+		{ CBarItem::ISub,	"Meas", &MainWnd.m_wndUserDmm, 6},				// 26
 
 		{ CBarItem::IEnd,		NULL, NULL }
 	};

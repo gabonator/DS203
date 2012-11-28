@@ -20,6 +20,7 @@
 #include "Settings/KeySettings.h"
 #include "Calibration/Calibration.h"
 #include "User/Meter.h"
+#include "Dmm/Dmm.h"
 #include "Spectrum/Spectrum.h"
 
 class CMainWnd : public CWnd
@@ -60,6 +61,7 @@ public:
 	//CWndCalibration		m_wndUserCalibration;
 	CWndMenuCalibration	m_wndUserCalibration;
 	CWndUserMeter		m_wndUserMeter;
+	CWndUserDmm			m_wndUserDmm;
 
 	CWndMenuSpectMain	m_wndSpectrumMain;
 	CWndMenuSpectMarker	m_wndSpectrumMarker;

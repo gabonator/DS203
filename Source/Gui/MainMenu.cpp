@@ -24,19 +24,19 @@
 	rcItem = _ITEM(0, 1);
 	m_itmSpectrum.Create( "Spectrum\nanalyser", RGB565(ffffff), rcItem, this, &m_itmLogic, &m_itmUser);
 	rcItem = _ITEM(0, 2);
-	m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), rcItem, this, /*&m_itmDmm*/ &m_itmAbout , &m_itmAbout);
+	m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), rcItem, this, &m_itmDmm, &m_itmAbout);
 	rcItem = _ITEM(1, 0);
 	m_itmSettings.Create( "Settings", RGB565(ffffff), rcItem, this, &m_itmOscilloscope, &m_itmResponse);
 	rcItem = _ITEM(1, 1);
 	m_itmUser.Create( "User\napplications", RGB565(ffffff), rcItem, this, &m_itmSpectrum, &m_itmLogic);
 	rcItem = _ITEM(1, 2);
-	m_itmAbout.Create( "About", RGB565(ffffff), rcItem, this, &m_itmGenerator, /*&m_itmDmm*/ &m_itmGenerator);
+	m_itmAbout.Create( "About", RGB565(ffffff), rcItem, this, &m_itmGenerator, &m_itmDmm);
 	rcItem = _ITEM(2, 0);
 	m_itmResponse.Create( "Frequency\nresponse", RGB565(808080), rcItem, this, &m_itmSettings, &m_itmOscilloscope);
 	rcItem = _ITEM(2, 1);
 	m_itmLogic.Create( "Logic\nanalyser", RGB565(808080), rcItem, this, &m_itmUser, &m_itmSpectrum);
 	rcItem = _ITEM(2, 2);
-	//m_itmDmm.Create( "Dmm", RGB565(ffffff), rcItem, this, &m_itmAbout, &m_itmGenerator);
+	m_itmDmm.Create( "Dmm", RGB565(ffffff), rcItem, this, &m_itmAbout, &m_itmGenerator);
 }
 
 /*virtual*/ void CWndModuleSelector::OnPaint()
@@ -62,8 +62,8 @@
 			target = CWndToolBar::_About;
 		if ( GetFocus() == &m_itmUser )
 			target = CWndToolBar::_UserApp;
-//		if ( GetFocus() == &m_itmDmm )
-//			target = CWndToolBar::_Dmm;
+		if ( GetFocus() == &m_itmDmm )
+			target = CWndToolBar::_Dmm;
 		
 		if (target >= 0)
 		{

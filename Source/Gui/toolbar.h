@@ -43,9 +43,9 @@ public:
 		_Demo = 21,
 		_Snake = 22,
 		_Calib = 23,
-		_Meter =24 //,
-//		_Dmm =25,
-//		_DmmMeas =26
+		_Meter =24,
+		_Dmm =25,
+		_DmmMeas =26
 	};
 
 	class CBarItem
