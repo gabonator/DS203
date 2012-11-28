@@ -208,4 +208,8 @@ CWndMenuInput::CWndMenuInput()
 	}
 }
 
+/*virtual*/ CWnd* CWndMenuInput::GetFirstActiveWindow()
+{
+	return m_pParent->GetFirstActiveWindow();
+}
 

@@ -209,7 +209,6 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />
-    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp" />
     <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\Annot.cpp" />
     <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.cpp" />
     <ClCompile Include="..\..\Source\Gui\Spectrum\Core\FFT.cpp" />

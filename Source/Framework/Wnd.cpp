@@ -143,6 +143,22 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 			pFocus->Invalidate();
 		}
 	}
+
+	if ( nKey & BIOS::KEY::KeyEscape )
+	{
+		if(m_pParent && m_pParent->m_pParent) {
+			CWnd *pFocus = m_pParent->m_pParent->m_pFirst;
+			if (pFocus)
+			{
+				if (pFocus->GetLast())
+					pFocus = pFocus->GetLast();	// staci !?
+
+				pFocus->SetFocus();
+				this->Invalidate();
+				pFocus->Invalidate();
+			}
+		}
+	}
 }
 
 /*virtual*/ void CWnd::OnMessage(CWnd* pSender, ui16 code, ui32 data)
@@ -257,26 +273,47 @@ CWnd* CWnd::_GetNextActiveWindow()
 		pWnd = pWnd->m_pNext;
 	}
 
-	if (!pWnd && m_pParent && (m_pParent->m_dwFlags & WsModal))
-		return NULL;
+	if (!pWnd && m_pParent && !(m_pParent->m_dwFlags & WsModal))
+		pWnd =  m_pParent->_GetNextActiveWindow();
 
-	if (!pWnd && m_pParent )
-		return m_pParent->_GetNextActiveWindow();
-
+	if(!pWnd)
+	{	// No more items => go back to the begining
+		pWnd = GetFirstActiveWindow();
+	}
 	return pWnd;
 }
+
 CWnd* CWnd::_GetPrevActiveWindow()
 {
 	CWnd *pWnd = GetPrev();
 	while ( pWnd && ( !(pWnd->m_dwFlags & WsVisible) || (pWnd->m_dwFlags & WsNoActivate)) )
 		pWnd = pWnd->GetPrev();
 
-	if (!pWnd && m_pParent && (m_pParent->m_dwFlags & WsModal))
-		return NULL;
+	if (!pWnd && m_pParent && !(m_pParent->m_dwFlags & WsModal))
+		pWnd = m_pParent->_GetPrevActiveWindow();
 
-	if (!pWnd && m_pParent)
-		return m_pParent->_GetPrevActiveWindow();
+	if(!pWnd)
+	{ // No more items => go back to the end
+		pWnd = GetLastActiveWindow();
+	}
+	return pWnd;
+}
 
+/*virtual*/ CWnd* CWnd::GetLastActiveWindow()
+{
+	CWnd *pWnd = GetLast();
+	if(pWnd && (!(pWnd->m_dwFlags & WsVisible))) {
+		pWnd = NULL;
+	}
+	return pWnd;
+}
+
+/*virtual*/ CWnd* CWnd::GetFirstActiveWindow()
+{
+	CWnd *pWnd = m_pFirst;
+	if(pWnd && (!(pWnd->m_dwFlags & WsVisible))) {
+		pWnd = NULL;
+	}
 	return pWnd;
 }
 

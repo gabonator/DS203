@@ -77,6 +77,8 @@ CSettings* CSettings::m_pInstance = NULL;
 		 = {"No", "Yes"};
 /*static*/ const char* const CSettings::Display::ppszTextGrid[]
 		 = {"None", "Dots", "Lines"};
+/*static*/ const char* const CSettings::Display::ppszTextAxis[]
+		 = {"None", "Single", "Double"};
 /*static*/ const char* const CSettings::Spectrum::ppszTextWindow[]
 		= {"Rect", "Hann"};
 /*static*/ const char* const CSettings::Spectrum::ppszTextDisplay[]
@@ -87,6 +89,12 @@ CSettings* CSettings::m_pInstance = NULL;
 		= {"Off", "CH1", "CH2"};
 /*static*/ const char* const CSettings::Spectrum::ppszTextMode[]
 		= {"Manual", "Find max"};
+
+/*static*/ const char* const CSettings::CRuntime::ppszTextBeepOnOff[]
+		= {"On", "Off"};
+/*static*/ const char* const CSettings::CRuntime::ppszTextShortcut[]
+		= {"Start/Stop Acquisition", "Oscilloscope", "Spectrum", "Generator", "Tuner", "Meter", "Screenshot"};
+
 
 CSettings::CSettings()
 {
@@ -249,6 +257,7 @@ void CSettings::Reset()
 	Disp.Average = Display::_AvgNo;
 	Disp.Persist = Display::_PerNo;
 	Disp.Grid = Display::_GridDots;
+	Disp.Axis= Display::_AxisSingle;
 
 	Spec.Window = Spectrum::_Hann;
 	Spec.Display = Spectrum::_Fft;
@@ -263,7 +272,15 @@ void CSettings::Reset()
 	Runtime.m_nMenuItem = -1;
 	Runtime.m_nUptime = 0;
 	Runtime.m_nBacklight = 50;
-	Runtime.m_nVolume = 50;
+	Runtime.m_nVolume = 12;
+	for(ui8 i = 0 ; i < 7 ; i++)
+	{
+		Runtime.m_nSubMenuItems[i] = -1;
+	}
+	Runtime.Beep = CRuntime::_On;
+	Runtime.ShortcutTriangle = CRuntime::_StartStop;
+	Runtime.ShortcutS1 = CRuntime::_Generator;
+	Runtime.ShortcutS2 = CRuntime::_Meter;
 }
 
 ui32 CSettings::GetChecksum()

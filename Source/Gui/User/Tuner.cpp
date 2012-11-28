@@ -1,14 +1,5 @@
 #include "Tuner.h"
 
-#include <Source/Gui/Oscilloscope/Meas/Statistics.h>	
-
-float GetAverage()
-{
-	CMeasStatistics Stat;
-    Stat.Process( CSettings::Measure::_CH1, CSettings::Measure::_View );
-    return Stat.GetAvg();
-}
-
 /*virtual*/ void CWndTuner::Create(CWnd *pParent, ui16 dwFlags)
 {
 	CWnd::Create("CWndTuner", dwFlags | CWnd::WsNoActivate | CWnd::WsListener, CRect(0, 16, 400, 240), pParent);

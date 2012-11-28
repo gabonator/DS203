@@ -286,6 +286,8 @@ public:
 		// = {"No", "Yes"};
 		static const char* const ppszTextGrid[];
 		// = {"None", "Dots", "Lines"};
+		static const char* const ppszTextAxis[];
+		// = {"None", "Single", "Double"};
 
 		enum { _TY, _XY, _YX, _AxesMax = _YX }
 			Axes;
@@ -297,15 +299,17 @@ public:
 			Persist;
 		enum { _GridNone, _GridDots, _GridLines, _GridMax = _GridLines }
 			Grid;
+		enum { _AxisNone, _AxisSingle, _AxisDouble, _AxisMax = _AxisDouble }
+			Axis;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Axes) << _E(Draw) << _E(Average) << _E(Persist) << _E(Grid);
+			stream << _E(Axes) << _E(Draw) << _E(Average) << _E(Persist) << _E(Grid) << _E(Axis);
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Axes) >> _E(Draw) >> _E(Average) >> _E(Persist) >> _E(Grid);
+			stream >> _E(Axes) >> _E(Draw) >> _E(Average) >> _E(Persist) >> _E(Grid) >> _E(Axis);
 			return *this;
 		}
 	};
@@ -354,10 +358,22 @@ public:
 	class CRuntime : public CSerialize
 	{
 	public:
+		static const char* const ppszTextBeepOnOff[];
+		// = {"On", "Off"};
+		static const char* const ppszTextShortcut[];
+		// = {"Start/Stop Acquisition", "Oscilloscope", "Spectrum", "Generator", "Tuner", "Meter", "Screenshot"};
+
+		enum { _On, _Off, _BeepMax = _Off }
+		Beep;
+
+		enum EShortcut { _StartStop, _Oscilloscope, _Spectrum, _Generator, _Tuner, _Meter, _Screenshot, _ShortcutMax = _Screenshot }
+		ShortcutTriangle, ShortcutS1, ShortcutS2;
+
 		int m_nMenuItem;
 		int m_nUptime;
 		int m_nBacklight;
 		int m_nVolume;
+		int m_nSubMenuItems[7];
 		
 		FLOAT m_fTimeRes;
 		FLOAT m_fCH1Res;
@@ -365,12 +381,18 @@ public:
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume;
+			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume 
+			<< m_nSubMenuItems[0] << m_nSubMenuItems[1] << m_nSubMenuItems[2] 
+			<< m_nSubMenuItems[3] << m_nSubMenuItems[4] << m_nSubMenuItems[5]
+			<< _E(Beep) << _E(ShortcutTriangle) << _E(ShortcutS1) << _E(ShortcutS2);
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume;
+			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume
+			>> m_nSubMenuItems[0] >> m_nSubMenuItems[1] >> m_nSubMenuItems[2] 
+			>> m_nSubMenuItems[3] >> m_nSubMenuItems[4] >> m_nSubMenuItems[5]
+			>> _E(Beep) >> _E(ShortcutTriangle) >> _E(ShortcutS1) >> _E(ShortcutS2);
 			return *this;
 		}
 	};

@@ -17,6 +17,7 @@
 #include "User/Tuner.h"
 #include "About/About.h"
 #include "Settings/Settings.h"
+#include "Settings/KeySettings.h"
 #include "Calibration/Calibration.h"
 #include "User/Meter.h"
 #include "Spectrum/Spectrum.h"
@@ -40,6 +41,7 @@ public:
 	CWndMenuCursor		m_wndMenuCursor;
 	CWndMenuMeas		m_wndMenuMeas;
 	CWndMenuSettings	m_wndMenuSettings;
+	CWndMenuKeySettings	m_wndMenuKeySettings;
 	CWndMenuDisplay		m_wndMenuDisplay;
 	CWndMenuGenerator	m_wndMenuGenerator;
 	CWndMenuGeneratorMod	m_wndMenuGeneratorMod;
@@ -82,6 +84,7 @@ private:
 
 private:
 	void SdkProc();
+	void CallShortcut(CSettings::CRuntime::EShortcut shortcut);
 };
 
 #endif

@@ -4,6 +4,8 @@
 #include <math.h>
 #include "Statistics.h"
 
+CMeasStatistics		m_Stat;
+
 /*virtual*/ void CWndMenuMeas::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	CWnd::Create("CWndMenuMeas", dwFlags | CWnd::WsListener, CRect(320-CWndMenuItem::MarginLeft, 20, 400, 240), pParent);
@@ -85,8 +87,6 @@
 
 void CWndMenuMeas::_UpdateAll()
 {
-	CMeasStatistics m_Stat;
-
 	for ( int nFilter = CSettings::Measure::_CH1; nFilter <= CSettings::Measure::_Math; nFilter++ )
 	{
 		int nLastRange = -1;

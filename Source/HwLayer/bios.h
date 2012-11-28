@@ -52,6 +52,11 @@ public:
 		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, char* str);
 		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, const char* str);
 		static int Print (const CPoint& cp, unsigned short clrf, char *str);
+
+		static int Printf (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char* format, ...);
+		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, char* str);
+		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char* str);
+
 		static void Line(int x1, int y1, int x2, int y2, unsigned short clr);
 		static ui16 GetPixel(int x, int y);
 		static void PutPixel(int x, int y, unsigned short clr);
@@ -86,7 +91,9 @@ public:
 			KeyEnter = 16,
 			KeyEscape = 32,
 			KeyFunction = 64,
-			KeyFunction2 = 128
+			KeyFunction2 = 128,
+			KeyS1 = 256,
+			KeyS2 = 512
 		};
 
 	public:

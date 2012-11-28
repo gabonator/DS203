@@ -7,6 +7,7 @@
 #define xstrlen(a) 5
 /*static*/ u8 _Round(int x, int y);
 /*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch);
+/*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch,int scale);
 
 
 CRect m_rcBuffer;
@@ -94,6 +95,42 @@ CPoint m_cpBuffer;
         va_start( args, format );
         int aux = print( &bbuf, format, args );
 	Print(x, y, clrf, clrb, buf);
+	return aux;
+}
+
+/*static*/ int BIOS::LCD::Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char *str)
+{
+	if (!str || !*str)
+		return 0;
+	int _x = x;
+	for (;*str; str++)
+	{
+		if (*str == '\n')
+		{
+			x = _x;
+			y += (16*scale);
+			continue;
+		}
+		x += _DrawChar(x, y, clrf, clrb, *str, scale);
+	}
+	return x - _x;
+}
+
+/*static*/ int BIOS::LCD::Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, char *str)
+{
+	return BIOS::LCD::Print (x, y, clrf, clrb, scale, (const char*)str);
+}
+
+/*static*/ int BIOS::LCD::Printf (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char * format, ...)
+{
+	char buf[128];
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        int aux = print( &bbuf, format, args );
+	Print(x, y, clrf, clrb, scale, buf);
 	return aux;
 }
 
@@ -355,6 +392,77 @@ CPoint m_cpBuffer;
 		}
 	}
 	return 8;
+}
+
+/*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch, int scale)
+{
+	const unsigned char *pFont = GetFont(ch);
+	if (clrb == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				if ( col & 128 )
+				{
+					for(int i=0 ; i<=scale ; i++)
+					{
+						for(int j=0 ; j<=scale ; j++)
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrf);
+						}
+					}
+				}
+			}
+		}
+	} else if (clrf == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				if ( (col & 128) == 0 )
+				{
+					for(int i=0 ; i<=scale ; i++)
+					{
+						for(int j=0 ; j<=scale ; j++)
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrb);
+						}
+					}
+				}
+			}
+		}
+	} else
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				for(int i=0 ; i<=scale ; i++)
+				{
+					for(int j=0 ; j<=scale ; j++)
+					{
+						if ( col & 128 )
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrf);
+						}
+						else
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrb);
+						}
+					}
+				}
+			}
+		}
+	}
+	return (8*scale);
 }
 
 /*static*/ void BIOS::LCD::Line(int x1, int y1, int x2, int y2, unsigned short clr)

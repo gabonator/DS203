@@ -20,6 +20,7 @@ int g_nBufferLen = 4096;
 #define RGB565RGB(r, g, b) (((r)>>3)|(((g)>>2)<<5)|(((b)>>3)<<11))
 
 int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch);
+int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch,int scale);
 DWORD FROM_565_TO_RGB(unsigned short clr565);
 WORD FROM_RGB_TO_565(unsigned int clrrgb);
 ui8 _Round(int x, int y);
@@ -95,6 +96,74 @@ void Assert(const char *msg, int n)
 			continue;
 		}
 		int nW = _DrawChar(x, y, clrf, clrb, *str);
+		x += nW;
+		nAux += nW;
+	}
+	return nAux;
+}
+
+/*static*/ int BIOS::LCD::Printf (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char * format, ...)
+{
+	char buffer[256];
+	/*
+	va_list args;
+	va_start (args, format);
+	vsnprintf_s (buffer, 256, 255, format, args);
+	int nAux = Print (x, y, clrf, clrb, buffer);
+	va_end (args);
+	*/
+
+	char* bbuf = buffer; 
+    va_list args;
+    va_start( args, format );
+	int nAux = print( &bbuf, format, args );
+	Print( x, y, clrf, clrb, scale, buffer );
+
+	return nAux;
+}
+       
+/*static*/ int BIOS::LCD::Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, char *str)
+{
+	if (!str || !*str)
+		return 0;
+	int nAux = 0;
+	int _x = x;
+	for (;*str; str++)
+	{
+		if (*str == '\n')
+		{
+			x = _x;
+			y += (16*scale);
+			continue;
+		}
+		int nW = _DrawChar(x, y, clrf, clrb, *str, scale);
+		x += nW;
+		nAux += nW;
+	}
+	return nAux;
+}
+
+/*static*/ int BIOS::LCD::Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char *str)
+{
+	/*
+#ifdef _WIN32
+	_ASSERT( (int)str > 0x10000 );
+	const char *xx = str;
+	xx=xx;
+#endif*/
+	if (!str || !*str)
+		return 0;
+	int nAux = 0;
+	int _x = x;
+	for (;*str; str++)
+	{
+		if (*str == '\n')
+		{
+			x = _x;
+			y += (16*scale);
+			continue;
+		}
+		int nW = _DrawChar(x, y, clrf, clrb, *str, scale);
 		x += nW;
 		nAux += nW;
 	}
@@ -281,6 +350,12 @@ void Assert(const char *msg, int n)
 		nKeys |= KeyEscape;
 	if ( pKeys[VK_SPACE] )
 		nKeys |= KeyFunction;
+	if ( pKeys[VK_DELETE] )
+		nKeys |= KeyFunction2;
+	if ( pKeys[VK_F1] )
+		nKeys |= KeyS1;
+	if ( pKeys[VK_F2] )
+		nKeys |= KeyS2;
 	return nKeys;
 }
 
@@ -340,6 +415,77 @@ void Assert(const char *msg, int n)
 		}
 	}
 	return 8;
+}
+
+/*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch, int scale)
+{
+	const unsigned char *pFont = GetFont(ch);
+	if (clrb == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				if ( col & 128 )
+				{
+					for(int i=0 ; i<=scale ; i++)
+					{
+						for(int j=0 ; j<=scale ; j++)
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrf);
+						}
+					}
+				}
+			}
+		}
+	} else if (clrf == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				if ( (col & 128) == 0 )
+				{
+					for(int i=0 ; i<=scale ; i++)
+					{
+						for(int j=0 ; j<=scale ; j++)
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrb);
+						}
+					}
+				}
+			}
+		}
+	} else
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				for(int i=0 ; i<=scale ; i++)
+				{
+					for(int j=0 ; j<=scale ; j++)
+					{
+						if ( col & 128 )
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrf);
+						}
+						else
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrb);
+						}
+					}
+				}
+			}
+		}
+	}
+	return (8*scale);
 }
 
 /*static*/ DWORD FROM_565_TO_RGB(unsigned short clr565)
@@ -445,7 +591,7 @@ void Assert(const char *msg, int n)
 {
 }
 
-bool bADCEnabled = false;
+bool bADCEnabled = true;
 
 /*static*/ void BIOS::ADC::Enable(bool bEnable)
 {
