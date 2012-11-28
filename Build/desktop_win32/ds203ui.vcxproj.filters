@@ -567,5 +567,8 @@
     <ClCompile Include="..\..\Source\Core\Shapes.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp">
+      <Filter>Source\Gui\Oscilloscope\Meas</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
