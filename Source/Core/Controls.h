@@ -70,12 +70,12 @@ public:
 		CWnd::OnKey(nKey);
 	}
 
-	virtual CWnd* GetLastActiveWindow()
+	CWnd* GetLastActiveWindow()
 	{
 		return m_pParent->GetLastActiveWindow();
 	}
 
-	virtual CWnd* GetFirstActiveWindow()
+	CWnd* GetFirstActiveWindow()
 	{
 		return m_pParent->GetFirstActiveWindow();
 	}

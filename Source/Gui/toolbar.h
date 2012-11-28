@@ -41,10 +41,11 @@ public:
 		_UserApp = 19,
 		_Tuner = 20,
 		_Demo = 21,
-		_Calib = 22,
-		_Meter =23 //,
-//		_Dmm =24,
-//		_DmmMeas =25
+		_Snake = 22,
+		_Calib = 23,
+		_Meter =24 //,
+//		_Dmm =25,
+//		_DmmMeas =26
 	};
 
 	class CBarItem
@@ -74,7 +75,7 @@ public:
 	virtual void	OnPaint();
 	virtual void	OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	CWnd*			GetCurrentLayout();
-	virtual CWnd*	GetLastActiveWindow();
+	CWnd*			GetLastActiveWindow();
 	virtual void	ChangeFocus(ui8 oldFocus);
 
 private:

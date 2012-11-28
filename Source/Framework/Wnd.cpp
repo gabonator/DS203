@@ -299,7 +299,7 @@ CWnd* CWnd::_GetPrevActiveWindow()
 	return pWnd;
 }
 
-/*virtual*/ CWnd* CWnd::GetLastActiveWindow()
+CWnd* CWnd::GetLastActiveWindow()
 {
 	CWnd *pWnd = GetLast();
 	if(pWnd && (!(pWnd->m_dwFlags & WsVisible))) {
@@ -308,7 +308,7 @@ CWnd* CWnd::_GetPrevActiveWindow()
 	return pWnd;
 }
 
-/*virtual*/ CWnd* CWnd::GetFirstActiveWindow()
+CWnd* CWnd::GetFirstActiveWindow()
 {
 	CWnd *pWnd = m_pFirst;
 	if(pWnd && (!(pWnd->m_dwFlags & WsVisible))) {
