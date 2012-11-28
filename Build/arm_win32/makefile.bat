@@ -5,13 +5,26 @@ rem DS203 Win32 GCC support by valky.eu ver 2.0
 rem USER DEFINED VALUES
 rem ===================================================
 set CBASE=C:\Programs\Devel\Gcc\arm-2011.03\bin\
-set TARGET=g:\
 set TFILE=APP_G251
 set APP=1
 rem ===================================================
 
 Echo DS203 Build tool by valky.eu
-Echo Target slot: !APP!
+
+echo Locating DFU drive...
+FOR /F "eol=# tokens=1,* delims==" %%i in ('_identify.bat') do (
+  set %%i=%%j
+)
+
+if "%TARGET%"=="" (
+  echo Could not find the DFU drive.
+  echo Please turn on your DSO while holding the first button and then connect it to your computer
+  echo.
+  echo Press any key
+  pause > nul
+  goto :eof
+)
+
 Echo DFU Drive: !TARGET!
 
 call :CheckSpaces "%CD%" %CD%
@@ -34,11 +47,29 @@ FOR /F "eol=# tokens=1,* delims=:= " %%i in (../common/build.mk) do (
 )
 
 echo Getting GIT revision...
-FOR /F "eol=# tokens=1,* delims==" %%i in ('revision.bat') do (
+FOR /F "eol=# tokens=1,* delims==" %%i in ('_revision.bat') do (
   set %%i=%%j
 )
 
-set REVISION=-DGIT_REVISION=%GIT_REVNUMBER% -DGIT_HASH=\"!GIT_REVHASH!\" -DGIT_BUILDER=\"!GIT_BUILDPC!\"
+if NOT "%GIT_REVNUMBER%"=="" (
+  set D1=-DGIT_REVISION=%GIT_REVNUMBER%
+) else (
+  set D1=
+)
+
+if NOT "%GIT_REVHASH%"=="" (
+  set D2=-DGIT_HASH=\"%GIT_REVHASH%\"
+) else (
+  set D2=
+)
+
+if NOT "%GIT_BUILDPC%"=="" (
+  set D3=-DGIT_BUILDER=\"%GIT_BUILDPC%\"
+) else (
+  set D3=
+)
+
+set REVISION=%D1% %D2% %D3%
 
 cd ../../
 set BIN=Bin
