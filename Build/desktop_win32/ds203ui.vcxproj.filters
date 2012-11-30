@@ -121,6 +121,9 @@
     <Filter Include="Source\Gui\Spectrum\Core">
       <UniqueIdentifier>{b5f16496-1d8f-4b2f-a853-9bb20683239e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Meas\Decoders">
+      <UniqueIdentifier>{09937f41-df98-45f2-b3a4-0b8d5d1928fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -431,6 +434,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Settings\KeySettings.h">
       <Filter>Source\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h">
+      <Filter>Source\Gui\Oscilloscope\Meas\Decoders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
