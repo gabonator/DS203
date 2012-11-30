@@ -13,7 +13,7 @@ void CWndUserDmm::OnPaint()
 	BIOS::DBG::sprintf( strDisplay, "%f mV", fDisplay );
 
 	ui16 cOn = RGB565(11bbff);
-	ui16 cOff = RGB565(111111);
+	ui16 cOff = RGB565(050505);
 	ui16 cClr = RGB565(000000);
 
 	if ( bRefresh )
