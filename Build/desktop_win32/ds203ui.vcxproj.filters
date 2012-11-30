@@ -124,6 +124,9 @@
     <Filter Include="Source\Gui\Dmm">
       <UniqueIdentifier>{4b9c5265-7fbc-4ba6-af88-c5163ce3d5e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Oscilloscope\Meas\Decoders">
+      <UniqueIdentifier>{09937f41-df98-45f2-b3a4-0b8d5d1928fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -437,6 +440,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Dmm\Dmm.h">
       <Filter>Source\Gui\Dmm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h">
+      <Filter>Source\Gui\Oscilloscope\Meas\Decoders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

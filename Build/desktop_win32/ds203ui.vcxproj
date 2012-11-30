@@ -119,6 +119,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ListOperand.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ListOperator.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp" />
     <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\Annot.cpp" />
     <ClCompile Include="..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.cpp" />
     <ClCompile Include="..\..\Source\Gui\Spectrum\Core\FFT.cpp" />
