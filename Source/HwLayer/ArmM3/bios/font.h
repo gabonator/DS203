@@ -260,7 +260,7 @@ const ui8 font[256*14] = {
 };
 
 
-const ui8* GetFont(ui8 Code)
+const ui8* BIOS::LCD::GetFont(ui8 Code)
 {
 	return font + (Code*14);
 }

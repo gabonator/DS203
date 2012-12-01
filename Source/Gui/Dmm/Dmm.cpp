@@ -1,6 +1,7 @@
 #include "Dmm.h"
 #include <Source/Core/Settings.h>
 #include <string.h>
+#include <Source/Core/Utils.h>
 
 void CWndUserDmm::OnPaint()
 {
@@ -29,9 +30,9 @@ void CWndUserDmm::OnPaint()
 		strcpy(strDisplay, " Err");
 
 	const char* pDisplay = strDisplay;
-	BIOS::LCD::Print( 20, 20, cOn, cClr, 4, strDisplay);
+	CUtils::Print( 20, 20, cOn, cClr, 4, strDisplay);
 
-	BIOS::LCD::Printf( 80, 80, cOn, cClr, 2, "%f mV", fDisplay);
+	CUtils::Printf( 80, 80, cOn, cClr, 2, "%f mV", fDisplay);
 	int i;
 	for (i=0; *pDisplay && i < 4; i++, pDisplay++)
 	{

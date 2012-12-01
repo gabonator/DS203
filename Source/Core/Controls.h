@@ -69,16 +69,6 @@ public:
 			m_pParent->SendMessage( m_pParent, ToWord('e', 'x'), 0 );
 		CWnd::OnKey(nKey);
 	}
-
-	CWnd* GetLastActiveWindow()
-	{
-		return m_pParent->GetLastActiveWindow();
-	}
-
-	CWnd* GetFirstActiveWindow()
-	{
-		return m_pParent->GetFirstActiveWindow();
-	}
 };
 
 class CWndMenuItem : public CWnd
@@ -169,15 +159,11 @@ class CWndMenuBlock : public CWnd
 {
 public:
 	ui16 m_clr;
-	CWnd*	m_pLeft;
-	CWnd*	m_pRight;
 
 public:
-	virtual void Create(const char* pszId, ui16 clr, CRect& rcRect, CWnd *pParent, CWnd *pLeft, CWnd *pRight) 
+	virtual void Create( const char* pszId, ui16 clr, CRect& rcRect, CWnd *pParent ) 
 	{
 		m_clr = clr;
-		m_pLeft = pLeft;
-		m_pRight = pRight;
 		CWnd::Create( pszId, WsVisible, rcRect, pParent );
 	}
 
@@ -194,21 +180,8 @@ public:
 	}
 	virtual void OnKey(ui16 nKey)
 	{
-		if ( nKey == BIOS::KEY::KeyEnter )
-			GetParent()->OnKey( nKey );
-		if ( nKey == BIOS::KEY::KeyLeft )
-		{
-			m_pLeft->SetFocus();
-			this->Invalidate();
-			m_pLeft->Invalidate();
-		}
-		if ( nKey == BIOS::KEY::KeyRight )
-		{
-			m_pRight->SetFocus();
-			this->Invalidate();
-			m_pRight->Invalidate();
-		}
-		CWnd::OnKey(nKey);
+		// Parent will manage the movement
+		GetParent()->OnKey( nKey );
 	}
 
 };

@@ -11,12 +11,12 @@ public:
 
 	virtual void OnKey(ui16 nKey)
 	{
-		/*if ( ( nKey & BIOS::KEY::KeyLeft ) || ( nKey & BIOS::KEY::KeyRight ) )
+		if ( ( nKey & BIOS::KEY::KeyLeft ) || ( nKey & BIOS::KEY::KeyRight ) )
         {
             CItemProvider::OnKey( nKey ); // this will update the variable
-            Settings.Save(); // save new value, again this approach is not good idea
+            Settings.Kick(); 
             return;
-        }*/
+        }
 		CItemProvider::OnKey( nKey );
 	}
 };
