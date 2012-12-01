@@ -86,7 +86,7 @@ private:
 
 private:
 	void SdkProc();
-	void CallShortcut(CSettings::CRuntime::EShortcut shortcut);
+	void CallShortcut(int nShortcut);
 };
 
 #endif

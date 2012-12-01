@@ -1,5 +1,6 @@
 #include "Settings.h"    
 #include <Source/HwLayer/bios.h>
+#include <Source/Gui/Toolbar.h>
 #include <string.h>
 
 CSettings* CSettings::m_pInstance = NULL;
@@ -93,12 +94,12 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::CRuntime::ppszTextBeepOnOff[]
 		= {"On", "Off"};
 /*static*/ const char* const CSettings::CRuntime::ppszTextShortcut[]
-		= {"Start/Stop Acquisition", "Oscilloscope", "Spectrum", "Generator", "Tuner", "Meter", "Screenshot"};
-
+		= {"None", "Start/Stop Acquisition", "Toolbox", "Wave manager", "Screenshot"};
 
 CSettings::CSettings()
 {
 	m_pInstance = this;
+	m_lLastChange = 0;
 	Reset();
 	ResetCalibration();
 }
@@ -273,14 +274,12 @@ void CSettings::Reset()
 	Runtime.m_nUptime = 0;
 	Runtime.m_nBacklight = 50;
 	Runtime.m_nVolume = 12;
-	for(ui8 i = 0 ; i < 7 ; i++)
-	{
-		Runtime.m_nSubMenuItems[i] = -1;
-	}
-	Runtime.Beep = CRuntime::_On;
-	Runtime.ShortcutTriangle = CRuntime::_StartStop;
-	Runtime.ShortcutS1 = CRuntime::_Generator;
-	Runtime.ShortcutS2 = CRuntime::_Meter;
+	Runtime.m_Beep = CRuntime::_On;
+	// cant use CWndToolBar::Find, MainWnd has been not initialized! (CMainWnd::m_pInstance = NULL)
+	Runtime.m_nShortcutCircle = CRuntime::Toolbox;
+	Runtime.m_nShortcutTriangle = CRuntime::None;//CToolbar::Find( );CRuntime::_StartStop;
+	Runtime.m_nShortcutS1 = CRuntime::None; //CWndToolBar::Find( "Generator" );
+	Runtime.m_nShortcutS2 = CRuntime::None; //CWndToolBar::Find( "Meter" );
 }
 
 ui32 CSettings::GetChecksum()
@@ -343,7 +342,7 @@ void CSettings::ResetCalibration()
 	const static si16 defaultKin[] = {0, 0, 0, 0, 0, 256};
 	const static si32 defaultKout[] = {1<<11, 1<<11, 1<<11, 1<<11, 1<<11, 1<<11};
 
-	for ( int i = 0; i < AnalogChannel::_ResolutionMax; i++ )
+	for ( int i = 0; i <= AnalogChannel::_ResolutionMax; i++ )
 	{
 		memcpy( CH1Calib.CalData[i].m_arrCurveQin, defaultQin, sizeof(defaultQin) );
 		memcpy( CH1Calib.CalData[i].m_arrCurveQout, defaultQout, sizeof(defaultQout) );
@@ -366,6 +365,11 @@ void CSettings::ResetCalibration()
 //	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveQout, {9380*5, -154816*5} );
 //	_COPY( si16, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKin, {-20, 15, 75, 90, 245, 280} );
 //	_COPY( si32, CH1Calib.CalData[AnalogChannel::_200mV].m_arrCurveKout, {581*5, 580*5, 581*5, 582*5, 584*5, 580*5} );
+}
+
+void CSettings::Kick()
+{
+	m_lLastChange = BIOS::SYS::GetTick();
 }
 
 void CSettings::SaveCalibration()

@@ -52,11 +52,6 @@ public:
 		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, char* str);
 		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, const char* str);
 		static int Print (const CPoint& cp, unsigned short clrf, char *str);
-
-		static int Printf (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char* format, ...);
-		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, char* str);
-		static int Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char* str);
-
 		static void Line(int x1, int y1, int x2, int y2, unsigned short clr);
 		static ui16 GetPixel(int x, int y);
 		static void PutPixel(int x, int y, unsigned short clr);
@@ -78,6 +73,9 @@ public:
 		static void GetImage(const CRect& rcRect, ui16* pBuffer );
 		static void PutImage(const CRect& rcRect, ui16* pBuffer );
 		static void Shadow(int x1, int y1, int x2, int y2, unsigned int nColor);
+
+		static const ui8* GetFont(ui8 Code);
+
 	};
 
 	class KEY {

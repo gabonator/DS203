@@ -22,7 +22,7 @@ if "%TARGET%"=="" (
   echo.
   echo Press any key
   pause > nul
-  goto :eof
+  rem goto :eof
 )
 
 Echo DFU Drive: !TARGET!

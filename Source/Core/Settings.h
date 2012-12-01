@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '7')
+#define _VERSION ToDword('D', 'S', 'C', '8')
 
 class CSettings : public CSerialize
 {
@@ -361,19 +361,22 @@ public:
 		static const char* const ppszTextBeepOnOff[];
 		// = {"On", "Off"};
 		static const char* const ppszTextShortcut[];
-		// = {"Start/Stop Acquisition", "Oscilloscope", "Spectrum", "Generator", "Tuner", "Meter", "Screenshot"};
+		// = {"Start/Stop Acquisition", "Screenshot"};
 
 		enum { _On, _Off, _BeepMax = _Off }
-		Beep;
+			m_Beep;
 
-		enum EShortcut { _StartStop, _Oscilloscope, _Spectrum, _Generator, _Tuner, _Meter, _Screenshot, _ShortcutMax = _Screenshot }
-		ShortcutTriangle, ShortcutS1, ShortcutS2;
+		enum EShortcut { None = -1, StartStop = -2, Toolbox = -3, WaveManager = -4, Screenshot = -5, _ShortcutMax = Screenshot };
+
+		int m_nShortcutCircle;
+		int m_nShortcutTriangle;
+		int m_nShortcutS1;
+		int m_nShortcutS2;
 
 		int m_nMenuItem;
 		int m_nUptime;
 		int m_nBacklight;
 		int m_nVolume;
-		int m_nSubMenuItems[7];
 		
 		FLOAT m_fTimeRes;
 		FLOAT m_fCH1Res;
@@ -382,17 +385,13 @@ public:
 		virtual CSerialize& operator <<( CStream& stream )
 		{
 			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume 
-			<< m_nSubMenuItems[0] << m_nSubMenuItems[1] << m_nSubMenuItems[2] 
-			<< m_nSubMenuItems[3] << m_nSubMenuItems[4] << m_nSubMenuItems[5]
-			<< _E(Beep) << _E(ShortcutTriangle) << _E(ShortcutS1) << _E(ShortcutS2);
+				<< _E(m_Beep) << m_nShortcutTriangle << m_nShortcutS1 << m_nShortcutS2;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
 			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume
-			>> m_nSubMenuItems[0] >> m_nSubMenuItems[1] >> m_nSubMenuItems[2] 
-			>> m_nSubMenuItems[3] >> m_nSubMenuItems[4] >> m_nSubMenuItems[5]
-			>> _E(Beep) >> _E(ShortcutTriangle) >> _E(ShortcutS1) >> _E(ShortcutS2);
+				>> _E(m_Beep) >> m_nShortcutTriangle >> m_nShortcutS1 >> m_nShortcutS2;
 			return *this;
 		}
 	};
@@ -427,6 +426,7 @@ public:
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;
 	LinApprox	DacCalib;
+	ui32		m_lLastChange;
 
 	virtual CSerialize& operator <<( CStream& stream )
 	{
@@ -471,6 +471,7 @@ public:
 	ui32 GetChecksum();
 	ui32 GetStaticChecksum();
 	void Save();
+	void Kick();
 	void Load();
 	void Reset();
 

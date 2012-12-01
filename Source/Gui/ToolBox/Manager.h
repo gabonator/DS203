@@ -43,6 +43,7 @@ public:
 	virtual void	OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	virtual int		GetResult();
 	void			DoModal();
+	void			Cancel();
 
 private:
 	bool			Exists(char *strName);

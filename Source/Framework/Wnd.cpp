@@ -117,11 +117,16 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 	{
 		_ASSERT( m_pFocus == this ); // ja mam focus!
 		CWnd *pFocus = _GetNextActiveWindow();
+		
+		// cycle items, when there are no more window, jump to first possible
+		if ( !pFocus )
+			pFocus = _GetFirstActiveWindow();
+
 		if (pFocus)
 		{
-			// najdi prvy viditelny child ktore moze byt focusovatelny
+			// find first visible window wich can be focused
 			if (pFocus->m_pFirst)
-				pFocus = pFocus->m_pFirst;	// staci !?
+				pFocus = pFocus->m_pFirst;
 
 			pFocus->SetFocus();
 			this->Invalidate();
@@ -131,12 +136,17 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 
 	if ( nKey & BIOS::KEY::KeyUp )
 	{
-		_ASSERT( m_pFocus == this ); // ja mam focus!
+		_ASSERT( m_pFocus == this ); 
 		CWnd *pFocus = _GetPrevActiveWindow();
+
+		// cycle items
+		if ( !pFocus )
+			pFocus = _GetLastActiveWindow();
+
 		if (pFocus)
 		{
 			if (pFocus->GetLast())
-				pFocus = pFocus->GetLast();	// staci !?
+				pFocus = pFocus->GetLast();	
 
 			pFocus->SetFocus();
 			this->Invalidate();
@@ -151,7 +161,7 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 			if (pFocus)
 			{
 				if (pFocus->GetLast())
-					pFocus = pFocus->GetLast();	// staci !?
+					pFocus = pFocus->GetLast();	
 
 				pFocus->SetFocus();
 				this->Invalidate();
@@ -238,7 +248,8 @@ CWnd* CWnd::GetActiveWindow()
 }
 void CWnd::Invalidate()
 {
-	// TODO: najprv iba nastavit flag tomuto oknu a vsetkym childom, je nejake okno (dialog) nadomnou !?
+	// TODO: we should only mark this windows and redraw it a while later, but for keeping
+	// things simple, invalidate causes window to redraw
 	WindowMessage(WmPaint);
 }
 
@@ -246,6 +257,7 @@ void CWnd::SendMessage(CWnd* pTarget, ui16 code, ui32 data)
 {
 	pTarget->OnMessage(this, code, data);
 }
+
 void CWnd::ShowWindow(ui8 sh)
 {
 	if ( sh == SwShow )
@@ -276,10 +288,6 @@ CWnd* CWnd::_GetNextActiveWindow()
 	if (!pWnd && m_pParent && !(m_pParent->m_dwFlags & WsModal))
 		pWnd =  m_pParent->_GetNextActiveWindow();
 
-	if(!pWnd)
-	{	// No more items => go back to the begining
-		pWnd = GetFirstActiveWindow();
-	}
 	return pWnd;
 }
 
@@ -292,29 +300,31 @@ CWnd* CWnd::_GetPrevActiveWindow()
 	if (!pWnd && m_pParent && !(m_pParent->m_dwFlags & WsModal))
 		pWnd = m_pParent->_GetPrevActiveWindow();
 
-	if(!pWnd)
-	{ // No more items => go back to the end
-		pWnd = GetLastActiveWindow();
-	}
 	return pWnd;
 }
 
-CWnd* CWnd::GetLastActiveWindow()
+CWnd* CWnd::_GetLastActiveWindow()
 {
-	CWnd *pWnd = GetLast();
-	if(pWnd && (!(pWnd->m_dwFlags & WsVisible))) {
-		pWnd = NULL;
+	CWnd* pWnd = this;
+	CWnd* pWndLast = NULL;
+	for ( int i = 0; i < 14 && pWnd; i++ )
+	{
+		pWndLast = pWnd;
+		pWnd = pWnd->_GetNextActiveWindow();
 	}
-	return pWnd;
+	return pWndLast;
 }
 
-CWnd* CWnd::GetFirstActiveWindow()
+CWnd* CWnd::_GetFirstActiveWindow()
 {
-	CWnd *pWnd = m_pFirst;
-	if(pWnd && (!(pWnd->m_dwFlags & WsVisible))) {
-		pWnd = NULL;
+	CWnd* pWnd = this;
+	CWnd* pWndLast = NULL;
+	for ( int i = 0; i < 14 && pWnd; i++ )
+	{
+		pWndLast = pWnd;
+		pWnd = pWnd->_GetPrevActiveWindow();
 	}
-	return pWnd;
+	return pWndLast;
 }
 
 void CWnd::SetTimer(ui32 nInterval)

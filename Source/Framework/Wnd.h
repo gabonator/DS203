@@ -98,8 +98,6 @@ public:
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	virtual void WindowMessage(int nMsg, int nParam = 0);
 	virtual void OnTimer();
-	virtual CWnd* GetFirstActiveWindow();
-	virtual CWnd* GetLastActiveWindow();
 
 	void SetFocus();
 	ui8 HasFocus();
@@ -117,6 +115,9 @@ public:
 private:
 	CWnd* _GetNextActiveWindow();
 	CWnd* _GetPrevActiveWindow();
+	CWnd* _GetLastActiveWindow();
+	CWnd* _GetFirstActiveWindow();
+
 	void _UpdateTimers();
 };                                 
 

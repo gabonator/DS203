@@ -9,7 +9,6 @@ class CWndToolBar : public CWnd
 {
 public:
 	ui8	m_nFocus;
-	ui8	m_nOldFocus;
 	enum {
 		clrSelected = RGB565(ffffff),
 		clrNormal = RGB565(b0b0b0),
@@ -18,39 +17,8 @@ public:
 		bgrSelectedFocus = RGB565(ffffff),
 	};
 
-	enum {
-		_Oscilloscope = 0,
-		_Input = 1,
-		_Cursor = 2,
-		_Meas = 3,
-		_Math = 4,
-		_Disp = 5,
-		_Spectrum = 6,
-		_FFT = 7,
-		_Marker = 8,
-		_Generator = 9,
-		_Wave = 10,
-		_Edit = 11,
-		_Modulation = 12,
-		_Settings = 13,
-		_Main = 14,
-		_Keys = 15,
-		_About = 16,
-		_Device = 17,
-		_Firmware = 18,
-		_UserApp = 19,
-		_Tuner = 20,
-		_Demo = 21,
-		_Snake = 22,
-		_Calib = 23,
-		_Meter =24,
-		_Dmm =25,
-		_DmmMeas =26
-	};
-
-	class CBarItem
+	struct CBarItem
 	{
-	public:
 		enum EType {
 			IMain,
 			ISub,
@@ -58,10 +26,12 @@ public:
 		};
 
 		EType m_eType;                                   
-		PCSTR m_pName;
-		CWnd* m_pWndMenu; 
-		ui8   m_mainMenuIndex;
+		PSTR m_pName;
+		const CWnd* m_pWndMenu; 
 	};
+
+	static const CBarItem m_arrMenuItems[];
+
 
 public:
 	
@@ -75,11 +45,11 @@ public:
 	virtual void	OnPaint();
 	virtual void	OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	CWnd*			GetCurrentLayout();
-	CWnd*			GetLastActiveWindow();
 	virtual void	ChangeFocus(ui8 oldFocus);
 
-private:
-	CBarItem* GetMenuItems();
+public:
+	static const CBarItem* GetMenuItems();
+	static int Find( const char* strId );
 };
 	
 #endif

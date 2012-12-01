@@ -9,6 +9,7 @@
 void CWndListCalSimple::LoadCalib()
 {
 	Settings.Trig.Sync = CSettings::Trigger::_None;
+	_ASSERT( (int)m_calRange >= 0 && (int)m_calRange < COUNT(Settings.CH1Calib.CalData) );
 
 	if ( m_calChannel == CSettings::Trigger::_CH1 )
 	{
@@ -60,6 +61,7 @@ void CWndListCalSimple::LoadCalib()
 
 void CWndListCalSimple::SaveCalib()
 {
+	_ASSERT( (int)m_calRange >= 0 && (int)m_calRange < COUNT(Settings.CH1Calib.CalData) );
 	if ( m_calChannel == CSettings::Trigger::_CH1 )
 		Settings.CH1Calib.CalData[m_calRange] = m_calCurve;
 	if ( m_calChannel == CSettings::Trigger::_CH2 )

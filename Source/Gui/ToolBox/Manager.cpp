@@ -44,6 +44,11 @@ void CWndManager::Create( CWnd* pParent )
 	return 0;
 }
 
+void CWndManager::Cancel()
+{
+	m_bRunning = false;
+}
+
 void CWndManager::DoModal()
 {
 	m_bRunning = true;

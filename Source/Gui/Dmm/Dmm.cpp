@@ -1,6 +1,7 @@
 #include "Dmm.h"
 #include <Source/Core/Settings.h>
 #include <string.h>
+#include <Source/Core/Utils.h>
 
 void CWndUserDmm::OnPaint()
 {
@@ -29,9 +30,9 @@ void CWndUserDmm::OnPaint()
 		strcpy(strDisplay, " Err");
 
 	const char* pDisplay = strDisplay;
-	BIOS::LCD::Print( 20, 20, cOn, cClr, 4, strDisplay);
+	CUtils::Print( 20, 20, cOn, cClr, 4, strDisplay);
 
-	BIOS::LCD::Printf( 80, 80, cOn, cClr, 2, "%f mV", fDisplay);
+	CUtils::Printf( 80, 80, cOn, cClr, 2, "%f mV", fDisplay);
 	int i;
 	for (i=0; *pDisplay && i < 4; i++, pDisplay++)
 	{
@@ -58,9 +59,9 @@ void DrawTriangle(int x, int y, int size, bool half, ui8 quadrant, ui16 clr)
 			{
 				yStart = 0;
 			}
-			else if (quadrant ==1 )
+			else if (quadrant == 1)
 			{
-				yStart = size - xPos;
+				yStart = size - xPos - 1;
 			}
 			else // if(quadrant == 2)
 			{
@@ -77,7 +78,7 @@ void DrawTriangle(int x, int y, int size, bool half, ui8 quadrant, ui16 clr)
 			}
 			else // if(quadrant == 3)
 			{
-				yMax = size - xPos;
+				yMax = size - xPos - 1;
 			}
 			for(int yPos = yStart ; yPos < yMax ; yPos++)
 			{
@@ -208,24 +209,24 @@ void CWndUserDmm::DrawDigit(int x, int y, int nDigit, ui16 clrOn, ui16 clrOff)
 	}
 
 	#define EN(n) ( dec>>(28-n*4)&1 ) ? RGB565(ff00ff) : clrOff
- 	_DrawDigitHT( x+2, y, EN(1) ); // horny
-	_DrawDigitHC( x+2, y+29, EN(7) ); // stredny
-	_DrawDigitHB( x+2, y+58, EN(4) ); // dolny
-	_DrawDigitVR( x+26, y+2, EN(2) );
-	_DrawDigitVR( x+26, y+35, EN(3) );
-	_DrawDigitVL( x, y+2, EN(6) ); 
-	_DrawDigitVL( x, y+35, EN(5) ); 
-	_DrawDot0(x+36, y+64, EN(0));
+ 	_DrawDigitHT( x+1, y, EN(1) ); // horny
+	_DrawDigitHC( x+1, y+27, EN(7) ); // stredny
+	_DrawDigitHB( x+1, y+56, EN(4) ); // dolny
+	_DrawDigitVR( x+24, y+1, EN(2) );
+	_DrawDigitVR( x+24, y+33, EN(3) );
+	_DrawDigitVL( x, y+1, EN(6) ); 
+	_DrawDigitVL( x, y+33, EN(5) ); 
+	_DrawDot0(x+35, y+58, EN(0));
 	#undef EN
 	#define EN(n) ( dec>>(28-n*4)&1 ) ? clrOn : RGB565(ff00ff)
- 	_DrawDigitHT( x+2, y, EN(1) ); // horny
-	_DrawDigitHC( x+2, y+29, EN(7) ); // stredny
-	_DrawDigitHB( x+2, y+58, EN(4) ); // dolny
-	_DrawDigitVR( x+26, y+2, EN(2) );
-	_DrawDigitVR( x+26, y+35, EN(3) );
-	_DrawDigitVL( x, y+2, EN(6) ); 
-	_DrawDigitVL( x, y+35, EN(5) ); 
-	_DrawDot0(x+36, y+64, EN(0));
+ 	_DrawDigitHT( x+1, y, EN(1) ); // horny
+	_DrawDigitHC( x+1, y+27, EN(7) ); // stredny
+	_DrawDigitHB( x+1, y+56, EN(4) ); // dolny
+	_DrawDigitVR( x+24, y+1, EN(2) );
+	_DrawDigitVR( x+24, y+33, EN(3) );
+	_DrawDigitVL( x, y+1, EN(6) ); 
+	_DrawDigitVL( x, y+33, EN(5) ); 
+	_DrawDot0(x+35, y+58, EN(0));
 	#undef EN
 }
 
