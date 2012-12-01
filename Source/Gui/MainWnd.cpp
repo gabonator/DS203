@@ -39,6 +39,7 @@ void CMainWnd::Create()
 	m_wndMenuMeas.Create( this, WsHidden );
 	m_wndMenuMath.Create( this, WsHidden );
 	m_wndMenuSettings.Create( this, WsHidden );
+	m_wndMenuKeySettings.Create( this, WsHidden );
 	m_wndMenuDisplay.Create( this, WsHidden );
 	m_wndMenuGenerator.Create( this, WsHidden );
 	m_wndMenuGeneratorMod.Create( this, WsHidden );
@@ -62,9 +63,9 @@ void CMainWnd::Create()
 
 	m_wndToolbox.Create(this);
 
-	if ( Settings.Runtime.m_nMenuItem != -1 )
-		SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
-	else
+	//if ( Settings.Runtime.m_nMenuItem != -1 )
+	//	SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
+	//else
 		SendMessage( &m_wndToolBar, ToWord('g', 'i'), 1);
 
 	m_lLastAcquired = 0;
@@ -83,8 +84,13 @@ void CMainWnd::Create()
 		nChecksum = Settings.GetChecksum();
 		Settings.Runtime.m_nUptime = nUptime;
 	}
-
-	if ( ++nSeconds >= 120*5 )
+	if ( Settings.m_lLastChange != 0 )
+	{
+		// save settings in 20 seconds
+		nSeconds = 120 - 20;
+		Settings.m_lLastChange = 0;
+	}
+	if ( ++nSeconds >= 120 )
 	{
 		nSeconds = 0;
 	
@@ -185,23 +191,140 @@ void CMainWnd::Create()
 	}
 
 	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction )
+		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutCircle);
+
+	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction2 )
+		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutTriangle);
+
+	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyS2 )
+		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS2);
+
+	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyS1 )
+		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS1);
+
+	CWnd::WindowMessage( nMsg, nParam );
+}
+
+void CMainWnd::CallShortcut(int nShortcut)
+{
+	static int nOldFocus = -1;
+	if ( nShortcut >= 0 )
 	{
-		// show toolbox	
-		if ( !m_wndToolbox.IsVisible() && !m_wndManager.IsVisible() )
+		// +1 => first submenu in section
+		if ( nShortcut+1 == MainWnd.m_wndToolBar.m_nFocus )
 		{
-			m_wndToolbox.DoModal();
-			if ( m_wndToolbox.GetResult() == CWndToolbox::MenuManager)
+			if ( nOldFocus != -1 )
+				SendMessage( &MainWnd.m_wndToolBar, ToWord('g', '2'), nOldFocus );
+		} else {
+			nOldFocus = MainWnd.m_wndToolBar.m_nFocus;
+			SendMessage( &MainWnd.m_wndToolBar, ToWord('g', '2'), nShortcut );
+		}
+		return;
+	}
+	switch ( nShortcut )
+	{
+		case CSettings::CRuntime::None:
+			break;
+		case CSettings::CRuntime::StartStop:
+			m_wndToolbox.ToggleAdc();
+			break;
+		case CSettings::CRuntime::Toolbox:
+			if ( !m_wndToolbox.IsVisible() && !m_wndManager.IsVisible() )
+			{
+				m_wndToolbox.DoModal();
+				if ( m_wndToolbox.GetResult() == CWndToolbox::MenuManager)
+				{
+					m_wndManager.Create(this);
+					m_wndManager.DoModal();
+				}
+			}
+			break;
+		case CSettings::CRuntime::WaveManager:
+			if ( m_wndManager.IsVisible() )
+				m_wndManager.Cancel();
+			else
 			{
 				m_wndManager.Create(this);
 				m_wndManager.DoModal();
 			}
-		}
+			break;
+		case CSettings::CRuntime::Screenshot:
+			m_wndToolbox.SaveScreenshot();
+			break;
+	default:
+		_ASSERT( !!!"Unknown shortcut" );
 	}
 
-	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction2 )
+	/*
+	si8 id = -1;
+	switch(shortcut)
 	{
+	case CSettings::CRuntime::_StartStop:
+		m_wndToolbox.ToggleAdc();
+		break;
+	case CSettings::CRuntime::_Oscilloscope:
+		if(MainWnd.m_wndToolBar.m_nFocus > CWndToolBar::_Disp) 
+		{	// Not in Oscilloscope => go there
+			id = CWndToolBar::_Oscilloscope;
+			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
+		}
+		else 
+		{	// Go back to previous screen
+			id = m_wndToolBar.m_nOldFocus;
+		}
+		break;
+	case CSettings::CRuntime::_Spectrum:
+		if(MainWnd.m_wndToolBar.m_nFocus < CWndToolBar::_Spectrum || MainWnd.m_wndToolBar.m_nFocus > CWndToolBar::_Marker) 
+		{	// Not in Spectrum => go there
+			id = CWndToolBar::_Spectrum;
+			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
+		}
+		else 
+		{	// Go back to previous screen
+			id = m_wndToolBar.m_nOldFocus;
+		}
+		break;
+	case CSettings::CRuntime::_Generator:
+		if(MainWnd.m_wndToolBar.m_nFocus < CWndToolBar::_Generator || MainWnd.m_wndToolBar.m_nFocus > CWndToolBar::_Modulation) 
+		{	// Not in Generator => go there
+			id = CWndToolBar::_Generator;
+			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
+		}
+		else 
+		{	// Go back to previous screen
+			id = m_wndToolBar.m_nOldFocus;
+		}
+		break;
+	case CSettings::CRuntime::_Tuner:
+		if(MainWnd.m_wndToolBar.m_nFocus != CWndToolBar::_Tuner) 
+		{	// Not in Tuner => go there
+			id = CWndToolBar::_Tuner;
+			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
+		}
+		else 
+		{	// Go back to previous screen
+			id = m_wndToolBar.m_nOldFocus;
+		}
+		break;
+	case CSettings::CRuntime::_Meter:
+		if(MainWnd.m_wndToolBar.m_nFocus != CWndToolBar::_Meter) 
+		{	// Not in Meter => go there
+			id = CWndToolBar::_Meter;
+			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
+		}
+		else 
+		{	// Go back to previous screen
+			id = m_wndToolBar.m_nOldFocus;
+		}
+		break;
+		break;
+	case CSettings::CRuntime::_Screenshot:
 		m_wndToolbox.SaveScreenshot();
+		break;
 	}
-
-	CWnd::WindowMessage( nMsg, nParam );
+	if(id >= 0)
+	{
+		SendMessage( &MainWnd.m_wndToolBar, ToWord('g', 'o'), id);
+	}
+	*/
 }

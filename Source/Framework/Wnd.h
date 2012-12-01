@@ -115,6 +115,9 @@ public:
 private:
 	CWnd* _GetNextActiveWindow();
 	CWnd* _GetPrevActiveWindow();
+	CWnd* _GetLastActiveWindow();
+	CWnd* _GetFirstActiveWindow();
+
 	void _UpdateTimers();
 };                                 
 

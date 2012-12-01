@@ -60,6 +60,7 @@
 			}
 #ifdef _WIN32
 			_ASSERT( b != e );
+			_ASSERT( inp[e] != inp[b] );
 #endif
 			Tcalc nTmp = (Tcalc)(i - inp[b]);
 			nTmp *= out[e] - out[b];
@@ -103,7 +104,7 @@
 	class Calibrator
 	{
 	public:	
-		LinCalibCurve CalData[AnalogChannel::_ResolutionMax];	
+		LinCalibCurve CalData[AnalogChannel::_ResolutionMax+1];	
 		typedef CalibrationCurve<si16, si32, int, int, int, LinCalibCurve::eKPoints> InterpolatorK;
 		typedef CalibrationCurve<si16, si32, int, int, int, LinCalibCurve::eQPoints> InterpolatorQ;
 

@@ -10,7 +10,13 @@ public:
 		BlkX = 30,
 		BlkY = 25,
 		DivsX = 10,
-		DivsY = 8
+		DivsY = 8,
+		MaxX = DivsX*BlkX,
+		CenterX = MaxX/2,
+		MaxY = DivsY*BlkY,
+		CenterY = MaxY/2,
+		CenterTop = MaxY/4,
+		CenterBottom = 3*CenterTop
 	};
 
 //public:

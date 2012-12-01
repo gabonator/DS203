@@ -1,4 +1,4 @@
-bool g_bAdcEnabled = false;
+bool g_bAdcEnabled = true;
 #define ADCSIZE 4096
 BIOS::ADC::TSample g_ADCMem[ADCSIZE];  // only 16 bits for sample, no wasted memory :)
 int g_nBufferLength = ADCSIZE;

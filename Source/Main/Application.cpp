@@ -80,6 +80,7 @@ CApplication::~CApplication()
 bool CApplication::operator ()()
 {
 	static ui32 lLastTick = (ui32)-1;
+	static ui16 lLastKeys = (ui16)-1;
 	ui32 lCurTick = BIOS::SYS::GetTick();
 	if ( lLastTick == (ui32)-1 )
 		lLastTick = lCurTick;
@@ -91,12 +92,23 @@ bool CApplication::operator ()()
 	}
 
 	ui16 nKeys = BIOS::KEY::GetKeys();
+	if(!nKeys)
+	{
+		lLastKeys = 0;
+	}
 
 	GLOBAL.m_kp << nKeys;
 	GLOBAL.m_kp >> nKeys;
 
 	if ( nKeys )
+	{
 		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
+		if ( nKeys != lLastKeys && Settings.Runtime.m_Beep == CSettings::CRuntime::_On ) 
+		{
+			BIOS::SYS::Beep(50);
+		}
+		lLastKeys = nKeys;
+	}
 
 	GLOBAL.m_wndMain.WindowMessage( CWnd::WmTick, 0 );
 

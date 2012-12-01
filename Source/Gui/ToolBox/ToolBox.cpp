@@ -156,6 +156,24 @@ void CWndToolbox::DoModal()
 	case -1: break;
 	}
 
+	UpdateAdc();
+
+	pSafeFocus->SetFocus();
+
+	CRect rcSafe = m_rcOverlay;
+	m_rcOverlay.Invalidate();
+	MainWnd.Invalidate(); // to redraw the graph
+	m_rcOverlay = rcSafe;
+}
+
+/*virtual*/ void CWndToolbox::ToggleAdc()
+{
+	m_bAdcEnabled = !BIOS::ADC::Enabled();
+	UpdateAdc();
+}
+
+/*virtual*/ void CWndToolbox::UpdateAdc()
+{
 	BIOS::ADC::Enable( m_bAdcEnabled );
 	if ( m_bAdcEnabled )
 	{
@@ -168,11 +186,4 @@ void CWndToolbox::DoModal()
 		MainWnd.m_wndMenuInput.m_wndListTrigger.Invalidate();
 	if ( MainWnd.m_wndMenuInput.m_itmTrig.IsVisible() )
 		MainWnd.m_wndMenuInput.m_itmTrig.Invalidate();
-
-	pSafeFocus->SetFocus();
-
-	CRect rcSafe = m_rcOverlay;
-	m_rcOverlay.Invalidate();
-	MainWnd.Invalidate(); // to redraw the graph
-	m_rcOverlay = rcSafe;
 }

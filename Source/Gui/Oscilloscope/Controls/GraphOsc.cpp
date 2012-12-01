@@ -16,15 +16,74 @@ void CWndOscGraph::_PrepareColumn( ui16 *column, ui16 n, ui16 clr )
 //		memset( column, clr, DivsY*BlkY*2 );
 	if ( n == 0 )
 		return;
-	if ( (n % BlkX) == 0)
+	// Grid display logic
+	if(Settings.Disp.Grid != CSettings::Display::_GridNone)
 	{
-		for (ui16 y=5; y<DivsY*BlkY; y += 5)
-			column[y] = RGB565(808080);
-	} else
-	if ( (n%6) == 0 )
+		if ( (n % BlkX) == 0)
+		{	// Display vertical line or dots
+			ui8 inc = (Settings.Disp.Grid == CSettings::Display::_GridLines) ? 1 : 5;
+			for (ui16 y=0; y<DivsY*BlkY; y += inc)
+				column[y] = RGB565(808080);
+		} else
+		if ((Settings.Disp.Grid == CSettings::Display::_GridLines) || ((n%6) == 0 ))
+		{	// Display horizontal line or dots
+			for (ui16 y=BlkY; y<DivsY*BlkY-1; y += BlkY)
+				column[y] = RGB565(808080);
+		}
+	}
+	// Axis display logic
+	if(Settings.Disp.Axis != CSettings::Display::_AxisNone)
 	{
-		for (ui16 y=BlkY; y<DivsY*BlkY-1; y += BlkY)
-			column[y] = RGB565(808080);
+		if (n == CenterX)
+		{	// Display center X axis
+			for (ui16 y=0; y<DivsY*BlkY; y += 1)
+				column[y] = RGB565(808080);
+		}
+		else if( (n==1) || (n == (MaxX-1)) || (n == CenterX-1) || (n == CenterX+1))
+		{	// Display X axis sub divisions
+			for (ui16 y=5; y<DivsY*BlkY; y += 5)
+				column[y] = RGB565(808080);
+		}
+		else if( (n==2) || (n == (MaxX-2)) || (n == CenterX-2) || (n == CenterX+2))
+		{	// Display X axis main divisions
+			for (ui16 y=BlkY; y<DivsY*BlkY; y += BlkY)
+				column[y] = RGB565(808080);
+		}
+		// Display horizontal main axis
+		column[CenterY] = RGB565(808080);
+		if (Settings.Disp.Axis == CSettings::Display::_AxisDouble)
+		{	// Display horizontal double axis
+			column[CenterTop] = RGB565(808080);
+			column[CenterBottom] = RGB565(808080);
+		}
+		if((n%6) == 0 )
+		{	// Displau horizontal sub divisions
+			column[0] = RGB565(808080);
+			column[CenterY-1] = RGB565(808080);
+			column[CenterY+1] = RGB565(808080);
+			column[MaxY-1] = RGB565(808080);
+			if (Settings.Disp.Axis == CSettings::Display::_AxisDouble)
+			{
+				column[CenterTop+1] = RGB565(808080);
+				column[CenterTop-1] = RGB565(808080);
+				column[CenterBottom+1] = RGB565(808080);
+				column[CenterBottom-1] = RGB565(808080);
+			}
+		}
+		if((n%BlkX) == 0 )
+		{	// Display horizontal main divisions
+			column[1] = RGB565(808080);
+			column[CenterY+2] = RGB565(808080);
+			column[CenterY-2] = RGB565(808080);
+			column[MaxY-2] = RGB565(808080);
+			if (Settings.Disp.Axis == CSettings::Display::_AxisDouble)
+			{
+				column[CenterTop+2] = RGB565(808080);
+				column[CenterTop-2] = RGB565(808080);
+				column[CenterBottom+2] = RGB565(808080);
+				column[CenterBottom-2] = RGB565(808080);
+			}
+		}
 	}
 }
 

@@ -281,6 +281,12 @@ void Assert(const char *msg, int n)
 		nKeys |= KeyEscape;
 	if ( pKeys[VK_SPACE] )
 		nKeys |= KeyFunction;
+	if ( pKeys[VK_DELETE] )
+		nKeys |= KeyFunction2;
+	if ( pKeys[VK_F1] )
+		nKeys |= KeyS1;
+	if ( pKeys[VK_F2] )
+		nKeys |= KeyS2;
 	return nKeys;
 }
 

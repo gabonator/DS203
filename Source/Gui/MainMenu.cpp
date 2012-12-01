@@ -4,6 +4,26 @@
 #include <Source/Core/Design.h>
 #include <Source/Core/Shapes.h>
 
+const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
+{
+	static const CWndModuleSelector::TMenuBlockStruct arrLayout[9] = 
+	{
+		// CWnd, Label, color, target sent to Toolbar.cpp
+		{ &m_itmOscilloscope,	"Oscillo\nscope",		RGB565(ffffff), "Oscilloscope" },
+		{ &m_itmSpectrum,		"Spectrum\nanalyser",	RGB565(ffffff), "Spectrum" },
+		{ &m_itmGenerator,		"Signal\ngenerator",	RGB565(ffffff), "Generator" },
+
+		{ &m_itmSettings,		"Settings",				RGB565(ffffff), "Settings" },
+		{ &m_itmUser,			"User\napplications",	RGB565(ffffff), "User app" },
+		{ &m_itmAbout,			"About",				RGB565(ffffff), "About" },
+
+		{ &m_itmResponse,		"Frequency\nresponse",	RGB565(808080), NULL },
+		{ &m_itmLogic,			"Logic\nanalyser",		RGB565(808080), NULL },
+		{ NULL,					NULL,					RGB565(808080), NULL },
+	};
+
+	return arrLayout;
+}
 
 /*virtual*/ void CWndModuleSelector::Create(CWnd *pParent, ui16 dwFlags) 
 {
@@ -18,23 +38,19 @@
 	#define _ITEM(x,y) CRect(_LEFT(x), _TOP(y), _RIGHT(x), _BOTTOM(y))
 
 	CRect rcItem;
+	const CWndModuleSelector::TMenuBlockStruct* arrLayout = GetLayout();
 
-	rcItem = _ITEM(0, 0);          
-	m_itmOscilloscope.Create( "Oscillo\nscope", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(1, 0);
-	m_itmSpectrum.Create( "Spectrum\nanalyser", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(2, 0);
-	m_itmGenerator.Create( "Signal\nGenerator", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(0, 1);
-	m_itmSettings.Create( "Settings", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(1, 1);
-	m_itmUser.Create( "User\napplications", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(2, 1);
-	m_itmAbout.Create( "About", RGB565(ffffff), rcItem, this );
-	rcItem = _ITEM(0, 2);
-	m_itmResponse.Create( "Frequency\nresponse", RGB565(808080), rcItem, this );
-	rcItem = _ITEM(1, 2);
-	m_itmLogic.Create( "Logic\nanalyser", RGB565(808080), rcItem, this );
+	int nIndex = 0;
+	for ( int y = 0; y < 3; y++ )
+		for ( int x = 0; x < 3; x++, nIndex++ )
+		{
+			const CWndModuleSelector::TMenuBlockStruct* pItem = &arrLayout[nIndex];
+			if ( pItem->m_pWnd )
+			{
+				CRect rcItem = _ITEM(x, y);          
+				pItem->m_pWnd->Create( pItem->m_strLabel, pItem->m_clr, rcItem, this );
+			}
+		}
 }
 
 /*virtual*/ void CWndModuleSelector::OnPaint()
@@ -47,19 +63,9 @@
 {
 	if ( nKey & BIOS::KEY::KeyEnter )
 	{
-		const char* strTarget = NULL;
-		if ( GetFocus() == &m_itmOscilloscope )
-			strTarget = "Oscilloscope"; 
-		if ( GetFocus() == &m_itmSpectrum )
-			strTarget = "Spectrum";
-		if ( GetFocus() == &m_itmGenerator )
-			strTarget = "Generator"; 
-		if ( GetFocus() == &m_itmSettings )
-			strTarget = "Settings"; 
-		if ( GetFocus() == &m_itmAbout )
-			strTarget = "About";
-		if ( GetFocus() == &m_itmUser )
-			strTarget = "User app";
+		const CWndModuleSelector::TMenuBlockStruct* arrLayout = GetLayout();
+		int nId = _GetItemId( GetFocus() );
+		const char* strTarget = arrLayout[nId].m_strTarget;
 		
 		if (strTarget)
 		{
@@ -69,5 +75,60 @@
 		}
 		return;
 	}
+	if ( nKey & ( BIOS::KEY::KeyLeft | BIOS::KEY::KeyRight | BIOS::KEY::KeyUp | BIOS::KEY::KeyDown ) )
+	{
+		CWnd* pCurrent = GetFocus();
+		int nCurrentId = _GetItemId(pCurrent);
+		_ASSERT( nCurrentId >= 0 && nCurrentId <= 9 );
+
+		int _x = nCurrentId % 3;
+		int _y = nCurrentId / 3;
+		if ( nKey & BIOS::KEY::KeyLeft && _x > 0 )
+			_x--;
+		if ( nKey & BIOS::KEY::KeyRight && _x < 2 )
+			_x++;
+		if ( nKey & BIOS::KEY::KeyUp && _y == 0 )
+		{
+			MainWnd.m_wndToolBar.SetFocus();
+			pCurrent->Invalidate();
+			MainWnd.m_wndToolBar.Invalidate();
+			return;
+		}
+		if ( nKey & BIOS::KEY::KeyUp && _y > 0 )
+			_y--;
+		if ( nKey & BIOS::KEY::KeyDown && _y < 2 )
+			_y++;
+		
+		int nNewId = _y * 3 + _x;
+		CWnd* pNew = NULL;
+		
+		if ( nNewId != nCurrentId ) 
+			pNew = _GetWindowById( nNewId );
+		if ( pNew )
+		{
+			pNew->SetFocus();
+			pCurrent->Invalidate();
+			pNew->Invalidate();
+		}
+		return;
+	}
+
 	CWnd::OnKey( nKey );
+}
+
+int CWndModuleSelector::_GetItemId(CWnd* pWnd)
+{
+	const CWndModuleSelector::TMenuBlockStruct* arrLayout = GetLayout();
+	
+	for (int i=0; i<9; i++)
+		if ( arrLayout[i].m_pWnd == pWnd )
+			return i;
+	return -1;
+}
+
+CWnd* CWndModuleSelector::_GetWindowById(int nId)
+{
+	const CWndModuleSelector::TMenuBlockStruct* arrLayout = GetLayout();
+	_ASSERT( nId >= 0 && nId <= 9 );
+	return arrLayout[ nId ].m_pWnd;
 }

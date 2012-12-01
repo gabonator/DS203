@@ -17,9 +17,8 @@ public:
 		bgrSelectedFocus = RGB565(ffffff),
 	};
 
-	class CBarItem
+	struct CBarItem
 	{
-	public:
 		enum EType {
 			IMain,
 			ISub,
@@ -27,9 +26,12 @@ public:
 		};
 
 		EType m_eType;                                   
-		PCSTR m_pName;
-		CWnd* m_pWndMenu; 
+		PSTR m_pName;
+		const CWnd* m_pWndMenu; 
 	};
+
+	static const CBarItem m_arrMenuItems[];
+
 
 public:
 	
@@ -43,9 +45,11 @@ public:
 	virtual void	OnPaint();
 	virtual void	OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	CWnd*			GetCurrentLayout();
+	virtual void	ChangeFocus(ui8 oldFocus);
 
-private:
-	CBarItem* GetMenuItems();
+public:
+	static const CBarItem* GetMenuItems();
+	static int Find( const char* strId );
 };
 	
 #endif

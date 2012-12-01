@@ -7,6 +7,15 @@
 class CWndModuleSelector : public CWnd
 {
 public:
+	struct TMenuBlockStruct
+	{
+		CWndMenuBlock* m_pWnd;
+		PCSTR m_strLabel;
+		ui16 m_clr;
+		PCSTR m_strTarget;
+	};
+
+public:
 	CWndMenuBlock	m_itmOscilloscope;
 	CWndMenuBlock	m_itmSpectrum;
 	CWndMenuBlock	m_itmLogic;
@@ -19,6 +28,11 @@ public:
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnPaint();
 	virtual void OnKey(ui16 nKey);
+
+private:
+	const TMenuBlockStruct* GetLayout();
+	int _GetItemId(CWnd* pWnd);
+	CWnd* _GetWindowById(int nId);
 };
 
 #endif

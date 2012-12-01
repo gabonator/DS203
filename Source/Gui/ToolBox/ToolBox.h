@@ -35,6 +35,8 @@ public:
 	virtual void	OnKey(ui16 nKey);
 	virtual int		GetResult();
 	void			DoModal();
+	virtual void	ToggleAdc();
+	virtual void	UpdateAdc();
 };
 
 #endif

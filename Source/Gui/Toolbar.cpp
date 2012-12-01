@@ -1,40 +1,40 @@
 #include "Toolbar.h"
 #include <Source/Gui/MainWnd.h>
 
-CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
+/*static*/ const CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 {
-	static CBarItem arrMenuItems[] = 
-	{
-		{ CBarItem::IMain,	"Oscilloscope", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Input", &MainWnd.m_wndMenuInput},
-		{ CBarItem::ISub,	"Cursor", &MainWnd.m_wndMenuCursor},
-		{ CBarItem::ISub,	"Meas", &MainWnd.m_wndMenuMeas},
-		{ CBarItem::ISub,	"Math", &MainWnd.m_wndMenuMath},
-		{ CBarItem::ISub,	"Disp", &MainWnd.m_wndMenuDisplay},
+	static const CBarItem arrMenuItems[] = {
+		{ CBarItem::IMain,	(PSTR)"Oscilloscope", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"Input", &MainWnd.m_wndMenuInput},
+		{ CBarItem::ISub,	(PSTR)"Cursor", &MainWnd.m_wndMenuCursor},
+		{ CBarItem::ISub,	(PSTR)"Meas", &MainWnd.m_wndMenuMeas},
+		{ CBarItem::ISub,	(PSTR)"Math", &MainWnd.m_wndMenuMath},
+		{ CBarItem::ISub,	(PSTR)"Disp", &MainWnd.m_wndMenuDisplay},
 
-		{ CBarItem::IMain,	"Spectrum", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"FFT", &MainWnd.m_wndSpectrumMain},
-		{ CBarItem::ISub,	"Marker", &MainWnd.m_wndSpectrumMarker},
+		{ CBarItem::IMain,	(PSTR)"Spectrum", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"FFT", &MainWnd.m_wndSpectrumMain},
+		{ CBarItem::ISub,	(PSTR)"Marker", &MainWnd.m_wndSpectrumMarker},
 
-		{ CBarItem::IMain,	"Generator", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Wave", &MainWnd.m_wndMenuGenerator},
-		{ CBarItem::ISub,	"Edit", &MainWnd.m_wndMenuGeneratorEdit},
-		{ CBarItem::ISub,	"Modulation", &MainWnd.m_wndMenuGeneratorMod},
+		{ CBarItem::IMain,	(PSTR)"Generator", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"Wave", &MainWnd.m_wndMenuGenerator},
+		{ CBarItem::ISub,	(PSTR)"Edit", &MainWnd.m_wndMenuGeneratorEdit},
+		{ CBarItem::ISub,	(PSTR)"Modulation", &MainWnd.m_wndMenuGeneratorMod},
 		
-		{ CBarItem::IMain,	"Settings", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Main", &MainWnd.m_wndMenuSettings},
+		{ CBarItem::IMain,	(PSTR)"Settings", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"Main", &MainWnd.m_wndMenuSettings},
+		{ CBarItem::ISub,	(PSTR)"Keys", &MainWnd.m_wndMenuKeySettings},
+		{ CBarItem::ISub,	(PSTR)"Calib", &MainWnd.m_wndUserCalibration},
 		
-		{ CBarItem::IMain,	"About", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Device", &MainWnd.m_wndAboutDevice},
-		{ CBarItem::ISub,	"Firmware", &MainWnd.m_wndAboutFirmware},
+		{ CBarItem::IMain,	(PSTR)"About", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"Device", &MainWnd.m_wndAboutDevice},
+		{ CBarItem::ISub,	(PSTR)"Firmware", &MainWnd.m_wndAboutFirmware},
 
-		{ CBarItem::IMain,	"User app", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	"Tuner", &MainWnd.m_wndUserTuner},
-		{ CBarItem::ISub,	"Demo", &MainWnd.m_wndScreenSaver},
-		{ CBarItem::ISub,	"Snake", &MainWnd.m_wndUserGame},
+		{ CBarItem::IMain,	(PSTR)"User app", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"Tuner", &MainWnd.m_wndUserTuner},
+		{ CBarItem::ISub,	(PSTR)"Demo", &MainWnd.m_wndScreenSaver},
+		{ CBarItem::ISub,	(PSTR)"Snake", &MainWnd.m_wndUserGame},
 		//{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
-		{ CBarItem::ISub,	"Calib", &MainWnd.m_wndUserCalibration},
-		{ CBarItem::ISub,	"Meter", &MainWnd.m_wndUserMeter},
+		{ CBarItem::ISub,	(PSTR)"Meter", &MainWnd.m_wndUserMeter},
 
 		{ CBarItem::IEnd,		NULL, NULL }
 	};
@@ -44,8 +44,7 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 
 /*virtual*/ void CWndToolBar::OnPaint()
 {
-	CWndToolBar::CBarItem* pItems = GetMenuItems();
-
+	const CWndToolBar::CBarItem* pItems = GetMenuItems();
 	int nFocus = m_nFocus;
 
 	// find nearest sub menu
@@ -113,39 +112,82 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 
 /*virtual*/ void CWndToolBar::OnKey(ui16 nKey)
 {
-	CWndToolBar::CBarItem* pItems = GetMenuItems();
-
-	if ( nKey & BIOS::KEY::KeyLeft && m_nFocus > 0 )
+	const CWndToolBar::CBarItem* pItems = GetMenuItems();
+	ui8 oldFocus = m_nFocus;
+	if ( nKey & BIOS::KEY::KeyLeft)
 	{
-		if ( pItems[m_nFocus].m_eType == CBarItem::IMain )
-			return;
-
-		SendMessage( GetParent(), ToWord('L', 'D'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-		m_nFocus--;
-		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-		SendMessage( GetParent(), ToWord('L', 'R'), 0 );
-		Settings.Runtime.m_nMenuItem = m_nFocus;
+		if ( pItems[m_nFocus].m_eType == CBarItem::IMain ) 
+		{
+			m_nFocus++;
+			while((pItems[m_nFocus].m_eType != CBarItem::IMain)&&(pItems[m_nFocus].m_eType != CBarItem::IEnd))
+			{	// Find the last item
+				m_nFocus++;
+			}
+			m_nFocus--;
+		}
+		else 
+		{
+			m_nFocus--;
+		}
+		CWndToolBar::ChangeFocus(oldFocus);
 	}
 
-	if ( nKey & BIOS::KEY::KeyRight && GetMenuItems()[m_nFocus+1].m_eType != CBarItem::IEnd )
+	if ( nKey & BIOS::KEY::KeyRight)
 	{
-		if ( pItems[m_nFocus+1].m_eType == CBarItem::IMain )
-			return;
+		if ((pItems[m_nFocus+1].m_eType == CBarItem::IMain)||((pItems[m_nFocus+1].m_eType == CBarItem::IEnd)))
+		{
+			m_nFocus--;
+			while(pItems[m_nFocus].m_eType != CBarItem::IMain)
+			{	// Find the first item
+				m_nFocus--;
+			}
+		}
+		else
+		{
+			m_nFocus++;
+		}
+		CWndToolBar::ChangeFocus(oldFocus);
+	}
 
-		SendMessage( GetParent(), ToWord('L', 'D'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-		m_nFocus++;
-		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-		SendMessage( GetParent(), ToWord('L', 'R'), 0 );
-		Settings.Runtime.m_nMenuItem = m_nFocus;
+	if( nKey & BIOS::KEY::KeyEnter )
+	{
+		CWnd::OnKey( BIOS::KEY::KeyDown );
+	}
+
+	if( nKey & BIOS::KEY::KeyEscape )
+	{	// Focus on first item
+		if (pItems[m_nFocus].m_eType != CBarItem::IMain)
+		{
+			m_nFocus--;
+			while(pItems[m_nFocus].m_eType != CBarItem::IMain)
+			{	// Find the first item
+				m_nFocus--;
+			}
+			CWndToolBar::ChangeFocus(oldFocus);
+		}
 	}
 	CWnd::OnKey( nKey );
+}
+
+/*virtual*/ void CWndToolBar::ChangeFocus(ui8 oldFocus)
+{
+	const CWndToolBar::CBarItem* pItems = GetMenuItems();
+	SendMessage( GetParent(), ToWord('L', 'D'), (NATIVEPTR)pItems[oldFocus].m_pWndMenu );
+	SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
+	SendMessage( GetParent(), ToWord('L', 'R'), 0 );
+	Settings.Runtime.m_nMenuItem = m_nFocus;
+	/*
+	if ( pItems[m_nFocus].m_eType != CBarItem::IMain )
+	{	// Store sub item position
+		Settings.Runtime.m_nSubMenuItems[pItems[m_nFocus].m_mainMenuIndex] = m_nFocus;
+	}*/
 }
 
 /*virtual*/ void CWndToolBar::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
 	if ( code == ToWord('g', 'i') )
 	{
-		CBarItem *pItems = GetMenuItems();
+		const CBarItem *pItems = GetMenuItems();
 		m_nFocus = (ui8)data;
 		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
 		SetFocus();
@@ -154,33 +196,53 @@ CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 	if ( code == ToWord('g', 'o') )
 	{
 		const char* strId = (const char*)data;
-		CBarItem *pItems = GetMenuItems();
-
-		for (int i=0; pItems[i].m_eType != CBarItem::IEnd; i++ )
-		{
-			if ( /*pItems[i].m_eType == CBarItem::IMain &&*/ 
-				 pItems[i].m_pName == strId )
-			{
-				SendMessage( GetParent(), ToWord('L', 'D'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-				if ( pItems[i].m_eType == CBarItem::IMain )
-					m_nFocus = i+1;
-				else 
-					m_nFocus = i;
-				SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
-				SetFocus();
-				SendMessage( GetParent(), ToWord('L', 'R'), 0 );
-				Settings.Runtime.m_nMenuItem = m_nFocus;
-				return;
-			}
-		}
-		_ASSERT(0);
+		int nItem = Find( strId );
+		
+		code = ToWord('g', '2');
+		data = nItem;
 	}
+
+	if ( code == ToWord('g', '2') )
+	{
+		const CBarItem *pItems = GetMenuItems();
+
+		int nItem = data;
+		if ( nItem == -1 )
+			return;
+
+		SendMessage( GetParent(), ToWord('L', 'D'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
+
+		if ( pItems[nItem].m_eType == CBarItem::IMain ) 
+			m_nFocus = nItem+1;
+		else
+			m_nFocus = nItem;
+
+		SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
+		SetFocus();
+		SendMessage( GetParent(), ToWord('L', 'R'), 0 );
+		Settings.Runtime.m_nMenuItem = m_nFocus;
+	}
+
 }
 
 CWnd* CWndToolBar::GetCurrentLayout()
 {
-	CWndToolBar::CBarItem* pItems = GetMenuItems();
-	return pItems[m_nFocus].m_pWndMenu;
+	const CWndToolBar::CBarItem* pItems = GetMenuItems();
+	return (CWnd*)pItems[m_nFocus].m_pWndMenu;
 }
 
+int CWndToolBar::Find(const char* strId)
+{	
+	const CBarItem *pItems = GetMenuItems();
 
+	for (int i=0; pItems[i].m_eType != CBarItem::IEnd; i++ )
+	{
+		if ( /*pItems[i].m_eType == CBarItem::IMain &&*/ 
+				strcmp(pItems[i].m_pName, strId) == 0 )
+		{
+			return i;
+		}
+	}
+	_ASSERT( 0 );
+	return -1;
+}

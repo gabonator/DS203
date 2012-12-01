@@ -86,7 +86,9 @@ public:
 			KeyEnter = 16,
 			KeyEscape = 32,
 			KeyFunction = 64,
-			KeyFunction2 = 128
+			KeyFunction2 = 128,
+			KeyS1 = 256,
+			KeyS2 = 512
 		};
 
 	public:

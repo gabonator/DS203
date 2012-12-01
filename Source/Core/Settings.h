@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '7')
+#define _VERSION ToDword('D', 'S', 'C', '8')
 
 class CSettings : public CSerialize
 {
@@ -286,6 +286,8 @@ public:
 		// = {"No", "Yes"};
 		static const char* const ppszTextGrid[];
 		// = {"None", "Dots", "Lines"};
+		static const char* const ppszTextAxis[];
+		// = {"None", "Single", "Double"};
 
 		enum { _TY, _XY, _YX, _AxesMax = _YX }
 			Axes;
@@ -297,15 +299,17 @@ public:
 			Persist;
 		enum { _GridNone, _GridDots, _GridLines, _GridMax = _GridLines }
 			Grid;
+		enum { _AxisNone, _AxisSingle, _AxisDouble, _AxisMax = _AxisDouble }
+			Axis;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Axes) << _E(Draw) << _E(Average) << _E(Persist) << _E(Grid);
+			stream << _E(Axes) << _E(Draw) << _E(Average) << _E(Persist) << _E(Grid) << _E(Axis);
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Axes) >> _E(Draw) >> _E(Average) >> _E(Persist) >> _E(Grid);
+			stream >> _E(Axes) >> _E(Draw) >> _E(Average) >> _E(Persist) >> _E(Grid) >> _E(Axis);
 			return *this;
 		}
 	};
@@ -354,6 +358,21 @@ public:
 	class CRuntime : public CSerialize
 	{
 	public:
+		static const char* const ppszTextBeepOnOff[];
+		// = {"On", "Off"};
+		static const char* const ppszTextShortcut[];
+		// = {"Start/Stop Acquisition", "Screenshot"};
+
+		enum { _On, _Off, _BeepMax = _Off }
+			m_Beep;
+
+		enum EShortcut { None = -1, StartStop = -2, Toolbox = -3, WaveManager = -4, Screenshot = -5, _ShortcutMax = Screenshot };
+
+		int m_nShortcutCircle;
+		int m_nShortcutTriangle;
+		int m_nShortcutS1;
+		int m_nShortcutS2;
+
 		int m_nMenuItem;
 		int m_nUptime;
 		int m_nBacklight;
@@ -365,12 +384,14 @@ public:
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume;
+			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume 
+				<< _E(m_Beep) << m_nShortcutTriangle << m_nShortcutS1 << m_nShortcutS2;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume;
+			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume
+				>> _E(m_Beep) >> m_nShortcutTriangle >> m_nShortcutS1 >> m_nShortcutS2;
 			return *this;
 		}
 	};
@@ -405,6 +426,7 @@ public:
 	Calibrator	CH1Calib;
 	Calibrator	CH2Calib;
 	LinApprox	DacCalib;
+	ui32		m_lLastChange;
 
 	virtual CSerialize& operator <<( CStream& stream )
 	{
@@ -449,6 +471,7 @@ public:
 	ui32 GetChecksum();
 	ui32 GetStaticChecksum();
 	void Save();
+	void Kick();
 	void Load();
 	void Reset();
 

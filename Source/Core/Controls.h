@@ -161,7 +161,7 @@ public:
 	ui16 m_clr;
 
 public:
-	virtual void Create(const char* pszId, ui16 clr, CRect& rcRect, CWnd *pParent) 
+	virtual void Create( const char* pszId, ui16 clr, CRect& rcRect, CWnd *pParent ) 
 	{
 		m_clr = clr;
 		CWnd::Create( pszId, WsVisible, rcRect, pParent );
@@ -180,9 +180,8 @@ public:
 	}
 	virtual void OnKey(ui16 nKey)
 	{
-		if ( nKey == BIOS::KEY::KeyEnter )
-			GetParent()->OnKey( nKey );
-		CWnd::OnKey(nKey);
+		// Parent will manage the movement
+		GetParent()->OnKey( nKey );
 	}
 
 };
