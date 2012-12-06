@@ -463,7 +463,7 @@ bool bADCEnabled = false;
 	return bADCEnabled;
 }
 
-/*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBPosition, ui16 nTimePsc, ui16 nTimeArr)
+/*static*/ void BIOS::ADC::Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBPosition, float fTimePerDiv)
 {
 }
 
@@ -787,7 +787,7 @@ void BIOS::VER::DrawLogo(int x, int y)
 /*static*/ void BIOS::SYS::SetVolume(int nLevel) // 0..100
 {
 }
-
+/*
 void BIOS::ADC::ConfigureBuffer(int nLength)
 {
 	g_nBufferLen = nLength;
@@ -797,4 +797,31 @@ void BIOS::ADC::GetBufferRange(int& nBegin, int& nEnd)
 {
 	nBegin = 8;
 	nEnd = g_nBufferLen;
+}*/
+
+/*static*/ BIOS::ADC::EState BIOS::ADC::GetState()
+{
+	int nAux = 0;
+	if ( 0 )
+		nAux |= BIOS::ADC::Start;
+	if ( 0 )
+		nAux |= BIOS::ADC::Empty;
+	if ( 0 )
+		nAux |= BIOS::ADC::Full;
+
+	return (BIOS::ADC::EState)(nAux);
+}
+
+int BIOS::SYS::Get(int, int)
+{
+	return 0;
+}
+
+void BIOS::SYS::Set(int, int)
+{
+}
+
+int BIOS::ADC::GetPointer()
+{
+	return 2048; //4096;
 }

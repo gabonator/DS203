@@ -87,7 +87,7 @@ public:
 #endif
 
 #ifdef GIT_BUILDER
-			BIOS::LCD::Print (   4, 240-5*16, clrA, 0, "Builded by:" );
+			BIOS::LCD::Print (   4, 240-5*16, clrA, 0, "Built by:" );
 			BIOS::LCD::Print ( 160, 240-5*16, clrB, 0, GIT_BUILDER );
 #endif
 

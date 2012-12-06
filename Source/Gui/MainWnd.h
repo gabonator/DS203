@@ -11,16 +11,15 @@
 #include "ToolBox/Manager.h"
 #include "Generator/Generator.h"
 #include "MainMenu.h"
-#include "User/Screensaver.h"
-#include "User/Snake.h"
-#include "User/Balls.h"
-#include "User/Tuner.h"
 #include "About/About.h"
 #include "Settings/Settings.h"
 #include "Settings/KeySettings.h"
 #include "Calibration/Calibration.h"
-#include "User/Meter.h"
 #include "Spectrum/Spectrum.h"
+
+#define ADD_MODULE( strName, type )
+#include "User/_Modules.h"
+#undef ADD_MODULE
 
 class CMainWnd : public CWnd
 {
@@ -52,14 +51,9 @@ public:
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
 	CWndScreenSaver		m_wndScreenSaver;
-	CWndSnake			m_wndUserGame;
-//	CWndBalls			m_wndUserBalls;
-	CWndTuner			m_wndUserTuner;
 	CWndAboutFirmware			m_wndAboutFirmware;
 	CWndAboutDevice	m_wndAboutDevice;
-	//CWndCalibration		m_wndUserCalibration;
-	CWndMenuCalibration	m_wndUserCalibration;
-	CWndUserMeter		m_wndUserMeter;
+	CWndMenuCalibration	m_wndCalibration;
 
 	CWndMenuSpectMain	m_wndSpectrumMain;
 	CWndMenuSpectMarker	m_wndSpectrumMarker;
@@ -71,6 +65,10 @@ public:
 
 	CWndToolbox			m_wndToolbox;
 	CWndManager			m_wndManager;
+
+#define ADD_MODULE( strName, type ) type m_wndUser##type;
+#include "User/_Modules.h"
+#undef ADD_MODULE
 
 	void Create();
 	virtual void OnPaint();

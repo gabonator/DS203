@@ -1,8 +1,13 @@
-#ifndef __METER_H__
+//#define ENABLE_MODULE_METER
+
+#if defined(ADD_MODULE) && defined(ENABLE_MODULE_METER)
+	ADD_MODULE( "Meter", CWndUserMeter )
+#endif
+
+#if !defined(__METER_H__) && defined(ENABLE_MODULE_METER)
 #define __METER_H__
 
 #include <Source/Framework/Wnd.h>
-
 
 class CWndUserMeter : public CWnd
 {

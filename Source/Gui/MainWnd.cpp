@@ -52,14 +52,19 @@ void CMainWnd::Create()
 	m_wndSpectrumMarker.Create( this, WsHidden );
 	m_wndSpectrumAnnot.Create( this, WsHidden );
 	m_wndScreenSaver.Create( this, WsHidden );
-	m_wndUserGame.Create( this, WsHidden );
+	//m_wndUserGame.Create( this, WsHidden );
 	//m_wndUserBalls.Create( this, WsHidden );
-	m_wndUserTuner.Create( this, WsHidden );
-	m_wndUserMeter.Create( this, WsHidden );
+	//m_wndUserTuner.Create( this, WsHidden );
+	//m_wndUserMeter.Create( this, WsHidden );
+	//m_wndUserFullView.Create( this, WsHidden );
 	m_wndAboutFirmware.Create( this, WsHidden );
 	m_wndAboutDevice.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
-	m_wndUserCalibration.Create( this, WsHidden );
+	m_wndCalibration.Create( this, WsHidden );
+
+#	define ADD_MODULE( strName, type ) m_wndUser##type.Create( this, WsHidden );
+#	include "User/_Modules.h"
+#	undef ADD_MODULE
 
 	m_wndToolbox.Create(this);
 
@@ -105,6 +110,8 @@ void CMainWnd::Create()
 	if ( (nSeconds & 7) == 0 )
 	{
 		SdkProc();
+		//BIOS::DBG::Print("R");
+		//BIOS::ADC::Restart();
 
 		// UART test
 		BIOS::SERIAL::Send("Ready.\n");
@@ -121,8 +128,9 @@ void CMainWnd::Create()
 			// whatever is in buffer, just process it. 250ms should be 
 			// sufficient to grab samples for one screen,
 			// in first pass it will copy nonintialzed buffer!
-			int nBegin, nEnd;
-			BIOS::ADC::GetBufferRange( nBegin, nEnd );
+			//int nBegin, nEnd;
+			//BIOS::ADC::GetBufferRange( nBegin, nEnd );
+			int nEnd = BIOS::ADC::GetCount();
 			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
 			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
 			// force update
@@ -162,15 +170,16 @@ void CMainWnd::Create()
 
 /*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
 {
+//	BIOS::LCD::Printf( 0, 0, RGB565(ff0000), RGB565(ffffff), "%d", BIOS::ADC::GetState() );
 	if ( nMsg == WmTick )
 	{
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
 
-		if ( BIOS::ADC::Enabled() && BIOS::ADC::Ready() )	
+		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() )	
 		{
-			int nBegin, nEnd;
-			BIOS::ADC::GetBufferRange( nBegin, nEnd );
+			int nEnd = BIOS::ADC::GetCount();
+//			BIOS::ADC::GetBufferRange( nBegin, nEnd );
 			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
 			BIOS::ADC::Restart();
 
@@ -254,77 +263,4 @@ void CMainWnd::CallShortcut(int nShortcut)
 	default:
 		_ASSERT( !!!"Unknown shortcut" );
 	}
-
-	/*
-	si8 id = -1;
-	switch(shortcut)
-	{
-	case CSettings::CRuntime::_StartStop:
-		m_wndToolbox.ToggleAdc();
-		break;
-	case CSettings::CRuntime::_Oscilloscope:
-		if(MainWnd.m_wndToolBar.m_nFocus > CWndToolBar::_Disp) 
-		{	// Not in Oscilloscope => go there
-			id = CWndToolBar::_Oscilloscope;
-			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
-		}
-		else 
-		{	// Go back to previous screen
-			id = m_wndToolBar.m_nOldFocus;
-		}
-		break;
-	case CSettings::CRuntime::_Spectrum:
-		if(MainWnd.m_wndToolBar.m_nFocus < CWndToolBar::_Spectrum || MainWnd.m_wndToolBar.m_nFocus > CWndToolBar::_Marker) 
-		{	// Not in Spectrum => go there
-			id = CWndToolBar::_Spectrum;
-			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
-		}
-		else 
-		{	// Go back to previous screen
-			id = m_wndToolBar.m_nOldFocus;
-		}
-		break;
-	case CSettings::CRuntime::_Generator:
-		if(MainWnd.m_wndToolBar.m_nFocus < CWndToolBar::_Generator || MainWnd.m_wndToolBar.m_nFocus > CWndToolBar::_Modulation) 
-		{	// Not in Generator => go there
-			id = CWndToolBar::_Generator;
-			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
-		}
-		else 
-		{	// Go back to previous screen
-			id = m_wndToolBar.m_nOldFocus;
-		}
-		break;
-	case CSettings::CRuntime::_Tuner:
-		if(MainWnd.m_wndToolBar.m_nFocus != CWndToolBar::_Tuner) 
-		{	// Not in Tuner => go there
-			id = CWndToolBar::_Tuner;
-			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
-		}
-		else 
-		{	// Go back to previous screen
-			id = m_wndToolBar.m_nOldFocus;
-		}
-		break;
-	case CSettings::CRuntime::_Meter:
-		if(MainWnd.m_wndToolBar.m_nFocus != CWndToolBar::_Meter) 
-		{	// Not in Meter => go there
-			id = CWndToolBar::_Meter;
-			m_wndToolBar.m_nOldFocus = m_wndToolBar.m_nFocus;
-		}
-		else 
-		{	// Go back to previous screen
-			id = m_wndToolBar.m_nOldFocus;
-		}
-		break;
-		break;
-	case CSettings::CRuntime::_Screenshot:
-		m_wndToolbox.SaveScreenshot();
-		break;
-	}
-	if(id >= 0)
-	{
-		SendMessage( &MainWnd.m_wndToolBar, ToWord('g', 'o'), id);
-	}
-	*/
 }

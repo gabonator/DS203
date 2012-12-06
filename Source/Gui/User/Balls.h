@@ -1,6 +1,11 @@
-#ifndef __BALLS_H__
+#define ENABLE_MODULE_BALLS
+
+#if defined(ADD_MODULE) && defined(ENABLE_MODULE_BALLS)
+	ADD_MODULE( "Balls", CWndBalls )
+#endif
+
+#if !defined(__BALLS_H__) && defined(ENABLE_MODULE_BALLS)
 #define __BALLS_H__
-#if 0
 #include <Source/Framework/Wnd.h>
 
 class CBallGenerator 
@@ -245,5 +250,4 @@ private:
 		return nSeed & 32767;
 	}
 };
-#endif
 #endif

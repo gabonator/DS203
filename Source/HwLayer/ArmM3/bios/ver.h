@@ -1,7 +1,3 @@
-#define BIN_BASE ((u32)(0x0802C000)) // Size < 68KB
-#define PRM_BASE BIN_BASE + 68*1024 // Size = 2KB
-#define INF_BASE BIN_BASE + 70*1024 // Size < 10KB 
-
 extern ui32 LCD_Type;
 
 /*static*/ const char* BIOS::VER::GetDfuVersion()
@@ -36,6 +32,11 @@ extern ui32 LCD_Type;
 
 /*static*/ void BIOS::VER::DrawLogo(int x0, int y0)
 {
+  #define BIN_BASE ((u32)(0x0802C000)) // Size < 68KB
+//  #define PRM_BASE BIN_BASE + 68*1024 // Size = 2KB
+  #define INF_BASE BIN_BASE + 70*1024 // Size < 10KB 
+
+
   ui8 *Ptr;
   ui16 i, x, y, Color[16];
   

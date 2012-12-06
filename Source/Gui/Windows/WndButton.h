@@ -1,3 +1,8 @@
+#ifndef __WNDBUTTON_H__
+#define __WNDBUTTON_H__
+
+#include <Source\Core\Shapes.h>
+
 class CWndButton : public CWnd
 {
 public:
@@ -13,7 +18,7 @@ public:
 	}	
 	virtual void OnKey(ui16 nKey)
 	{
-		if ( nKey == BIOS::KEY::KeyEnter )
+		if ( nKey & ( BIOS::KEY::KeyEnter | BIOS::KEY::KeyLeft | BIOS::KEY::KeyRight ) )
 		{
 			GetParent()->OnKey( nKey );
 			return;
@@ -21,3 +26,5 @@ public:
 		CWnd::OnKey( nKey );
 	}
 };
+
+#endif

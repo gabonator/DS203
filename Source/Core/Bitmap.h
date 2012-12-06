@@ -1,3 +1,6 @@
+#ifndef __BITMAP_H__
+#define __BITMAP_H__
+
 class CBitmap {
 	int naccum;
 	const ui8* m_p;
@@ -5,31 +8,45 @@ class CBitmap {
 	int base_y;
 	int x;
 	int y;
-	int w;
-	int h;
+	
+public:
+	int m_width;
+	int m_height;
+	ui16 m_arrPalette[16];
 
 public:
-	void Blit( int _x, int _y, const ui8* pData )
+	void Load( const ui8* pData )
 	{
-		base_x = _x;
-		base_y = _y;
-		x = 0;
-		y = 0;
 		naccum = -1;
-		if ( pData[0] != 'G' || pData[1] != 'B' )
+		if ( pData[0] != 'G' /*|| pData[1] != 'B'*/ )
 			return;
 
 		m_p = pData+2;
-		w = getvlc8();
-		h = getvlc8();
-		ui16 arrPal[16];
+		m_width = getvlc8();
+		m_height = getvlc8();
+		if ( pData[1] == 'b' )
+			return;
+		if ( pData[1] != 'B' )
+			return;
 		for (int i=0; i<16; i++)
 		{
 			int nHigh = *m_p++;
 			int nLow = *m_p++;
-			arrPal[i] = (nHigh<<8) | nLow;
+			m_arrPalette[i] = (nHigh<<8) | nLow;
 		}
-		int nPixels = w*h;
+	}
+
+	void Blit( int _x, int _y )
+	{
+		naccum = -1;
+		base_x = _x;
+		base_y = _y;
+		x = 0;
+		y = 0;
+
+		const ui8* pPixels = m_p;
+
+		int nPixels = m_width*m_height;
 		bool bSame = true;
 		while ( nPixels > 0 )
 		{
@@ -39,7 +56,7 @@ public:
 				nCount = getvlc4()+1;
 				int nColor = getfix4();
 				for (int i=0; i<nCount; i++)
-					Pixel( arrPal[nColor] );
+					Pixel( m_arrPalette[nColor] );
 				bSame = false;
 			} else
 			{	// unique
@@ -47,13 +64,14 @@ public:
 				for (int i=0; i<nCount; i++)
 				{
 					int nColor = getfix4();
-					Pixel( arrPal[nColor] );
+					Pixel( m_arrPalette[nColor] );
 				}
 				bSame = true;
 			}
 			nPixels -= nCount;
 			_ASSERT( nPixels >= 0 );
 		}
+		m_p = pPixels;
 	}
 
 private:
@@ -69,7 +87,7 @@ private:
 			}
 		} else
 		{
-			if ( ++x >= w )
+			if ( ++x >= m_width )
 			{
 				x--;
 				y++;
@@ -115,3 +133,5 @@ private:
 		return i;
 	}
 };
+
+#endif
