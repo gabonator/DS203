@@ -1,4 +1,10 @@
-#ifndef __TUNER_H__
+#define ENABLE_MODULE_TUNER
+
+#if defined(ADD_MODULE) && defined(ENABLE_MODULE_TUNER)
+	ADD_MODULE( "Tuner", CWndTuner )
+#endif
+
+#if !defined(__TUNER_H__) && defined(ENABLE_MODULE_TUNER)
 #define __TUNER_H__
 
 #include <Source/Core/Settings.h>

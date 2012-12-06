@@ -128,4 +128,18 @@ void BIOS::SYS::Execute( int nCode )
 	GotoApp();
 }
 
+void BIOS::SYS::Set( int nKey, int nValue )
+{
+	__Set( nKey, nValue );
+}
+
+int BIOS::SYS::Get( int nKey, int nSub  )
+{
+	if ( nKey == ToWord('r', 'f') )
+	{
+		return __Read_FIFO();
+	}
+	return __Get( nKey, nSub );
+}
+
 #endif

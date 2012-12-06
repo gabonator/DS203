@@ -444,6 +444,15 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h">
       <Filter>Source\Gui\Oscilloscope\Meas\Decoders</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\_Modules.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\FullView.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\Timer.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -494,9 +503,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Main\Application.cpp">
       <Filter>Source\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
-      <Filter>Source\Gui\User</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\Serialize.cpp">
       <Filter>Source\Core</Filter>
@@ -573,9 +579,6 @@
     <ClCompile Include="..\..\Source\Gui\Spectrum\Core\FFT.cpp">
       <Filter>Source\Gui\Spectrum\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Core\Shapes.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
@@ -584,6 +587,18 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Dmm\Dmm.cpp">
       <Filter>Source\Gui\Dmm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\_Modules.cpp">
+      <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
+      <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\Timer.cpp">
+      <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
+      <Filter>Source\Gui\User</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

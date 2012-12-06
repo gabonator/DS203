@@ -65,6 +65,7 @@ public:
 			for ( nSearch++; pItems[nSearch].m_eType != CWndToolBar::CBarItem::IEnd; nSearch++ )
 				if ( pItems[nSearch].m_eType == CWndToolBar::CBarItem::IMain )
 					return nSearch;
+
 		} else {
 			for ( nSearch--; nSearch >= 0; nSearch-- )
 				if ( pItems[nSearch].m_eType == CWndToolBar::CBarItem::IMain )

@@ -32,6 +32,8 @@ public:
 		static void SetBacklight(int nLevel); // 0..100
 		static void SetVolume(int nLevel); // 0..100
 		static void Execute( int nCode );
+		static void Set( int nKey, int nValue );
+		static int Get( int nKey, int nSub = 0 );
 	};
 
 	class LCD {
@@ -114,22 +116,30 @@ public:
 			ui8 CH[4];
 			ui32 nValue;
 		};
+	
+		enum EState {
+			Start = 0,
+			Empty = 1,
+			Full = 2
+		};
 
 	public:
 		static void Init();
 		static unsigned char Ready();
-	
+		static EState GetState();
+
 	private:
 		static unsigned long Get();
-	public:
 
+	public:
+		static int GetPointer();
 		static void Restart();
 		static void Enable(bool bEnable);
 		static bool Enabled();
-		static void Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, ui16 nTimePsc, ui16 nTimeArr);
+		static void Configure(ui8 nACouple, ui8 nARange, ui16 nAOffset, ui8 nBCouple, ui8 nBRange, ui16 nBOffset, float fTimePerDiv);
 		static void ConfigureTrigger(ui16 nTThreshold, ui16 nVThreshold, ui8 nSource, ui8 nType);
-		static void ConfigureBuffer(int nLength);
-		static void GetBufferRange(int& nBegin, int& nEnd);
+//		static void ConfigureBuffer(int nLength);
+//		static void GetBufferRange(int& nBegin, int& nEnd);
 
 		static void Copy(int nCount);
 		static unsigned long GetCount();

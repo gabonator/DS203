@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '8')
+#define _VERSION ToDword('D', 'S', 'C', '9')
 
 class CSettings : public CSerialize
 {
@@ -86,7 +86,7 @@ public:
 			_10us, _20us, _50us, _100us, _200us, _500us,
 			_1ms, _2ms, _5ms,
 			_10ms, _20ms, _50ms, _100ms, _200ms, _500ms, 
-			_1s, _ResolutionMax = _1s }
+			_1s, _ResolutionMax = _500ms }
 			Resolution;
 		enum {
 			_1, _2, _4, _FULL}

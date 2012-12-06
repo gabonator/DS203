@@ -23,18 +23,18 @@
 		{ CBarItem::IMain,	(PSTR)"Settings", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Main", &MainWnd.m_wndMenuSettings},
 		{ CBarItem::ISub,	(PSTR)"Keys", &MainWnd.m_wndMenuKeySettings},
-		{ CBarItem::ISub,	(PSTR)"Calib", &MainWnd.m_wndUserCalibration},
+		{ CBarItem::ISub,	(PSTR)"Calib", &MainWnd.m_wndCalibration},
 		
 		{ CBarItem::IMain,	(PSTR)"About", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Device", &MainWnd.m_wndAboutDevice},
 		{ CBarItem::ISub,	(PSTR)"Firmware", &MainWnd.m_wndAboutFirmware},
 
+
 		{ CBarItem::IMain,	(PSTR)"User app", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	(PSTR)"Tuner", &MainWnd.m_wndUserTuner},
-		{ CBarItem::ISub,	(PSTR)"Demo", &MainWnd.m_wndScreenSaver},
-		{ CBarItem::ISub,	(PSTR)"Snake", &MainWnd.m_wndUserGame},
-		//{ CBarItem::ISub,	"Balls", &MainWnd.m_wndUserBalls},
-		{ CBarItem::ISub,	(PSTR)"Meter", &MainWnd.m_wndUserMeter},
+
+#		define ADD_MODULE( strName, type ) { CBarItem::ISub, (PSTR)strName, &MainWnd.m_wndUser##type },
+#		include "User/_Modules.h"
+#		undef ADD_MODULE
 
 		{ CBarItem::IMain,	(PSTR)"Dmm", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Meas", &MainWnd.m_wndUserDmm},

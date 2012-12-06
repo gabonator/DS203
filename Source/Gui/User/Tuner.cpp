@@ -1,5 +1,7 @@
 #include "Tuner.h"
 
+#ifdef ENABLE_MODULE_TUNER
+
 /*virtual*/ void CWndTuner::Create(CWnd *pParent, ui16 dwFlags)
 {
 	CWnd::Create("CWndTuner", dwFlags | CWnd::WsNoActivate | CWnd::WsListener, CRect(0, 16, 400, 240), pParent);
@@ -19,7 +21,9 @@
 		BIOS::LCD::Bar(m_rcClient, RGB565(FFFFFF));
 		BIOS::LCD::Bar(m_rcClient.left, m_rcClient.bottom-16, m_rcClient.right, m_rcClient.bottom, RGB565(b0b0b0));
 		CBitmap bmp;
-		bmp.Blit ( 70, 32, bitmapTuner );
+		bmp.Load( bitmapTuner );
+		bmp.Blit ( 70, 32 );
+
 		DrawPiano();
 		DrawScale();
 
@@ -480,3 +484,4 @@ LINKERSECTION(".extra")
 	0x16, 0x10, 0x0c, 0x82, 0x00, 0x12, 0x10, 0xe3, 0xe0, 0x11, 0x10, 0x08, 0xc7, 0x00, 
 }; // 3616 bytes
 
+#endif

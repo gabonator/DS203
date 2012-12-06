@@ -1,4 +1,5 @@
 #include "Meter.h"
+#ifdef ENABLE_MODULE_METER
 #include <Source/Core/Settings.h>
 #include <string.h>
 
@@ -151,3 +152,4 @@ void CWndUserMeter::OnWave()
 	KillTimer();
 	Invalidate();
 }
+#endif
