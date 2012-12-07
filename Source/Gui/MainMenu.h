@@ -9,21 +9,29 @@ class CWndModuleSelector : public CWnd
 public:
 	struct TMenuBlockStruct
 	{
-		CWndMenuBlock* m_pWnd;
+		CWndMenuBlockIcon* m_pWnd;
 		PCSTR m_strLabel;
 		ui16 m_clr;
 		PCSTR m_strTarget;
+		PVOID m_icon;
 	};
-
+private:
+	static const unsigned char iconOscilloscope[];
+	static const unsigned char iconSpectrum[];
+	static const unsigned char iconGenerator[];
+	static const unsigned char iconSettings[];
+	static const unsigned char iconUser[];
+	static const unsigned char iconAbout[];
+	
 public:
-	CWndMenuBlock	m_itmOscilloscope;
-	CWndMenuBlock	m_itmSpectrum;
-	CWndMenuBlock	m_itmLogic;
-	CWndMenuBlock	m_itmResponse;
-	CWndMenuBlock	m_itmGenerator;
-	CWndMenuBlock	m_itmSettings;
-	CWndMenuBlock	m_itmUser;
-	CWndMenuBlock	m_itmAbout;
+	CWndMenuBlockIcon	m_itmOscilloscope;
+	CWndMenuBlockIcon	m_itmSpectrum;
+	CWndMenuBlockIcon	m_itmLogic;
+	CWndMenuBlockIcon	m_itmResponse;
+	CWndMenuBlockIcon	m_itmGenerator;
+	CWndMenuBlockIcon	m_itmSettings;
+	CWndMenuBlockIcon	m_itmUser;
+	CWndMenuBlockIcon	m_itmAbout;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnPaint();

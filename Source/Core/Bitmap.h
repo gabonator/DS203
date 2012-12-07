@@ -77,7 +77,8 @@ public:
 private:
 	void Pixel(ui16 clr)
 	{
-		BIOS::LCD::PutPixel(base_x+x, base_y+y, clr);
+		if ( clr != RGB565(ff00ff) )
+			BIOS::LCD::PutPixel(base_x+x, base_y+y, clr);
 		if ( y & 1 )
 		{
 			if ( --x < 0 )
