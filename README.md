@@ -53,7 +53,7 @@ Screenshots:
 
 ![Image 10](/gabonator/DS203/raw/master/Man/Screenshot/tuner.png)
 
-![Image 11](/gabonator/DS203/raw/master/Man/Screenshot/android.png)
+![Image 11](/gabonator/DS203/raw/master/Man/Screenshot/android.jpg)
 
 
 Feature highlights:
