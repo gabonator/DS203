@@ -36,7 +36,7 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Generator::ppszTextWave[] =
 		{"DC", "Sin HQ", "Sin LQ", "Triangle", "Sawtooth", "Square", "Cardiac", "Volatile"};
 /*static*/ const char* const CSettings::Trigger::ppszTextSync[] =
-		{"Auto", "Norm", "Single", "None"};
+		{"Auto", "Norm", "Single", "Scan", "None"};
 /*static*/ const char* const CSettings::Trigger::ppszTextSource[] =
 		{"CH1", "CH2", "CH3", "CH4", "Math"};
 /*static*/ const char* const CSettings::Trigger::ppszTextType[] =

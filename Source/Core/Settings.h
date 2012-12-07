@@ -115,7 +115,7 @@ public:
 		static const char* const ppszTextSync[];
 		static const char* const ppszTextSource[];
 		static const char* const ppszTextType[];
-		enum { _Auto, _Norm, _Single, _None, _SyncMax = _None }
+		enum ESync { _Auto, _Norm, _Single, _Scan, _None, _SyncMax = _None }
 			Sync;
 		enum { _EdgeLH, _EdgeHL, _Pulse, _TypeMax = _EdgeHL }
 			Type;

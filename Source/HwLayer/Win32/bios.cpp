@@ -491,9 +491,10 @@ BOOL bADCReady = FALSE;
 		lCounter = 0;
 
 	FLOAT fa = 0.035f + (GetTickCount()%20000)/20000.0f*0.04f;
+	fa = lCounter*0.0001f;
 	FLOAT a = cos(lCounter*(fa)*10)*0.8f+0.2f;
 	FLOAT b = sin(lCounter*0.011f+1)*0.5f;
-	unsigned long da = (ui32)((a+1.0f)*20)+67;
+	unsigned long da = (ui32)((a+1.0f)*127);
 	unsigned long db = (ui32)((b+1.0f)*127);
 	da |= rand()&3;
 	lCounter++;

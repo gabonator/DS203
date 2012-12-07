@@ -225,6 +225,8 @@ void CWndTuner::DrawPiano()
 
 /*virtual*/ void CWndTuner::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
+	static int nOldResolution, nOldSync;
+
  	if ( pSender == NULL && code == WmBroadcast && data == ToWord('d', 'g') )
 	{
 		m_bWave = true;
@@ -236,13 +238,18 @@ void CWndTuner::DrawPiano()
 	// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
 	if (code == ToWord('L', 'D') )
 	{
+		Settings.Time.Resolution = (CSettings::TimeBase::EResolution)nOldResolution;
+		Settings.Trig.Sync = (CSettings::Trigger::ESync)nOldSync;
+		CCoreOscilloscope::ConfigureAdc();
 		return;
 	}
 
 	if (code == ToWord('L', 'E') )
 	{
+		nOldResolution = Settings.Time.Resolution;
+		nOldSync = Settings.Trig.Sync;
 		Settings.Time.Resolution = CSettings::TimeBase::_5ms;
-		Settings.Trig.Sync = CSettings::Trigger::_None;
+		Settings.Trig.Sync = CSettings::Trigger::_Scan;
 		CCoreOscilloscope::ConfigureAdc();
 		return;
 	}
