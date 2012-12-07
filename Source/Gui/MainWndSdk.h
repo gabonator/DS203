@@ -45,7 +45,7 @@ public:
 		if ( m_nSimpleLen == -1 && m_nStreamLen == -1 )
 		{
 			if ( m_pszExpression == NULL || *m_pszExpression == 0 )
-			{
+			{/*
 				if ( !m_bTerminator )
 				{
 					m_bTerminator = TRUE;
@@ -53,7 +53,7 @@ public:
 					m_nSimpleLen = 4;
 					m_nSimplePos = 0;
 					return GetChar();
-				}
+				}*/
 				// at end of evaluated expression
 				return -1;
 			} else
@@ -142,8 +142,41 @@ public:
 	}
 };
 
-void CMainWnd::SdkProc()
+void CMainWnd::SdkUartProc()
 {
+	static char buffer[128];
+	static int npos = 0;
+	static CSdkStreamProvider SdkStream;
+
+
+	int ch;
+	while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
+	{
+		if ( ch == 0x0d || ch == 0x0a )
+		{
+			if (npos > 0)
+			{
+				buffer[npos] = 0;
+				// eval
+				SdkStream.Evaluate( buffer );
+				while ( ( ch = SdkStream.GetChar() ) != -1 )
+					BIOS::SERIAL::Putch( ch );
+			}
+			npos = 0;
+			continue;
+		}
+		buffer[npos++] = ch;
+		if ( npos >= (int)COUNT(buffer) -1 )
+		{
+			npos = 0;
+			m_wndMessage.Show(this, "SDK Warning", "Unrecognized command", RGB565(FF0000));
+		}
+	}
+}
+
+void CMainWnd::SdkDiskProc()
+{
+#if 0
 	static FILEINFO fbase;
 	static bool bInit = TRUE;
 	FILEINFO f;
@@ -239,5 +272,6 @@ void CMainWnd::SdkProc()
 	// buffer mismatch
 	m_wndMessage.Show(this, "SDK Warning", "SDK File Corrupted", RGB565(FF0000));
 	bInit = TRUE; 
+#endif
 }
 

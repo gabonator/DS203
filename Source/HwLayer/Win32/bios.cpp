@@ -746,7 +746,10 @@ BOOL Is64BitWindows()
 {
 	return -1;
 }
-
+/*static*/ void BIOS::SERIAL::Putch(char ch)
+{
+}
+		
 const char* BIOS::VER::GetHardwareVersion()
 {
 	return Is64BitWindows() ? "x64" : "x86";

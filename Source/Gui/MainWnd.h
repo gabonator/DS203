@@ -81,7 +81,8 @@ private:
 	long				m_lLastAcquired;
 
 private:
-	void SdkProc();
+	void SdkDiskProc();
+	void SdkUartProc();
 	void CallShortcut(int nShortcut);
 };
 

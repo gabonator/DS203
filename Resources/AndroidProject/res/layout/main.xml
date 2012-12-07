@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color">
+    
+	<TextView android:id="@+id/txt_appname"
+		android:layout_width="wrap_content"
+		android:text="@string/app_name"		
+		android:layout_centerHorizontal="true"
+		android:textSize="5pt"
+		android:textColor="@color/label_color"
+		android:textStyle="bold" android:layout_height="wrap_content">
+	</TextView>
+	
+	<RelativeLayout android:id="@+id/Waveform"
+		android:layout_below="@+id/txt_appname"
+		android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginBottom="100px">
+    	<eu.valky.dsoquad.WaveformView android:id="@+id/WaveformArea"
+			android:layout_height="fill_parent" android:layout_width="fill_parent"/>
+    </RelativeLayout>
+		
+	<LinearLayout android:id="@+id/bluetooth_settings"
+        android:orientation="vertical"
+        android:layout_height="wrap_content" android:layout_width="120px"
+        android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+        android:layout_marginRight="15px">
+	    <TextView android:id="@+id/txt_btstatus"
+			android:text="BT status:"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:textColor="@color/status_color" />
+		<Button android:id="@+id/button_connect"
+	    	android:layout_width="fill_parent" android:layout_height="35px"
+	    	android:text="@string/button_connect" />
+	</LinearLayout>
+	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignBaseline="@+id/button1" android:layout_alignBottom="@+id/button1" android:layout_toRightOf="@+id/button1" android:id="@+id/button2" android:text="@string/btn2"></Button>
+	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/button3" android:layout_alignBottom="@+id/button2" android:layout_toRightOf="@+id/button2" android:text="@string/btn3"></Button>
+	<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/button1" android:layout_alignParentBottom="true" android:layout_alignLeft="@+id/cb_beep" android:text="@string/btn1"></Button>
+	<Button android:id="@+id/button4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_above="@+id/button1" android:layout_alignParentLeft="true" android:text="@string/btn4"></Button>
+	<Button android:id="@+id/button5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_above="@+id/button2" android:layout_toRightOf="@+id/button4" android:text="@string/btn5"></Button>
+	
+</RelativeLayout>

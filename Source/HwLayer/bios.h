@@ -186,6 +186,7 @@ public:
 		static void Init();
 		static void Send(const char* strBuf);
 		static int Getch();
+		static void Putch(char ch);
 	};
 
 	class VER

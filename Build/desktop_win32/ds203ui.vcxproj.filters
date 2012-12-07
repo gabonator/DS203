@@ -453,6 +453,15 @@
     <ClInclude Include="..\..\Source\Gui\User\ZoomView.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Framework\Eval.h">
+      <Filter>Source\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Framework\Thread.h">
+      <Filter>Source\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Sdk.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

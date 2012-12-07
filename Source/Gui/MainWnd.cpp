@@ -109,15 +109,15 @@ void CMainWnd::Create()
 	}
 	if ( (nSeconds & 7) == 0 )
 	{
-		SdkProc();
-		//BIOS::DBG::Print("R");
-		//BIOS::ADC::Restart();
+//		SdkProc();
 
+/*
 		// UART test
 		BIOS::SERIAL::Send("Ready.\n");
 		int ch;
 		while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
 			BIOS::DBG::Print("%c", ch);
+*/
 	}
 	
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )
@@ -168,6 +168,7 @@ void CMainWnd::Create()
 	}
 }
 
+//long lForceRestart = -1;
 /*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
 {
 //	BIOS::LCD::Printf( 0, 0, RGB565(ff0000), RGB565(ffffff), "%d", BIOS::ADC::GetState() );
@@ -176,12 +177,20 @@ void CMainWnd::Create()
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
 
-		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() )	
+		SdkUartProc();
+/*
+		if ( lForceRestart > 0 && lForceRestart <= (long)BIOS::SYS::GetTick() )
+		{
+			BIOS::ADC::Restart();
+			lForceRestart = -1;
+		}*/
+		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() /*&& lForceRestart < 0*/ )
 		{
 			int nEnd = BIOS::ADC::GetCount();
 //			BIOS::ADC::GetBufferRange( nBegin, nEnd );
 			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
 			BIOS::ADC::Restart();
+//			lForceRestart = BIOS::SYS::GetTick() + 400;
 
 			// trig stuff
 			m_lLastAcquired = BIOS::SYS::GetTick();
