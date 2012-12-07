@@ -23,10 +23,7 @@ public:
 		CWnd::Create("CWndUserDmm", dwFlags | CWnd::WsListener | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
 
-	void DrawDigit(int x, int y, int n, ui16 clrOn, ui16 clrOff );
-	void DrawDigitH(int x, int y, ui16 clr );
-	void DrawDigitV(int x, int y, ui16 clr );
-	void DrawDot(int x, int y, ui16 clr );
+	void DrawDigit(int x, int y, int width, int size, int space, int n, ui16 clrOn, ui16 clrOff );
 	void OnWave();
 
 	virtual void OnPaint();

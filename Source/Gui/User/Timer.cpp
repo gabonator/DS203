@@ -54,7 +54,7 @@ void CWndUserTimer::DrawNumbers()
 	if ( !m_bRunning )
 		DrawNumbers( numbers, RGB565(ffffff), RGB565(c0c0c0), RGB565(e0e0e0) );
 	else
-		DrawNumbers( numbers, RGB565(ffffff), RGB565(00c0c0), RGB565(80c0c0) );
+		DrawNumbers( numbers, RGB565(ffffff), RGB565(00c0c0), RGB565(80e0e0) );
 }
 
 void CWndUserTimer::SetDigit( CBitmap& bmp, int nValue, ui16 clrBack, ui16 clrFront1, ui16 clrFront2 )

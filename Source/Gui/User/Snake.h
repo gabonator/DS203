@@ -1,4 +1,4 @@
-ADD_MODULE( "Snake", CWndSnake )
+//ADD_MODULE( "Snake", CWndSnake )
 
 #ifndef __SNAKE_H__
 #define __SNAKE_H__

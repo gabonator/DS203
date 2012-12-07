@@ -34,6 +34,9 @@ void CWndUserDmm::OnPaint()
 
 	CUtils::Printf( 80, 80, cOn, cClr, 2, "%f mV", fDisplay);
 	int i;
+	int width = 8;
+	int size = 30;
+	int space = 1;
 	for (i=0; *pDisplay && i < 4; i++, pDisplay++)
 	{
 		int nDigit = *pDisplay;
@@ -42,10 +45,10 @@ void CWndUserDmm::OnPaint()
 			nDigit |= 128;
 			pDisplay++;
 		}
- 		DrawDigit(20+i*45, 120, nDigit, cOn, cOff);
+ 		DrawDigit(20+i*(size+2*width+7*space), 120, width, size, space, nDigit, cOn, cOff);
 	}
 	for ( ; i < 4; i++ )
-		DrawDigit(20+i*45, 120, 0, cClr, cClr);
+		DrawDigit(20+i*(size+2*width+7*space), 120, width, size, space, 0, cClr, cClr);
 }
 
 void DrawTriangle(int x, int y, int size, bool half, ui8 quadrant, ui16 clr)
@@ -134,59 +137,59 @@ void DrawTriangle(int x, int y, int size, bool half, ui8 quadrant, ui16 clr)
 	}
 }
 
-void _DrawDigitHT(int x, int y, ui16 clr)
+void _DrawDigitHT(int x, int y, int width, int size, ui16 clr)
 {
 	if ( clr == RGB565(ff00ff) )
 		return;
-	DrawTriangle(x,y,8,true,0,clr);
-	BIOS::LCD::Bar( x+8, y, x+22, y+8, clr ); 
-	DrawTriangle(x+22,y,8,true,3,clr);
+	DrawTriangle(x,y,width,true,0,clr);
+	BIOS::LCD::Bar( x+width, y, x+size, y+width, clr ); 
+	DrawTriangle(x+size,y,width,true,3,clr);
 }
 
-void _DrawDigitHC(int x, int y, ui16 clr)
+void _DrawDigitHC(int x, int y, int width, int size, ui16 clr)
 {
 	if ( clr == RGB565(ff00ff) )
 		return;
-	DrawTriangle(x,y,8,false,1,clr);
-	BIOS::LCD::Bar( x+4, y, x+26, y+8, clr ); 
-	DrawTriangle(x+26,y,8,false,3,clr);
+	DrawTriangle(x,y,width,false,1,clr);
+	BIOS::LCD::Bar( x+width/2, y, x+size+width/2, y+width, clr ); 
+	DrawTriangle(x+size+width/2,y,width,false,3,clr);
 }
 
-void _DrawDigitHB(int x, int y, ui16 clr)
+void _DrawDigitHB(int x, int y, int width, int size, ui16 clr)
 {
 	if ( clr == RGB565(ff00ff) )
 		return;
-	DrawTriangle(x,y,8,true,1,clr);
-	BIOS::LCD::Bar( x+8, y, x+22, y+8, clr ); 
-	DrawTriangle(x+22,y,8,true,2,clr);
+	DrawTriangle(x,y,width,true,1,clr);
+	BIOS::LCD::Bar( x+width, y, x+size, y+width, clr ); 
+	DrawTriangle(x+size,y,width,true,2,clr);
 }
 
-void _DrawDigitVL(int x, int y, ui16 clr)
+void _DrawDigitVL(int x, int y, int width, int size, ui16 clr)
 {
 	if ( clr == RGB565(ff00ff) )
 		return;
-	DrawTriangle(x,y,8,true,2,clr);
-	BIOS::LCD::Bar( x, y+8, x+8, y+22, clr ); 
-	DrawTriangle(x,y+22,8,true,3,clr);
+	DrawTriangle(x,y,width,true,2,clr);
+	BIOS::LCD::Bar( x, y+width, x+width, y+size, clr ); 
+	DrawTriangle(x,y+size,width,true,3,clr);
 }
 
-void _DrawDigitVR(int x, int y, ui16 clr)
+void _DrawDigitVR(int x, int y, int width, int size, ui16 clr)
 {
 	if ( clr == RGB565(ff00ff) )
 		return;
-	DrawTriangle(x,y,8,true,1,clr);
-	BIOS::LCD::Bar( x, y+8, x+8, y+22, clr ); 
-	DrawTriangle(x,y+22,8,true,0,clr);
+	DrawTriangle(x,y,width,true,1,clr);
+	BIOS::LCD::Bar( x, y+width, x+width, y+size, clr ); 
+	DrawTriangle(x,y+size,width,true,0,clr);
 }
 
-void _DrawDot0(int x, int y, ui16 clr)
+void _DrawDot0(int x, int y, int width, int size, int space, ui16 clr)
 {
 	if ( clr == RGB565(ff00ff) )
 		return;
-	BIOS::LCD::Bar( x, y, x+6, y+6, clr );
+	BIOS::LCD::Bar( x, y, x+(width/4)*3, y+(width/4)*3, clr );
 }
 
-void CWndUserDmm::DrawDigit(int x, int y, int nDigit, ui16 clrOn, ui16 clrOff)
+void CWndUserDmm::DrawDigit(int x, int y, int width, int size, int space, int nDigit, ui16 clrOn, ui16 clrOff)
 {
 	ui32 decoder[] =
 	{0x1111110, 0x0110000, 0x1101101, 0x1111001, 0x0110011, 0x1011011, 0x1011111, 0x1110000, 0x1111111, 0x1111011};
@@ -209,24 +212,24 @@ void CWndUserDmm::DrawDigit(int x, int y, int nDigit, ui16 clrOn, ui16 clrOff)
 	}
 
 	#define EN(n) ( dec>>(28-n*4)&1 ) ? RGB565(ff00ff) : clrOff
- 	_DrawDigitHT( x+1, y, EN(1) ); // horny
-	_DrawDigitHC( x+1, y+27, EN(7) ); // stredny
-	_DrawDigitHB( x+1, y+56, EN(4) ); // dolny
-	_DrawDigitVR( x+24, y+1, EN(2) );
-	_DrawDigitVR( x+24, y+33, EN(3) );
-	_DrawDigitVL( x, y+1, EN(6) ); 
-	_DrawDigitVL( x, y+33, EN(5) ); 
-	_DrawDot0(x+35, y+58, EN(0));
+ 	_DrawDigitHT( x+space, y, width, size, EN(1) ); // horny
+	_DrawDigitHC( x+space, y+width/2+size+2*space-1, width, size, EN(7) ); // stredny
+	_DrawDigitHB( x+space, y+size*2+width+4*space, width, size, EN(4) ); // dolny
+	_DrawDigitVR( x+size+2*space, y+space, width, size, EN(2) );
+	_DrawDigitVR( x+size+2*space, y+size+width+3*space, width, size, EN(3) );
+	_DrawDigitVL( x, y+space, width, size, EN(6) ); 
+	_DrawDigitVL( x, y+size+width+3*space, width, size, EN(5) ); 
+	_DrawDot0(x+size+width+5*space, y+size*2+width+6*space, width, size, space, EN(0));
 	#undef EN
 	#define EN(n) ( dec>>(28-n*4)&1 ) ? clrOn : RGB565(ff00ff)
- 	_DrawDigitHT( x+1, y, EN(1) ); // horny
-	_DrawDigitHC( x+1, y+27, EN(7) ); // stredny
-	_DrawDigitHB( x+1, y+56, EN(4) ); // dolny
-	_DrawDigitVR( x+24, y+1, EN(2) );
-	_DrawDigitVR( x+24, y+33, EN(3) );
-	_DrawDigitVL( x, y+1, EN(6) ); 
-	_DrawDigitVL( x, y+33, EN(5) ); 
-	_DrawDot0(x+35, y+58, EN(0));
+ 	_DrawDigitHT( x+space, y, width, size, EN(1) ); // horny
+	_DrawDigitHC( x+space, y+width/2+size+2*space-1, width, size, EN(7) ); // stredny
+	_DrawDigitHB( x+space, y+size*2+width+4*space, width, size, EN(4) ); // dolny
+	_DrawDigitVR( x+size+2*space, y+space, width, size, EN(2) );
+	_DrawDigitVR( x+size+2*space, y+size+width+3*space, width, size, EN(3) );
+	_DrawDigitVL( x, y+space, width, size, EN(6) ); 
+	_DrawDigitVL( x, y+size+width+3*space, width, size, EN(5) ); 
+	_DrawDot0(x+size+width+5*space, y+size*2+width+6*space, width, size, space, EN(0));
 	#undef EN
 }
 

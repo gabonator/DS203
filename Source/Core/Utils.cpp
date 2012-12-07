@@ -109,6 +109,22 @@ char tmp[16];
 		return tmp;
 	}
 
+ui16 CUtils::InterpolateColor( ui16 clrA, ui16 clrB, int nLevel )
+{
+	int br = Get565R(clrB)*nLevel;
+	int bg = Get565G(clrB)*nLevel;
+	int bb = Get565B(clrB)*nLevel;
+	nLevel = 255-nLevel;
+	int ar = Get565R(clrA)*nLevel;
+	int ag = Get565G(clrA)*nLevel;
+	int ab = Get565B(clrA)*nLevel;
+	ar = (ar+br) / 256;
+	ag = (ag+bg) / 256;
+	ab = (ab+bb) / 256;
+	return RGB565RGB(ar, ag, ab);
+}
+
+
 /*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch, int scale)
 {
 	const unsigned char *pFont = BIOS::LCD::GetFont(ch);
