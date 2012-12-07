@@ -447,6 +447,12 @@
     <ClInclude Include="..\..\Source\Gui\User\Timer.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\CanBus.h">
+      <Filter>Source\Gui\Oscilloscope\Meas\Decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\ZoomView.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

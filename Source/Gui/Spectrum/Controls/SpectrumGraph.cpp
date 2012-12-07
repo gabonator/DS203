@@ -190,8 +190,8 @@ void CWndTimeGraphTempl::OnPaint()
 	int nLength = Settings.Spec.nWindowLength;
 	int nPixels = DivsX*m_nBlkX;
 	int nSampleIndex = 0;
-	int nLastY1 = 0;
-	int nLastY2 = 0;
+	int nLastY1 = -1;
+	int nLastY2 = -1;
 
 	int nSum[] = {0, 0};
 	for ( int i = 0; i < 512; i++ )
@@ -215,6 +215,7 @@ void CWndTimeGraphTempl::OnPaint()
 
 		bool bSatur = false;
 
+
 		for (int nTest=nSampleIndex; nTest < nCurSampleIndex && !bSatur; nTest++ )
 		{
 			BIOS::ADC::SSample Sample;
@@ -231,6 +232,7 @@ void CWndTimeGraphTempl::OnPaint()
 				if ( y1 == 0 || y1 == 255 )
 					bSatur = true;
 			}
+
 		}
 
 		_PrepareColumn( column, i, bSatur ? RGB565(800000) : 0x0101 );
@@ -244,11 +246,13 @@ void CWndTimeGraphTempl::OnPaint()
 				int y2 = Sample.CH2;
 				if ( bHann )
 				{
-					y2 -= nSum[0];
+					y2 -= nSum[1];
 					y2 = (y2 * nWindow) >> 16;
-					y2 += nSum[0];
+					y2 += 128;
 				}
 				y2 = (y2*(DivsY*m_nBlkY))>>8;
+				if ( nLastY2 == -1 )
+					nLastY2 = y2;
 				LineTo( column, y2, nLastY2, clr2 );
 			}
 
@@ -257,11 +261,13 @@ void CWndTimeGraphTempl::OnPaint()
 				int y1 = Sample.CH1;
 				if ( bHann )
 				{
-					y1 -= nSum[1];
+					y1 -= nSum[0];
 					y1 = (y1 * nWindow) >> 16;
-					y1 += nSum[1];
+					y1 += 128;
 				}
 				y1 = (y1*(DivsY*m_nBlkY))>>8;
+				if ( nLastY1 == -1 )
+					nLastY1 = y1;
 				LineTo( column, y1, nLastY1, clr1 );
 			}
 		}

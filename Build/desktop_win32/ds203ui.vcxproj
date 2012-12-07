@@ -118,6 +118,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ListOperand.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ListOperator.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\CanBus.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="..\..\Source\Gui\User\Snake.h" />
     <ClInclude Include="..\..\Source\Gui\User\Timer.h" />
     <ClInclude Include="..\..\Source\Gui\User\Tuner.h" />
+    <ClInclude Include="..\..\Source\Gui\User\ZoomView.h" />
     <ClInclude Include="..\..\Source\Gui\User\_Modules.h" />
     <ClInclude Include="..\..\Source\Gui\Windows\MessageBox.h" />
     <ClInclude Include="..\..\Source\Gui\Windows\WndButton.h" />
