@@ -20,7 +20,7 @@ This picture shows the power regulating circuit with USB on left, battery charge
 
 ![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/photo_1.jpg)
 
-On this picture we can see how is the wire passd through the CN7 connector to the opposite side of board.
+On this picture we can see how is the wire passed through the CN7 connector to the opposite side of board.
 
 ![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/photo_2.jpg)
 
@@ -60,7 +60,7 @@ On the bottom side, there are many soldering pads forming three connectors. Its 
 
 ![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/obs421pins.png)
 
-The RX pin is used for serial reception no the bluetooth module and should be connected to the TX pin of DS203, TX pin on bluetooth module should be connected to RX pin (do not laugh, there are always many people who do not understand this).
+The RX pin is used for serial reception on the bluetooth module and should be connected to the TX pin of DS203, TX pin on bluetooth module should be connected to RX pin (do not laugh, there are always many people who do not understand how to wire uart signals).
 
 I placed small 4 pin header on the bottom of this bluetooth module, connected to suitable pins and fixed with melted glue.
 
@@ -87,6 +87,10 @@ We will need to configure the OBS module to set it a name, device class number, 
 
 From your computer, pair with the bluetooth module (devices and printers->add device), check the port number and open the utility. You should be able to connect to it wirelessly by clicking the Connect button and selecting the port number. You don't need to change the baudrate settings (you need to set them only when using UART cable). 
 
+![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/toolbox_00.png)
+
+After successfull connection, click on the "AT Mode" button.
+
 ![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/toolbox_0.png)
 
 Click on Read All button, set the Local Name and Class of device to 0x8050C. This is important, because some android devices will refuse to work with the module when the class of device is not properly set. Here is a nice online generator for COD: http://bluetooth-pentest.narod.ru/software/bluetooth_class_of_device-service_generator.html
@@ -99,11 +103,16 @@ In the Security tab, select Enabled and set some simple pin code. I noticed that
 
 The DS203 has its serial port configured to 115200 bauds, 8 bits, no parity. Set these parameters in Serial tab and click Write. These values are applied after a power cycle, so turn off and then on your DS203.
 
+![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/toolbox_3.png)
+
+Don't forget to click "Save" before switching to other tab, when you changed any value.
 
 Android application
 -------------------
 
-In your android phone settings, add and pair with the OBS module. Download and install the DsoQuad.apk from this GIT repository, click Connect, select your bluetooth device and wait until a message saying whether the connection was established or not. Then you can click one of the buttons on bottom to check the communication.
+In your android phone settings, add and pair with the OBS module. Download and install the DsoQuad.apk from this GIT repository, click Connect, select your bluetooth device and wait until a message pops up saying whether the connection was established or not. Then you can click one of the buttons on bottom to check the communication.
+
+The application is very simple, it only demonstrates the possibilities of wireless communication between DS203 and android phone or tablet. It can transfer the waveform from DS203 to phone, change the vertical resolution, make the device to beep or to display a message.
 
 Working connection with android tablet:
 ![Image](/gabonator/DS203/raw/master/Man/SerialOutput/images/photo_tablet.jpg)
