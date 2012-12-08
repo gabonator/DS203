@@ -70,3 +70,9 @@ extern "C" {
 {
   return UsartGet();
 }
+
+/*static*/ void BIOS::SERIAL::Putch(char ch)
+{
+	while ( !(USART1->SR & USART_SR_TXE) );
+	USART1->DR = ch;
+}

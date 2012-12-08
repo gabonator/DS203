@@ -1,0 +1,281 @@
+<html>
+<head>
+    <title>websockets client</title>
+    <style>
+			html, body {
+			  background:#c0c0e0;
+			  height: 100%;
+			}
+		</style>
+</head>
+<body>
+<style>
+#scrollpane
+{
+width:100%;
+overflow:auto;
+border: solid 1px gray;
+background-color:white;
+}
+</style>
+
+<input type="button" value="Calibrate current resolution CH1" onClick="CalibrateCh1()">
+<br>
+<table><tr><td>
+<textarea id="ta" cols="80" rows="20">
+</textarea>
+</td><td>
+<textarea id="ta2" cols="40" rows="20">
+</textarea>
+</td></tr>
+</table>
+<div id="txt"></div>
+
+    <script type="text/javascript">
+				String.prototype.trim=function(){return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');};
+
+				function LogReset()
+				{
+					document.getElementById("ta").value = "";
+				}
+				function Log(msg)
+				{
+					document.getElementById("ta").value = document.getElementById("ta").value + msg + "\n";
+document.getElementById("ta").scrollTop = document.getElementById("ta").scrollHeight;
+				}
+				function Log2Reset()
+				{
+					document.getElementById("ta2").value = "";
+				}
+				function Log2(msg)
+				{
+					document.getElementById("ta2").value = document.getElementById("ta2").value + msg + "\n";
+document.getElementById("ta2").scrollTop = document.getElementById("ta2").scrollHeight;
+				}
+
+				var SocketClass = function()
+        {
+					// private
+					var ws = null;
+					var arrListeners = new Array();
+					var _this = this;
+
+					var url = "ws://127.0.0.1:38950/resourcePath";
+
+					// public
+					this.Send = function( msg ) 
+					{
+						ws.send( msg );
+					}
+					this.Receive = function ( msg )
+					{
+						if ( msg.substr(0, 1) == "[" )
+							Process( eval(msg) );                         
+					}
+					this.Connect = function()
+					{
+            document.title = "Connecting...";
+	          ws = new WebSocket(url);
+            ws.onmessage = this.onMessage;
+            ws.onopen = this.onOpen;
+            ws.onclose = this.onClose;
+            ws.onerror = this.onError;
+          }
+
+					// private
+					this.onMessage = function(evt)
+					{
+            if (typeof evt !== "undefined" && typeof evt.data == "string") {
+								_this.Receive( evt.data.toString() );
+            }
+					}
+
+					this.onOpen = function(evt)
+					{
+						document.title = "Online";
+					}
+
+					this.onClose = function(evt)
+					{
+						document.title = "Offline";
+					}
+					this.onEror = function(evt)
+					{
+						document.title = "Error";
+						alert(evt);
+					}
+
+				};
+
+				var WSocket = new SocketClass();
+        window.onload = function () {
+          setTimeout( "WSocket.Connect();", 500 );
+        };
+
+function Process(msg)
+{
+  var result = "";
+	if (typeof( msg ) == "string")
+	{
+		alert(0);
+		ProcessMessage(msg);
+	}
+	if (typeof( msg ) == "object" && msg.length > 0 )
+	{
+		for (var i=0; i<msg.length; i++)
+		{
+			var element = msg[i];
+			if (result != "") result = result + ", ";
+			if ( typeof(element) == "string" )
+			{
+				if ( element.substr(-1,1)==")" )
+					setTimeout( element, 0 );
+
+				result += element;
+			} else
+			if ( typeof(element) == "object" && element.length > 0 )
+			{
+				result += "array("+element.length+")";			
+				ProcessArray(element);
+			} else
+			{
+				result += "unknown";
+			}
+		}
+		document.getElementById("txt").innerHTML = result;
+	}
+}
+
+function ProcessMessage(msg)
+{
+ 	document.getElementById("txt").innerHTML = msg;
+}
+
+var hWaveHandler = false;
+function ProcessArray(arr)
+{
+ if (arr.length > 0)
+ {
+ 		var nCH1sum = 0, nCH1sum2 = 0, nCH1n = 0;
+ 		for (var i=0, x=0; i<arr.length; i+=4)
+ 		{
+ 			var y = arr[i];
+ 			nCH1sum += y;
+ 			nCH1sum2 += y*y;
+ 			nCH1n++;
+ 		}
+
+ 		var nCH1avg = nCH1sum / nCH1n, nCH1var = (nCH1sum2 - (nCH1sum*nCH1sum)/nCH1n)/nCH1n;
+		if (hWaveHandler)
+			hWaveHandler( nCH1avg, nCH1var );
+/*
+ 		var nCH2sum = 0, nCH2sum2 = 0, nCH2n = 0;
+ 		for (var i=0, x=0; i<arr.length; i+=4,x+=step)
+ 		{
+ 			var y = arr[i+1];
+ 			nCH2sum += y;
+ 			nCH2sum2 += y*y;
+ 			nCH2n++;
+ 	    y = 255-y;
+ 		}
+ 		var nCH2avg = nCH2sum / nCH2n, nCH2var = (nCH2sum2 - (nCH2sum*nCH2sum)/nCH2n)/nCH2n;
+*/
+ } else
+ 	alert(0);
+} 
+
+var oldp, oldq;
+var newp, newq, newq2, newq4, newq6;
+var resol;
+var resol_num, resol_units;
+var running = 0;
+
+function CalibrateCh1()
+{
+	if (running)
+	{
+		Log("Already running...");
+		return;
+	}
+	running = 1;
+	LogReset();
+	Log2Reset();
+	Log("Calibrating...");
+	WSocket.Send("CH1::Resolution=2;#hResolution(ENUM::Ampl(CH1::Resolution));");
+}
+function hResolution(name)
+{
+	Log("Current resolution = " + name );
+	Proc();
+}
+var lastset = -999;
+function Proc()
+{
+	if (lastset != dc)
+	{
+		alert("Please set DC voltage to "+dc.toFixed(3));
+		lastset = dc;
+	}
+
+	WSocket.Send("CH1::Offset="+pos+"; ALL::Setup(); Update(); #hDownload(CH1::Offset);");
+}
+
+function hDownload(p)
+{
+	if ( p != pos )
+	{
+		Log("Something wrong happened...");
+		Proc();
+		return;
+	}
+	Log("Downloading wave... (pos="+pos+", dc="+dc.toFixed(2)+")");
+	hWaveHandler = hHandler;
+	WSocket.Send("ADC::Get()");
+}
+
+var pos=-20, dc=-2.0; //-0.5;
+
+function hHandler(average, variance)
+{
+	Log("Current waveform = average:" + average.toFixed(3) + " variance:" + variance.toFixed(3) );
+	if ( variance > 1 )
+	{
+		Log("Variance too big, probably the buffer was transferred incorrectly... retry");
+		WSocket.Send("ADC::Get()");
+		return;		
+	}
+
+	Log("Value [" + pos + ", " + average.toFixed(3) + "]");
+	Log2(pos + ", " + dc.toFixed(2) + ", " + average.toFixed(3) + ",");
+
+	pos += 5;
+		if ( pos > 280 )
+	{
+Log2("");
+Log2("");
+
+		dc += 0.1;
+	  pos = -20;
+	if ( dc > 2.1 )
+		{
+			hDone(0);
+			return;
+		}
+		BeepProc();
+	} else
+		Proc();
+}
+
+function BeepProc()
+{
+	WSocket.Send("Beep(500);#Proc(0);");
+}
+
+function hDone(x)
+{
+	Log("Operation succeed!");
+	running = 0;
+}
+</script>
+</body>
+</html>

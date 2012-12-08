@@ -148,6 +148,13 @@ public:
 
 	class GEN {
 	public:
+		enum
+			{
+				DcMin = 0,
+				DcMax = 0xfff
+			};
+
+	public:
 		static void ConfigureSq(ui16 psc, ui16 arr, ui16 ccr);
 		static void ConfigureWave(ui16* pData, ui16 cnt);
 		static void ConfigureWaveRate(ui16 arr);
@@ -182,6 +189,7 @@ public:
 		static void Init();
 		static void Send(const char* strBuf);
 		static int Getch();
+		static void Putch(char ch);
 	};
 
 	class VER

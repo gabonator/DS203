@@ -32,8 +32,10 @@ void CWndUserTimer::OnTimer()
 {
 	if ( m_nValue > 0 )
 		m_nValue--;
-	else
+
+	if ( m_nValue == 0 )
 	{
+		BIOS::GEN::ConfigureDc( BIOS::GEN::DcMin );
 		if ( m_nBeep > 0 )
 		{
 			BIOS::SYS::Beep(300);
@@ -183,7 +185,10 @@ void CWndUserTimer::OnKey(ui16 nKey)
 			m_nValue = m_nDefault;
 		DrawNumbers();
 		if ( m_bRunning )
+		{
 			SetTimer(1000);
+			BIOS::GEN::ConfigureDc( BIOS::GEN::DcMax );
+		}
 	}
 
 	if ( nKey == BIOS::KEY::KeyEnter && GetFocus() == &m_btnReset )

@@ -96,7 +96,7 @@ void UsartInit()
 	NVIC_SetPriority(USART1_IRQn, 14);
 }
 
-#define nUsartLength 32
+#define nUsartLength 128
 char aUsartBuf[nUsartLength];
 int nUsartWrite = 0;
 int nUsartRead = 0;

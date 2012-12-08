@@ -79,6 +79,39 @@ public:
 		return CEvalOperand(CAdcStream::getInstance());
 	}
 
+	static CEvalOperand _OscGetViewData( CArray<CEvalOperand>& arrOperands )
+	{
+		class CAdcStream : public CStream {
+		public:
+			int m_nPos;
+
+		public:		
+			static CAdcStream* getInstance()
+			{
+				static CAdcStream staticStream;
+				staticStream.m_nPos = 0;
+				return &staticStream;
+			}
+
+		public:
+			virtual INT GetSize()
+			{
+				return 300*2;
+			};
+
+			virtual CHAR Get()
+			{
+				const BIOS::ADC::TSample& sample = BIOS::ADC::GetAt( 10 + m_nPos/2 );
+				CHAR chOut = (m_nPos & 1) ? (CHAR) (sample >> 8) : (CHAR)sample;
+				m_nPos++;
+				return chOut;
+			};
+
+		};
+
+		return CEvalOperand(CAdcStream::getInstance());
+	}
+
 	static CEvalOperand _CH1_Coupling( CArray<CEvalOperand>& arrOperands )
 	{
 		static CEvalMappedInteger<NATIVEENUM> coupling( (NATIVEENUM*)&Settings.CH1.Coupling );
@@ -482,6 +515,9 @@ public:
 	//		CEvalToken( "MEM::Write", CEvalToken::PrecedenceConst, _MemWrite ),
 	//		CEvalToken( "MEM::Read", CEvalToken::PrecedenceFunc, _MemRead ),
 
+
+
+			CEvalToken( "OSC.GetViewData", CEvalToken::PrecedenceFunc, _OscGetViewData ),
 
 			CEvalToken( "Print", CEvalToken::PrecedenceFunc, _Print ),
 			CEvalToken( "Beep", CEvalToken::PrecedenceFunc, _Beep ),
