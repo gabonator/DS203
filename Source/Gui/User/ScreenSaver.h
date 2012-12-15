@@ -1,4 +1,4 @@
-ADD_MODULE( "Demo", CWndScreenSaver )
+//ADD_MODULE( "Demo", CWndScreenSaver )
 
 #ifndef __SCREENSAVER_H__
 #define __SCREENSAVER_H__

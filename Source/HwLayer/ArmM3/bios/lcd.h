@@ -320,7 +320,7 @@ CPoint m_cpBuffer;
 
 /*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch)
 {
-	const unsigned char *pFont = GetFont(ch);
+	const unsigned char *pFont = BIOS::LCD::GetFont(ch);
 	if (clrb == RGBTRANS)
 	{
 		for (ui8 _y=0; _y<14; _y++)

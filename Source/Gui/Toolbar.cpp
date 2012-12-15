@@ -37,6 +37,9 @@
 #		include "User/_Modules.h"
 #		undef ADD_MODULE
 
+		{ CBarItem::IMain,	(PSTR)"Dmm", &MainWnd.m_wndModuleSel},
+		{ CBarItem::ISub,	(PSTR)"Mode", &MainWnd.m_wndMenuMode},
+
 		{ CBarItem::IEnd,		NULL, NULL }
 	};
 

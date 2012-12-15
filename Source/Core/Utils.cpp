@@ -1,5 +1,6 @@
 #include "Utils.h"
 #include <Source\HwLayer\bios.h>
+#include <stdarg.h>
 
 char tmp[16];
 /*static */ const char hex[16] = {'0', '1', '2', '3', '4',
@@ -132,3 +133,112 @@ ui16 CUtils::InterpolateColor( ui16 clrA, ui16 clrB, int nLevel )
 	ab = (ab+bb) / 256;
 	return RGB565RGB(ar, ag, ab);
 }
+
+
+/*static*/ int _DrawChar(int x, int y, unsigned short clrf, unsigned short clrb, char ch, int scale)
+{
+	const unsigned char *pFont = BIOS::LCD::GetFont(ch);
+	if (clrb == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				if ( col & 128 )
+				{
+					for(int i=0 ; i<=scale ; i++)
+					{
+						for(int j=0 ; j<=scale ; j++)
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrf);
+						}
+					}
+				}
+			}
+		}
+	} else if (clrf == RGBTRANS)
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				if ( (col & 128) == 0 )
+				{
+					for(int i=0 ; i<=scale ; i++)
+					{
+						for(int j=0 ; j<=scale ; j++)
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrb);
+						}
+					}
+				}
+			}
+		}
+	} else
+	{
+		for (ui8 _y=0; _y<(14*scale); _y+=scale)
+		{
+			ui8 col = ~*pFont++;
+	
+			for (ui8 _x=0; _x<(8*scale); _x+=scale, col <<= 1)
+			{
+				for(int i=0 ; i<=scale ; i++)
+				{
+					for(int j=0 ; j<=scale ; j++)
+					{
+						if ( col & 128 )
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrf);
+						}
+						else
+						{
+							BIOS::LCD::PutPixel(x+_x+i, y+_y+j, clrb);
+						}
+					}
+				}
+			}
+		}
+	}
+	return (8*scale);
+}
+
+/*static*/ int CUtils::Printf (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char * format, ...)
+{
+	char buf[128];
+	char* bbuf = buf; 
+
+        va_list args;
+        
+        va_start( args, format );
+        int aux = BIOS::DBG::sprintf( bbuf, format, args );
+	Print(x, y, clrf, clrb, scale, buf);
+	return aux;
+}
+       
+/*static*/ int CUtils::Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, char *str)
+{
+	return CUtils::Print (x, y, clrf, clrb, scale, (const char*)str);
+}
+
+/*static*/ int CUtils::Print (int x, int y, unsigned short clrf, unsigned short clrb, int scale, const char *str)
+{
+	if (!str || !*str)
+		return 0;
+	int _x = x;
+	for (;*str; str++)
+	{
+		if (*str == '\n')
+		{
+			x = _x;
+			y += (16*scale);
+			continue;
+		}
+		x += _DrawChar(x, y, clrf, clrb, *str, scale);
+	}
+	return x - _x;
+}
+

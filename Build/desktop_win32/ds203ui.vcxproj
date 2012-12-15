@@ -92,6 +92,10 @@
     <ClInclude Include="..\..\Source\Gui\Calibration\CalibDac.h" />
     <ClInclude Include="..\..\Source\Gui\Calibration\CalibMenu.h" />
     <ClInclude Include="..\..\Source\Gui\Calibration\Calibration.h" />
+    <ClInclude Include="..\..\Source\Gui\Dmm\Dmm.h" />
+    <ClInclude Include="..\..\Source\Gui\Dmm\Mode\ItemMode.h" />
+    <ClInclude Include="..\..\Source\Gui\Dmm\Mode\ListMode.h" />
+    <ClInclude Include="..\..\Source\Gui\Dmm\Mode\MenuMode.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Controls\GraphSig.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Core\CoreGenerator.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Edit\MenuGenEdit.h" />
@@ -210,6 +214,8 @@
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibDac.cpp" />
     <ClCompile Include="..\..\Source\Gui\Calibration\CalibMenu.cpp" />
     <ClCompile Include="..\..\Source\Gui\Calibration\Calibration.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Dmm\Dmm.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Dmm\Mode\MenuMode.cpp" />
     <ClCompile Include="..\..\Source\Gui\Generator\Core\CoreGenerator.cpp" />
     <ClCompile Include="..\..\Source\Gui\Generator\Edit\MenuGenEdit.cpp" />
     <ClCompile Include="..\..\Source\Gui\Generator\Main\MenuGenMain.cpp" />

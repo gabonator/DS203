@@ -32,6 +32,7 @@ public:
 	CWndMenuBlockIcon	m_itmSettings;
 	CWndMenuBlockIcon	m_itmUser;
 	CWndMenuBlockIcon	m_itmAbout;
+	CWndMenuBlockIcon	m_itmDmm;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnPaint();

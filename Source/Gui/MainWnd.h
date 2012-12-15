@@ -15,6 +15,7 @@
 #include "Settings/Settings.h"
 #include "Settings/KeySettings.h"
 #include "Calibration/Calibration.h"
+#include "Dmm/Dmm.h"
 #include "Spectrum/Spectrum.h"
 
 #define ADD_MODULE( strName, type )
@@ -55,6 +56,9 @@ public:
 	CWndAboutFirmware			m_wndAboutFirmware;
 	CWndAboutDevice	m_wndAboutDevice;
 	CWndMenuCalibration	m_wndCalibration;
+
+	CWndDmm				m_wndDmm;
+	CWndMenuMode		m_wndMenuMode;
 
 	CWndMenuSpectMain	m_wndSpectrumMain;
 	CWndMenuSpectMarker	m_wndSpectrumMarker;

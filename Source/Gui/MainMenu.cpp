@@ -6,7 +6,7 @@
 
 const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 {
-	static const CWndModuleSelector::TMenuBlockStruct arrLayout[9] = 
+	static const CWndModuleSelector::TMenuBlockStruct arrLayout[10] = 
 	{
 		// CWnd, Label, color, target sent to Toolbar.cpp
 		{ &m_itmOscilloscope,	"Oscillo\nscope",		RGB565(ffffff), "Oscilloscope", (PVOID)iconOscilloscope },
@@ -17,9 +17,10 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 		{ &m_itmUser,			"User\napplications",	RGB565(ffffff), "User app",		(PVOID)iconUser },
 		{ &m_itmAbout,			"About",				RGB565(ffffff), "About",		(PVOID)iconAbout },
 
-		{ &m_itmResponse,		"Frequency\nresponse",	RGB565(808080), NULL,			NULL },
-		{ &m_itmLogic,			"Logic\nanalyser",		RGB565(808080), NULL,			NULL },
-		{ NULL,					NULL,					RGB565(808080), NULL,			NULL },
+		{ &m_itmDmm,			"Dmm",					RGB565(ffffff), "Dmm", NULL },
+		{ &m_itmResponse,		"Frequency\nresponse",	RGB565(808080), NULL , NULL },
+		{ &m_itmLogic,			"Logic\nanalyser",		RGB565(808080), NULL , NULL },
+		{ NULL,					NULL,					RGB565(808080), NULL , NULL }
 	};
 
 	return arrLayout;
@@ -83,21 +84,65 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 
 		int _x = nCurrentId % 3;
 		int _y = nCurrentId / 3;
-		if ( nKey & BIOS::KEY::KeyLeft && _x > 0 )
-			_x--;
-		if ( nKey & BIOS::KEY::KeyRight && _x < 2 )
-			_x++;
-		if ( nKey & BIOS::KEY::KeyUp && _y == 0 )
+		if (((nKey & BIOS::KEY::KeyUp) && _y == 0 && _x == 0) || ((nKey & BIOS::KEY::KeyDown) && _x == 2 && _y == 2))
 		{
 			MainWnd.m_wndToolBar.SetFocus();
 			pCurrent->Invalidate();
 			MainWnd.m_wndToolBar.Invalidate();
 			return;
 		}
-		if ( nKey & BIOS::KEY::KeyUp && _y > 0 )
+		if ( nKey & BIOS::KEY::KeyLeft)
+		{
+			_x--;
+			if(_x < 0) 
+			{
+				_x=2;
+				_y--;
+				if(_y < 0)
+				{ 
+					_y = 2;
+				}
+			}
+		}
+		if ( nKey & BIOS::KEY::KeyRight)
+		{
+			_x++;
+			if(_x > 2)
+			{
+				_x=0;
+				_y++;
+				if(_y > 2)
+				{
+					_y = 0;
+				}
+			}
+		}
+		if ( nKey & BIOS::KEY::KeyUp)
+		{
 			_y--;
-		if ( nKey & BIOS::KEY::KeyDown && _y < 2 )
+			if(_y < 0)
+			{
+				_y=2;
+				_x--;
+				if(_x < 0)
+				{
+					_x = 2;
+				}
+			}
+		}
+		if ( nKey & BIOS::KEY::KeyDown)
+		{
 			_y++;
+			if(_y > 2)
+			{
+				_y=0;
+				_x++;
+				if(_x > 2)
+				{
+					_x = 0;
+				}
+			}
+		}
 		
 		int nNewId = _y * 3 + _x;
 		CWnd* pNew = NULL;
