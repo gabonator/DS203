@@ -22,6 +22,8 @@ void CMainWnd::Create()
 	CCoreOscilloscope::ConfigureAdc();
 	CCoreSettings::Update();
 
+	m_nLastKey = BIOS::SYS::GetTick();
+	m_bSleeping = FALSE;
 	
 	CWnd::Create("CMainWnd", WsVisible | WsListener, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
 
@@ -79,47 +81,68 @@ void CMainWnd::Create()
 
 /*virtual*/ void CMainWnd::OnTimer()
 {
-	static int nSeconds = 0;
-	static ui32 nChecksum = -1;
+	// every 200ms
+	static int nSubCounter = 0;
 
-	if ( nChecksum == (ui32)-1 )
+	if ( ++nSubCounter == 5 )
 	{
-		int nUptime = Settings.Runtime.m_nUptime;
-		Settings.Runtime.m_nUptime = 0;
-		nChecksum = Settings.GetChecksum();
-		Settings.Runtime.m_nUptime = nUptime;
-	}
-	if ( Settings.m_lLastChange != 0 )
-	{
-		// save settings in 20 seconds
-		nSeconds = 120 - 20;
-		Settings.m_lLastChange = 0;
-	}
-	if ( ++nSeconds >= 120 )
-	{
-		nSeconds = 0;
-	
-		ui32 nNewChecksum = Settings.GetStaticChecksum();
-		if ( nNewChecksum != nChecksum )
+		nSubCounter = 0;
+		static ui32 nChecksum = -1;
+		static int nSeconds = 0;
+		nSeconds++;
+
+		if ( Settings.Runtime.m_nStandby != 0 )
 		{
-			//m_wndMessage.Show(this, "Information", "Saving settings...", RGB565(ffff00));
-			Settings.Save();
-			nChecksum = nNewChecksum;
+			if ( (int)BIOS::SYS::GetTick() > m_nLastKey + Settings.Runtime.m_nStandby*60000 )
+			{
+				// enter sleep mode
+				BIOS::SYS::SetVolume(0);
+				m_wndMessage.Show(this, "Information", "Entering sleep mode", RGB565(ffff00));
+				BIOS::ADC::Enable( FALSE );
+				for ( int i = Settings.Runtime.m_nBacklight; i > 0; i--)
+				{
+					BIOS::SYS::SetBacklight( i );
+					BIOS::SYS::DelayMs(10);
+				}
+				BIOS::SYS::Standby( TRUE );
+				m_bSleeping = TRUE;
+				KillTimer();
+			}
 		}
-	}
-	if ( (nSeconds & 7) == 0 )
-	{
-//		SdkProc();
 
-/*
-		// UART test
-		BIOS::SERIAL::Send("Ready.\n");
-		int ch;
-		while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
-			BIOS::DBG::Print("%c", ch);
-*/
-	}
+ 		if ( nChecksum == (ui32)-1 )
+		{
+			int nUptime = Settings.Runtime.m_nUptime;
+			Settings.Runtime.m_nUptime = 0;
+			nChecksum = Settings.GetChecksum();
+			Settings.Runtime.m_nUptime = nUptime;
+		}
+		if ( Settings.m_lLastChange != 0 )
+		{
+			// save settings in 20 seconds
+			nSeconds = 120 - 20;
+			Settings.m_lLastChange = 0;
+		}
+		if ( nSeconds >= 120 )
+		{
+			nSeconds = 0;
 	
+			ui32 nNewChecksum = Settings.GetStaticChecksum();
+			if ( nNewChecksum != nChecksum )
+			{
+				//m_wndMessage.Show(this, "Information", "Saving settings...", RGB565(ffff00));
+				Settings.Save();
+				nChecksum = nNewChecksum;
+			}
+		}
+
+		char test[32];
+		static int nCounter=0;
+		BIOS::DBG::sprintf(test, "Ready.(%d)\n", nCounter++);
+		BIOS::SERIAL::Send("TEST!");
+		BIOS::SERIAL::Send(test);
+	}
+
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )
 	{
 		long lTick = BIOS::SYS::GetTick();
@@ -174,6 +197,8 @@ void CMainWnd::Create()
 //	BIOS::LCD::Printf( 0, 0, RGB565(ff0000), RGB565(ffffff), "%d", BIOS::ADC::GetState() );
 	if ( nMsg == WmTick )
 	{
+		if ( m_bSleeping )
+			return;
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
 
@@ -208,17 +233,44 @@ void CMainWnd::Create()
 		return;
 	}
 
-	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction )
-		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutCircle);
+	if ( nMsg == WmKey )
+	{
+		if ( m_bSleeping )
+		{
+			SetTimer( 200 );
+			m_bSleeping = false;
+			BIOS::SYS::Standby( FALSE );
 
-	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyFunction2 )
-		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutTriangle);
+			CCoreOscilloscope::ConfigureAdc();
+			CCoreGenerator::Update();
+			m_wndMessage.Hide();
+			Invalidate();
 
-	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyS2 )
-		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS2);
+			for ( int i = 0; i < Settings.Runtime.m_nBacklight; i++)
+			{
+				BIOS::SYS::SetBacklight( i );
+				BIOS::SYS::DelayMs(10);
+			}
 
-	if ( nMsg == WmKey && nParam == BIOS::KEY::KeyS1 )
-		CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS1);
+			m_nLastKey = BIOS::SYS::GetTick();
+			CCoreSettings::Update();	// display backlight
+			return;
+		}
+
+		m_nLastKey = BIOS::SYS::GetTick();
+
+		if ( nParam == BIOS::KEY::KeyFunction )
+			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutCircle);
+
+		if ( nParam == BIOS::KEY::KeyFunction2 )
+			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutTriangle);
+
+		if ( nParam == BIOS::KEY::KeyS2 )
+			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS2);
+
+		if ( nParam == BIOS::KEY::KeyS1 )
+			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS1);
+	}
 
 	CWnd::WindowMessage( nMsg, nParam );
 }

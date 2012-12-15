@@ -79,6 +79,8 @@ public:
 private:
 	// auto trigger
 	long				m_lLastAcquired;
+	int					m_nLastKey;
+	bool				m_bSleeping;
 
 private:
 	void SdkDiskProc();

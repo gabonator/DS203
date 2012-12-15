@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', '9')
+#define _VERSION ToDword('D', 'S', 'C', 10)
 
 class CSettings : public CSerialize
 {
@@ -377,6 +377,7 @@ public:
 		int m_nUptime;
 		int m_nBacklight;
 		int m_nVolume;
+		int m_nStandby;
 		
 		FLOAT m_fTimeRes;
 		FLOAT m_fCH1Res;
@@ -384,13 +385,13 @@ public:
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume 
+			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume << m_nStandby
 				<< _E(m_Beep) << m_nShortcutTriangle << m_nShortcutS1 << m_nShortcutS2;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume
+			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume >> m_nStandby
 				>> _E(m_Beep) >> m_nShortcutTriangle >> m_nShortcutS1 >> m_nShortcutS2;
 			return *this;
 		}

@@ -29,8 +29,8 @@
 
 /* Comment the line below to disable the specific peripheral inclusion */
 /************************************* ADC ************************************/
-//#define _ADC
-//#define _ADC1
+#define _ADC
+#define _ADC1
 //#define _ADC2
 //#define _ADC3
 

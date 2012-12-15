@@ -280,6 +280,7 @@ void CSettings::Reset()
 	Runtime.m_nShortcutTriangle = CRuntime::None;//CToolbar::Find( );CRuntime::_StartStop;
 	Runtime.m_nShortcutS1 = CRuntime::None; //CWndToolBar::Find( "Generator" );
 	Runtime.m_nShortcutS2 = CRuntime::None; //CWndToolBar::Find( "Meter" );
+	Runtime.m_nStandby = 5;
 }
 
 ui32 CSettings::GetChecksum()

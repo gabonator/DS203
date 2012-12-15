@@ -34,6 +34,8 @@ public:
 		static void Execute( int nCode );
 		static void Set( int nKey, int nValue );
 		static int Get( int nKey, int nSub = 0 );
+		static int GetTemperature();
+		static void Standby( bool bEnterSleep );
 	};
 
 	class LCD {
