@@ -4,6 +4,7 @@
 //#include "FullView.h"
 #include "ScreenSaver.h"
 #include "Snake.h"
+#include "CharMap.h"
 //#include "Balls.h"
 //#include "Meter.h"
 

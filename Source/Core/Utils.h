@@ -9,6 +9,7 @@ class CUtils
 {
 public:
 	static char* itoa(si16 n);
+	static char* itoa2(ui8 n);
 	static char* ftoa(float f);
 	static char tohex(ui8 n);
 	static char* clrhex(ui16 c);

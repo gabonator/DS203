@@ -841,3 +841,8 @@ int BIOS::SYS::GetTemperature()
 void BIOS::SYS::Standby(bool)
 {
 }
+
+const void* BIOS::LCD::GetCharRom()
+{
+	return (void*)font;
+}

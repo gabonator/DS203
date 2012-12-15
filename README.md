@@ -47,7 +47,7 @@ Screenshots:
 
 ![Image 7](/gabonator/DS203/raw/master/Man/Screenshot/calibration.png)
 
-![Image 12](/gabonator/DS203/raw/master/Man/Screenshot/enevlope.png)
+![Image 12](/gabonator/DS203/raw/master/Man/Screenshot/envelope.png)
 
 ![Image 8](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
 

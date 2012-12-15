@@ -156,6 +156,7 @@
     <ClInclude Include="..\..\Source\Gui\ToolBox\Manager.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h" />
     <ClInclude Include="..\..\Source\Gui\User\Balls.h" />
+    <ClInclude Include="..\..\Source\Gui\User\CharMap.h" />
     <ClInclude Include="..\..\Source\Gui\User\FullView.h" />
     <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
     <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h" />
@@ -237,6 +238,9 @@
     <ClCompile Include="..\..\Source\Gui\ToolBox\Import.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\Manager.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp" />
+    <ClCompile Include="..\..\Source\Gui\User\CharMap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>

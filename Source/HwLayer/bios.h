@@ -78,8 +78,10 @@ public:
 		static void PutImage(const CRect& rcRect, ui16* pBuffer );
 		static void Shadow(int x1, int y1, int x2, int y2, unsigned int nColor);
 
+
 		static const ui8* GetFont(ui8 Code);
 
+		static const void* GetCharRom();
 	};
 
 	class KEY {

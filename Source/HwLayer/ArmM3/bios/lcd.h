@@ -418,3 +418,8 @@ CPoint m_cpBuffer;
         }
     }
 }
+
+const void* BIOS::LCD::GetCharRom()
+{
+	return GetFont(0);
+}
