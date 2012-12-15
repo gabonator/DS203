@@ -508,7 +508,10 @@ unsigned long g_ADCMem[ADCSIZE];
 {
 	_ASSERT( nCount <= ADCSIZE );
 	for ( int i = 0; i < ADCSIZE; i++ )
-		g_ADCMem[i] = Get();
+	{
+		ui32 nOld = g_ADCMem[i] & 0xff000000;
+		g_ADCMem[i] = ( Get() & 0x00ffffff ) | nOld;
+	}
 }
 
 /*static*/ unsigned long BIOS::ADC::GetCount()
@@ -828,4 +831,13 @@ void BIOS::SYS::Set(int, int)
 int BIOS::ADC::GetPointer()
 {
 	return 2048; //4096;
+}
+
+int BIOS::SYS::GetTemperature()
+{
+	return 22;
+}
+
+void BIOS::SYS::Standby(bool)
+{
 }

@@ -10,6 +10,7 @@
 		{ CBarItem::ISub,	(PSTR)"Meas", &MainWnd.m_wndMenuMeas},
 		{ CBarItem::ISub,	(PSTR)"Math", &MainWnd.m_wndMenuMath},
 		{ CBarItem::ISub,	(PSTR)"Disp", &MainWnd.m_wndMenuDisplay},
+		{ CBarItem::ISub,	(PSTR)"Mask", &MainWnd.m_wndMenuMask},
 
 		{ CBarItem::IMain,	(PSTR)"Spectrum", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"FFT", &MainWnd.m_wndSpectrumMain},
@@ -83,7 +84,22 @@
 		x += BIOS::LCD::Draw(x, 0, RGB565(0020ff), RGBTRANS, CShapes::corner_right);
 	x += 10;
 
-	for (int i=nMenu+1; pItems[i].m_eType == CBarItem::ISub; i++)
+	int nIgnoreFirst = 1; // 1 -> first sub menu
+	
+	// calculate how many items we need to hide from left to reach the selected one
+	int nRequired = 0;
+	int nAvailable = BIOS::LCD::LcdWidth - 16 - x; // 16px reserved for arrows
+	for ( int i = nFocus; i > 0 && pItems[i].m_eType != CBarItem::IMain; i-- )
+	{
+		nRequired += strlen(pItems[i].m_pName)*8 + 16;
+		if ( nRequired > nAvailable )
+			nIgnoreFirst++;
+	}
+
+	if ( nIgnoreFirst > 1 )
+		x += BIOS::LCD::Print( x, m_rcClient.top, RGB565(b0b0b0), RGBTRANS, "\x11");
+
+	for ( int i = nMenu+nIgnoreFirst; pItems[i].m_eType == CBarItem::ISub; i++ )
 	{
 		ui8 bSelected = (i==nFocus);
 		u16 clr = bSelected ? clrSelected : clrNormal;
@@ -93,6 +109,12 @@
 		{
 			clr = clrSelectedFocus;
 			bgr = bgrSelectedFocus;
+		}
+
+		if ( x + 16 + strlen(pItems[i].m_pName)*8 >= BIOS::LCD::LcdWidth )
+		{
+			x += BIOS::LCD::Print( x, m_rcClient.top, RGB565(b0b0b0), RGBTRANS, "\x10");
+			break;
 		}
 		
 		if ( bSelected )
@@ -179,11 +201,6 @@
 	SendMessage( GetParent(), ToWord('L', 'E'), (NATIVEPTR)pItems[m_nFocus].m_pWndMenu );
 	SendMessage( GetParent(), ToWord('L', 'R'), 0 );
 	Settings.Runtime.m_nMenuItem = m_nFocus;
-	/*
-	if ( pItems[m_nFocus].m_eType != CBarItem::IMain )
-	{	// Store sub item position
-		Settings.Runtime.m_nSubMenuItems[pItems[m_nFocus].m_mainMenuIndex] = m_nFocus;
-	}*/
 }
 
 /*virtual*/ void CWndToolBar::OnMessage(CWnd* pSender, ui16 code, ui32 data)

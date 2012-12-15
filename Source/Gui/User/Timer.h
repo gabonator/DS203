@@ -1,4 +1,4 @@
-#define ENABLE_MODULE_TIMER
+//#define ENABLE_MODULE_TIMER
 
 #if defined(ADD_MODULE) && defined(ENABLE_MODULE_TIMER)
 	ADD_MODULE( "Timer", CWndUserTimer )

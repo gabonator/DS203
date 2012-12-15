@@ -198,8 +198,8 @@ float CMeasStatistics::GetBaud()
 
 	float fBaud = Iterate.GetBaud();
 
-	bool bCan100k = (fBaud > 100000.0f-5000.0f) && (fBaud > 100000.0f+5000.0f);
-	bool bCan500k = (fBaud > 500000.0f-5000.0f) && (fBaud > 500000.0f+5000.0f);
+	bool bCan100k = (fBaud > 100000.0f-5000.0f) && (fBaud < 100000.0f+5000.0f);
+	bool bCan500k = (fBaud > 500000.0f-5000.0f) && (fBaud < 500000.0f+5000.0f);
 
 	/*if (1)
 	{

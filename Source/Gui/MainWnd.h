@@ -43,6 +43,7 @@ public:
 	CWndMenuSettings	m_wndMenuSettings;
 	CWndMenuKeySettings	m_wndMenuKeySettings;
 	CWndMenuDisplay		m_wndMenuDisplay;
+	CWndMenuMask		m_wndMenuMask;
 	CWndMenuGenerator	m_wndMenuGenerator;
 	CWndMenuGeneratorMod	m_wndMenuGeneratorMod;
 	CWndMenuGeneratorEdit	m_wndMenuGeneratorEdit;
@@ -83,6 +84,8 @@ public:
 private:
 	// auto trigger
 	long				m_lLastAcquired;
+	int					m_nLastKey;
+	bool				m_bSleeping;
 
 private:
 	void SdkDiskProc();

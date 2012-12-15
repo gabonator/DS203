@@ -2,13 +2,14 @@
 #include "Controls/Slider.h"
 #include "ItemBacklight.h"
 #include "ItemVolume.h"
+#include "ItemAutoOff.h"
 
 class CWndMenuSettings : public CWnd
 {
 public:
 	CMIBacklight	m_itmBacklight;
 	CMIVolume		m_itmVolume;
-	CWndMenuItem	m_itmAutoOff;
+	CMIAutoOff		m_itmAutoOff;
 	CWndMenuItem	m_itmReboot;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags) 
@@ -16,7 +17,7 @@ public:
 		CWnd::Create("CWndMenuSettings", dwFlags, CRect(60, 60, 280, 240), pParent);
 		m_itmBacklight.Create("Backlight", RGB565(808080), 2, this);
 		m_itmVolume.Create("Volume", RGB565(808080), 2, this);
-		m_itmAutoOff.Create("~Auto off\n5 min", RGB565(808080), 2, this);
+		m_itmAutoOff.Create("Enter standby mode", RGB565(808080), 2, this);
 		//m_itmReboot.Create("Reboot to DFU", RGB565(ff8080), 2, this);
 	}
 

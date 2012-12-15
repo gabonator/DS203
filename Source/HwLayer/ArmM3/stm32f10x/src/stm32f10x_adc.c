@@ -132,7 +132,8 @@ void ADC_DeInit(ADC_TypeDef* ADCx)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
 
-  switch (*(u32*)&ADCx)
+	void* p = &ADCx;
+  switch (*(u32*)p)
   {
     case ADC1_BASE:
       /* Enable ADC1 reset state */
@@ -1103,7 +1104,8 @@ void ADC_SetInjectedOffset(ADC_TypeDef* ADCx, u8 ADC_InjectedChannel, u16 Offset
   assert_param(IS_ADC_OFFSET(Offset));  
 
   /* Set the selected injected channel data offset */
-  *((vu32 *)((*(u32*)&ADCx) + ADC_InjectedChannel)) = (u32)Offset;
+	void* p = &ADCx;
+  *((vu32 *)((*(u32*)p) + ADC_InjectedChannel)) = (u32)Offset;
 }
 
 /*******************************************************************************
@@ -1125,8 +1127,9 @@ u16 ADC_GetInjectedConversionValue(ADC_TypeDef* ADCx, u8 ADC_InjectedChannel)
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   assert_param(IS_ADC_INJECTED_CHANNEL(ADC_InjectedChannel));
 
+	void* p = &ADCx;
   /* Returns the selected injected channel conversion data value */
-  return (u16) (*(vu32*) (((*(u32*)&ADCx) + ADC_InjectedChannel + JDR_Offset)));
+  return (u16) (*(vu32*) (((*(u32*)p) + ADC_InjectedChannel + JDR_Offset)));
 }
 
 /*******************************************************************************

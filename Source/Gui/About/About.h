@@ -10,7 +10,26 @@ public:
 	{
 		CWnd::Create("CWndAboutDevice", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
-	
+/*
+	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
+	{	
+  	if (code == ToWord('L', 'D') )
+  	{
+			KillTimer();
+  	}
+
+  	if (code == ToWord('L', 'E') )
+  	{
+			SetTimer(100);
+  	}
+	}
+
+	virtual void OnTimer()
+	{
+		int nTemp = BIOS::SYS::GetTemperature();
+		BIOS::LCD::Printf(20, 20, RGB565(ff0000), 0, "Temp=%d   ", nTemp);
+	}
+*/
 	virtual void OnPaint()
 	{
 			const ui16 clrB = RGB565(b0b0b0);

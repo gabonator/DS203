@@ -106,7 +106,8 @@ public:
 	{
 		int x = 20;
 		int y = 30;
-		x += 8*BIOS::LCD::Printf(x, y, RGB565(ffffff), 0x0101, "CanBus: ID=%03x (", m_nFrameArb );
+		x += 8*BIOS::LCD::Print(x, y, RGB565(ff0000), 0x0101, "CanBus: ");
+		x += 8*BIOS::LCD::Printf(x, y, RGB565(ffffff), 0x0101, "ID=%03x (", m_nFrameArb );
 		for (int i=0; i<m_nFrameDlc; i++)
 			x += 8*BIOS::LCD::Printf(x, y, RGB565(b0b0b0), 0x0101, (i>0) ? " %02x" : "%02x", m_arrFrameData[i]);
 		x += 8*BIOS::LCD::Printf(x, y, RGB565(ffffff), 0x0101, ")" );

@@ -23,12 +23,12 @@ Just contact me, or make a modification of the source code and push me a request
 
 Controls:
 ======================
-The DS203 device has 4 push buttons and two slide buttons. The function of first three buttons are following:
+The DS203 device has 4 push buttons and two slide buttons. The function of first three buttons is following:
 
 - PlayPause button - Enter
 - Square button - Escape
 - Circle button - Show toolbox
-- Triagle button - User assignable button, currently creates screenshot
+- Triagle button - User assignable button
 - The two slider buttons are used for navigation and value change.
 
 Screenshots:
@@ -47,6 +47,8 @@ Screenshots:
 
 ![Image 7](/gabonator/DS203/raw/master/Man/Screenshot/calibration.png)
 
+![Image 12](/gabonator/DS203/raw/master/Man/Screenshot/enevlope.png)
+
 ![Image 8](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
 
 ![Image 9](/gabonator/DS203/raw/master/Man/Screenshot/wave_export_ac.png)
@@ -59,24 +61,24 @@ Screenshots:
 Feature highlights:
 ======================
 
-- UART decoder
-- Advanced mathematical operators
+- UART, CANBUS decoder
+- Mask tests (create envelope of your signal and catch disturbances which exceed this envelope)
+- Advanced mathematical operators (3 operands)
 - Cursors with lock-to-channel function
 - Spectral analysis
-- Export to Wave (use your favourite sound editing program)
+- Export to Wave (use your favourite sound editing program for signal examination)
 - Export to CSV file
 - Export to interactive SVG
 - Chromatic tuner utility with very precise frequency counter
-- Remote control (SDK) with WebSockets, easy developing with javascript/html
-- Remote control with android device
+- Remote control with android device over UART/bluetooth
 
 Todo list:
 ======================
-- finish oscilloscope module - 90% done
+- finish oscilloscope module - 92% done
 - calibration - 70% done
 - fft view - 80% done
 - signal generator with modulations - 40% done
-- connection with android tablet/phone - 20% done
+- connection with android tablet/phone - 80% done
 - optimize ROM usage (many bitmaps are stored as 8bits per pixel) - 0%
 
 Calibration:
@@ -102,7 +104,7 @@ This firmware finally implements a simple method for analog channel calibration.
 Development:
 ======================
 
-If you want to build your own firmware, follow the instructions in man/Readme.txt.
+If you want to build this firmware with your own modules, follow the instructions in man/Readme.txt.
 
 References:
 ======================
@@ -117,4 +119,3 @@ Alternative firmwares and useful resouces:
  - Petteri Aimonen - http://essentialscrap.com/dsoquad/
  - Pedro Simoes - https://github.com/pmos69/dso203_gcc
  - Marco Sinatti - https://sites.google.com/site/marcosinatti/elettronica/dso
-

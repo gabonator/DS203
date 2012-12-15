@@ -31,7 +31,22 @@ public:
 
 	virtual void OnTimer()
 	{
+		NormalDraw();
+	}
+
+	void SegmentedDraw() // faster
+	{
+		static int nSegment = 0;
+		if ( ++nSegment >= 20 )
+			nSegment = 0;
+		DrawWave(nSegment*20, nSegment*20+20);
+		DrawProgress();
+	}
+
+	void NormalDraw()
+	{	
 		DrawWave();
+		DrawProgress();
 	}
 
 	virtual void OnPaint()
@@ -113,7 +128,7 @@ public:
 		return nSum;
 	}
 
-	void DrawWave()
+	void DrawWave(int nPixelLeft = 0, int nPixelRight = 400)
 	{
 		ui16 col[198];
 
@@ -129,7 +144,8 @@ public:
 		{
 			int __x = (nPtr - nViewBegin)*400/(nViewEnd - nViewBegin+1);
 			int nLastVal = -1;
-			for (int x=0; x<400; x++)
+			int nPixelStart = max(nPixelLeft-1, 0);
+			for (int x=nPixelStart; x<nPixelRight; x++)
 			{
 				int nBegin = nViewBegin + ( nViewEnd - nViewBegin + 1 ) * x / 400;
 				int nEnd = nViewBegin + ( nViewEnd - nViewBegin + 1 ) * (x+1) / 400;
@@ -160,7 +176,7 @@ public:
 					}
 				}
 				
-				if ( x > 0 )
+				if ( x > nPixelLeft )
 				{
 					if ( nLastVal > nMax )
 						nMax = nLastVal;
@@ -168,6 +184,9 @@ public:
 						nMin = nLastVal;
 				}
 				nLastVal = (nMin + nMax)/2;
+
+				if ( x < nPixelLeft )
+					continue;
 
 				for ( int i=nMin; i<nMax; i++ )
 					if ( col[i] == RGB565(101010) )
@@ -181,13 +200,14 @@ public:
 			int nLastIndex = -1;
 			int nLastVal = 0;
 			int nMark = -1;
-			for (int x=0; x<=400; x++)
+			int nPixelStart = max(nPixelLeft-1, 0);
+			for (int x=nPixelStart; x<nPixelRight; x++)
 			{
 				BIOS::ADC::SSample Sample;
 
-				int nIndex = x*(nViewEnd - nViewBegin+1)/400 + nViewBegin;
 				int nFixIndex = x*(nViewEnd - nViewBegin+1)*256/400 + nViewBegin*256;
-				bool bMatch = (nLastIndex != nIndex);
+				int nIndex = nFixIndex >> 8;
+				bool bMatch = (x > nPixelStart) && (nLastIndex != nIndex);
 				nLastIndex = nIndex;
 
 				if ( bMatch )
@@ -206,7 +226,7 @@ public:
 						col[i] = RGB565(ff0000);
 				} 
 
-				if ( x == 0 )
+				if ( x == nPixelStart )
 					nLastVal = ch1;
 				else if ( nLastVal < ch1 )
 					for (; nLastVal<ch1; nLastVal++)
@@ -234,13 +254,14 @@ public:
 				}
 				if ( bMatch )
 					nMark = ch1;
-
+				if ( x < nPixelLeft )
+					continue;
 				BIOS::LCD::Buffer( x, m_rcClient.top, col, COUNT(col));	
 			}
 		}
-
-		BIOS::LCD::Printf(0, m_rcClient.bottom-16, RGB565(ffffff), RGB565(808080), "view %d-%d   ", 
-			nViewBegin, nViewEnd );
+		if ( nPixelLeft == 0 )
+			BIOS::LCD::Printf(0, m_rcClient.bottom-16, RGB565(ffffff), RGB565(808080), "view %d-%d   ", 
+				nViewBegin, nViewEnd );
 	}
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
@@ -253,7 +274,7 @@ public:
 
 		if (code == ToWord('L', 'E') )
 		{
-			SetTimer(200);
+			SetTimer(100);
 			return;
 		}
 
@@ -271,30 +292,45 @@ public:
 		rcBar.bottom = m_rcClient.bottom - 20 - 1;
 		rcBar.left = (ui16)(nViewBegin*400/BIOS::ADC::GetCount());
 		rcBar.right = (ui16)((nViewEnd+1)*400/BIOS::ADC::GetCount());
+		if ( rcBar.right - rcBar.left < 2 )
+		{
+			rcBar.right = rcBar.left + 2;
+			if ( rcBar.right > 400 )
+				rcBar.right = 400;
+		}
 		BIOS::LCD::Bar( rcBar, RGB565(ffffff) );
 		if ( rcBar.left > 0 )
 		{
 			CRect rcLeft(rcBar);
 			rcLeft.right = rcLeft.left;
 			rcLeft.left = 0;
-			BIOS::LCD::Bar( rcLeft, RGB565(b0b0b0) );
-		}
+			BIOS::LCD::Bar( rcLeft, RGB565(404040) );
+		}                                  
 		if ( rcBar.right < 400 )
 		{
 			CRect rcRight(rcBar);
 			rcRight.left = rcRight.right;
 			rcRight.right = 400;
-			BIOS::LCD::Bar( rcRight, RGB565(b0b0b0) );
+			BIOS::LCD::Bar( rcRight, RGB565(404040) );
 		}
+		// write pointer
+		int nPtr = BIOS::ADC::GetPointer();
+		int x = nPtr*400/BIOS::ADC::GetCount();
+		BIOS::LCD::Line( x, rcBar.top+1, x, rcBar.bottom-1, RGB565(ff0000) );
 	}
 
 	virtual void OnKey(ui16 nKey)
 	{
 		if ( nKey == BIOS::KEY::KeyEnter && GetFocus() == &m_btnMove )
 		{
+			BIOS::ADC::Restart();
+		}
+
+		if ( nKey == BIOS::KEY::KeyEnter && GetFocus() == &m_btnZoom )
+		{
 			nViewBegin = 0;
 			nViewEnd = BIOS::ADC::GetCount();
-			BIOS::ADC::Restart();
+			SegmentedDraw();
 		}
 
 		if ( nKey == BIOS::KEY::KeyLeft && GetFocus() == &m_btnMove )
@@ -304,8 +340,7 @@ public:
 			nViewBegin -= nMove;            
 			UTILS.Clamp<int>( nViewBegin, 0, BIOS::ADC::GetCount()-1 );
 			nViewEnd = nViewBegin + nWidth;
-			DrawWave();
-			DrawProgress();
+			SegmentedDraw();
 		}
 
 		if ( nKey == BIOS::KEY::KeyRight && GetFocus() == &m_btnMove )
@@ -315,8 +350,7 @@ public:
 			nViewEnd += nMove;            
 			UTILS.Clamp<int>( nViewEnd, 0, BIOS::ADC::GetCount()-1 );
 			nViewBegin = nViewEnd - nWidth;
-			DrawWave();
-			DrawProgress();
+			SegmentedDraw();
 		}
 
 		if ( nKey == BIOS::KEY::KeyLeft && GetFocus() == &m_btnZoom )
@@ -329,8 +363,7 @@ public:
 			
 			UTILS.Clamp<int>( nViewBegin, 0, BIOS::ADC::GetCount()-1 );
 			UTILS.Clamp<int>( nViewEnd, 0, BIOS::ADC::GetCount()-1 );
-			DrawWave();
-			DrawProgress();
+			SegmentedDraw();
 		}
 
 		if ( nKey == BIOS::KEY::KeyRight && GetFocus() == &m_btnZoom )
@@ -343,8 +376,7 @@ public:
 			
 			UTILS.Clamp<int>( nViewBegin, 0, BIOS::ADC::GetCount()-1 );
 			UTILS.Clamp<int>( nViewEnd, 0, BIOS::ADC::GetCount()-1 );
-			DrawWave();
-			DrawProgress();
+			SegmentedDraw();
 		}
 		CWnd::OnKey( nKey );
 	}

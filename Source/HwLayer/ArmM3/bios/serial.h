@@ -53,7 +53,7 @@ extern "C" {
               ;
   // Enable the pull-up for PA 10 (RX):
   GPIOA->BSRR = GPIO_BSRR_BS10;
-  Send("DS203 Boot...");
+  Send("DS203 Boot...\n");
 }
 
 /*static*/ void BIOS::SERIAL::Send(const char* strBuf)

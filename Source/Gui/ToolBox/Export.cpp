@@ -2,6 +2,7 @@
 #include <Source/Gui/MainWnd.h>
 //#include <Source/Gui/Oscilloscope/Controls/GraphOsc.h>
 
+LINKERSECTION(".extra")
 void CExport::SaveSvg(char* strName_ /*= NULL*/)
 {
 	char strNameUnique[] = "WAVE000 SVG";

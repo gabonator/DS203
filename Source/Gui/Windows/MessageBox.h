@@ -40,17 +40,20 @@ public:
 			RGB565(000000), RGBTRANS, m_strMessage);		
 	}
 
-	virtual void OnKey(ui16 nKey)
+	void Hide()
 	{
 		KillTimer();
 		StopModal();
 	}
 
+	virtual void OnKey(ui16 nKey)
+	{
+		Hide();
+	}
 
 	virtual void OnTimer()
 	{		
-		KillTimer();
-		StopModal();
+		Hide();
 	}
 };
 

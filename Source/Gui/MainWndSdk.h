@@ -148,7 +148,6 @@ void CMainWnd::SdkUartProc()
 	static int npos = 0;
 	static CSdkStreamProvider SdkStream;
 
-
 	int ch;
 	while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
 	{
