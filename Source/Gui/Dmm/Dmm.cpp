@@ -3,7 +3,7 @@
 #include <string.h>
 #include <Source/Core/Utils.h>
 
-void CWndUserDmm::OnPaint()
+void CWndDmm::OnPaint()
 {
 	char strDisplay[16];
 	CSettings::Calibrator::FastCalc fastCalc;
@@ -189,7 +189,7 @@ void _DrawDot0(int x, int y, int width, int size, int space, ui16 clr)
 	BIOS::LCD::Bar( x, y, x+(width/4)*3, y+(width/4)*3, clr );
 }
 
-void CWndUserDmm::DrawDigit(int x, int y, int width, int size, int space, int nDigit, ui16 clrOn, ui16 clrOff)
+void CWndDmm::DrawDigit(int x, int y, int width, int size, int space, int nDigit, ui16 clrOn, ui16 clrOff)
 {
 	ui32 decoder[] =
 	{0x1111110, 0x0110000, 0x1101101, 0x1111001, 0x0110011, 0x1011011, 0x1011111, 0x1110000, 0x1111111, 0x1111011};
@@ -233,7 +233,7 @@ void CWndUserDmm::DrawDigit(int x, int y, int width, int size, int space, int nD
 	#undef EN
 }
 
-void CWndUserDmm::OnWave()
+void CWndDmm::OnWave()
 {
 	if (bTimer)
 		return;
@@ -269,7 +269,7 @@ void CWndUserDmm::OnWave()
 	bTimer = true;
 }
 
-/*virtual*/ void CWndUserDmm::OnTimer()
+/*virtual*/ void CWndDmm::OnTimer()
 {
 	bTimer = false;
 	KillTimer();

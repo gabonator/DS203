@@ -61,7 +61,10 @@ void CMainWnd::Create()
 	m_wndAboutDevice.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
 	m_wndCalibration.Create( this, WsHidden );
-	m_wndUserDmm.Create( this, WsHidden );
+
+	m_wndMenuMode.Create(this, WsHidden);
+	m_wndDmm.Create( this, WsHidden | WsNoActivate );
+
 
 #	define ADD_MODULE( strName, type ) m_wndUser##type.Create( this, WsHidden );
 #	include "User/_Modules.h"

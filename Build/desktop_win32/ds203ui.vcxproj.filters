@@ -127,6 +127,9 @@
     <Filter Include="Source\Gui\Oscilloscope\Meas\Decoders">
       <UniqueIdentifier>{09937f41-df98-45f2-b3a4-0b8d5d1928fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Gui\Dmm\Mode">
+      <UniqueIdentifier>{487f8958-a7b7-4da3-a196-7292cb6ec29f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -468,6 +471,15 @@
     <ClInclude Include="..\..\Source\Core\Sdk.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Dmm\Mode\ItemMode.h">
+      <Filter>Source\Gui\Dmm\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Dmm\Mode\ListMode.h">
+      <Filter>Source\Gui\Dmm\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Dmm\Mode\MenuMode.h">
+      <Filter>Source\Gui\Dmm\Mode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -614,6 +626,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
       <Filter>Source\Gui\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Dmm\Mode\MenuMode.cpp">
+      <Filter>Source\Gui\Dmm\Mode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

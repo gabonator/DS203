@@ -37,7 +37,7 @@
 #		undef ADD_MODULE
 
 		{ CBarItem::IMain,	(PSTR)"Dmm", &MainWnd.m_wndModuleSel},
-		{ CBarItem::ISub,	(PSTR)"Meas", &MainWnd.m_wndUserDmm},
+		{ CBarItem::ISub,	(PSTR)"Mode", &MainWnd.m_wndMenuMode},
 
 		{ CBarItem::IEnd,		NULL, NULL }
 	};

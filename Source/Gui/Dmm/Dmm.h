@@ -2,16 +2,17 @@
 #define __DMM_H__
 
 #include <Source/Framework/Wnd.h>
+#include <Source/Gui/Dmm/Mode/MenuMode.h>
 
 
-class CWndUserDmm : public CWnd
+class CWndDmm : public CWnd
 {
 public:
 	float m_fAverage, m_fVariance;
 	bool bRefresh;
 	bool bTimer;
 
-	CWndUserDmm()
+	CWndDmm()
 	{
 		bRefresh = true;
 		m_fAverage = 0;
@@ -20,7 +21,7 @@ public:
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndUserDmm", dwFlags | CWnd::WsListener | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
+		CWnd::Create("CWndUserDmm", dwFlags | CWnd::WsListener | CWnd::WsNoActivate, CRect(0, 16, 320-CWndMenuItem::MarginLeft, 240), pParent);
 	}
 
 	void DrawDigit(int x, int y, int width, int size, int space, int n, ui16 clrOn, ui16 clrOff );

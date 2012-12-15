@@ -55,7 +55,9 @@ public:
 	CWndAboutFirmware			m_wndAboutFirmware;
 	CWndAboutDevice	m_wndAboutDevice;
 	CWndMenuCalibration	m_wndCalibration;
-	CWndUserDmm			m_wndUserDmm;
+
+	CWndDmm				m_wndDmm;
+	CWndMenuMode		m_wndMenuMode;
 
 	CWndMenuSpectMain	m_wndSpectrumMain;
 	CWndMenuSpectMarker	m_wndSpectrumMarker;
