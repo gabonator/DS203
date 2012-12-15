@@ -43,6 +43,7 @@ void CMainWnd::Create()
 	m_wndMenuSettings.Create( this, WsHidden );
 	m_wndMenuKeySettings.Create( this, WsHidden );
 	m_wndMenuDisplay.Create( this, WsHidden );
+	m_wndMenuMask.Create( this, WsHidden );
 	m_wndMenuGenerator.Create( this, WsHidden );
 	m_wndMenuGeneratorMod.Create( this, WsHidden );
 	m_wndMenuGeneratorEdit.Create( this, WsHidden );

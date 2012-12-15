@@ -77,6 +77,8 @@ extern void Assert(const char* msg, int n);
 #ifdef _ASSERT
 #	undef _ASSERT
 #endif
+#define _ASSERTW(a) 
+
 #define _ASSERT(a) if(!(a)) { Assert(__FILE__, __LINE__); }
 
 #define _ASSERT_VALID(a) if(!(a)) { Assert(__FILE__, __LINE__); }

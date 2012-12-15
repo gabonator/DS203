@@ -290,6 +290,10 @@ void CWndOscGraph::OnPaintTY()
 		clrShade12 = _Interpolate( _Interpolate(clr2, 0x0101), clr1 );
 	}
 
+	bool bUsingMask = false;
+	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuMask )
+		bUsingMask = true;
+
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuCursor )
 		SetupMarkers( Ch1fast, Ch2fast, nMarkerT1, nMarkerT2, nMarkerY1, nMarkerY2 );
 	if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndMenuMeas )
@@ -316,6 +320,44 @@ void CWndOscGraph::OnPaintTY()
 			clrCol = Settings.MarkT2.u16Color;
 			
 		_PrepareColumn( column, x, clrCol );
+		
+		if ( bUsingMask )
+		{
+			ui8* pLow = NULL;
+			ui8* pHigh = NULL;
+			CCoreOscilloscope::GetMaskAt( x, &pLow, &pHigh );
+			int nLow = pLow ? (((int)*pLow) * DivsY*BlkY)/256 : 0;
+			int nHigh = pHigh ? (((int)*pHigh) * DivsY*BlkY)/256 : DivsY*BlkY;
+			for ( int i = 0; i < DivsY*BlkY; i++ )
+			{
+				if ( i <= nLow )
+				{
+					if ( nLow - i > 4 )
+						column[i] |= RGB565(800000);
+					else if ( nLow - i > 3 )
+						column[i] |= RGB565(a00000);
+					else if ( nLow - i > 2 )
+						column[i] |= RGB565(b00000);
+					else if ( nLow - i > 1 )
+						column[i] |= RGB565(d00000);
+					else
+						column[i] |= RGB565(ff0000);
+				}
+				if ( i >= nHigh )
+				{
+					if ( i - nHigh > 4 )
+						column[i] |= RGB565(800000);
+					else if ( i - nHigh > 3 )
+						column[i] |= RGB565(a00000);
+					else if ( i - nHigh > 2 )
+						column[i] |= RGB565(b00000);
+					else if ( i - nHigh > 1 )
+						column[i] |= RGB565(d00000);
+					else
+						column[i] |= RGB565(ff0000);
+				}
+			}
+		}
 
 		BIOS::ADC::SSample Sample;
 		Sample.nValue = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;

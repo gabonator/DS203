@@ -204,7 +204,8 @@ void BIOS::ADC::GetBufferRange(int& nBegin, int& nEnd)
 
 	for ( int i = 0; i < /*g_nBufferLength*/ ADCSIZE; i++ )
   { 
-		g_ADCMem[i] = Get(); // & 0xffff;
+		ui32 nOld = g_ADCMem[i] & 0xff000000;
+		g_ADCMem[i] = ( Get() & 0x00ffffff ) | nOld;
   }
 }
 

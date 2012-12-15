@@ -115,6 +115,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Mask\MenuMask.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ItemOperand.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ItemOperator.h" />
@@ -129,6 +130,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\Controls\Slider.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\Core\SettingsCore.h" />
+    <ClInclude Include="..\..\Source\Gui\Settings\ItemAutoOff.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\ItemBacklight.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\ItemBeepOnOff.h" />
     <ClInclude Include="..\..\Source\Gui\Settings\ItemShortcut.h" />
@@ -215,6 +217,7 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Mask\MenuMask.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />

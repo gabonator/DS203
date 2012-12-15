@@ -62,6 +62,7 @@ typedef signed short si16;
 #define ToWord(a, b) (ui16)(((a)<<8)|(b))
 #define ToDword(a, b, c, d) (ui32)((ToWord(d, c)<<16)|ToWord(b,a))
 
+#define _ASSERTW(a) _ASSERT(a)
 #define _ASSERT_VALID(a) if(!(a)) { _ASSERT(#a); }
 #define LINKERSECTION(sec) 
 //__attribute__((section(".extra")))

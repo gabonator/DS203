@@ -10,6 +10,8 @@ public:
 	static void ConfigureAdc();
 	static void ConfigureTrigger();
 	static void UpdateConstants();
+	// mask
+	static void GetMaskAt(int nX, ui8** pLow, ui8** pHigh);
 };
 
 #endif
