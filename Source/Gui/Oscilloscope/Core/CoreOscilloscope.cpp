@@ -68,3 +68,11 @@
 	*pLow = &((ui8*)&ts1)[3];
 	*pHigh = &((ui8*)&ts2)[3];
 }
+
+/*static*/ void CCoreOscilloscope::GetMaskStats(int** nPass, int** nFail)
+{
+	static int g_nPass = 0;
+	static int g_nFail = 0;
+	*nPass = &g_nPass;
+	*nFail = &g_nFail;
+}

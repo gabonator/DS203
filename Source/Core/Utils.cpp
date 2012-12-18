@@ -132,3 +132,20 @@ ui16 CUtils::InterpolateColor( ui16 clrA, ui16 clrB, int nLevel )
 	ab = (ab+bb) / 256;
 	return RGB565RGB(ar, ag, ab);
 }
+
+int CUtils::Sqrt(int a)
+{
+	int ret=0;
+	int s;
+	int ret_sq=-a-1;
+	for(s=30; s>=0; s-=2){
+		int b;
+		ret+= ret;
+		b=ret_sq + ((2*ret+1)<<s);
+		if(b<0){
+			ret_sq=b;
+			ret++;
+		}
+	}
+	return ret;
+}

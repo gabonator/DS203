@@ -70,7 +70,7 @@ void CWndCharMap::OnPaint()
 		BIOS::LCD::Printf(x, y, RGB565(00ff00), 0, "0x%02x", i);
 	}
 
-	UpdateChar( nCursor, HasFocus() );
+	UpdateChar( nCursor, HasFocus() ? true : false );
 }
 
 void CWndCharMap::OnKey(ui16 nKey)

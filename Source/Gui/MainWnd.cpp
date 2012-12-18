@@ -71,10 +71,10 @@ void CMainWnd::Create()
 
 	m_wndToolbox.Create(this);
 
-	//if ( Settings.Runtime.m_nMenuItem != -1 )
-	//	SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
-	//else
-		SendMessage( &m_wndToolBar, ToWord('g', 'i'), 1);
+	if ( Settings.Runtime.m_nMenuItem == -1 )
+		Settings.Runtime.m_nMenuItem = 1;
+	
+	SendMessage( &m_wndToolBar, ToWord('g', 'i'), Settings.Runtime.m_nMenuItem);
 
 	m_lLastAcquired = 0;
 	SetTimer(200);
@@ -282,7 +282,7 @@ void CMainWnd::CallShortcut(int nShortcut)
 	if ( nShortcut >= 0 )
 	{
 		// +1 => first submenu in section
-		if ( nShortcut+1 == MainWnd.m_wndToolBar.m_nFocus )
+		if ( nShortcut == MainWnd.m_wndToolBar.m_nFocus )
 		{
 			if ( nOldFocus != -1 )
 				SendMessage( &MainWnd.m_wndToolBar, ToWord('g', '2'), nOldFocus );

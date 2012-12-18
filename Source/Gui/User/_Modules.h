@@ -5,6 +5,7 @@
 #include "ScreenSaver.h"
 #include "Snake.h"
 #include "CharMap.h"
+#include "Thermometer.h"
 //#include "Balls.h"
 //#include "Meter.h"
 

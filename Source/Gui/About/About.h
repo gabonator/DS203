@@ -10,26 +10,70 @@ public:
 	{
 		CWnd::Create("CWndAboutDevice", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
 	}
-/*
+
+#if 0
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{	
-  	if (code == ToWord('L', 'D') )
-  	{
-			KillTimer();
-  	}
+  		if (code == ToWord('L', 'D') )
+  		{
+				KillTimer();
+  		}
 
-  	if (code == ToWord('L', 'E') )
-  	{
-			SetTimer(100);
-  	}
+  		if (code == ToWord('L', 'E') )
+  		{
+				SetTimer(20);
+  		}
 	}
 
 	virtual void OnTimer()
 	{
 		int nTemp = BIOS::SYS::GetTemperature();
-		BIOS::LCD::Printf(20, 20, RGB565(ff0000), 0, "Temp=%d   ", nTemp);
+		float fTemp = (1.42f - nTemp*2.8f/4096)*1000/4.35f + 25;
+
+		static int nAvg = 0;
+		static int nAvg2 = 0;
+		static int nAvg3 = 0;
+
+		if ( nAvg3 == 0 )
+			nAvg3 = nAvg2;
+		nAvg3 = (nAvg3*220 + nAvg2*(256-220))/256;
+
+		if ( nAvg2 == 0 )
+			nAvg2 = nAvg;
+		nAvg2 = (nAvg2*220 + nAvg*(256-220))/256;
+
+		if ( nAvg == 0 )
+			nAvg = nTemp*256;
+		nAvg = (nAvg*220 + nTemp*256*(256-220))/256;
+
+		//float fTemp2 = (1.42f - nAvg2/256.0f*2.8f/4096)*1000/4.35f + 25;
+		//float fTemp3 = (1.42f - nAvg3/256.0f*2.8f/4096)*1000/4.35f + 25;
+
+
+		static int nx = 0;
+		int ycur = (nTemp-1800)*240/300;
+		int yavg = (nAvg3/256-1800)*240/300;
+
+		UTILS.Clamp<int>( ycur, 0, 240-1);
+		UTILS.Clamp<int>( yavg, 0, 240-1);
+
+
+		BIOS::LCD::PutPixel(nx/10, ycur, RGB565(0000ff));
+		BIOS::LCD::PutPixel(nx/10, yavg, RGB565(00ff00));
+		if (++nx >= 400*10 )
+		{
+			nx = 0;
+			BIOS::LCD::Bar( m_rcClient, 0 );			
+		}
+		fTemp = 3.2f - (nAvg3/256 - 2169)*(21.3f-3.2f)/(2169-2068);
+//		fTemp += 22 + 19;
+//		int nA = *((ui8*)0x1ff8007a);
+//		int nB = *((ui8*)0x1ff8007e);
+		BIOS::LCD::Printf(20, 20, RGB565(ff0000), 0, "Temp=%d %d %f    ", nTemp, nAvg3/256, fTemp);
+//		BIOS::LCD::Printf(20, 36, RGB565(ff0000), 0, "%d %d", nA, nB);
 	}
-*/
+#endif
+
 	virtual void OnPaint()
 	{
 			const ui16 clrB = RGB565(b0b0b0);

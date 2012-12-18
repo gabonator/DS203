@@ -2,3 +2,4 @@
 #include "Timer.cpp"
 #include "Tuner.cpp"
 #include "CharMap.cpp"
+#include "Thermometer.cpp"

@@ -10,9 +10,9 @@
 class CMIButton : public CWndMenuItem
 {
 public:
-	virtual void Create(const char* pszId, ui16 clr, CWnd *pParent) 
+	virtual void Create(const char* pszId, ui16 clr, int nRows, CWnd *pParent) 
 	{
-		CWndMenuItem::Create( pszId, clr, 2, pParent);
+		CWndMenuItem::Create( pszId, clr, nRows, pParent);
 	}
 
 	virtual void OnPaint()
@@ -39,7 +39,15 @@ public:
 		ActionStop = 3,
 		ActionMax = ActionStop
 	};
+	enum EDisplay 
+	{
+		DisplayNo = 0,
+		DisplayYes = 1,
+		DisplayMax = DisplayYes
+	};
+
 	static const char* const m_ppszTextAction[];
+	static const char* const m_ppszDispAction[];
 
 public:
 	// Menu items
@@ -52,8 +60,11 @@ public:
 	CMIButton	m_btnBlur;
 	CMPItem		m_itmAction;
 	CProviderEnum	m_proAction;
+	CMPItem		m_itmDisplay;
+	CProviderEnum	m_proDisplay;
 
 	EAction		m_Action;
+	EDisplay	m_Display;
 
 	virtual void		Create(CWnd *pParent, ui16 dwFlags);
 	virtual void		OnMessage(CWnd* pSender, ui16 code, ui32 data);

@@ -69,7 +69,7 @@ public:
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
 	{
-		CWnd::Create("CWndMenuCalibration", dwFlags, CRect(400-120, 20, 400, 240), pParent);
+		CWnd::Create("CWndMenuCalibration", dwFlags, CRect(80, 40, 320, 260), pParent);
 		m_itmAdc.Create("Adc", RGB565(8080b0), 2, this);
 		m_itmSimple.Create("Analog-Simple", RGB565(8080b0), 1, this);
 		m_itmLoad.Create("Load\ncalib data", RGB565(ffffff), 2, this);

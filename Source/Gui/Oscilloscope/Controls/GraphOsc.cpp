@@ -202,6 +202,7 @@ void CWndOscGraph::OnPaintXY()
 
 }
 
+LINKERSECTION(".extra")
 void CWndOscGraph::OnPaintTY()
 {
 	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
@@ -323,6 +324,18 @@ void CWndOscGraph::OnPaintTY()
 		
 		if ( bUsingMask )
 		{
+			if ( x == 80 && MainWnd.m_wndMenuMask.m_Display != CWndMenuMask::DisplayNo )
+			{
+				int* nPass = NULL;
+				int* nFail = NULL;
+				CCoreOscilloscope::GetMaskStats( &nPass, &nFail );
+				BIOS::LCD::Printf(m_rcClient.left+2, m_rcClient.bottom-16-14*2, 
+					RGB565(ffffff), 0x0101, "Pass: %d", *nPass);
+				BIOS::LCD::Printf(m_rcClient.left+2, m_rcClient.bottom-16-14, 
+					RGB565(ffffff), 0x0101, "Fail: %d", *nFail);
+				BIOS::LCD::Printf(m_rcClient.left+2, m_rcClient.bottom-16, 
+					RGB565(ffffff), 0x0101, "%1f%%", (*nPass)*100.0f/(*nFail + *nPass));
+			}
 			ui8* pLow = NULL;
 			ui8* pHigh = NULL;
 			CCoreOscilloscope::GetMaskAt( x, &pLow, &pHigh );

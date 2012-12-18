@@ -47,7 +47,9 @@ public:
 		return nSeed & 32767;
 	}
 
-  static ui16 InterpolateColor( ui16 clrA, ui16 clrB, int nLevel );
+	static ui16 InterpolateColor( ui16 clrA, ui16 clrB, int nLevel );
+	static int Sqrt(int a);
+
 };
 
 

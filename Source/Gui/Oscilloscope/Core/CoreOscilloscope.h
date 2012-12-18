@@ -12,6 +12,7 @@ public:
 	static void UpdateConstants();
 	// mask
 	static void GetMaskAt(int nX, ui8** pLow, ui8** pHigh);
+	static void GetMaskStats(int** nPass, int** nFail);
 };
 
 #endif

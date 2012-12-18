@@ -835,7 +835,7 @@ int BIOS::ADC::GetPointer()
 
 int BIOS::SYS::GetTemperature()
 {
-	return 22;
+	return 2068;
 }
 
 void BIOS::SYS::Standby(bool)

@@ -5,23 +5,44 @@
 PCSTR m_strStart = "Start\ncollect";
 PCSTR m_strStop = "Stop\ncollect";
 
+int BlurFilter( int a, int b, int c )
+{
+	if ( a < b && c < b )
+		return (a + b + c)/3;
+	if ( a < b )
+		return (a + b)/2;
+	if ( c < b )
+		return (c + b)/2;
+	return b;
+}
+
+#define BlurFilterInv(a, b, c) (255-BlurFilter(255-(a), 255-(b), 255-(c)))
+
 /*static*/ const char* const CWndMenuMask::m_ppszTextAction[] =
 	{"None", "Beep", "BeepStp", "Stop"};
+
+/*static*/ const char* const CWndMenuMask::m_ppszDispAction[] =
+	{"No", "Yes"};
 
 /*virtual*/ void CWndMenuMask::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	m_Action = ActionNone;
+	m_Display = DisplayNo;
+
 	CWnd::Create("CWndMenuMask", dwFlags | CWnd::WsListener, CRect(320-CWndMenuItem::MarginLeft, 20, 400, 240), pParent);
 
-	m_btnSource.Create( "Source\nCH1", RGB565(ffff00), this );
-	m_btnReset.Create( "Reset\nmask", RGB565(8080ff), this );
-	m_btnCollect.Create( m_strStart, RGB565(8080ff), this );
+	m_btnSource.Create( "Source\nCH1", RGB565(ffff00), 2, this );
+	m_btnReset.Create( "Reset\nmask", RGB565(8080ff), 2, this );
+	m_btnCollect.Create( m_strStart, RGB565(8080ff), 2, this );
 
 	m_itmAction.Create( "Action", RGB565(ffffff), &m_proAction, this );
 	m_proAction.Create( (const char**)m_ppszTextAction, (NATIVEENUM*)&m_Action, ActionMax );
 
-	m_btnExpand.Create( "Expand\n\x11 \x10", RGB565(8080ff), this );
-	m_btnBlur.Create( "Blur\n  \x10", RGB565(8080ff), this );
+	m_btnExpand.Create( "\x11" "Expand\x10", RGB565(8080ff), 1, this );
+	m_btnBlur.Create( "\x11 Blur \x10", RGB565(8080ff), 1, this );
+
+	m_itmDisplay.Create( "Display", RGB565(ffffff), &m_proDisplay, this );
+	m_proDisplay.Create( (const char**)m_ppszDispAction, (NATIVEENUM*)&m_Display, DisplayMax );
 }
 
 /*virtual*/ void CWndMenuMask::OnMessage(CWnd* pSender, ui16 code, ui32 data)
@@ -50,7 +71,7 @@ PCSTR m_strStop = "Stop\ncollect";
 				*bHigh = max(*bHigh, (ui8)ch1);
 			}
 		}
-		if ( m_Action != ActionNone )
+		if ( m_Action != ActionNone || m_Display != DisplayNo )
 		{
 			bool bFailure = false;
 			CSettings::Calibrator::FastCalc Ch1fast;
@@ -75,12 +96,19 @@ PCSTR m_strStop = "Stop\ncollect";
 					break;
 				}
 			}
-			if ( bFailure )
+
+			int* nPass = NULL;
+			int* nFail = NULL;
+			CCoreOscilloscope::GetMaskStats(&nPass, &nFail);
+
+			if ( !bFailure )
+				(*nPass)++;
+			else
 			{
+				(*nFail)++;
 				switch ( m_Action )
 				{
 				case ActionNone:
-					_ASSERT(0);
 					break;
 
 				case ActionBeep:
@@ -215,28 +243,48 @@ PCSTR m_strStop = "Stop\ncollect";
 
 			if (i >= 2)
 			{
-				int nNewLow = arrLow[1];
-				if ( arrLow[0] < arrLow[1] && arrLow[2] < arrLow[1] )
-					nNewLow = (arrLow[0] + arrLow[1] + arrLow[2])/3;
-				else if ( arrLow[0] < arrLow[1] )
-					nNewLow = ( arrLow[0] + arrLow[1] ) / 2;
-				else if ( arrLow[2] < arrLow[1] )
-					nNewLow = ( arrLow[1] + arrLow[2] ) / 2;
-
-				int nNewHigh = arrHigh[1];
-				if ( arrHigh[0] > arrHigh[1] && arrHigh[2] > arrHigh[1] )
-					nNewHigh = (arrHigh[0] + arrHigh[1] + arrHigh[2])/3;
-				else if ( arrHigh[0] > arrHigh[1] )
-					nNewHigh = ( arrHigh[0] + arrHigh[1] ) / 2;
-				else if ( arrHigh[2] > arrHigh[1] )
-					nNewHigh = ( arrHigh[1] + arrHigh[2] ) / 2;
-
 				CCoreOscilloscope::GetMaskAt( i-1, &bLow, &bHigh );
-				*bLow = nNewLow;
-				*bHigh = nNewHigh;
+				*bLow = BlurFilter( arrLow[0], arrLow[1], arrLow[2] );
+				*bHigh = BlurFilterInv( arrHigh[0], arrHigh[1], arrHigh[2] );
 			}
 		}
 	}
+
+	if ( pSender == &m_btnBlur && code == CWnd::WmKey && data == BIOS::KEY::KeyLeft )
+	{
+		ui8 arrLow[3] = {0, 0, 0};
+		ui8 arrHigh[3] = {255, 255, 25};
+		for ( int i = 0; i < CWndGraph::DivsX*CWndGraph::BlkX; i++ )
+		{
+			ui8* bLow = NULL;
+			ui8* bHigh = NULL;
+			
+			CCoreOscilloscope::GetMaskAt( i, &bLow, &bHigh );
+			arrLow[0] = arrLow[1];
+			arrLow[1] = arrLow[2];
+			arrLow[2] = *bLow;
+
+			arrHigh[0] = arrHigh[1];
+			arrHigh[1] = arrHigh[2];
+			arrHigh[2] = *bHigh;
+
+			if (i >= 2)
+			{
+				CCoreOscilloscope::GetMaskAt( i-1, &bLow, &bHigh );
+				*bLow = BlurFilterInv( arrLow[0], arrLow[1], arrLow[2] );
+				*bHigh = BlurFilter( arrHigh[0], arrHigh[1], arrHigh[2] );
+			}
+		}
+	}
+	if ( pSender == &m_itmDisplay && code == ToWord('l', 'e') )
+	{
+		int* nPass = NULL;
+		int* nFail = NULL;
+		CCoreOscilloscope::GetMaskStats( &nPass, &nFail );
+		*nPass = 0;
+		*nFail = 0;
+	}
+
 }
 
 

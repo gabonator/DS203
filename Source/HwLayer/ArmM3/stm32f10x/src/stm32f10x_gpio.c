@@ -53,7 +53,8 @@ void GPIO_DeInit(GPIO_TypeDef* GPIOx)
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   
-  switch (*(u32*)&GPIOx)
+	void* p = &GPIOx;
+  switch (*(u32*)p)
   {
     case GPIOA_BASE:
       RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOA, ENABLE);
