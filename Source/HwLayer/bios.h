@@ -35,6 +35,7 @@ public:
 		static void Set( int nKey, int nValue );
 		static int Get( int nKey, int nSub = 0 );
 		static int GetTemperature();
+		static int GetCoreVoltage();
 		static void Standby( bool bEnterSleep );
 	};
 
@@ -188,6 +189,7 @@ public:
 	{
 	public:
 		static void Init();
+		static void Configure(int nBaudrate);
 		static void Send(const char* strBuf);
 		static int Getch();
 		static void Putch(char ch);

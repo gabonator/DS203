@@ -198,3 +198,152 @@ void CExport::SaveWav(char* strName_ /*= NULL*/)
 
 	writer.Close();
 }
+
+void CExport::SaveScreenshot32(char* strName_ /*= NULL*/)
+{
+	char strNameUnique[] = "IMG000  BMP";
+	char* strName = strName_ ? strName_ : strNameUnique;
+	if ( !strName_ )
+		FindUnusedFile( strNameUnique, 3 );
+		
+	FILEINFO f;
+	// strName contains unique non existent file name 
+	if ( !BIOS::DSK::Open( &f, strName, BIOS::DSK::IoWrite ) )
+	{
+		_ASSERT(0);
+		return;
+	}
+	int nSize = 0, nOffset = 0;
+	ui8* pData = (ui8*)BIOS::DSK::GetSharedBuffer();
+
+	BmpHdr* pHdr = (BmpHdr*)pData;
+	pHdr->wBfType = 'B' | ('M'<<8);
+	pHdr->dwBfSize = sizeof(BmpHdr) + BIOS::LCD::LcdWidth * BIOS::LCD::LcdHeight * 3;  // no need to align row to multiply of 4
+	pHdr->wBfReserved1 = 0;
+	pHdr->wBfReserved2 = 0;
+	pHdr->dwBfOffset = 0x36;
+
+	pHdr->dwBiSize = 0x28;
+	pHdr->dwBiWidth = BIOS::LCD::LcdWidth;
+	pHdr->dwBiHeight = BIOS::LCD::LcdHeight;
+	pHdr->wBiPlanes = 1;
+	pHdr->wBiBitDepth = 24;
+	pHdr->dwBiCompression = 0;
+	pHdr->dwBiSizeImage = BIOS::LCD::LcdWidth * BIOS::LCD::LcdHeight * 3;
+	pHdr->dwBiXPels = 0;
+	pHdr->dwBiYPels = 0;
+	pHdr->dwBiClrUsed = 0;
+	pHdr->dwBiClrImportant = 0;
+
+	nOffset = sizeof(BmpHdr);
+	for ( int y = BIOS::LCD::LcdHeight-1; y >= 0; y-- )
+		for ( int x = 0; x < BIOS::LCD::LcdWidth; x++ )
+		{
+			unsigned char arrColors[3];
+			ui16 wPixel = BIOS::LCD::GetPixel( x, y );
+			if (((x>>2)+(y>>2))&1)
+			{
+				BIOS::LCD::PutPixel( x, y, wPixel^0x18e3);
+			}
+			arrColors[2] = Get565R(wPixel);
+			arrColors[1] = Get565G(wPixel);
+			arrColors[0] = Get565B(wPixel);
+			for ( int c=0; c<3; c++ )
+			{
+				pData[nOffset] = arrColors[c];
+				if ( ++nOffset >= FILEINFO::SectorSize )
+				{
+					nSize += FILEINFO::SectorSize;
+					nOffset = 0;
+					BIOS::DSK::Write( &f, pData );
+				}
+
+			}
+		}
+
+	if ( nOffset > 0 )
+		BIOS::DSK::Write( &f, pData );
+
+	BIOS::DSK::Close( &f, nSize + nOffset );
+	// Display message
+	//Sleep(500);
+
+	for ( int y = BIOS::LCD::LcdHeight-1; y >= 0; y-- )
+		for ( int x = 0; x < BIOS::LCD::LcdWidth; x++ )
+		{
+			if (((x>>2)+(y>>2))&1)
+			{
+				ui16 wPixel = BIOS::LCD::GetPixel( x, y );
+				BIOS::LCD::PutPixel( x, y, wPixel^0x18e3);
+				// ..... ...... .....
+				// ...11 ...111 ...11
+			}
+		}
+
+}
+
+void CExport::SaveScreenshot16(char* strName_ /*= NULL*/)
+{
+	char strNameUnique[] = "IMG000  BMP";
+	char* strName = strName_ ? strName_ : strNameUnique;
+	if ( !strName_ )
+		FindUnusedFile( strName, 3 );
+
+	CBufferedWriter writer;
+	writer.Open( strName );
+
+
+	BmpHdr hdr;
+	BmpHdr* pHdr = &hdr;
+	pHdr->wBfType = 'B' | ('M'<<8);
+	pHdr->dwBfSize = sizeof(BmpHdr) + BIOS::LCD::LcdWidth * BIOS::LCD::LcdHeight * 3;  // no need to align row to multiply of 4
+	pHdr->wBfReserved1 = 0;
+	pHdr->wBfReserved2 = 0;
+	pHdr->dwBfOffset = 0x36;
+
+	pHdr->dwBiSize = 0x28;
+	pHdr->dwBiWidth = BIOS::LCD::LcdWidth;
+	pHdr->dwBiHeight = BIOS::LCD::LcdHeight;
+	pHdr->wBiPlanes = 1;
+	pHdr->wBiBitDepth = 16;
+	pHdr->dwBiCompression = 0;
+	pHdr->dwBiSizeImage = BIOS::LCD::LcdWidth * BIOS::LCD::LcdHeight * 3;
+	pHdr->dwBiXPels = 0;
+	pHdr->dwBiYPels = 0;
+	pHdr->dwBiClrUsed = 0;
+	pHdr->dwBiClrImportant = 0;
+
+	writer << CStream( &hdr, sizeof(BmpHdr) );
+
+	for ( int y = BIOS::LCD::LcdHeight-1; y >= 0; y-- )
+		for ( int x = 0; x < BIOS::LCD::LcdWidth; x++ )
+		{
+			ui16 wPixel = BIOS::LCD::GetPixel( x, y );
+
+			if (((x>>2)+(y>>2))&1)
+				BIOS::LCD::PutPixel( x, y, wPixel^0x18e3);
+
+			int r = Get565R( wPixel ) >> 3;
+			int g = Get565G( wPixel ) >> 3;
+			int b = Get565B( wPixel ) >> 3;
+
+			// RGB555
+			wPixel = b | (g << 5) | (r << 10);
+			writer << wPixel;
+		}
+
+	writer.Close();
+
+	for ( int y = BIOS::LCD::LcdHeight-1; y >= 0; y-- )
+		for ( int x = 0; x < BIOS::LCD::LcdWidth; x++ )
+		{
+			if (((x>>2)+(y>>2))&1)
+			{
+				ui16 wPixel = BIOS::LCD::GetPixel( x, y );
+				BIOS::LCD::PutPixel( x, y, wPixel^0x18e3);
+				// ..... ...... .....
+				// ...11 ...111 ...11
+			}
+		}
+}
+

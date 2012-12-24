@@ -724,6 +724,11 @@ return nv;
 
 }
 
+/*static*/ void BIOS::SERIAL::Configure(int nBaudrate)
+{
+
+}
+
 /*static*/ void BIOS::SERIAL::Send(const char* strBuf)
 {
 	OutputDebugString( "Serial:" );
@@ -836,6 +841,11 @@ int BIOS::ADC::GetPointer()
 int BIOS::SYS::GetTemperature()
 {
 	return 2068;
+}
+
+int BIOS::SYS::GetCoreVoltage()
+{
+	return 1024;
 }
 
 void BIOS::SYS::Standby(bool)

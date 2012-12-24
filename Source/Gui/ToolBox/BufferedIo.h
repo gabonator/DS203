@@ -42,6 +42,12 @@ public:
 		return *this;
 	}
 
+	virtual CBufferedWriter& operator <<( ui16 wData )
+	{
+		*this << CStream(wData);
+		return *this;
+	}
+
 	virtual CBufferedWriter& operator <<( ui8 dwData )
 	{
 		*this << CStream(dwData);

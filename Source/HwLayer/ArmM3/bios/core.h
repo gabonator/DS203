@@ -228,7 +228,7 @@ void RCC_APB2PeriphClockCmd(u32 RCC_APB2Periph, FunctionalState NewState)
 int BIOS::SYS::GetTemperature()
 {
 //  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); 
-
+#if 0
   ADC_InitTypeDef ADC_InitStructure;
   /* ADC1 configuration ------------------------------------------------------*/
   ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;	 
@@ -239,38 +239,16 @@ int BIOS::SYS::GetTemperature()
   ADC_InitStructure.ADC_NbrOfChannel = 1;
   ADC_Init(ADC1, &ADC_InitStructure);
 
-
+#endif
   /* ADC1 regular channe16 configuration */ 
   //ADC_RegularChannelConfig(ADC1, ADC_Channel_16, 1, ADC_SampleTime_239Cycles5);  
   /* Enable the temperature sensor and vref internal channel */ 
   ADC_TempSensorVrefintCmd(ENABLE);    
   /* Enable ADC1 */
-  ADC_Cmd(ADC1, ENABLE);
-#if 0  
-/* Enable ADC1 reset calibaration register */ 
-  ADC_ResetCalibration(ADC1);
-  /* Check the end of ADC1 reset calibration register */
-  while(ADC_GetResetCalibrationStatus(ADC1));
-  /* Start ADC1 calibaration */
-  ADC_StartCalibration(ADC1);
-  /* Check the end of ADC1 calibration */
-  while(ADC_GetCalibrationStatus(ADC1));  
-  /* Start ADC1 Software Conversion */ 
-
-/*
-#define ADC_SampleTime_1Cycles5                    ((u8)0x00)
-#define ADC_SampleTime_7Cycles5                    ((u8)0x01)
-#define ADC_SampleTime_13Cycles5                   ((u8)0x02)
-#define ADC_SampleTime_28Cycles5                   ((u8)0x03)
-#define ADC_SampleTime_41Cycles5                   ((u8)0x04)
-#define ADC_SampleTime_55Cycles5                   ((u8)0x05)
-#define ADC_SampleTime_71Cycles5                   ((u8)0x06)
-#define ADC_SampleTime_239Cycles5                  ((u8)0x07)
-
-*/
-#endif
-  BIOS::SYS::DelayMs(1);
+//  ADC_Cmd(ADC1, ENABLE);
+//  BIOS::SYS::DelayMs(5);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_16, 1, ADC_SampleTime_55Cycles5);  
+  BIOS::SYS::DelayMs(1);
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);	
 	while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)!=SET);
 
@@ -282,4 +260,36 @@ int BIOS::SYS::GetTemperature()
   return ADCConvertedValue;
 //	return (int)(fTemp);
 }
+
+int BIOS::SYS::GetCoreVoltage()
+{
+//  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); 
+#if 0
+  ADC_InitTypeDef ADC_InitStructure;
+  /* ADC1 configuration ------------------------------------------------------*/
+  ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;	 
+  ADC_InitStructure.ADC_ScanConvMode = DISABLE;			  
+  ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;	 
+  ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None; 
+  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;		   
+  ADC_InitStructure.ADC_NbrOfChannel = 1;
+  ADC_Init(ADC1, &ADC_InitStructure);
+#endif
+
+  /* ADC1 regular channe16 configuration */ 
+  //ADC_RegularChannelConfig(ADC1, ADC_Channel_16, 1, ADC_SampleTime_239Cycles5);  
+  /* Enable the temperature sensor and vref internal channel */ 
+  ADC_TempSensorVrefintCmd(ENABLE);    
+  /* Enable ADC1 */
+//  ADC_Cmd(ADC1, ENABLE);
+//  BIOS::SYS::DelayMs(5);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1, ADC_SampleTime_55Cycles5);  
+  BIOS::SYS::DelayMs(1);
+  ADC_SoftwareStartConvCmd(ADC1, ENABLE);	
+	while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)!=SET);
+
+	int ADCConvertedValue = ADC_GetConversionValue(ADC1);
+  return ADCConvertedValue;
+}
+
 #endif

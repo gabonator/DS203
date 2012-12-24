@@ -28,7 +28,6 @@ void CMainWnd::Create()
 	CWnd::Create("CMainWnd", WsVisible | WsListener, CRect(0, 0, BIOS::LCD::LcdWidth, BIOS::LCD::LcdHeight), NULL );
 
 	m_wndToolBar.Create( this );
-	//m_wndManager.Create( this );
 	m_wndGraph.Create( this, WsHidden | WsNoActivate );
 	m_wndSignalGraph.Create( this, WsNoActivate );
 	m_wndSpectrumGraph.Create( this, WsNoActivate );
@@ -55,13 +54,9 @@ void CMainWnd::Create()
 	m_wndSpectrumMarker.Create( this, WsHidden );
 	m_wndSpectrumAnnot.Create( this, WsHidden );
 	m_wndScreenSaver.Create( this, WsHidden );
-	//m_wndUserGame.Create( this, WsHidden );
-	//m_wndUserBalls.Create( this, WsHidden );
-	//m_wndUserTuner.Create( this, WsHidden );
-	//m_wndUserMeter.Create( this, WsHidden );
-	//m_wndUserFullView.Create( this, WsHidden );
 	m_wndAboutFirmware.Create( this, WsHidden );
 	m_wndAboutDevice.Create( this, WsHidden );
+	m_wndAboutStatus.Create( this, WsHidden );
 	m_wndModuleSel.Create(this, WsHidden );
 	m_wndCalibration.Create( this, WsHidden );
 
@@ -146,19 +141,23 @@ void CMainWnd::Create()
 
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )
 	{
-		long lTick = BIOS::SYS::GetTick();
-		if ( m_lLastAcquired != -1 && lTick - m_lLastAcquired > 150 )
+		if ( m_lLastAcquired != -1 && BIOS::SYS::GetTick() - m_lLastAcquired > 150 )
 		{
-			// whatever is in buffer, just process it. 250ms should be 
-			// sufficient to grab samples for one screen,
-			// in first pass it will copy nonintialzed buffer!
-			//int nBegin, nEnd;
-			//BIOS::ADC::GetBufferRange( nBegin, nEnd );
-			int nEnd = BIOS::ADC::GetCount();
-			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
+			bool bScreenReady = BIOS::ADC::GetPointer() > (300 + Settings.Time.InvalidFirst);
+			BIOS::ADC::Copy( BIOS::ADC::GetCount() );
+
+			// redraw the screen even when the sampler is not full
+			//BIOS::LCD::Print(0, 0, RGB565(ff0000), 0, "U");
 			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
-			// force update
-			BIOS::ADC::Restart();
+			//BIOS::LCD::Print(0, 0, RGB565(808080), 0, "u");
+		
+			// force restart if the write pointer is behind current window
+			// TODO: the FPGA program is unreliable and stupid!, the restart wont reset the WPTR to begin of buffer
+			if ( bScreenReady )
+			{
+				//BIOS::LCD::Print(0, 0, RGB565(ff0000), 0, "R");
+				BIOS::ADC::Restart();
+			} 
 		}
 	}
 }
@@ -203,20 +202,17 @@ void CMainWnd::Create()
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
 
+#ifdef _ENABLE_MONITOR
+		// When the user is in UART monitor screen, do not intercept UART traffic
+		if ( MainWnd.m_wndToolBar.GetCurrentLayout() != &MainWnd.m_wndUserMonitor )
+#endif
 		SdkUartProc();
-/*
-		if ( lForceRestart > 0 && lForceRestart <= (long)BIOS::SYS::GetTick() )
-		{
-			BIOS::ADC::Restart();
-			lForceRestart = -1;
-		}*/
+
 		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() /*&& lForceRestart < 0*/ )
 		{
-			int nEnd = BIOS::ADC::GetCount();
-//			BIOS::ADC::GetBufferRange( nBegin, nEnd );
-			BIOS::ADC::Copy( /*BIOS::ADC::GetCount()*/ nEnd );
+			// ADC::Ready means that the write pointer is at the end of buffer, we can restart sampler
+			BIOS::ADC::Copy( BIOS::ADC::GetCount() );
 			BIOS::ADC::Restart();
-//			lForceRestart = BIOS::SYS::GetTick() + 400;
 
 			// trig stuff
 			m_lLastAcquired = BIOS::SYS::GetTick();
@@ -320,7 +316,7 @@ void CMainWnd::CallShortcut(int nShortcut)
 			}
 			break;
 		case CSettings::CRuntime::Screenshot:
-			m_wndToolbox.SaveScreenshot();
+			m_wndToolbox.SaveScreenshot16();
 			break;
 	default:
 		_ASSERT( !!!"Unknown shortcut" );

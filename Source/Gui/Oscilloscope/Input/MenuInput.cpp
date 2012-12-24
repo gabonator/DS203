@@ -19,6 +19,7 @@ CWndMenuInput::CWndMenuInput()
 	m_itmTrig.Create(this);
 }
 
+LINKERSECTION(".extra")
 /*virtual*/ void CWndMenuInput::OnMessage(CWnd* pSender, ui16 code, ui32 data)
 {
 	// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR

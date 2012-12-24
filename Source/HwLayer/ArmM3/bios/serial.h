@@ -25,6 +25,12 @@ extern "C" {
 	int UsartGet();
 	int UsartEmpty();
 }
+
+/*static*/ void BIOS::SERIAL::Configure(int nBaudrate)
+{
+  USART1->BRR = CPU_CLK / nBaudrate;
+}
+
 /*static*/ void BIOS::SERIAL::Init()
 {
   // Enable USART1:

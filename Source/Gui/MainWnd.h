@@ -52,8 +52,9 @@ public:
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
 	CWndScreenSaver		m_wndScreenSaver;
-	CWndAboutFirmware			m_wndAboutFirmware;
-	CWndAboutDevice	m_wndAboutDevice;
+	CWndAboutFirmware	m_wndAboutFirmware;
+	CWndAboutDevice		m_wndAboutDevice;
+	CWndAboutStatus		m_wndAboutStatus;
 	CWndMenuCalibration	m_wndCalibration;
 
 	CWndMenuSpectMain	m_wndSpectrumMain;

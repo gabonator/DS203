@@ -148,7 +148,11 @@ bool CWndManager::Exists(char *strName)
 				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
 				break;
 			case 1: // Bmp
-				CExport::SaveScreenshot( strName );
+				ShowWindow(CWnd::SwHide);
+				MainWnd.Invalidate();
+				CExport::SaveScreenshot16( strName );
+				ShowWindow(CWnd::SwShow);
+				MainWnd.Invalidate();
 				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
 				break;
 			case 2: // Csv

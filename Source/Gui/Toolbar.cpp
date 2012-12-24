@@ -29,6 +29,7 @@
 		{ CBarItem::IMain,	(PSTR)"About", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Device", &MainWnd.m_wndAboutDevice},
 		{ CBarItem::ISub,	(PSTR)"Firmware", &MainWnd.m_wndAboutFirmware},
+		{ CBarItem::ISub,	(PSTR)"Status", &MainWnd.m_wndAboutStatus},
 
 
 		{ CBarItem::IMain,	(PSTR)"User app", &MainWnd.m_wndModuleSel},
