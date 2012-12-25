@@ -103,6 +103,7 @@
 #endif
 	if ( code == ToWord('m', 'o') && pSender == &m_itmSimple )
 	{
+		m_wndListSimple.LoadCalib();
 		m_wndListSimple.Create( this );
 		m_wndListSimple.StartModal( &m_wndListSimple.m_itmResolution );
 		return;

@@ -26,6 +26,7 @@ void CWndListCalSimple::LoadCalib()
 		Settings.CH2.Coupling = CSettings::AnalogChannel::_DC;
 	}
 	Settings.Time.Resolution = CSettings::TimeBase::_1ms;
+	Settings.Trig.Sync = CSettings::Trigger::_Scan;
 	CCoreOscilloscope::ConfigureAdc();
 	CCoreOscilloscope::ConfigureTrigger();
 

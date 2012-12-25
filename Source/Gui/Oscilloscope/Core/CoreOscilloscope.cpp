@@ -37,7 +37,7 @@
 
 /*static*/ void CCoreOscilloscope::ConfigureTrigger()
 {
-	if ( Settings.Trig.Sync == CSettings::Trigger::_None )
+	if ( Settings.Trig.Sync == CSettings::Trigger::_None || Settings.Trig.Sync == CSettings::Trigger::_Scan )
 	{
 		BIOS::ADC::ConfigureTrigger(0, 0, 0, -1 );
 	} else {
