@@ -4,7 +4,7 @@
 #include <Source/Core/Serialize.h>
 #include <Source/Core/Settings.h>
 #include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
-#include "BufferedIo.h"
+#include <Source/Core/BufferedIo.h>
 
 class CImport
 {

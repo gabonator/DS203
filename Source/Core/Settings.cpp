@@ -64,7 +64,7 @@ CSettings* CSettings::m_pInstance = NULL;
 		{ "View", "Selection", "All" };
 
 /*static*/ const char* const CSettings::MathOperator::ppszTextType[] = 
-		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C", "min(A,B)", "max(A,B)"};
+		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C", "min(A,B)", "max(A,B)", "Fir(A)+C", "F(A)/B+C"};
 /*static*/ const char* const CSettings::MathOperand::ppszTextType[] = 
 		{"CH1raw", "CH1", "CH2raw", "CH2", "Const", "Fx"};
 

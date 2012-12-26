@@ -5,6 +5,17 @@ char tmp[16];
 /*static */ const char hex[16] = {'0', '1', '2', '3', '4',
 			'5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
+/*static*/ int CUtils::atoi(char *str)
+{
+	int nValue = 0;
+	while ( *str >= '0' && *str <= '9' )
+	{
+		nValue *= 10;
+		nValue += *str++ - '0';
+	}
+	return nValue;
+}
+
 /*static*/ char* CUtils::itoa2(ui8 n)
 {
 	for (int i=0; i<8; i++)

@@ -60,7 +60,14 @@ public:
 CApplication::CApplication()
 {
 	m_pInstance = this;
+}
 
+CApplication::~CApplication()
+{
+}
+
+void CApplication::Create()
+{
 	BIOS::SYS::Init();
 
 	GLOBAL.m_wndMain.Create();
@@ -71,10 +78,6 @@ CApplication::CApplication()
 	CCoreGenerator::Update();
 
 	BIOS::ADC::Restart();
-}
-
-CApplication::~CApplication()
-{
 }
 
 bool CApplication::operator ()()

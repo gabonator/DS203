@@ -329,7 +329,7 @@ public:
 		if ( nKey == BIOS::KEY::KeyEnter && GetFocus() == &m_btnZoom )
 		{
 			nViewBegin = 0;
-			nViewEnd = BIOS::ADC::GetCount();
+			nViewEnd = BIOS::ADC::GetCount()-1;
 			SegmentedDraw();
 		}
 

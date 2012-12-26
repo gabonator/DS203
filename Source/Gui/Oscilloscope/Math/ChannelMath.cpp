@@ -1,9 +1,16 @@
 #include "ChannelMath.h"
 #include <Source/Gui/Oscilloscope/Controls/GraphOsc.h>
 #include <math.h>
+#include <Source/Core/BufferedIo.h>
+#include <Source/Core/Utils.h>
+#include <Source/Gui/MainWnd.h>
 
 void CMathChannel::MathSetup(CSettings::Calibrator::FastCalc* pFC1, CSettings::Calibrator::FastCalc* pFC2)
 {
+	if ( Settings.Math.Type == CSettings::MathOperator::_FirAplusC || 
+		 Settings.Math.Type == CSettings::MathOperator::_FirAdivBplusC )
+		m_Fir.Reset();
+
 	m_pFC1 = pFC1;
 	m_pFC2 = pFC2;
 	m_nTemp = 0;
@@ -53,6 +60,32 @@ int CMathChannel::MathCalc(ui32 nSample)
 			int fA = MathGet(Settings.MathA, nSample);
 			int fB = MathGet(Settings.MathB, nSample);
 			return max(fA, fB);
+		}
+	case CSettings::MathOperator::_FirAplusC:
+		{
+			int nA = MathGet(Settings.MathA, nSample);
+			int nC = MathGet(Settings.MathC, nSample);
+			int nFiltered = 0;
+
+			m_Fir << nA;
+			m_Fir >> nFiltered;
+			
+			return nFiltered + nC;
+		}
+	case CSettings::MathOperator::_FirAdivBplusC:
+		{
+			int nA = MathGet(Settings.MathA, nSample);
+			int nB = MathGet(Settings.MathB, nSample);
+			int nC = MathGet(Settings.MathC, nSample);
+			int nFiltered = 0;
+
+			m_Fir << nA;
+			m_Fir >> nFiltered;
+			
+			if ( nB == 0 )
+				nB = 1;
+
+			return (nFiltered / nB) + nC;
 		}
 	default:
 		_ASSERT(0);
@@ -105,110 +138,3 @@ int	CMathChannel::MathFx( int nParam, int nScale )
 	m_nTemp++;
 	return nValue;
 }
-
-#if 0
-void CMathChannel::MathSetup(CSettings::Calibrator::FastCalc* pFC1, CSettings::Calibrator::FastCalc* pFC2)
-{
-	m_pFC1 = pFC1;
-	m_pFC2 = pFC2;
-
-	switch ( Settings.Math.Type )
-	{
-	case CSettings::MathOperator::_A: 
-		m_pEval = GetEvalFunc( Settings.MathA ); 
-	
-		break;
-	case CSettings::MathOperator::_B: 
-		m_pEval = GetEvalFunc( Settings.MathB ); 
-		break;
-	case CSettings::MathOperator::_C: 
-		m_pEval = GetEvalFunc( Settings.MathC ); 
-		break;
-	case CSettings::MathOperator::_AplusBplusC: 
-		m_pEvalX = GetEvalFunc( Settings.MathA );
-		m_pEvalY = GetEvalFunc( Settings.MathB );
-		m_pEvalZ = GetEvalFunc( Settings.MathC );
-		m_pEval = _EvalXYZ; 
-		break;
-	case CSettings::MathOperator::_AminusBplusC: 
-		m_pEvalX = GetEvalFunc( Settings.MathA );
-		m_pEvalY = GetEvalFunc( Settings.MathB, true );
-		m_pEvalZ = GetEvalFunc( Settings.MathC );
-		m_pEval = _EvalXYZ; 
-		break;
-	case CSettings::MathOperator::_BminusAplusC:
-		m_pEvalX = GetEvalFunc( Settings.MathA, true );
-		m_pEvalY = GetEvalFunc( Settings.MathB );
-		m_pEvalZ = GetEvalFunc( Settings.MathC );
-		m_pEval = _EvalXYZ; 
-		break;
-	default:
-		_ASSERT(0);
-		return 0;
-	}
-
-}
-
-int CMathChannel::MathCalc(ui32 nSample)
-{
-	m_nSample = nSample;
-	return this->*m_pEval();
-}
-
-int CMathChannel::_EvalXYZ()
-{
-	return this->*m_pEvalX() + this->*m_pEvalY() + this->*m_pEvalZ();
-}
-
-int CMathChannel::GetEvalFunc(CSettings::MathOperand& op, bool bNegate)
-{
-	switch ( op.Type )
-	{
-	case CSettings::MathOperand::_CH1Corrected:
-		return bNegate ? _EvalCh1Corrected : _EvalCh1CorrectedNeg;
-	case CSettings::MathOperand::_Ch1Raw:
-		return bNegate ? _EvalCh1Raw : _EvalCh1RawNeg;
-	case CSettings::MathOperand::_CH2Corrected:
-		return bNegate ? _EvalCh2Corrected : _EvalCh2CorrectedNeg;
-	case CSettings::MathOperand::_Ch2Raw:
-		return bNegate ? _EvalCh2Raw : _EvalCh2RawNeg;
-	case CSettings::MathOperand::_Constant:
-		return op.nConstant;
-	}
-
-int CMathChannel::_EvalA()
-{
-}
-
-
-	switch ( Settings.Math.Type )
-	{
-	case CSettings::MathOperator::_A:
-		return MathGet(Settings.MathA, nSample);
-	case CSettings::MathOperator::_B:
-		return MathGet(Settings.MathB, nSample);
-	case CSettings::MathOperator::_C:
-		return MathGet(Settings.MathC, nSample);
-	case CSettings::MathOperator::_AplusBplusC:
-		return 
-			MathGet(Settings.MathA, nSample) +
-			MathGet(Settings.MathB, nSample) +
-			MathGet(Settings.MathC, nSample);
-	case CSettings::MathOperator::_AminusBplusC:
-		return 
-			MathGet(Settings.MathA, nSample) -
-			MathGet(Settings.MathB, nSample) +
-			MathGet(Settings.MathC, nSample);
-	case CSettings::MathOperator::_BminusAplusC:
-		return 
-			MathGet(Settings.MathB, nSample) -
-			MathGet(Settings.MathA, nSample) +
-			MathGet(Settings.MathC, nSample);
-	default:
-		_ASSERT(0);
-		return 0;
-	}
-}
-
-#endif
-

@@ -20,6 +20,9 @@ public:
 			_ASSERT(0);
 			return;
 		}
+#ifdef _WIN32
+		memset(m_pData, 0, FILEINFO::SectorSize);
+#endif
 	}
 
 	virtual CBufferedWriter& operator <<( PSTR str )
@@ -96,7 +99,7 @@ public:
 
 		if ( !BIOS::DSK::Open( &m_FileInfo, strName, BIOS::DSK::IoRead ) )
 		{
-			_ASSERT(0);
+			//_ASSERT(0);
 			return false;
 		}
 		BIOS::DSK::Read( &m_FileInfo, m_pData );

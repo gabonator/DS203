@@ -258,7 +258,7 @@ public:
 		static const char* const ppszTextType[];
 		// = {"Off", "A", "B", "A+B+C", "A+B-C", "B-A+C"}
 		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, 
-			_AgreaterBplusC, _AlessBplusC, _minAB, _maxAB, _TypeMax = _maxAB }
+			_AgreaterBplusC, _AlessBplusC, _minAB, _maxAB, _FirAplusC, _FirAdivBplusC, _TypeMax = _FirAdivBplusC }
 			Type;
 		ui16 uiColor;
 

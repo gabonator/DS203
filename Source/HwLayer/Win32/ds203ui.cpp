@@ -47,6 +47,7 @@ DWORD WINAPI ThreadProcApp(HANDLE handle)
 	while ( !g_hwnd )
 		Sleep( 10 );
 
+	g_app.Create();
 	while (g_running) 
 	{
 		g_dev();

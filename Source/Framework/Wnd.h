@@ -34,12 +34,18 @@ public:
 			m_pPrevFocus = CWnd::m_pFocus;
 			m_rcPrevOverlay = CWnd::m_rcOverlay; 
 		}
-
+		CModal& operator = ( const CModal& modCopy )
+		{
+			m_pPrevFocus = modCopy.m_pPrevFocus;
+			m_rcPrevOverlay = modCopy.m_rcPrevOverlay;
+			return *this;
+		}
+		/*
 		CModal( CRect rcOverlay, CWnd* pFocus )
 		{
 			m_rcPrevOverlay = rcOverlay;
 			m_pPrevFocus = pFocus;
-		}
+		}*/
 
 		CWnd*		m_pPrevFocus;
 		CRect		m_rcPrevOverlay;
@@ -77,13 +83,13 @@ public:
 	static CArray<CModal> m_arrModals;
 	static CRect m_rcOverlay;
 
-	CRect	m_rcClient;						// 16
+	CRect	m_rcClient;						// 8
 	CWnd*	m_pParent;						// 4
 	CWnd*	m_pFirst;						// 4
 	CWnd*	m_pNext;						// 4
 	ui16	m_dwFlags;						// 4
 	const char* m_pszId;					// 4
-	// Total 36 bytes per window
+	// Total 28 bytes per window (+5 virtuals)
 
 	CWnd();
 	CWnd* GetLast();

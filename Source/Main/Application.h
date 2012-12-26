@@ -17,6 +17,7 @@ public:
 
 	CApplication();
 	~CApplication();
+	void Create();
 	bool operator ()();
 };
 

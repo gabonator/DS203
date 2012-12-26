@@ -8,7 +8,8 @@
 class CUtils
 {
 public:
-	static char* itoa(si16 n);
+	static int atoi(char *str);
+	static char* itoa(si16 i);
 	static char* itoa2(ui8 n);
 	static char* ftoa(float f);
 	static char tohex(ui8 n);

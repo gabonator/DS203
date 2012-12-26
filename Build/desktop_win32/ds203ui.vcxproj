@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Bitmap.h" />
+    <ClInclude Include="..\..\Source\Core\BufferedIo.h" />
     <ClInclude Include="..\..\Source\Core\Calibration.h" />
     <ClInclude Include="..\..\Source\Core\Sdk.h" />
     <ClInclude Include="..\..\Source\Core\Serialize.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Mask\MenuMask.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.h" />
+    <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\FirFilter.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ItemOperand.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ItemOperator.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\ListOperand.h" />
@@ -221,6 +223,7 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Mask\MenuMask.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\FirFilter.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp" />

@@ -377,7 +377,8 @@ bool CWnd::IsVisible()
 
 void CWnd::StartModal( CWnd* pwndChildFocus /*= NULL*/ )
 {
-	m_arrModals.Add( CModal() );
+	CModal modCurrent;
+	m_arrModals.Add( modCurrent );
 
 	if ( pwndChildFocus )
 		pwndChildFocus->SetFocus();
@@ -395,6 +396,7 @@ void CWnd::StartModal( CWnd* pwndChildFocus /*= NULL*/ )
 
 void CWnd::StopModal()
 {
+	_ASSERT( m_arrModals.GetLast().m_pPrevFocus != this );
 	Destroy();
 	m_rcOverlay.Invalidate();
 	m_arrModals.GetLast().m_pPrevFocus->SetFocus();

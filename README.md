@@ -64,6 +64,7 @@ Feature highlights:
 - UART, CANBUS decoder
 - Mask tests (create envelope of your signal and catch disturbances which exceed this envelope)
 - Advanced mathematical operators (3 operands)
+- User defined FIR filter (in Oscilloscope/Math)
 - Cursors with lock-to-channel function
 - Spectral analysis
 - Export to Wave (use your favourite sound editing program for signal examination)

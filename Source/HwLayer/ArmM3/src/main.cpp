@@ -15,6 +15,9 @@ int main(void)
 	__USB_Init();
 
 	CApplication app;
+	app.Create();
+
 	while ( app() );
+
 	return 0;
 }
