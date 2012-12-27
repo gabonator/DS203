@@ -9,13 +9,12 @@ ADD_MODULE( "Demo", CWndScreenSaver )
 class CWndScreenSaver : public CWnd
 {
 public:
-	bool bReset;
-	int x, y;
+	int m_x, m_y;
 
 	CWndScreenSaver()
 	{
-		bReset = true;
-		x = 0;
+		m_x = -1;
+		m_y = -1;
 	}
 	
 	virtual void Create(CWnd *pParent, ui16 dwFlags)
@@ -25,48 +24,34 @@ public:
 
 	virtual void OnPaint()
 	{
-		const int ax[3] = {20, 380, 200};
-		const int ay[3] = {40, 50, 220};
-		if ( bReset )
-		{
-			BIOS::LCD::Bar(m_rcClient, RGB565(FFFFFF));
-			BIOS::LCD::Print(m_rcClient.left+8, m_rcClient.bottom-20, RGB565(000000), RGBTRANS, "Hello world!");
-			bReset = false;
-			x = ax[0];
-			y = ay[0];
-		}
-		int n = CUtils::Random();
-		int i = n%3;
-		x += ax[i];
-		x >>= 1;
-		y += ay[i];
-		y >>= 1;
-		BIOS::LCD::PutPixel( x, y, (ui16)(n<<2));
+		BIOS::LCD::Bar(m_rcClient, RGB565(FFFFFF));
+		BIOS::LCD::Print(m_rcClient.left+8, m_rcClient.bottom-20, RGB565(000000), RGBTRANS, "Hello world!");
 	}
 
 	void OnTick()	
 	{
-		Invalidate();
+		const int ax[3] = {20, 380, 200};
+		const int ay[3] = {40, 50, 220};
+
+		if ( m_x == -1 )
+		{
+			m_x = ax[0];
+			m_y = ay[0];
+		}
+
+		int n = CUtils::Random();
+		int i = n % 3;
+		m_x = (m_x + ax[i]) / 2;
+		m_y = (m_y + ay[i]) / 2;
+		BIOS::LCD::PutPixel( m_x, m_y, (ui16)(n << 2) );
 	}
 
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data)
 	{
-		if (code == ToWord('t', 'i') )
+		if ( code == ToWord('t', 'i') )
 		{
-			// OnTick
+			// CWnd::WsTick -> OnTick, this function will be called every frame
 			OnTick();
-			return;
-		}
-
-		// LAYOUT ENABLE/DISABLE FROM TOP MENU BAR
-		if (code == ToWord('L', 'D') )
-		{
-			return;
-		}
-
-		if (code == ToWord('L', 'E') )
-		{
-			bReset = true;
 			return;
 		}
 	}
