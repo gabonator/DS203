@@ -14,6 +14,5 @@ extern "C" {
 #include "../bios/adc.h"
 #include "../bios/gen.h"
 #include "../bios/files.h"
-#include "../bios/fft.h"
 #include "../bios/serial.h"
 #include "../bios/ver.h"

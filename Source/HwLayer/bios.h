@@ -177,14 +177,6 @@ public:
 		static BOOL Close(FILEINFO* pFileInfo, int nSize = -1);
 	};
 
-	class FFT
-	{	
-	public:	
-		static void Window( si16* arrSignal, const ui16* arrWindowHalf, int n );
-		static void Convert( si16* arrOutput, si16* arrInput, int n );	
-		static ui32 Sqrt( ui32 value );
-	};
-
 	class SERIAL
 	{
 	public:

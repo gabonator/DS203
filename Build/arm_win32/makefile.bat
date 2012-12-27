@@ -20,9 +20,9 @@ if "%TARGET%"=="" (
   echo Could not find the DFU drive.
   echo Please turn on your DSO while holding the first button and then connect it to your computer
   echo.
-  echo Press any key
-  pause > nul
-  goto :eof
+  rem echo Press any key
+  rem pause > nul
+  rem goto :eof
 )
 
 Echo DFU Drive: !TARGET!
@@ -86,7 +86,6 @@ rem goto link
 echo Compiling...
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC1! -o !ASM_OUT1!
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC2! -o !ASM_OUT2!
-!CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC3! -o !ASM_OUT3!
 !CC! !WIN32_ARM_GCC_CFLAGS! !WIN32_ARM_GCC_INCLUDES! -c !C_SRCS!
 !CPP! !WIN32_ARM_GCC_GPPFLAGS! !WIN32_ARM_GCC_INCLUDES! !REVISION! -c !CPP_SRCS!
 :link
@@ -114,7 +113,7 @@ if exist !TARGET!\*.WPT (
 )
 
 Echo Downloading...
-copy !TFILE!.hex !TARGET!!TFILE!.hex
+copy !TFILE!.hex !TARGET!!TFILE!.hex > nul 2> nul
 rem dir !TARGET! > nul
 
 rem del *.elf *.hex *.bin
