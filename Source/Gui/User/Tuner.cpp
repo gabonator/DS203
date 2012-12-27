@@ -293,7 +293,6 @@ float CWndTuner::GetFundamental()
 	int nIndexEnd = (int)(fFreqEnd * nLength / ( 0.5f * fSampling ));
 
 	float fBestIndex = (float)nIndexBegin;
-	int nBestIndex = nIndexBegin;
 	int nBestAmplSq = 0;
 	int nAmplSq[3] = {0, 0, 0};
 	const ui16 arrPattern[] = { RGB565(ff8080), RGB565(ff0000), RGB565(ff1010), RGB565(ffd0d0) };
@@ -359,7 +358,6 @@ float CWndTuner::GetFundamental()
 					fBestIndex = (float)i;
 
 				nBestAmplSq = nAmplSq[1];
-				nBestIndex = i;
 			}
 		}
 	}

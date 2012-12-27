@@ -377,19 +377,19 @@ void CWndTimeGraphTempl::OnPaint()
 		if ( en1 )
 		{
 			int colorA[3] = { 
-				(GetColorR(clr32A)*ch1) >> 8, 
-				(GetColorG(clr32A)*ch1) >> 8,
-				(GetColorB(clr32A)*ch1) >> 8};
+				(int) ((GetColorR(clr32A)*ch1) >> 8), 
+				(int) ((GetColorG(clr32A)*ch1) >> 8),
+				(int) ((GetColorB(clr32A)*ch1) >> 8)};
 			color[0] = max( colorA[0], color[0] );
 			color[1] = max( colorA[1], color[1] );
 			color[2] = max( colorA[2], color[2] );
 		}
 		if ( en2 )
 		{
-			ui8 colorB[3] = { 
-				(GetColorR(clr32B)*ch2) >> 8, 
-				(GetColorG(clr32B)*ch2) >> 8,
-				(GetColorB(clr32B)*ch2) >> 8};
+			int colorB[3] = { 
+				(int) ((GetColorR(clr32B)*ch2) >> 8), 
+				(int) ((GetColorG(clr32B)*ch2) >> 8),
+				(int) ((GetColorB(clr32B)*ch2) >> 8)};
 			color[0] = max( colorB[0], color[0] );
 			color[1] = max( colorB[1], color[1] );
 			color[2] = max( colorB[2], color[2] );

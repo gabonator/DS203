@@ -37,7 +37,7 @@ class CExport
 public:
 	void FindUnusedFile(char* strName, int nNumbers)
 	{
-		bool bExists = false;
+		bool bExists;
 		FILEINFO f;
 		do {
 			bExists = false;

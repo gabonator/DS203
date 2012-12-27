@@ -49,7 +49,7 @@ void CWndUserMonitor::OnTick()
 
 		int x = m_x * 8 + 4;
 		int y = m_y * 16 + 24;
-		char str[2] = {ch, 0};
+		char str[2] = {(char)ch, 0};
 		BIOS::LCD::Print(x, y, RGB565(ffffff), RGB565(000000), str);
 		if ( ++m_x >= 32 )
 		{
