@@ -176,7 +176,7 @@ int BIOS::SYS::GetTemperature()
 }
 #endif
 
-#include "Source/HwLayer/ArmM3/stm32f10x/src/stm32f10x_adc.c"
+#include "Source\HwLayer\ArmM3\stm32f10x\src\stm32f10x_adc.c"
 
 void RCC_APB2PeriphResetCmd(u32 RCC_APB2Periph, FunctionalState NewState)
 {

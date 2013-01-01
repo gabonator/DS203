@@ -1,7 +1,7 @@
 // inspired by https://github.com/neilstockbridge/dsoquad-BIOS/blob/master/src/serial.c
 
-#include "Source/HwLayer/ArmM3/stm32f10x/inc/stm32f10x_lib.h"
-#include "Source/HwLayer/ArmM3/stm32f10x/inc/stm32f10x_usart.h"
+#include "Source\HwLayer\ArmM3\stm32f10x\inc\stm32f10x_lib.h"
+#include "Source\HwLayer\ArmM3\stm32f10x\inc\stm32f10x_usart.h"
 
 // Note: CPU_CLK / BAUD_RATE must fit within 16-bits
 #define CPU_CLK 72000000

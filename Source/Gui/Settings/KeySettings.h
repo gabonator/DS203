@@ -1,6 +1,6 @@
 #include "ItemBeepOnOff.h"
 #include "ItemShortcut.h"
-#include "Source/Gui/Toolbar.h"
+#include "Source\Gui\Toolbar.h"
 
 class CWndMenuKeySettings : public CWnd
 {
