@@ -1,7 +1,7 @@
 #ifndef __WNDBUTTON_H__
 #define __WNDBUTTON_H__
 
-#include <Source\Core\Shapes.h>
+#include <Source/Core/Shapes.h>
 
 class CWndButton : public CWnd
 {

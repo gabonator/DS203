@@ -1,8 +1,8 @@
 #ifndef __MANAGER_H__
 #define __MANAGER_H__
 
-#include <Source\Core\Controls.h>
-#include <Source\Framework\Thread.h>
+#include <Source/Core/Controls.h>
+#include <Source/Framework/Thread.h>
 #include "Export.h"
 #include "Import.h"
 #include "LineTabs.h"

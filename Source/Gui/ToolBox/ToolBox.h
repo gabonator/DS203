@@ -1,8 +1,8 @@
 #ifndef __TOOLBOX_H__
 #define __TOOLBOX_H__
 
-#include <Source\Framework\Wnd.h>
-#include <Source\Framework\Thread.h>
+#include <Source/Framework/Wnd.h>
+#include <Source/Framework/Thread.h>
 #include "Export.h"
 
 class CWndToolbox : public CWnd, public CThread, public CExport
