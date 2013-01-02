@@ -1,0 +1,331 @@
+arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -c ../Source/HwLayer/ArmM3/src/BIOS.S -o bios.o	
+arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -c ../Source/HwLayer/ArmM3/stm32f10x/asm/cortexm3_macro.s -o cortexm3_macro.o	
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/HwLayer/ArmM3/src/cbios.cpp -o cbios.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -fno-threadsafe-statics -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Main/Application.cpp -o Application.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Oscilloscope.h:4,
+                 from ../Source/Gui/MainWnd.h:7,
+                 from ../Source/Main/Application.cpp:2:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Main/Application.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/HwLayer/ArmM3/src/main.cpp -o Main.o
+arm-none-eabi-gcc -Wall -Os -Werror -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/HwLayer/ArmM3/stm32f10x/src/stm32f10x_nvic.c -o stm32f10x_nvic.o	
+arm-none-eabi-gcc -Wall -Os -Werror -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/HwLayer/ArmM3/src/interrupt.c -o interrupt.o	
+arm-none-eabi-gcc -Wall -Os -Werror -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/HwLayer/ArmM3/src/startup.c -o startup.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Controls/GraphOsc.cpp -o GraphOsc.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Controls/GraphOsc.h:4,
+                 from ../Source/Gui/Oscilloscope/Controls/GraphOsc.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Controls/GraphOsc.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Core/Controls.cpp -o Controls.o
+In file included from ../Source/Core/Controls.cpp:1:0:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Core/Settings.cpp -o Settings.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Core/Utils.cpp -o  Utils.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Framework/Wnd.cpp -o Wnd.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -fno-threadsafe-statics -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/MainWnd.cpp -o MainWnd.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Oscilloscope.h:4,
+                 from ../Source/Gui/MainWnd.h:7,
+                 from ../Source/Gui/MainWnd.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/MainWnd.cpp:1:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Input/MenuInput.cpp -o MenuInput.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Input/MenuInput.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Input/MenuInput.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -fno-threadsafe-statics -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Toolbar.cpp -o Toolbar.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Oscilloscope.h:4,
+                 from ../Source/Gui/MainWnd.h:7,
+                 from ../Source/Gui/Toolbar.cpp:2:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Toolbar.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -fno-threadsafe-statics -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/MainMenu.cpp -o MainMenu.o
+In file included from ../Source/Gui/MainMenu.h:5:0,
+                 from ../Source/Gui/MainMenu.cpp:2:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/MainMenu.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Spectrum/Main/MenuSpectMain.cpp -o MenuSpectMain.o
+In file included from ../Source/Gui/Spectrum/Main/MenuSpectMain.h:4:0,
+                 from ../Source/Gui/Spectrum/Main/MenuSpectMain.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Spectrum/Main/MenuSpectMain.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Calibration/Calibration.cpp -o Calibration.o
+In file included from ../Source/Gui/Calibration/Calibration.h:6:0,
+                 from ../Source/Gui/Calibration/Calibration.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Calibration/Calibration.cpp:4:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Core/Serialize.cpp -o Serialize.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Calibration/CalibAnalog.cpp -o CalibAnalog.o
+In file included from ../Source/Gui/Calibration/CalibAnalog.h:6:0,
+                 from ../Source/Gui/Calibration/CalibAnalog.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Calibration/CalibAnalog.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Calibration/CalibDac.cpp -o CalibDac.o
+In file included from ../Source/Gui/Calibration/CalibDac.h:6:0,
+                 from ../Source/Gui/Calibration/CalibDac.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Calibration/CalibDac.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Calibration/CalibMenu.cpp -o CalibMenu.o
+In file included from ../Source/Gui/Calibration/CalibMenu.h:5:0,
+                 from ../Source/Gui/Calibration/CalibMenu.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Calibration/CalibMenu.cpp:7:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Marker/MenuMarker.cpp -o MenuMarker.o
+In file included from ../Source/Gui/Oscilloscope/Marker/MenuMarker.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Marker/MenuMarker.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Marker/MenuMarker.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/ToolBox/ToolBox.cpp -o ToolBox.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/ToolBox/Export.h:6,
+                 from ../Source/Gui/ToolBox/ToolBox.h:6,
+                 from ../Source/Gui/ToolBox/ToolBox.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/ToolBox/ToolBox.cpp:1:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Meas/MenuMeas.cpp -o MenuMeas.o
+In file included from ../Source/Gui/Oscilloscope/Meas/MenuMeas.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Meas/MenuMeas.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Meas/MenuMeas.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/ToolBox/Manager.cpp -o Manager.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/ToolBox/Export.h:6,
+                 from ../Source/Gui/ToolBox/ToolBox.h:6,
+                 from ../Source/Gui/ToolBox/Manager.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/ToolBox/Manager.cpp:1:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Math/ChannelMath.cpp -o ChannelMath.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Controls/GraphOsc.h:4,
+                 from ../Source/Gui/Oscilloscope/Math/ChannelMath.cpp:2:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Math/ChannelMath.cpp:6:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Math/MenuMath.cpp -o MenuMath.o
+In file included from ../Source/Gui/Oscilloscope/Math/MenuMath.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Math/MenuMath.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Math/MenuMath.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Disp/MenuDisp.cpp -o MenuDisp.o
+In file included from ../Source/Gui/Oscilloscope/Disp/MenuDisp.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Disp/MenuDisp.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Disp/MenuDisp.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Spectrum/Controls/SpectrumGraph.cpp -o SpectrumGraph.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/Spectrum/Controls/SpectrumGraph.h:6,
+                 from ../Source/Gui/Spectrum/Controls/SpectrumGraph.cpp:2:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Spectrum/Marker/MenuSpectMarker.cpp -o MenuSpectMarker.o
+In file included from ../Source/Gui/Spectrum/Marker/MenuSpectMarker.h:4:0,
+                 from ../Source/Gui/Spectrum/Marker/MenuSpectMarker.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Spectrum/Marker/MenuSpectMarker.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Spectrum/Controls/Annot.cpp -o Annot.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Oscilloscope.h:4,
+                 from ../Source/Gui/MainWnd.h:7,
+                 from ../Source/Gui/Spectrum/Controls/Annot.cpp:4:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Spectrum/Controls/Annot.cpp:4:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Toolbox/Export.cpp -o Export.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/Toolbox/Export.h:6,
+                 from ../Source/Gui/Toolbox/Export.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/Toolbox/Export.cpp:1:0:
+../Source/Gui/Toolbox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/Toolbox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Generator/Main/MenuGenMain.cpp -o MenuGenMain.o
+In file included from ../Source/Core/ListItems.h:5:0,
+                 from ../Source/Gui/Generator/Main/MenuGenMain.h:8,
+                 from ../Source/Gui/Generator/Main/MenuGenMain.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Generator/Main/MenuGenMain.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Generator/Edit/MenuGenEdit.cpp -o MenuGenEdit.o
+In file included from ../Source/Core/ListItems.h:5:0,
+                 from ../Source/Gui/Generator/Edit/MenuGenEdit.h:7,
+                 from ../Source/Gui/Generator/Edit/MenuGenEdit.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Generator/Edit/MenuGenEdit.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Generator/Modulation/MenuGenModulation.cpp -o MenuGenModulation.o
+In file included from ../Source/Core/ListItems.h:5:0,
+                 from ../Source/Gui/Generator/Modulation/MenuGenModulation.h:7,
+                 from ../Source/Gui/Generator/Modulation/MenuGenModulation.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Generator/Modulation/MenuGenModulation.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Generator/Core/CoreGenerator.cpp -o CoreGenerator.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/ToolBox/Import.cpp -o Import.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/ToolBox/Import.h:6,
+                 from ../Source/Gui/ToolBox/Import.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Core/CoreOscilloscope.cpp -o CoreOscilloscope.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Spectrum/Core/FFT.cpp -o FFT.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Core/Shapes.cpp -o Shapes.o
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Meas/Statistics.cpp -o Statistics.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Oscilloscope.h:4,
+                 from ../Source/Gui/MainWnd.h:7,
+                 from ../Source/Gui/Oscilloscope/Meas/Statistics.cpp:2:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Meas/Statistics.cpp:2:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/User/_Modules.cpp -o _Modules.o
+In file included from ../Source/Gui/Oscilloscope/Controls/GraphBase.h:4:0,
+                 from ../Source/Gui/User/Tuner.h:16,
+                 from ../Source/Gui/User/Tuner.cpp:1,
+                 from ../Source/Gui/User/_Modules.cpp:3:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/User/_Modules.cpp:4:0:
+../Source/Gui/User/CharMap.cpp: In function 'void UpdateChar(int, bool)':
+../Source/Gui/User/CharMap.cpp:29:26: warning: narrowing conversion of 'nPos' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Mask/MenuMask.cpp -o MenuMask.o
+In file included from ../Source/Gui/Oscilloscope/Mask/MenuMask.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Mask/MenuMask.cpp:1:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Mask/MenuMask.cpp:3:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-g++ -Wall -Os -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -Wno-psabi -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src -c ../Source/Gui/Oscilloscope/Math/FirFilter.cpp -o FirFilter.o
+In file included from ../Source/Gui/Oscilloscope/Input/MenuInput.h:4:0,
+                 from ../Source/Gui/Oscilloscope/Oscilloscope.h:4,
+                 from ../Source/Gui/MainWnd.h:7,
+                 from ../Source/Gui/Oscilloscope/Math/FirFilter.cpp:5:
+../Source/Core/Controls.h: In member function 'virtual void CProviderDigit::OnPaint(const CRect&, ui8)':
+../Source/Core/Controls.h:703:38: warning: narrowing conversion of '(nDigit + 48)' from 'int' to 'char' inside { } is ill-formed in C++11 [-Wnarrowing]
+In file included from ../Source/Gui/ToolBox/ToolBox.h:6:0,
+                 from ../Source/Gui/MainWnd.h:10,
+                 from ../Source/Gui/Oscilloscope/Math/FirFilter.cpp:5:
+../Source/Gui/ToolBox/Export.h: In member function 'void CExport::FindUnusedFile(char*, int)':
+../Source/Gui/ToolBox/Export.h:40:8: warning: variable 'bExists' set but not used [-Wunused-but-set-variable]
+arm-none-eabi-gcc -o APP_M251.elf -nostartfiles -mcpu=cortex-m3 -mthumb -march=armv7 -mfix-cortex-m3-ldrd -msoft-float -lc -lgcc -T ../Source/HwLayer/ArmM3/lds/app1.lds cbios.o Application.o Main.o stm32f10x_nvic.o cortexm3_macro.o interrupt.o startup.o GraphOsc.o Controls.o Settings.o Utils.o Wnd.o MainWnd.o MenuInput.o Toolbar.o MainMenu.o MenuSpectMain.o Calibration.o Serialize.o CalibAnalog.o CalibDac.o CalibMenu.o Calibration.o MenuMarker.o ToolBox.o MenuMeas.o Manager.o ChannelMath.o MenuMath.o MenuDisp.o SpectrumGraph.o MenuSpectMarker.o Annot.o Export.o MenuGenMain.o MenuGenEdit.o MenuGenModulation.o CoreGenerator.o Import.o CoreOscilloscope.o FFT.o Shapes.o Statistics.o _Modules.o MenuMask.o BIOS.o FirFilter.o
+arm-none-eabi-objcopy -O ihex APP_M251.elf APP_M251.hex
