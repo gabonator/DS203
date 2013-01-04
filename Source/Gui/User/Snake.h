@@ -154,12 +154,12 @@ static const ui8 levels[] = {
 	"#                       #"
 	"#                       #"
 	"#                       #"
-	"#                 #     #"
-	"#                 #     #"
 	"#     #############     #"
-	"#     #                 #"
-	"#     #                 #"
-	"#                       #"
+	"#     #           #     #"
+	"#     #           #     #"
+	"#     #           #     #"
+	"#     #           #     #"
+	"#     #           #     #"
 	"#                       #"
 	"#                       #"
 	"#                       #"
@@ -227,23 +227,22 @@ public:
 	int m_nTailDir;
 	int m_nLength;
 	int m_nScore;
-	ui8 m_arrLevel[14*25];
+	ui8 m_arrLevel[14*25/2];
 
-	CMapPos m_arrBodyPos_[50];
+	CMapPos m_arrBodyPos_[30];
 	CArray<CMapPos> m_arrBodyPos;
 
 	void SetLevel(int nLevel)
 	{
 		const ui8* pLevelSrc = &levels[nLevel*14*25];
-		ui8* pLevel = m_arrLevel;
 
 		for (int y=0; y<14; y++)
 			for (int x=0; x<25; x++)
 			{
 				switch ( *pLevelSrc++ )
 				{
-					case ' ': *pLevel++ = eGround; break;
-					case '#': *pLevel++ = eWall; break;
+					case ' ': SetBlock(x, y, eGround); break;
+					case '#': SetBlock(x, y, eWall); break;
 					default:
 						_ASSERT(0);
 				}
@@ -258,7 +257,7 @@ public:
 			x = CUtils::Random() % 25;
 			y = CUtils::Random() % 14;
 		} while ( GetBlock(x, y) != eGround );
-		GetBlock(x, y) = eDiamond;
+		SetBlock(x, y, eDiamond);
 
 		return CMapPos( x, y, eDirRight );
 	}
@@ -271,7 +270,7 @@ public:
 			m_nX = CUtils::Random() % 25;
 			m_nY = CUtils::Random() % 14;
 		} while ( GetBlock(m_nX, m_nY) != eGround );
-		GetBlock(m_nX, m_nY) = eHead;
+		SetBlock(m_nX, m_nY, eHead);
 	}
 
 	void DrawMap()
@@ -297,9 +296,19 @@ public:
 		BIOS::LCD::Pattern( x<<4, (y+1)<<4, (x+1)<<4, (y+2)<<4, pSprite, 16*16 );
 	}
 
-	ui8& GetBlock(int x, int y)
+	ui8 GetBlock(int x, int y)
 	{
-		return m_arrLevel[x+y*25];
+		ui8 blk = m_arrLevel[x+(y/2)*25];
+		return ( y & 1 ) ? (blk >> 4) : blk & 0x0f;
+	}
+
+	void SetBlock(int x, int y, ui8 d)
+	{
+		ui8& blk = m_arrLevel[x+(y/2)*25];
+		if ( y & 1 )
+			blk = (blk & 0x0f) | (d<<4);
+		else
+			blk = (blk & 0xf0) | (d);
 	}
 
 	void PrepareSprite(int nType, ui16* pSprite, int nTransform)
@@ -397,7 +406,7 @@ public:
 		if ( GetFocus() != this )
 			return;
 
-		GetBlock( m_nX, m_nY ) = eBody;
+		SetBlock( m_nX, m_nY, eBody );
 		DrawBlock( m_nX, m_nY );
 
 		if ( m_arrBodyPos.GetSize() == 0 )
@@ -406,7 +415,7 @@ public:
 		m_nX += dx[m_nDir];
 		m_nY += dy[m_nDir];
 
-		ui8& blk = GetBlock( m_nX, m_nY );
+		ui8 blk = GetBlock( m_nX, m_nY );
 		m_arrBodyPos.Add( CMapPos( m_nX, m_nY, m_nDir ) );
 
 		if ( blk == eDiamond )
@@ -433,12 +442,12 @@ public:
 			return;
 		}
 
-		GetBlock( m_nX, m_nY ) = eHead;
+		SetBlock( m_nX, m_nY, eHead );
 		DrawBlock( m_nX, m_nY );
 		if ( m_arrBodyPos.GetSize() > m_nLength )
 		{
 			CMapPos& posTail = m_arrBodyPos[0];
-			GetBlock( posTail.nX, posTail.nY ) = eGround;
+			SetBlock( posTail.nX, posTail.nY, eGround );
 			DrawBlock( posTail.nX, posTail.nY );
 			m_arrBodyPos.RemoveAt( 0 );
 		}
@@ -446,7 +455,7 @@ public:
 		{
 			CMapPos& posTail = m_arrBodyPos[0];
 			m_nTailDir = m_arrBodyPos[1].nDir;
-			GetBlock( posTail.nX, posTail.nY ) = eTail;
+			SetBlock( posTail.nX, posTail.nY, eTail );
 			DrawBlock( posTail.nX, posTail.nY );	
 		}
 	}

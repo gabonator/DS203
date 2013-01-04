@@ -77,6 +77,7 @@ public:
 	virtual void OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	void OnTimer();
 	virtual void WindowMessage(int nMsg, int nParam =0);
+	bool HasOverlay();
 
 private:
 	// auto trigger

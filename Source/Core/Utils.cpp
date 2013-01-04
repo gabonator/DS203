@@ -105,12 +105,54 @@ char tmp[16];
 	strcat( tmp, strUnits );
 	return tmp;
 }
+
+/*static*/ char* CUtils::FormatTime( float fT, int nChars )
+{
+	char* strUnits = (char*)" s";
+
+	if (fT < 0.001f)
+	{
+		strUnits = (char*)" \xe6s";
+		fT *= 1000.0f;
+	} else
+	if (fT < 1.0f)
+	{
+		strUnits = (char*)" ms";
+		fT *= 1000.0f;
+	} 
+
+	BIOS::DBG::sprintf( tmp, "%f", fT );
+	int nLen = strlen(tmp);
+	int nLenUnits = strlen(strUnits);
+	while ( nLen + nLenUnits > nChars )
+		tmp[--nLen] = 0;
+	if ( tmp[nLen-1] == '.' )
+		tmp[--nLen] = 0;
+	strcat( tmp, strUnits );
+	return tmp;
+}
+
 /*static*/ char* CUtils::ftoa(float f)
 {
 	BIOS::DBG::sprintf( tmp, "%f", f );
 	return tmp;
 }
 
+/*static*/ char* CUtils::FormatFloat5( float f )
+{
+	tmp[0] = ( f < 0.0f ) ? '-' : ' ';
+	if ( f < 0 )
+		f = -f;
+
+//	_ASSERT( f < 10.0f );
+	BIOS::DBG::sprintf( tmp+1, "%d", (int)f );
+	f -= (int)f;
+	f *= 1000.0f;
+	BIOS::DBG::sprintf( tmp+strlen(tmp), ".%03d", (int)f );
+	tmp[6] = 0; 
+	return tmp;
+}
+	
 /*static*/ char* CUtils::MidiNote(int n)
 {
 	const static char notes[] = "C-" "C#" "D-" "D#" "E-" "F-" "F#" "G-" "G#" "A-" "A#" "B-";

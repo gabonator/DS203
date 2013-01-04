@@ -12,6 +12,10 @@ public:
 		x(_x), y(_y)
 	{
 	}
+	CPoint operator +(const CPoint& cp)
+	{
+		return CPoint( x + cp.x, y + cp.y );
+	}
 };
 
 class CRect {
@@ -91,6 +95,16 @@ public:
 		top = min(top, rcUnion.top);
 		right = max(right, rcUnion.right);
 		bottom = max(bottom, rcUnion.bottom);
+	}
+
+	CRect operator +(const CPoint& cp)
+	{
+		CRect rcNew( *this );
+		rcNew.left += cp.x;
+		rcNew.right += cp.x;
+		rcNew.top += cp.y;
+		rcNew.bottom += cp.y;
+		return rcNew;
 	}
 
 	// RAM optimization int->short

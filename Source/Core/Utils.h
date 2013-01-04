@@ -17,6 +17,8 @@ public:
 	static char* MidiNote(int n);
 	static char* FormatVoltage( float fV, int nChars=8 );
 	static char* FormatFrequency( float fF, int nChars=8 );
+	static char* FormatTime( float fT, int nChars=8 );
+	static char* FormatFloat5( float f );
 	template <class T>
 	inline void Clamp(T& nVariable, T nMin, T nMax)
 	{

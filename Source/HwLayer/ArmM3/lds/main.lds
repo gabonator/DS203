@@ -65,10 +65,8 @@ SECTIONS
     .text :
     {
 	    . = ALIGN(4);
-      _vectors = .;
-      *(.isr_vectors)      /* Vector table */
-        
-        *(.text .text.* .gnu.linkonce.t.*)
+
+      *(.text .text.* .gnu.linkonce.t.*)
     	*(.plt)
     	*(.gnu.warning)
     	*(.glue_7t) *(.glue_7) *(.vfp11_veneer)
@@ -77,9 +75,7 @@ SECTIONS
     	*(.gcc_except_table)
 	   
     } >ROM
-    
-    
-    
+ 
     .eh_frame_hdr : ALIGN (4)
 	{
 		KEEP (*(.eh_frame_hdr))
@@ -145,9 +141,19 @@ SECTIONS
 /* experiment with extra ROM - https://svn.kapsi.fi/jpa/dsoquad/test_flash_size/linker_scripts/main.lds */
     . = 0x08040000;
 
+/*
     .extra : {
         *(.extra)
     } >EXTRA
+*/
+
+    .entry : {
+	    . = ALIGN(4);
+      _vectors = .;
+      *(.isr_vectors)      /* Vector table */
+      *(.exec)
+    } >ENTRY
+
     
     .  = 0x20000000;   /* From 0x20000000 */      
 

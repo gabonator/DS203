@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\Source\Gui\User\FullView.h" />
     <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
     <ClInclude Include="..\..\Source\Gui\User\Monitor.h" />
+    <ClInclude Include="..\..\Source\Gui\User\PidRegulator.h" />
     <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h" />
     <ClInclude Include="..\..\Source\Gui\User\Snake.h" />
     <ClInclude Include="..\..\Source\Gui\User\Timer.h" />
@@ -243,6 +244,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Monitor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\PidRegulator.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\User\Timer.cpp">

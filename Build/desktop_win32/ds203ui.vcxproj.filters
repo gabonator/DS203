@@ -483,6 +483,9 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\FirFilter.h">
       <Filter>Source\Gui\Oscilloscope\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\User\PidRegulator.h">
+      <Filter>Source\Gui\User</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -638,6 +641,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\FirFilter.cpp">
       <Filter>Source\Gui\Oscilloscope\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\User\PidRegulator.cpp">
+      <Filter>Source\Gui\User</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
