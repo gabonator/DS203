@@ -33,533 +33,166 @@
 class CSdkEval : public CEval
 {
 public:
-	static CEvalOperand _Mul( CArray<CEvalOperand>& arrOperands )
+	#include "SdkV0.h"
+	#include "SdkV1.h"
+	
+	static const CEvalToken* getOperators()
 	{
-		FLOAT fResult = arrOperands[-2].GetFloat() * arrOperands[-1].GetFloat();
-		arrOperands.Resize(-2);
-		return fResult;
-	}
+		static const CEvalToken myTokens[] = 
+		{
+			// old interface
+			{ "ADC::Count", CEvalToken::PrecedenceFunc, _ADC_Count },
+			{ "ADC::Get", CEvalToken::PrecedenceFunc, _ADC_Get },
 
-	static CEvalOperand _ADC_Get( CArray<CEvalOperand>& arrOperands )
-	{
-		class CAdcStream : public CStream {
-		public:
-			int m_nPos;
-			union {
-				ui32 m_ui32;
-				ui8 m_arr8[4];
-			} m_LastSample;
+			{ "CH1::Coupling", CEvalToken::PrecedenceVar, _CH1_Coupling },
+			{ "CH1::Offset", CEvalToken::PrecedenceVar, _CH1_Offset },
+			{ "CH1::Resolution", CEvalToken::PrecedenceVar, _CH1_Resolution },
+			{ "CH1::Color", CEvalToken::PrecedenceVar, _CH1_Color },
 
-		public:		
-			static CAdcStream* getInstance()
-			{
-				static CAdcStream staticStream;
-				staticStream.m_nPos = 0;
-				return &staticStream;
-			}
+			{ "CH2::Coupling", CEvalToken::PrecedenceVar, _CH2_Coupling },
+			{ "CH2::Offset", CEvalToken::PrecedenceVar, _CH2_Offset },
+			{ "CH2::Resolution", CEvalToken::PrecedenceVar, _CH2_Resolution },
+			{ "CH2::Color", CEvalToken::PrecedenceVar, _CH2_Color },
 
-		public:
-			virtual INT GetSize()
-			{
-				return 4096*4;
-			};
+			{ "TIME::Offset", CEvalToken::PrecedenceVar, _TIME_Offset },
+			{ "TIME::Resolution", CEvalToken::PrecedenceVar, _TIME_Resolution },
+			{ "ALL::Setup", CEvalToken::PrecedenceFunc, _ALL_Setup },
 
-			virtual CHAR Get()
-			{
-				//if ( m_nPos == 0 )
-				//	BIOS::ADC::Restart();
-				if ( (m_nPos & 3) == 0 )
-					m_LastSample.m_ui32 = BIOS::ADC::GetAt(m_nPos >> 2);
+			{ "ENUM::Time", CEvalToken::PrecedenceFunc, _ENUM_Time },
+			{ "ENUM::Ampl", CEvalToken::PrecedenceFunc, _ENUM_Ampl },
 
-				return m_LastSample.m_arr8[ m_nPos++ & 3 ];
-			};
+			{ "GEN::Square", CEvalToken::PrecedenceFunc, _GEN_Square },
+			{ "GEN::Update", CEvalToken::PrecedenceFunc, _GenUpdate },
+			{ "GEN::Output", CEvalToken::PrecedenceFunc, _GenOutput },
 
+			{ "OSC.GetViewData", CEvalToken::PrecedenceFunc, _OscGetViewData },
+
+			{ "Print", CEvalToken::PrecedenceFunc, _Print },
+			{ "Beep", CEvalToken::PrecedenceFunc, _Beep },
+			{ "Sleep", CEvalToken::PrecedenceFunc, _Sleep },
+			{ "Update", CEvalToken::PrecedenceFunc, _Update },
+
+			{ "#", CEvalToken::PrecedenceFunc, _Transfer },
+
+			// new interface
+			
+			// R/W variables
+			{ "CH1.Enabled", CEvalToken::PrecedenceVar, _Ch1Enabled },
+			{ "CH1.Coupling", CEvalToken::PrecedenceVar, _Ch1Coupling },
+			{ "CH1.Resolution", CEvalToken::PrecedenceVar, _Ch1Resolution },
+			{ "CH1.Probe", CEvalToken::PrecedenceVar, _Ch1Probe },
+			{ "CH1.Position", CEvalToken::PrecedenceVar, _Ch1Position },
+			{ "CH1.Color", CEvalToken::PrecedenceVar, _Ch1Color },
+			
+			{ "CH2.Enabled", CEvalToken::PrecedenceVar, _Ch1Enabled },
+			{ "CH2.Coupling", CEvalToken::PrecedenceVar, _Ch1Coupling },
+			{ "CH2.Resolution", CEvalToken::PrecedenceVar, _Ch1Resolution },
+			{ "CH2.Probe", CEvalToken::PrecedenceVar, _Ch1Probe },
+			{ "CH2.Position", CEvalToken::PrecedenceVar, _Ch1Position },
+			{ "CH2.Color", CEvalToken::PrecedenceVar, _Ch1Color },
+
+			{ "CH3.Enabled", CEvalToken::PrecedenceVar, _Ch3Enabled },
+			{ "CH3.Polarity", CEvalToken::PrecedenceVar, _Ch3Polarity },
+			{ "CH3.Position", CEvalToken::PrecedenceVar, _Ch3Position },
+			{ "CH3.Color", CEvalToken::PrecedenceVar, _Ch3Color },
+
+			{ "CH4.Enabled", CEvalToken::PrecedenceVar, _Ch4Enabled },
+			{ "CH4.Polarity", CEvalToken::PrecedenceVar, _Ch4Polarity },
+			{ "CH4.Position", CEvalToken::PrecedenceVar, _Ch4Position },
+			{ "CH4.Color", CEvalToken::PrecedenceVar, _Ch4Color },
+
+			{ "TIME.Resolution", CEvalToken::PrecedenceVar, _TimeResolution },
+
+			{ "TRIG.Sync", CEvalToken::PrecedenceVar, _TrigSync },
+			{ "TRIG.Type", CEvalToken::PrecedenceVar, _TrigType },
+			{ "TRIG.Source", CEvalToken::PrecedenceVar, _TrigSource },
+			{ "TRIG.State", CEvalToken::PrecedenceVar, _TrigState },
+			{ "TRIG.Level", CEvalToken::PrecedenceVar, _TrigLevel },
+
+			{ "DISP.Axes", CEvalToken::PrecedenceVar, _DispAxes },
+			{ "DISP.Draw", CEvalToken::PrecedenceVar, _DispDraw },
+			{ "DISP.Average", CEvalToken::PrecedenceVar, _DispAverage },
+			{ "DISP.Persist", CEvalToken::PrecedenceVar, _DispPersist },
+			{ "DISP.Grid", CEvalToken::PrecedenceVar, _DispGrid },
+			{ "DISP.Axis", CEvalToken::PrecedenceVar, _DispAxis },
+
+			{ "SPEC.Window", CEvalToken::PrecedenceVar, _SpecWindow },
+			{ "SPEC.Display", CEvalToken::PrecedenceVar, _SpecDisplay },
+			{ "RUN.Backlight", CEvalToken::PrecedenceVar, _RunBacklight },
+			{ "RUN.Volume", CEvalToken::PrecedenceVar, _RunVolume },
+
+			// functions
+			{ "About", CEvalToken::PrecedenceFunc, _About },
+			{ "Help", CEvalToken::PrecedenceFunc, _Help },
+
+			{ "WND.Message", CEvalToken::PrecedenceFunc, _WndMessage },
+			{ "WND.Dump", CEvalToken::PrecedenceFunc, _WndDump },			// output only through uart
+			{ "ADC.Transfer", CEvalToken::PrecedenceFunc, _AdcTransfer },	// output only through uart
+
+			// constants
+			{ "WND::WmPaint", CEvalToken::PrecedenceConst, _WndWmPaint },
+			{ "WND::WmKey", CEvalToken::PrecedenceConst, _WndWmKey },
+			{ "WND::WmTick", CEvalToken::PrecedenceConst, _WndWmTick },
+			{ "WND::WmBroadcast", CEvalToken::PrecedenceConst, _WndWmBroadcast },
+			{ "WND::WsHidden", CEvalToken::PrecedenceConst, _WndWsHidden },
+			{ "WND::WsVisible", CEvalToken::PrecedenceConst, _WndWsVisible },
+			{ "WND::WsNoActivate", CEvalToken::PrecedenceConst, _WndWsNoActivate },
+			{ "WND::WsModal", CEvalToken::PrecedenceConst, _WndWsModal },
+			{ "WND::WsTick", CEvalToken::PrecedenceConst, _WndWsTick },
+			{ "WND::WsListener", CEvalToken::PrecedenceConst, _WndWsListener },
+			{ "KEY::Left", CEvalToken::PrecedenceConst, _KeyLeft },
+			{ "KEY::Right", CEvalToken::PrecedenceConst, _KeyRight },
+			{ "KEY::Up", CEvalToken::PrecedenceConst, _KeyUp },
+			{ "KEY::Down", CEvalToken::PrecedenceConst, _KeyDown },
+			{ "KEY::Enter", CEvalToken::PrecedenceConst, _KeyEnter },
+			{ "KEY::Escape", CEvalToken::PrecedenceConst, _KeyEscape },
+			{ "KEY::F1", CEvalToken::PrecedenceConst, _KeyF1 },
+			{ "KEY::F2", CEvalToken::PrecedenceConst, _KeyF2 },
+			{ "KEY::F3", CEvalToken::PrecedenceConst, _KeyF3 },
+			{ "KEY::F4", CEvalToken::PrecedenceConst, _KeyF4 },
+
+			// others
+			{ "SET.Core.bUartTest", CEvalToken::PrecedenceVar, _SetCoreUartTest },
+			{ "SET.Core.bUartEcho", CEvalToken::PrecedenceVar, _SetCoreUartEcho },
+			{ "MENU.Item", CEvalToken::PrecedenceVar, _MenuItem },
+			
+			{ "SET.Save", CEvalToken::PrecedenceFunc, _SetSave },
+			{ "SET.Load", CEvalToken::PrecedenceFunc, _SetLoad },
+			{ "SET.Reset", CEvalToken::PrecedenceFunc, _SetReset },
+
+			{ "ADC.Update", CEvalToken::PrecedenceFunc, _AdcUpdate },
+			{ "TRIG.Update", CEvalToken::PrecedenceFunc, _TrigUpdate },
+			{ "CORE.Update", CEvalToken::PrecedenceFunc, _CoreUpdate },
+			{ "GEN.Update", CEvalToken::PrecedenceFunc, _GenUpdate2 },
+			{ "LCD.Update", CEvalToken::PrecedenceFunc, _LcdUpdate },
+
+			{ "ADC.ResetWritePtr", CEvalToken::PrecedenceFunc, _AdcResetWritePtr },
+			{ "ADC.GetWritePtr", CEvalToken::PrecedenceFunc, _AdcGetWritePtr },
+			{ "ADC.Enabled", CEvalToken::PrecedenceVar, _AdcEnabled },
+
+			{ "BIOS.Get", CEvalToken::PrecedenceFunc, _BiosGet },
+			{ "BIOS.Set", CEvalToken::PrecedenceFunc, _BiosSet },
+
+		
+
+			{ NULL, -1, NULL }
 		};
 
-		return CEvalOperand(CAdcStream::getInstance());
-	}
-
-	static CEvalOperand _OscGetViewData( CArray<CEvalOperand>& arrOperands )
-	{
-		class CAdcStream : public CStream {
-		public:
-			int m_nPos;
-
-		public:		
-			static CAdcStream* getInstance()
-			{
-				static CAdcStream staticStream;
-				staticStream.m_nPos = 0;
-				return &staticStream;
-			}
-
-		public:
-			virtual INT GetSize()
-			{
-				return 300*2;
-			};
-
-			virtual CHAR Get()
-			{
-				const BIOS::ADC::TSample& sample = BIOS::ADC::GetAt( 10 + m_nPos/2 );
-				CHAR chOut = (m_nPos & 1) ? (CHAR) (sample >> 8) : (CHAR)sample;
-				m_nPos++;
-				return chOut;
-			};
-
-		};
-
-		return CEvalOperand(CAdcStream::getInstance());
-	}
-
-	static CEvalOperand _CH1_Coupling( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<NATIVEENUM> coupling( (NATIVEENUM*)&Settings.CH1.Coupling );
-		return CEvalOperand( &coupling );
-	}
-
-	static CEvalOperand _CH1_Offset( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<si16> offset( &Settings.CH1.u16Position );
-		return CEvalOperand( &offset );
-	}
-
-	static CEvalOperand _CH1_Resolution( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<NATIVEENUM> resolution( (NATIVEENUM*)&Settings.CH1.Resolution );
-		return CEvalOperand( &resolution );
-	}
-
-	static CEvalOperand _CH1_Color( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<ui16> color( &Settings.CH1.u16Color );
-		return CEvalOperand( &color );
-	}
-
-	static CEvalOperand _CH2_Coupling( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<NATIVEENUM> coupling( (NATIVEENUM*)&Settings.CH2.Coupling );
-		return CEvalOperand( &coupling );
-	}
-
-	static CEvalOperand _CH2_Offset( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<si16> offset( &Settings.CH2.u16Position );
-		return CEvalOperand( &offset );
-	}
-
-	static CEvalOperand _CH2_Resolution( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<NATIVEENUM> resolution( (NATIVEENUM*)&Settings.CH2.Resolution );
-		return CEvalOperand( &resolution );
-	}
-
-	static CEvalOperand _CH2_Color( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<ui16> color( &Settings.CH2.u16Color );
-		return CEvalOperand( &color );
-	}
-
-	static CEvalOperand _ALL_Setup( CArray<CEvalOperand>& arrOperands )
-	{
-		CCoreOscilloscope::ConfigureAdc();
-		return CEvalOperand( CEvalOperand::eoNone );
-	}
-
-	static CEvalOperand _TIME_Offset( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<si16> resolution( &Settings.Time.Shift );
-		return CEvalOperand( &resolution );
-	}
-
-	static CEvalOperand _TIME_Resolution( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<NATIVEENUM> resolution( (NATIVEENUM*)&Settings.Time.Resolution );
-		return CEvalOperand( &resolution );
-	}
-/*
-	static CEvalOperand _CH1_Calib_p( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<si16> p;
-		p.Reset( &Settings.calCH1[Settings.CH1.Resolution].nOffset );
-		return CEvalOperand( &p );
-	}
-
-	static CEvalOperand _CH1_Calib_q( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<ui16> q;
-		q.Reset( &Settings.calCH1[Settings.CH1.Resolution].nScale );
-		return CEvalOperand( &q );
-	}
-
-	static CEvalOperand _CH2_Calib_p( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<si16> p;
-		p.Reset( &Settings.calCH2[Settings.CH2.Resolution].nOffset );
-		return CEvalOperand( &p );
-	}
-
-	static CEvalOperand _CH2_Calib_q( CArray<CEvalOperand>& arrOperands )
-	{
-		static CEvalMappedInteger<ui16> q;
-		q.Reset( &Settings.calCH2[Settings.CH2.Resolution].nScale );
-		return CEvalOperand( &q );
-	}
-*/
-	static CEvalOperand _ENUM_Ampl( CArray<CEvalOperand>& arrOperands )
-	{
-		int nValue = arrOperands.RemoveLast().GetInteger();
-		if ( nValue < 0 || nValue > CSettings::AnalogChannel::_ResolutionMax )
-			return CEvalOperand( CEvalOperand::eoError );
-
-		PCSTR strEnum = CSettings::AnalogChannel::ppszTextResolution[ nValue ];
-		return CEvalOperand( strEnum, strlen(strEnum) );
-	}
-
-	static CEvalOperand _ENUM_Time( CArray<CEvalOperand>& arrOperands )
-	{
-		int nValue = arrOperands.RemoveLast().GetInteger();
-		if ( nValue < 0 || nValue > CSettings::TimeBase::_ResolutionMax )
-			return CEvalOperand( CEvalOperand::eoError );
-
-		PCSTR strEnum = CSettings::TimeBase::ppszTextResolution[ nValue ];
-		return CEvalOperand( strEnum, strlen(strEnum) );
-	}
-
-	static CEvalOperand _ADC_Count( CArray<CEvalOperand>& arrOperands )
-	{
-		return (INT)4096;
-	}
-
-	static CEvalOperand _Print( CArray<CEvalOperand>& arrOperands )
-	{
-		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);		
-		if ( arrOperands.GetSize() == 1 )
-		{
-			CEvalOperand& op = arrOperands[-1];
-			op.m_Data.m_pString[ op.m_Data.m_pData32[1] ] = 0;
-			PSTR strPrint = op.m_Data.m_pString;			
-			BIOS::DBG::Print(strPrint);
-
-			arrOperands.Resize(-1);
-		} else
-		{	
-			_SAFE( arrOperands.GetSize() == 5 );
-			_ASSERT( arrOperands[-5].Is( CEvalOperand::eoInteger ) );
-			_ASSERT( arrOperands[-4].Is( pTokDelim ) );
-			_ASSERT( arrOperands[-3].Is( CEvalOperand::eoInteger ) );
-			_ASSERT( arrOperands[-2].Is( pTokDelim ) );
-			_ASSERT( arrOperands[-1].Is( CEvalOperand::eoString ) );
-
-			CEvalOperand& op = arrOperands[-1];
-			op.m_Data.m_pString[ op.m_Data.m_pData32[1] ] = 0;
-			PSTR strPrint = op.m_Data.m_pString;			
-
-			BIOS::LCD::Print( arrOperands[-5].GetInteger(), arrOperands[-3].GetInteger(),
-				0xffff, 0x0000, strPrint );
-
-			arrOperands.Resize(-5);
-		}
-		return CEvalOperand(CEvalOperand::eoNone);
-	}
-
-	static CEvalOperand _Beep( CArray<CEvalOperand>& arrOperands )
-	{
-		_SAFE( arrOperands.GetSize() == 1 );
-		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
-
-		BIOS::SYS::Beep( arrOperands.RemoveLast().GetInteger() );
-
-		return CEvalOperand(CEvalOperand::eoNone);
-	}
-
-	static CEvalOperand _Sleep( CArray<CEvalOperand>& arrOperands )
-	{
-		_SAFE( arrOperands.GetSize() == 1 );
-		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
-
-		BIOS::SYS::DelayMs( arrOperands.RemoveLast().GetInteger() );
-
-		return CEvalOperand(CEvalOperand::eoNone);
-	}
-
-	static CEvalOperand _Update( CArray<CEvalOperand>& arrOperands )
-	{
-		MainWnd.WindowMessage( CWnd::WmPaint );
-		return CEvalOperand(CEvalOperand::eoNone);
-	}
-
-	static CEvalOperand _GEN_Square( CArray<CEvalOperand>& arrOperands )
-	{
-		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);		
-		_SAFE( arrOperands.GetSize() == 3 );
-		_ASSERT( arrOperands[-3].Is( CEvalOperand::eoInteger ) );
-		_ASSERT( arrOperands[-2].Is( pTokDelim ) );
-		_ASSERT( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
-
-		int nPsc = arrOperands[-3].GetInteger();
-		int nArr = arrOperands[-1].GetInteger();
-		arrOperands.Resize(-3);
-
-		BIOS::GEN::ConfigureSq( nPsc, nArr, (nArr+1)>>1 );
-		return CEvalOperand(CEvalOperand::eoNone);
-	}
-/*
-
-*/
-	static CEvalOperand _GenUpdate( CArray<CEvalOperand>& arrOperands )
-	{
-		_SAFE( arrOperands.GetSize() == 1 );
-		_SAFE( arrOperands.GetLast().Is( CEval::CEvalOperand::eoInteger ) );
-		
-		int nLength = arrOperands.RemoveLast().GetInteger();
-		BIOS::GEN::ConfigureWave( CWndMenuGenerator::GetRamDac(), nLength );
-
-		return CEvalOperand::eoNone;
-	}
-/*
-	static CEvalOperand _GenRamDacPtr( CArray<CEvalOperand>& arrOperands )
-	{
-		return CEvalOperand( (int)CWndMenuGenerator::GetRamDac() );
-	}
-*/
-
-	static CEvalOperand _GenOutput( CArray<CEvalOperand>& arrOperands )
-	{
-		static ui16 nDacValue;
-
-		if ( arrOperands.GetLast().Is( CEvalOperand::eoInteger ) )
-		{
-			_SAFE( arrOperands.GetLast().Is( CEvalOperand::eoInteger ) );	
-			int nValue = arrOperands.RemoveLast().GetInteger();
-			if ( nValue < 0 || nValue > 65536 )
-				return CEvalOperand::eoError;
-
-			nDacValue = nValue;
-			BIOS::GEN::ConfigureWave( &nDacValue, 1 );
-		
-			return CEvalOperand(CEvalOperand::eoNone);
-		} else
-		if ( arrOperands.GetLast().Is( CEvalOperand::eoFloat ) )
-		{
-			float fVoltage = arrOperands.RemoveLast().GetFloat();
-
-			ui16 nValue = Settings.DacCalib.Get( fVoltage );
-		
-			nDacValue = nValue;
-			BIOS::GEN::ConfigureWave( &nDacValue, 1 );
-		
-			return CEvalOperand(CEvalOperand::eoNone);
-		} else
-		{
-			return CEvalOperand( CEvalOperand::eoError );
-		}
-	}   
-/*
-	static CEvalOperand _MemWrite( CArray<CEvalOperand>& arrOperands )
-	{
-		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);
-
-		_SAFE( arrOperands[-3].Is( CEvalOperand::eoInteger ) );
-		_SAFE( arrOperands[-2].Is( pTokDelim ) );
-		_SAFE( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
-		
-		ui32 nAddress = arrOperands[-3].GetInteger();
-		ui8* pBuffer = (ui8*)nAddress;
-		ui8 nValue = arrOperands[-1].GetInteger();
-
-		*pBuffer = nValue;
-
-		arrOperands.Resize(-3);
-		return CEvalOperand::eoNone;
-		*/
-/*
-		CEvalToken* pTokDelim = &(CEval::getOperators()[2]);		
-
-		_SAFE( arrOperands[0].Is( CEvalOperand::eoInteger ) );
-		ui32 nAddress = arrOperands[0].GetInteger();
-		ui8* pBuffer = (ui8*)nAddress;
-
-		_SAFE( arrOperands[1].Is( pTokDelim ) );
-
-	  for (int i=2; i < arrOperands.GetSize(); i+=2)
-		{
-			_SAFE( arrOperands[i].Is( CEval::CEvalOperand::eoInteger ) );
-			_SAFE( arrOperands[i+1].Is( pTokDelim ) );
-			ui8 bValue = arrOperands[i].GetInteger();
-			*pBuffer++ = bValue;
-		}
-//		arrOperands.RemoveAll();
-		arrOperands.Resize( -arrOperands.GetSize() );
-
-		return CEvalOperand::eoNone;
-*/
-//	}
-/*
-	static CEvalOperand _MemRead( CArray<CEvalOperand>& arrOperands )
-	{
-		// implement with stream and variable length !
-		_SAFE( arrOperands.GetLast().Is( CEvalOperand::eoInteger ) );
-
-		ui32 nAddress = arrOperands.RemoveLast().GetInteger();
-		ui8* pBuffer = (ui8*)nAddress;
-		ui8 nValue = *pBuffer;
-
-		return nValue;
-	}
-*/	
-	static CEvalOperand _Transfer( CArray<CEvalOperand>& arrOperands )
-	{
-		static char strAnswer[32];
-		_SAFE( arrOperands.GetSize() == 2 );
-
-		CEvalOperand opResult = arrOperands.RemoveLast();
-		CEvalOperand opPrefix = arrOperands.RemoveLast();
-
-		_SAFE( opPrefix.m_eType == CEval::CEvalOperand::eoAttribute );
-
-		memcpy( strAnswer, opPrefix.m_Data.m_pString, opPrefix.m_Data.m_pData32[1] );
-		strAnswer[ opPrefix.m_Data.m_pData32[1] ] = 0;
-
-		char* pParam = strAnswer + strlen(strAnswer); // go to end
-
- 		if ( opResult.m_eType == CEval::CEvalOperand::eoVariable )
- 		{
- 			opResult = opResult.m_Data.m_pVariable->Get();
- 		}
-
- 		switch ( opResult.m_eType )               
- 		{
- 			case CEval::CEvalOperand::eoError: 
- 				BIOS::DBG::sprintf(pParam, "()"); 
- 			break;
-
- 			case CEval::CEvalOperand::eoFloat: 
- 				BIOS::DBG::sprintf(pParam, "(%d)", (int)opResult.m_Data.m_fData); 
- 			break;
-
- 			case CEval::CEvalOperand::eoInteger: 	
- 				BIOS::DBG::sprintf(pParam, "(%d)", (int)opResult.m_Data.m_iData); 
- 			break;
-
- 			case CEval::CEvalOperand::eoString: 
- 				pParam[0] = '(';
- 				pParam[1] = '\'';
- 				memcpy( pParam+2, opResult.m_Data.m_pString, opResult.m_Data.m_pData32[1] );
- 				pParam[opResult.m_Data.m_pData32[1]+2] = '\'';
- 				pParam[opResult.m_Data.m_pData32[1]+3] = ')';
- 				pParam[opResult.m_Data.m_pData32[1]+4] = 0;
- 			break;
-
- 			case CEval::CEvalOperand::eoCString: 
- 				pParam[0] = '(';
- 				pParam[1] = '\'';
- 				memcpy( pParam+2, opResult.m_Data.m_pcString, opResult.m_Data.m_pData32[1] );
- 				pParam[opResult.m_Data.m_pData32[1]+2] = '\'';
- 				pParam[opResult.m_Data.m_pData32[1]+3] = ')';
- 				pParam[opResult.m_Data.m_pData32[1]+4] = 0;
- 			break;
-
- 			case CEval::CEvalOperand::eoNone: 
- 				BIOS::DBG::sprintf(pParam, "()"); 
- 			break;
-
- 			default:
- 				_ASSERT( 0 );
- 			break;
-
- 			case CEval::CEvalOperand::eoStream:  
- 				_ASSERT( 0 ); // not implemented
- 			break;				
- 		}
-
-		return CEvalOperand(strAnswer, strlen(strAnswer));
-	}
-
-	static CEvalToken* getOperators()
-	{
-		static CEvalToken myTokens[] = 
-		{
-			CEvalToken( "ADC::Count", CEvalToken::PrecedenceFunc, _ADC_Count ),
-			CEvalToken( "ADC::Get", CEvalToken::PrecedenceFunc, _ADC_Get ),
-
-			CEvalToken( "CH1::Coupling", CEvalToken::PrecedenceVar, _CH1_Coupling ),
-			CEvalToken( "CH1::Offset", CEvalToken::PrecedenceVar, _CH1_Offset ),
-			CEvalToken( "CH1::Resolution", CEvalToken::PrecedenceVar, _CH1_Resolution ),
-			CEvalToken( "CH1::Color", CEvalToken::PrecedenceVar, _CH1_Color ),
-
-//			CEvalToken( "CH1::Calib.p", CEvalToken::PrecedenceVar, _CH1_Calib_p ),
-//			CEvalToken( "CH1::Calib.q", CEvalToken::PrecedenceVar, _CH1_Calib_q ),
-
-			CEvalToken( "CH2::Coupling", CEvalToken::PrecedenceVar, _CH2_Coupling ),
-			CEvalToken( "CH2::Offset", CEvalToken::PrecedenceVar, _CH2_Offset ),
-			CEvalToken( "CH2::Resolution", CEvalToken::PrecedenceVar, _CH2_Resolution ),
-			CEvalToken( "CH2::Color", CEvalToken::PrecedenceVar, _CH2_Color ),
-
-//			CEvalToken( "CH2::Calib.p", CEvalToken::PrecedenceVar, _CH2_Calib_p ),
-//			CEvalToken( "CH2::Calib.q", CEvalToken::PrecedenceVar, _CH2_Calib_q ),
-
-			CEvalToken( "TIME::Offset", CEvalToken::PrecedenceVar, _TIME_Offset ),
-			CEvalToken( "TIME::Resolution", CEvalToken::PrecedenceVar, _TIME_Resolution ),
-			CEvalToken( "ALL::Setup", CEvalToken::PrecedenceFunc, _ALL_Setup ),
-
-
-			CEvalToken( "ENUM::Time", CEvalToken::PrecedenceFunc, _ENUM_Time ),
-			CEvalToken( "ENUM::Ampl", CEvalToken::PrecedenceFunc, _ENUM_Ampl ),
-
-			CEvalToken( "GEN::Square", CEvalToken::PrecedenceFunc, _GEN_Square ),
-			CEvalToken( "GEN::Update", CEvalToken::PrecedenceFunc, _GenUpdate ),
-	//		CEvalToken( "GEN::RamDacPtr", CEvalToken::PrecedenceConst, _GenRamDacPtr ),
-			CEvalToken( "GEN::Output", CEvalToken::PrecedenceFunc, _GenOutput ),
-
-	//		CEvalToken( "MEM::Write", CEvalToken::PrecedenceConst, _MemWrite ),
-	//		CEvalToken( "MEM::Read", CEvalToken::PrecedenceFunc, _MemRead ),
-
-
-
-			CEvalToken( "OSC.GetViewData", CEvalToken::PrecedenceFunc, _OscGetViewData ),
-
-			CEvalToken( "Print", CEvalToken::PrecedenceFunc, _Print ),
-			CEvalToken( "Beep", CEvalToken::PrecedenceFunc, _Beep ),
-			CEvalToken( "Sleep", CEvalToken::PrecedenceFunc, _Sleep ),
-			CEvalToken( "Update", CEvalToken::PrecedenceFunc, _Update ),
-
-			CEvalToken( "#", CEvalToken::PrecedenceFunc, _Transfer ),
-
-
-/*
-Beep
-Sleep
-Print
-Color
-Gotoxy
-TRIG::Start
-TRIG::Stop
-TRIG::Ref
-TRIG::Mode
-TIME::Offset
-TIME::Resolution
-BIOS::Battery
-*/
-
-			CEvalToken( NULL, -1, NULL )
-		};
 		return myTokens;
 	}
 
-	CEvalToken* isOperator( char* pszExpression )
+	const CEvalToken* isOperator( char* pszExpression )
 	{
-		CEvalToken* pToken = CEval::isOperator( pszExpression );
+		const CEvalToken* pToken = CEval::isOperator( pszExpression );
 		if ( pToken )
 			return pToken;
 
-
-		CEvalToken *pFind = getOperators();
-		for (; pFind->m_nTokenLen > 0; pFind++)
-			if ( strncmp( pszExpression, pFind->m_pszToken, pFind->m_nTokenLen ) == 0 )
-				return pFind;
+		const CEvalToken *pFind = getOperators();
+		for (; pFind->m_pszToken; pFind++)
+			if ( strncmp( pszExpression, pFind->m_pszToken, strlen(pFind->m_pszToken) ) == 0 )
+				return (CEvalToken*)pFind;	// todo: ugly!
 
 		return NULL;
 	}
-
 };
+

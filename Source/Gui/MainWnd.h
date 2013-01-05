@@ -44,7 +44,7 @@ public:
 	CWndMenuDisplay		m_wndMenuDisplay;
 	CWndMenuMask		m_wndMenuMask;
 	CWndMenuGenerator	m_wndMenuGenerator;
-	CWndMenuGeneratorMod	m_wndMenuGeneratorMod;
+//	CWndMenuGeneratorMod	m_wndMenuGeneratorMod;
 	CWndMenuGeneratorEdit	m_wndMenuGeneratorEdit;
 	CWndMenuMath		m_wndMenuMath;
 	CWndZoomBar			m_wndZoomBar;

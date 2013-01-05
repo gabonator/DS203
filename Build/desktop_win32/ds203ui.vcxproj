@@ -84,6 +84,8 @@
     <ClInclude Include="..\..\Source\Core\BufferedIo.h" />
     <ClInclude Include="..\..\Source\Core\Calibration.h" />
     <ClInclude Include="..\..\Source\Core\Sdk.h" />
+    <ClInclude Include="..\..\Source\Core\SdkV0.h" />
+    <ClInclude Include="..\..\Source\Core\SdkV1.h" />
     <ClInclude Include="..\..\Source\Core\Serialize.h" />
     <ClInclude Include="..\..\Source\Framework\Eval.h" />
     <ClInclude Include="..\..\Source\Framework\Thread.h" />

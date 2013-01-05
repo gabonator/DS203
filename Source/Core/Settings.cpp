@@ -281,6 +281,9 @@ void CSettings::Reset()
 	Runtime.m_nShortcutS1 = CRuntime::None; //CWndToolBar::Find( "Generator" );
 	Runtime.m_nShortcutS2 = CRuntime::None; //CWndToolBar::Find( "Meter" );
 	Runtime.m_nStandby = 5;
+
+	Runtime.m_bUartTest = true;
+	Runtime.m_bUartEcho = false;
 }
 
 ui32 CSettings::GetChecksum()

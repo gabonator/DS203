@@ -692,9 +692,9 @@ void BIOS::SYS::Beep(int)
 
 /*static*/ void BIOS::SERIAL::Send(const char* strBuf)
 {
-	OutputDebugString( "Serial:" );
+//	OutputDebugString( "Serial:" );
 	OutputDebugString( strBuf );
-	OutputDebugString( "\n" );
+//	OutputDebugString( "\n" );
 }
 
 BOOL Is64BitWindows()
@@ -711,12 +711,29 @@ BOOL Is64BitWindows()
 #endif
 }
 
+char *pserial = NULL;
+
 /*static*/ int BIOS::SERIAL::Getch()
 {
-	return -1;
+	if ( pserial == NULL || *pserial == 0 )
+	{
+		int nRandom = 0;
+		switch ( nRandom )
+		{
+		case 0: break;
+		case 1: pserial = "WND.Dump();\n";break;
+		case 2: pserial = "WND.Message(WND::WmKey, KEY::Left);\n";break;
+		case 3: pserial = "MENU.Item=5;\n";break;
+		}
+		return -1;
+	}
+	return *pserial++;
 }
+
 /*static*/ void BIOS::SERIAL::Putch(char ch)
 {
+	char str[2] = {ch, 0};
+	OutputDebugString( str );
 }
 		
 const char* BIOS::VER::GetHardwareVersion()

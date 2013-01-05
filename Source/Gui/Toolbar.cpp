@@ -19,7 +19,7 @@
 		{ CBarItem::IMain,	(PSTR)"Generator", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Wave", &MainWnd.m_wndMenuGenerator},
 		{ CBarItem::ISub,	(PSTR)"Edit", &MainWnd.m_wndMenuGeneratorEdit},
-		{ CBarItem::ISub,	(PSTR)"Modulation", &MainWnd.m_wndMenuGeneratorMod},
+//		{ CBarItem::ISub,	(PSTR)"Modulation", &MainWnd.m_wndMenuGeneratorMod},
 		
 		{ CBarItem::IMain,	(PSTR)"Settings", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Main", &MainWnd.m_wndMenuSettings},

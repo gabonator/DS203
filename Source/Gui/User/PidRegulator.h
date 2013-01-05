@@ -100,13 +100,14 @@ public:
 	virtual void OnTimer();
 
 private:
-	void ShowLocalMenu();
+	void ShowLocalMenu(bool bFocus);
 	void ShowDiagram(CPoint& cpBase);
 	void ShowDiagramValues(CPoint cpBase);
 	void OnTimerGraph();
 	void OnTimerDiagram();
 	void ShowValues(bool bValues);
 	void Process();
+	void ShowGraph();
 
 private:
 	void _Highlight( CRect rcRect, int nR, int nG, int nB );

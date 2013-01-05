@@ -61,22 +61,29 @@ void CWndPidRegulator::_Highlight( CPoint cpPoint, int nRadius, int nR, int nG, 
 			}
 }
 
-void CWndPidRegulator::ShowLocalMenu()
+void CWndPidRegulator::ShowLocalMenu(bool bFocus)
 {
 	/*static*/ const char* const ppszLocalMenu[] =
 	{"Diagram", "Values", "Graph", NULL};
-	
-	BIOS::LCD::Bar( m_rcClient.left, m_rcClient.top, m_rcClient.right, m_rcClient.top + 20, RGB565(000000) );
 
 	int x = 4;
 	for ( int i=0; ppszLocalMenu[i]; i++ )
 	{
-		ui16 clrTab = (i==m_nFocus) ? RGB565(ffffff) : RGB565(b0b0b0);
-
-		x += BIOS::LCD::Draw(x, 20, clrTab, RGB565(000000), CShapes::corner_left);
-		BIOS::LCD::Bar( x, 20, x + strlen(ppszLocalMenu[i])*8, 36, clrTab);
-		x += BIOS::LCD::Print(x, 20, RGB565(000000), RGBTRANS, ppszLocalMenu[i]);
-		x += BIOS::LCD::Draw(x, 20, clrTab, RGB565(000000), CShapes::corner_right);
+		if ( bFocus )
+		{
+			ui16 clrTab = (i==m_nFocus) ? RGB565(ffffff) : RGB565(b0b0b0);
+			x += BIOS::LCD::Draw(x, 20, clrTab, RGB565(000000), CShapes::corner_left);
+			BIOS::LCD::Bar( x, 20, x + strlen(ppszLocalMenu[i])*8, 36, clrTab);
+			x += BIOS::LCD::Print(x, 20, RGB565(000000), RGBTRANS, ppszLocalMenu[i]);
+			x += BIOS::LCD::Draw(x, 20, clrTab, RGB565(000000), CShapes::corner_right);
+		} else
+		{
+			ui16 clrTab = (i==m_nFocus) ? RGB565(ffffff) : RGB565(808080);
+			x += BIOS::LCD::Draw(x, 20, RGB565(b0b0b0), RGBTRANS, CShapes::sel_left);
+			x += BIOS::LCD::Print(x, 20, clrTab, RGB565(b0b0b0), ppszLocalMenu[i]);
+			x += BIOS::LCD::Draw(x, 20, RGB565(b0b0b0), RGBTRANS, CShapes::sel_right);
+			x += 2;
+		}
 		x += 16;
 	}
 }
@@ -180,7 +187,7 @@ void CWndPidRegulator::ShowValues(bool bValues)
 	}
 }
 
-void ShowGraph()
+void CWndPidRegulator::ShowGraph()
 {
 	CRect rcGraph(60, 46, 400-20, 220);
 	rcGraph.Inflate(1, 1, 1, 1);
@@ -265,10 +272,12 @@ void CWndPidRegulator::OnPaint()
 {
 	if ( HasFocus() )
 	{
+		BIOS::LCD::Bar( m_rcClient.left, m_rcClient.top, m_rcClient.right, m_rcClient.top+20, RGB565(000000) );
 		BIOS::LCD::Bar( m_rcClient.left, m_rcClient.top+20, m_rcClient.right, m_rcClient.bottom, RGB565(ffffff) );
-		ShowLocalMenu();
+		ShowLocalMenu(true);
 	} else {
 		BIOS::LCD::Bar( m_rcClient, RGB565(ffffff) );
+		ShowLocalMenu(false);
 	}
 
 	switch ( m_nFocus )

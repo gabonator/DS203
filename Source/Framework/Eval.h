@@ -22,8 +22,9 @@ class CEvalClasses
 public:
 	enum {
 		RpnLength = 32,
-		StackLength = 16,
-		MaxTokenLength = 20
+		StackLength = 16
+		//,
+		//MaxTokenLength = 20
 	};
 
 public:
@@ -114,6 +115,26 @@ public:
 		virtual CEvalOperand Get() = 0;
 	};
 
+	class CEvalToken {
+	public:
+		enum ePrecedence {
+			PrecedenceToken = -1,
+			PrecedenceNone = 0,
+			PrecedenceMul = 9,
+			PrecedenceAdd = 8,
+			PrecedenceLow = 4,
+			PrecedenceFunc = 20,
+			PrecedenceFuncLow = 5,
+			PrecedenceConst = 30,
+			PrecedenceVar = 31
+		};
+
+		const CHAR*			m_pszToken;
+		const si8			m_ePrecedence;
+		const PEvalFunc		m_pEval;
+	};
+
+	/*
 	class CEvalToken 
 	{
 	public:
@@ -155,6 +176,7 @@ public:
 			}
 		}
 	};
+	*/
 
 	class CEvalOperand 
 	{
@@ -178,10 +200,10 @@ public:
 		union {
 			INT				m_iData;
 			FLOAT			m_fData;
-			CEvalToken		*m_pOperator;
+			const CEvalToken	*m_pOperator;
 			CStream			*m_pStream;
 			char			*m_pString;
-			const char	*m_pcString;
+			const char		*m_pcString;
 			ui8				m_pData8[8];
 			ui32			m_pData32[2];
 			CEvalVariable	*m_pVariable;
@@ -220,7 +242,7 @@ public:
 			m_Data.m_pData32[1] = (nLength > -1) ? nLength : strlen(str);
 		}
 
-		CEvalOperand( CEvalToken* pToken ) : m_eType( eoOperator )
+		CEvalOperand( const CEvalToken* pToken ) : m_eType( eoOperator )
 		{
 			m_Data.m_pOperator = pToken;
 		}
@@ -264,7 +286,7 @@ public:
 			return m_eType == eType;
 		}
 
-		BOOL Is( CEvalToken* pToken )
+		BOOL Is( const CEvalToken* pToken )
 		{
 			if ( m_eType != eoOperator )
 				return FALSE;
@@ -371,7 +393,7 @@ public:
 	PSTR m_pEndPtr;
 
 private:
-	virtual CEvalToken* isOperator( CHAR* pszExpression ) = NULL;
+	virtual const CEvalToken* isOperator( CHAR* pszExpression ) = NULL;
 
 public:
 	CEvalOperand Eval( PSTR pszExpression )
@@ -391,13 +413,13 @@ public:
 
 		PSTR pszEnd = pszExpression + strlen( pszExpression );
 		
-		CEvalToken *pPrevToken = NULL;
-		CEvalToken *pTokLPar = isOperator( (char*)"(" );
-		CEvalToken *pTokRPar = isOperator( (char*)")" );
-		CEvalToken *pTokDelim = isOperator( (char*)"," );
-		CEvalToken *pTokEq = isOperator( (char*)"=" );
-		CEvalToken *pTokTerm = isOperator( (char*)";" );
-		CEvalToken *pToken = pTokLPar;
+		const CEvalToken *pPrevToken = NULL;
+		const CEvalToken *pTokLPar = isOperator( (char*)"(" );
+		const CEvalToken *pTokRPar = isOperator( (char*)")" );
+		const CEvalToken *pTokDelim = isOperator( (char*)"," );
+		const CEvalToken *pTokEq = isOperator( (char*)"=" );
+		const CEvalToken *pTokTerm = isOperator( (char*)";" );
+		const CEvalToken *pToken = pTokLPar;
 
 		m_pEndPtr = NULL;
 
@@ -410,7 +432,7 @@ public:
 			pToken = isOperator( pszExpression );
 			if ( pToken == pTokTerm )
 			{
-				pszExpression += pToken->m_nTokenLen;
+				pszExpression += strlen(pToken->m_pszToken);
 				m_pEndPtr = pszExpression;
 				break;
 			}
@@ -452,7 +474,7 @@ public:
 				pToken->m_ePrecedence == CEvalToken::PrecedenceFuncLow ) )
 			{
 				arrStack.Add( pToken );
-				pszExpression += pToken->m_nTokenLen - 1;
+				pszExpression += strlen(pToken->m_pszToken) - 1;
 				continue;
 			}
 
@@ -463,7 +485,7 @@ public:
 				 )
 			{
 				m_arrRpn.Add( CEvalOperand(pToken) );
-				pszExpression += pToken->m_nTokenLen - 1;
+				pszExpression += strlen(pToken->m_pszToken) - 1;
 				continue;
 			}
 
@@ -557,7 +579,7 @@ public:
 			// get precedence
 			int precedence = pToken->m_ePrecedence;
 			int topPrecedence = 0;
-			pszExpression += pToken->m_nTokenLen - 1;
+			pszExpression += strlen(pToken->m_pszToken) - 1;
 
 			while ( TRUE )
 			{
@@ -607,7 +629,7 @@ public:
 		CEvalOperand arrOperands_[StackLength];
 		CArray<CEvalOperand> arrOperands( arrOperands_, StackLength );
 
-		CEvalToken *pTokDelim = isOperator( (char*)"," );
+		const CEvalToken *pTokDelim = isOperator( (char*)"," );
 
 		for ( int i = 0; i < m_arrRpn.GetSize(); i++ )
 		{
@@ -675,39 +697,39 @@ public:
 		return CEvalOperand( CEvalOperand::eoNone );
 	}
 
-	static CEvalToken* getOperators()
+	static const CEvalToken* getOperators()
 	{
-		static CEvalToken myTokens[] = 
+		static const CEvalToken myTokens[] = 
 		{
-			CEvalToken( "(", -1, NULL ),
-			CEvalToken( ")", -1, NULL ),
-			CEvalToken( ",", -1, NULL ),
-			CEvalToken( ";", -1, NULL ),
-			CEvalToken( "=", -1, _Set ),
+			{ "(", -1, NULL },
+			{ ")", -1, NULL },
+			{ ",", -1, NULL },
+			{ ";", -1, NULL },
+			{ "=", -1, _Set },
 
-			CEvalToken( "*", CEvalToken::PrecedenceMul, _Mul ),
-			CEvalToken( "/", CEvalToken::PrecedenceMul, _Div ),
-			CEvalToken( "+", CEvalToken::PrecedenceAdd, _Add ),
-			CEvalToken( "-", CEvalToken::PrecedenceAdd, _Sub ),
+			{ "*", CEvalToken::PrecedenceMul, _Mul },
+			{ "/", CEvalToken::PrecedenceMul, _Div },
+			{ "+", CEvalToken::PrecedenceAdd, _Add },
+			{ "-", CEvalToken::PrecedenceAdd, _Sub },
 
-			CEvalToken( NULL, -1, NULL )
+			{ NULL, -1, NULL }
 		};
 		return myTokens;
 	}
 
-	CEvalToken* isOperator( char* pszExpression )
+	const CEvalToken* isOperator( char* pszExpression )
 	{
-		CEvalToken *pFind = getOperators();
-		CEvalToken *pBest = NULL;
+		const CEvalToken *pFind = getOperators();
+		const CEvalToken *pBest = NULL;
 
 		// ak to je func/var, hladat najdlhsiu
-		for (; pFind->m_nTokenLen > 0; pFind++)
-			if ( strncmp( pszExpression, pFind->m_pszToken, pFind->m_nTokenLen ) == 0 )
+		for (; pFind->m_pszToken; pFind++)
+			if ( strncmp( pszExpression, pFind->m_pszToken, strlen(pFind->m_pszToken) ) == 0 )
 			{
 				if ( pFind->m_ePrecedence == CEvalToken::PrecedenceFunc ||
 					 pFind->m_ePrecedence == CEvalToken::PrecedenceVar )
 				{
-					if ( !pBest || pFind->m_nTokenLen > pBest->m_nTokenLen )
+					if ( !pBest || strlen(pFind->m_pszToken) > strlen(pBest->m_pszToken) )
 						pBest = pFind;
 				} else
 					return pFind;

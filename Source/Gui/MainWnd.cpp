@@ -44,7 +44,7 @@ void CMainWnd::Create()
 	m_wndMenuDisplay.Create( this, WsHidden );
 	m_wndMenuMask.Create( this, WsHidden );
 	m_wndMenuGenerator.Create( this, WsHidden );
-	m_wndMenuGeneratorMod.Create( this, WsHidden );
+//	m_wndMenuGeneratorMod.Create( this, WsHidden );
 	m_wndMenuGeneratorEdit.Create( this, WsHidden );
 	m_wndZoomBar.Create( this, WsHidden, &m_wndGraph );
 	m_wndInfoBar.Create( this, WsHidden, &m_wndGraph );
@@ -131,12 +131,14 @@ void CMainWnd::Create()
 				nChecksum = nNewChecksum;
 			}
 		}
-
-		char test[32];
-		static int nCounter=0;
-		BIOS::DBG::sprintf(test, "Ready.(%d)\n", nCounter++);
-		BIOS::SERIAL::Send("TEST!");
-		BIOS::SERIAL::Send(test);
+		if ( Settings.Runtime.m_bUartTest )
+		{
+			char test[32];
+			static int nCounter=0;
+			BIOS::DBG::sprintf(test, "Ready.(%d)\n", nCounter++);
+			BIOS::SERIAL::Send("TEST!");
+			BIOS::SERIAL::Send(test);
+		}
 	}
 
 	if ( BIOS::ADC::Enabled() && Settings.Trig.Sync == CSettings::Trigger::_Auto )

@@ -151,6 +151,9 @@ void CMainWnd::SdkUartProc()
 	int ch;
 	while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
 	{
+		if ( Settings.Runtime.m_bUartEcho )
+			BIOS::SERIAL::Putch(ch);
+
 		if ( ch == 0x0d || ch == 0x0a )
 		{
 			if (npos > 0)

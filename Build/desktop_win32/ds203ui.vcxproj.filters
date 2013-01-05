@@ -486,6 +486,12 @@
     <ClInclude Include="..\..\Source\Gui\User\PidRegulator.h">
       <Filter>Source\Gui\User</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\SdkV0.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\SdkV1.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
