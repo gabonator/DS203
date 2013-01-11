@@ -16,3 +16,4 @@ extern "C" {
 #include "../bios/files.h"
 #include "../bios/serial.h"
 #include "../bios/ver.h"
+#include "../bios/mouse.h"

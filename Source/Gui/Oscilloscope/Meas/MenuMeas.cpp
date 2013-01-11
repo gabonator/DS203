@@ -126,6 +126,7 @@ void CWndMenuMeas::_UpdateAll()
 				case CSettings::Measure::_Dispersion:
 					meas.fValue = m_Stat.GetDispersion(); break;
 				case CSettings::Measure::_Baud:		meas.fValue = m_Stat.GetBaud(); break;
+				case CSettings::Measure::_Pwm:		meas.fValue = m_Stat.GetPwm(); break;
 				default:
 					_ASSERT( !!!"Unknown measurement type" );
 			}

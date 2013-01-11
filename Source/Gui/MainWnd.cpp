@@ -193,6 +193,67 @@ void CMainWnd::Create()
 	}
 }
 
+CWnd* GetWindowByPoint( CWnd* pParent, int x, int y )
+{
+	if ( !pParent->m_rcClient.IsInside(x, y) )
+		return NULL;
+
+	CWnd *pChild = pParent->m_pFirst;
+	while (pChild)
+	{
+		if ( pChild->m_dwFlags & CWnd::WsVisible && !(pChild->m_dwFlags & CWnd::WsNoActivate) )
+		{
+			CWnd* pFound = GetWindowByPoint( pChild, x, y );
+			if ( pFound )
+				return pFound;
+		}
+		pChild = pChild->m_pNext;
+	}
+	return pParent;
+}
+
+void CMainWnd::OnMouseClick()
+{
+	CWnd* pTopDialog = GetFocus();
+	while ( pTopDialog->m_pParent )
+	{
+		if ( pTopDialog->m_dwFlags & CWnd::WsModal )
+			break;
+		pTopDialog = pTopDialog->m_pParent;
+	}
+
+	CWnd* pWnd = GetWindowByPoint( pTopDialog, m_Mouse.GetX(), m_Mouse.GetY() );
+	if ( pWnd )
+	{
+		if ( pWnd == pTopDialog )
+		{
+		} else
+		if ( pWnd == GetFocus() )
+		{
+			if ( !(pWnd->m_dwFlags & CWnd::WsNoActivate) )
+			{
+				bool bProcess = true;
+				pTopDialog->SendMessage( pWnd, ToWord('M', 'D'), (NATIVEPTR)&bProcess );
+				if ( bProcess )
+					pWnd->WindowMessage( CWnd::WmKey, BIOS::KEY::KeyEnter );
+			}
+		} else if ( !(pWnd->m_dwFlags & CWnd::WsNoActivate) )
+		{
+			CWnd* pPrevFocus = GetFocus();
+			pWnd->SetFocus();
+
+			bool bProcess = false;
+			pTopDialog->SendMessage( pWnd, ToWord('M', 'C'), (NATIVEPTR)&bProcess );
+
+			pPrevFocus->Invalidate();
+			pWnd->Invalidate();
+		}
+	} else
+	{
+		GetFocus()->WindowMessage( CWnd::WmKey, BIOS::KEY::KeyEscape );
+	}
+}
+
 //long lForceRestart = -1;
 /*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
 {
@@ -201,6 +262,11 @@ void CMainWnd::Create()
 	{
 		if ( m_bSleeping )
 			return;
+
+		m_Mouse.Hide();
+		if ( m_Mouse.Clicked() )
+			OnMouseClick();
+
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
 
@@ -229,6 +295,7 @@ void CMainWnd::Create()
 			// broadcast message for windows that process waveform data
 			WindowMessage( CWnd::WmBroadcast, ToWord('d', 'g') );
 		}
+		m_Mouse.Show();
 		return;
 	}
 
@@ -258,20 +325,28 @@ void CMainWnd::Create()
 
 		m_nLastKey = BIOS::SYS::GetTick();
 
-		if ( nParam == BIOS::KEY::KeyFunction )
-			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutCircle);
+		if ( nParam & ( BIOS::KEY::KeyFunction | BIOS::KEY::KeyFunction2 | BIOS::KEY::KeyS2 | BIOS::KEY::KeyS1 ) )
+		{
+			m_Mouse.Hide();
+			if ( nParam == BIOS::KEY::KeyFunction )
+				CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutCircle);
 
-		if ( nParam == BIOS::KEY::KeyFunction2 )
-			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutTriangle);
+			if ( nParam == BIOS::KEY::KeyFunction2 )
+				CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutTriangle);
 
-		if ( nParam == BIOS::KEY::KeyS2 )
-			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS2);
+			if ( nParam == BIOS::KEY::KeyS2 )
+				CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS2);
 
-		if ( nParam == BIOS::KEY::KeyS1 )
-			CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS1);
+			if ( nParam == BIOS::KEY::KeyS1 )
+				CMainWnd::CallShortcut(Settings.Runtime.m_nShortcutS1);
+			m_Mouse.Show();
+			return;
+		}
 	}
 
+	m_Mouse.Hide();
 	CWnd::WindowMessage( nMsg, nParam );
+	m_Mouse.Show();
 }
 
 void CMainWnd::CallShortcut(int nShortcut)

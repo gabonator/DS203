@@ -105,6 +105,7 @@
     <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenFrequency.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenWaveform.h" />
     <ClInclude Include="..\..\Source\Gui\Generator\Modulation\MenuGenModulation.h" />
+    <ClInclude Include="..\..\Source\Gui\Mouse.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphBase.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.h" />
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Controls\LevelRef.h" />

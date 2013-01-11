@@ -834,3 +834,25 @@ const void* BIOS::LCD::GetCharRom()
 {
 	return (void*)font;
 }
+
+bool BIOS::MOUSE::IsSupported()
+{
+	return true;
+}
+
+int BIOS::MOUSE::GetX()
+{
+	return DEVICE->mousex;
+}
+
+int BIOS::MOUSE::GetY()
+{
+	return DEVICE->mousey;
+}
+
+bool BIOS::MOUSE::GetDown()
+{
+	int nm = DEVICE->moused;
+	DEVICE->moused = 0;
+	return nm ? true : false;
+}

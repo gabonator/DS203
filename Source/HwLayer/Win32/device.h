@@ -63,6 +63,7 @@ public:
 	CFrameBuffer display;
 	int keys;
 	int keybuf[1000];
+	int mousex, mousey, moused;
 
 public:
 	CDevice()
@@ -70,6 +71,9 @@ public:
 		m_pInstance = this;
 		keys = 0;
 		memset(keybuf, 0, sizeof(keybuf));
+		mousex = -1;
+		mousey = -1;
+		moused = 0;
 	}
 	~CDevice()
 	{
@@ -92,6 +96,19 @@ public:
 		_ASSERT( k >= 0 && k < 1000 );
 		keybuf[k] = 0;
 		//keys |= k;
+	}
+	void OnMouseMove(int x, int y)
+	{
+		mousex = x;
+		mousey = y;
+	}
+	void OnMouseDown()
+	{
+		moused = 1;
+	}
+	void OnMouseUp()
+	{
+		//moused = 0;
 	}
 	int* GetKeys()
 	{

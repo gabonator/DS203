@@ -492,6 +492,9 @@
     <ClInclude Include="..\..\Source\Core\SdkV1.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Gui\Mouse.h">
+      <Filter>Source\Gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

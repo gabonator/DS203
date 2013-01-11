@@ -34,18 +34,6 @@ public:
 			m_pPrevFocus = CWnd::m_pFocus;
 			m_rcPrevOverlay = CWnd::m_rcOverlay; 
 		}
-		CModal& operator = ( const CModal& modCopy )
-		{
-			m_pPrevFocus = modCopy.m_pPrevFocus;
-			m_rcPrevOverlay = modCopy.m_rcPrevOverlay;
-			return *this;
-		}
-		/*
-		CModal( CRect rcOverlay, CWnd* pFocus )
-		{
-			m_rcPrevOverlay = rcOverlay;
-			m_pPrevFocus = pFocus;
-		}*/
 
 		CWnd*		m_pPrevFocus;
 		CRect		m_rcPrevOverlay;
@@ -58,6 +46,7 @@ public:
 		WmKey = 2,
 		WmTick = 3,
 		WmBroadcast = 4,
+//		WmMouse = 8,
 
 		// Window style
 		WsHidden = 0,

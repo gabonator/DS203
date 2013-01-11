@@ -211,7 +211,7 @@ public:
 			Enabled;
 		enum ESource { _CH1, _CH2, _Math, _MaxSource = _Math }
 			Source; 
-		enum { _Min, _Max, _Avg, _Rms, _RectAvg, _Vpp, _Freq, _Period, _FormFactor, _Sigma, _Dispersion, _Baud, _MaxType = _Baud }
+		enum { _Min, _Max, _Avg, _Rms, _RectAvg, _Vpp, _Freq, _Period, _Pwm, _FormFactor, _Sigma, _Dispersion, _Baud, _MaxType = _Baud }
 			Type;
 		enum ERange { _View, _Selection, _All, _MaxRange = _All }
 			Range;

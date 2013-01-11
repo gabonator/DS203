@@ -106,6 +106,7 @@ private:
 	void OnTimerGraph();
 	void OnTimerDiagram();
 	void ShowValues(bool bValues);
+	void Simulation();
 	void Process();
 	void ShowGraph();
 

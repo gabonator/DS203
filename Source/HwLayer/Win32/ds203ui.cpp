@@ -200,6 +200,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 
+	case WM_MOUSEMOVE:
+		g_dev.OnMouseMove(LOWORD(lParam), HIWORD(lParam));
+		break;
+
+	case WM_LBUTTONDOWN:
+		g_dev.OnMouseDown();
+		break;
+
+	case WM_LBUTTONUP:
+		g_dev.OnMouseUp();
+		break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

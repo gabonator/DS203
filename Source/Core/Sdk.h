@@ -173,8 +173,11 @@ public:
 			{ "BIOS.Get", CEvalToken::PrecedenceFunc, _BiosGet },
 			{ "BIOS.Set", CEvalToken::PrecedenceFunc, _BiosSet },
 
+			{ "MAIN.Mouse", CEvalToken::PrecedenceFunc, _Mouse },
+			{ "LCD.GetBitmap", CEvalToken::PrecedenceFunc, _LcdGetBitmap },
+			{ "LCD::Width", CEvalToken::PrecedenceConst, _LcdWidth },
+			{ "LCD::Height", CEvalToken::PrecedenceConst, _LcdHeight },
 		
-
 			{ NULL, -1, NULL }
 		};
 

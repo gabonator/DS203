@@ -29,6 +29,7 @@ public:
 	float GetVpp();
 	float GetFormFactor();
 	float GetDispersion();
+	float GetPwm();
 
 private:
 	bool _GetRange( int& nBegin, int& nEnd, CSettings::Measure::ERange range );

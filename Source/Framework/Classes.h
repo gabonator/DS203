@@ -107,6 +107,13 @@ public:
 		return rcNew;
 	}
 
+	bool IsInside( int x, int y )
+	{
+		if ( x < left || x >= right || y < top || y >= bottom )
+			return false;
+		return true;
+	}
+
 	// RAM optimization int->short
 	short left, top, right, bottom;
 };

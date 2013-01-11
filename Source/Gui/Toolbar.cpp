@@ -130,7 +130,6 @@
 		else
 			x += 8;
 	}
-
 }
 
 /*virtual*/ void CWndToolBar::OnKey(ui16 nKey)
@@ -220,6 +219,23 @@
 		data = nItem;
 	}
 
+	if ( ( code == ToWord('M', 'C') || code == ToWord('M', 'D') ) && data )
+	{
+		// select menu item by mouse position
+		bool* pProcess = (bool*)data;
+		*pProcess = false;
+
+		int nOldFocus = m_nFocus;
+		int nNewFocus = _FindItemByPoint( BIOS::MOUSE::GetX() );
+		if ( nNewFocus != -1 && nNewFocus != nOldFocus )
+		{
+			m_nFocus = nNewFocus;
+			SetFocus();
+			ChangeFocus(nOldFocus);
+			Invalidate();
+		}
+	}
+
 	if ( code == ToWord('g', '2') )
 	{
 		const CBarItem *pItems = GetMenuItems();
@@ -240,7 +256,54 @@
 		SendMessage( GetParent(), ToWord('L', 'R'), 0 );
 		Settings.Runtime.m_nMenuItem = m_nFocus;
 	}
+}
 
+int CWndToolBar::_FindItemByPoint( int mx )
+{
+	const CWndToolBar::CBarItem* pItems = GetMenuItems();
+	int nFocus = m_nFocus;
+	int nMenu = nFocus;
+	while ( pItems[nMenu].m_eType == CBarItem::ISub && nMenu > 0 )
+		nMenu--;
+	_ASSERT( pItems[nMenu].m_eType == CBarItem::IMain );
+	int x = m_rcClient.left;
+	
+	x += 9;
+	x += strlen(pItems[nMenu].m_pName)*8;
+	x += 9;
+	if ( x >= mx )
+		return nMenu;
+	x += 10;
+
+	int nIgnoreFirst = 1; // 1 -> first sub menu
+	// calculate how many items we need to hide from left to reach the selected one
+	int nRequired = 0;
+	int nAvailable = BIOS::LCD::LcdWidth - 16 - x; // 16px reserved for arrows
+	for ( int i = nFocus; i > 0 && pItems[i].m_eType != CBarItem::IMain; i-- )
+	{
+		nRequired += strlen(pItems[i].m_pName)*8 + 16;
+		if ( nRequired > nAvailable )
+			nIgnoreFirst++;
+	}
+
+	if ( nIgnoreFirst > 1 )
+		x += 8;
+
+	for ( int i = nMenu+nIgnoreFirst; pItems[i].m_eType == CBarItem::ISub; i++ )
+	{
+		ui8 bSelected = (i==nFocus);
+		if ( x + 16 + strlen(pItems[i].m_pName)*8 >= BIOS::LCD::LcdWidth )
+		{
+			x += 8;
+			break;
+		}
+		x += bSelected ? 9 : 8;
+		x += strlen(pItems[i].m_pName)*8; 
+		x += bSelected ? 9 : 8;
+		if ( x >= mx )
+			return i;
+	}
+	return -1;
 }
 
 CWnd* CWndToolBar::GetCurrentLayout()

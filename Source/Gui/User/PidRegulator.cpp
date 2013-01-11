@@ -5,6 +5,7 @@
 #include <Source/Core/Utils.h>
 #include <Source/Core/Bitmap.h>
 #include <Source/Gui/MainWnd.h>
+#include <Source/Gui/Oscilloscope/Meas/Statistics.h>
 
 // http://www.embeddedheaven.com/pid-control-algorithm-c-language.htm
 // http://radhesh.wordpress.com/2008/05/11/pid-controller-simplified/
@@ -19,6 +20,73 @@ int m_nTarget = -1;
 int m_nInput = -1;
 int m_nOutput = -1;
 //int m_nCurrent = -1;
+
+bool m_bRealModel = false;
+
+
+/*
+http://www.kvraudio.com/forum/viewtopic.php?p=4999198
+
+transfer function :
+
+
+				b0 + b1*z^-1 + b2*z^-2 + b3*z^-3 + ...
+		H(z) = ----------------------------------------
+				a0 + a1*z^-1 + a2*z^-2 + a3*z^-3 + ... 
+
+code implementation :		
+
+		a0*y[n] = b0*x[n] + b1*x[n-1] + b2*x[n-2] + b3*x[n-3] + ...
+						  - a1*y[n-1] - a2*y[n-2] - a3*y[n-3] - ... 
+
+1/(s^2+s) -> b0/(
+
+1/(s+1) - > b0/(a0+a1*z^-1) -> y[n] = x[n]-y[n-1]
+p/(qs+r) -> y[n] = (r*x[n]-q*y[n-1])/p
+
+*/
+
+void CWndPidRegulator::Simulation()
+{
+	// simple transfer function 1/(s+1)
+	m_Pid.m_Current = m_Pid.m_Current*0.9f + m_Pid.m_Output*0.1f;
+}
+
+void CWndPidRegulator::Process()
+{
+	CMeasStatistics Meas;
+	Meas.Process( CSettings::Measure::_CH1, CSettings::Measure::_All );
+	m_Pid.m_Current = Meas.GetAvg();
+
+	ui16 nValue = Settings.DacCalib.Get( m_Pid.m_Output );
+	BIOS::GEN::ConfigureDc( nValue );
+}
+
+void CWndPidRegulator::OnTimer()
+{
+	if ( MainWnd.HasOverlay() || !BIOS::ADC::Enabled() )
+		return;
+
+	long lTick = BIOS::SYS::GetTick();
+
+	m_Pid();
+
+	if ( m_bRealModel )
+		Process();
+	else
+		Simulation();
+
+	if ( m_nFocus == 2 ) // graph
+		OnTimerGraph();
+	if ( m_nFocus == 1 )
+		ShowValues( true );
+	if ( m_nFocus == 0 ) // diagram
+		ShowDiagramValues( CPoint(5, 55) );
+
+	long lPassed = BIOS::SYS::GetTick() - lTick;
+	if ( HasFocus() )
+		BIOS::LCD::Printf(300, 20, RGB565(404040), RGB565(000000), "upd: %dms  ", lPassed);
+}
 
 void CWndPidRegulator::Create(CWnd *pParent, ui16 dwFlags)
 {
@@ -229,12 +297,6 @@ void CWndPidRegulator::ShowGraph()
 	BIOS::LCD::Print( rcGraph.right - 90, rcGraph.top + 34, RGB565(000000), RGBTRANS, "--- Target");
 }
 
-void CWndPidRegulator::Process()
-{
-	m_Pid.m_Current = m_Pid.m_Current*0.9f + m_Pid.m_Output*0.1f;
-	m_Pid();
-}
-
 void CWndPidRegulator::OnTimerGraph()
 {
 	CRect rcGraph(60, 46, 400-20, 220);
@@ -243,9 +305,9 @@ void CWndPidRegulator::OnTimerGraph()
 	int nPrevOutput = m_nOutput;
 	int nPrevTarget = m_nTarget;
 
-	m_nTarget = (int)( m_Pid.m_Target * (rcGraph.Height() / 8) / fVoltPerDiv );
-	m_nInput = (int)( m_Pid.m_Current * (rcGraph.Height() / 8) / fVoltPerDiv );
-	m_nOutput = (int)( m_Pid.m_Output * (rcGraph.Height() / 8) / fVoltPerDiv );
+	m_nTarget = (int)( m_Pid.m_Target / fVoltPerDiv * rcGraph.Height() / 8.0f  );
+	m_nInput = (int)( m_Pid.m_Current / fVoltPerDiv * rcGraph.Height() / 8.0f );
+	m_nOutput = (int)( m_Pid.m_Output / fVoltPerDiv * rcGraph.Height() / 8.0f );
 
 	UTILS.Clamp<int>( m_nInput, 0, rcGraph.Height() );
 	UTILS.Clamp<int>( m_nTarget, 0, rcGraph.Height() );
@@ -254,8 +316,11 @@ void CWndPidRegulator::OnTimerGraph()
 	if ( nPrevInput == -1 )
 		return;
 
-	BIOS::LCD::Line( rcGraph.left + m_nGraphX, rcGraph.bottom - nPrevOutput, 
-		rcGraph.left + m_nGraphX, rcGraph.bottom - m_nOutput, RGB565(00ff00) );
+	if ( abs(m_nOutput - nPrevOutput) > 40 )
+		BIOS::LCD::PutPixel( rcGraph.left + m_nGraphX, rcGraph.bottom - m_nOutput, RGB565(00ff00) );
+	else
+		BIOS::LCD::Line( rcGraph.left + m_nGraphX, rcGraph.bottom - nPrevOutput, 
+			rcGraph.left + m_nGraphX, rcGraph.bottom - m_nOutput, RGB565(00ff00) );
 	BIOS::LCD::Line( rcGraph.left + m_nGraphX, rcGraph.bottom - nPrevInput, 
 		rcGraph.left + m_nGraphX, rcGraph.bottom - m_nInput, RGB565(ff0000) );
 	BIOS::LCD::Line( rcGraph.left + m_nGraphX, rcGraph.bottom - nPrevTarget, 
@@ -326,27 +391,6 @@ void CWndPidRegulator::OnKey(ui16 nKey)
 		return;
 	}
 	CWnd::OnKey( nKey );
-}
-
-
-void CWndPidRegulator::OnTimer()
-{
-	if ( MainWnd.HasOverlay() || !BIOS::ADC::Enabled() )
-		return;
-	
-	long lTick = BIOS::SYS::GetTick();
-
-	Process();
-	if ( m_nFocus == 2 ) // graph
-		OnTimerGraph();
-	if ( m_nFocus == 1 )
-		ShowValues( true );
-	if ( m_nFocus == 0 ) // diagram
-		ShowDiagramValues( CPoint(5, 55) );
-
-	long lPassed = BIOS::SYS::GetTick() - lTick;
-	if ( HasFocus() )
-		BIOS::LCD::Printf(300, 20, RGB565(404040), RGB565(000000), "upd: %dms  ", lPassed);
 }
 
 void CWndPidRegulator::OnMessage(CWnd* pSender, ui16 code, ui32 data)

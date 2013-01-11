@@ -198,6 +198,20 @@ public:
 		static ui32 GetSerialNumber();
 		static void DrawLogo(int x, int y);
 	};
+
+	class MOUSE
+	{
+	public:
+		enum {
+			Click = 1,
+			DbClick = 2
+		};
+	public:
+		static bool IsSupported();
+		static int GetX();
+		static int GetY();
+		static bool GetDown();
+	};
 };
 
 #endif

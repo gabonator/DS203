@@ -166,6 +166,34 @@ float CMeasStatistics::GetPeriod()
 	return fValue;
 }
 
+float CMeasStatistics::GetPwm() 
+{
+	int nBegin = 0, nEnd = 0;
+	if ( !_GetRange( nBegin, nEnd, m_curRange ) )
+		return 0;
+	if ( m_nRawMax - m_nRawMin < 6 )
+		return 0;
+		
+	int nThresh = ( m_nRawMax + m_nRawMin ) / 2;
+	int nLow = 0, nHigh = 0;
+
+	for ( int i = nBegin; i < nEnd; i++ )
+	{
+		int nSample_ = BIOS::ADC::GetAt(i);
+		int nSample = _GetSample( nSample_ );
+
+		if ( nSample > nThresh )
+			nHigh++;
+		else
+			nLow++;
+	}
+			
+	if ( nLow + nHigh == 0 )
+		return 0;
+
+	return (float)nHigh/(nLow+nHigh);
+}
+
 float CMeasStatistics::GetFreq() 
 { 
 	float f = GetPeriod(); 

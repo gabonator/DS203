@@ -45,11 +45,13 @@ public:
 	virtual void	OnPaint();
 	virtual void	OnMessage(CWnd* pSender, ui16 code, ui32 data);
 	CWnd*			GetCurrentLayout();
-	virtual void	ChangeFocus(ui8 oldFocus);
+	void			ChangeFocus(ui8 oldFocus);
 
 public:
 	static const CBarItem* GetMenuItems();
 	static int Find( const char* strId );
+	int _FindItemByPoint( int mx );
+
 };
 	
 #endif
