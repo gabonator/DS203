@@ -228,6 +228,11 @@ public:
 			m_Data.m_iData = i;
 		}
 
+		CEvalOperand( UINT i ) : m_eType( eoInteger )
+		{
+			m_Data.m_iData = i;
+		}
+
 		CEvalOperand( CHAR* str, INT nLength, EOperandType eType = eoString ) :
 			m_eType( eType )
 		{

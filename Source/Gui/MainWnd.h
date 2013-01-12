@@ -57,6 +57,7 @@ public:
 	CWndAboutFirmware	m_wndAboutFirmware;
 	CWndAboutDevice		m_wndAboutDevice;
 	CWndAboutStatus		m_wndAboutStatus;
+	CWndAboutModules	m_wndAboutModules;
 	CWndMenuCalibration	m_wndCalibration;
 
 	CWndMenuSpectMain	m_wndSpectrumMain;

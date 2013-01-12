@@ -112,7 +112,7 @@ void Assert(const char*msg, int n)
 
 void BIOS::SYS::Execute( int nCode )
 {
-	u32 dwGotoAddr = NULL;
+	u32 dwGotoAddr = 0;
 	switch ( nCode )
 	{
 		case BIOS::SYS::EApp1: dwGotoAddr = APP1_BASE; break;
@@ -132,6 +132,28 @@ void BIOS::SYS::Execute( int nCode )
 
 	__MSR_MSP(dwGotoAddr);
 	GotoApp();
+}
+
+void* BIOS::SYS::IdentifyApplication( int nCode )
+{
+	u32 dwGotoAddr = 0;
+
+	switch ( nCode )
+	{
+		case BIOS::SYS::EApp1: dwGotoAddr = APP1_BASE; break;
+		case BIOS::SYS::EApp2: dwGotoAddr = APP2_BASE; break;
+		case BIOS::SYS::EApp3: dwGotoAddr = APP3_BASE; break;
+		case BIOS::SYS::EApp4: dwGotoAddr = APP4_BASE; break;
+		case BIOS::SYS::ESys: dwGotoAddr = SYS_BASE; break;
+		case BIOS::SYS::EDfu: dwGotoAddr = DFU_BASE; break;
+	}
+	ui32* pData = (ui32*)dwGotoAddr;
+	for (int i=0; i<200; i++, pData++)
+	{
+		if ( *pData == ToDword('D', 'S', 'O', '_') )
+			return pData;
+	}
+	return NULL;
 }
 
 void BIOS::SYS::Set( int nKey, int nValue )

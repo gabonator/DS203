@@ -856,3 +856,10 @@ bool BIOS::MOUSE::GetDown()
 	DEVICE->moused = 0;
 	return nm ? true : false;
 }
+
+void* BIOS::SYS::IdentifyApplication( int nCode )
+{
+	if ( nCode == BIOS::SYS::EApp1 )
+		return "DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;";
+	return NULL;
+}

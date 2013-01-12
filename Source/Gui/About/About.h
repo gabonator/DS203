@@ -300,5 +300,44 @@ public:
 	}
 };
 
+class CWndAboutModules : public CWnd
+{
+public:
+	virtual void Create(CWnd *pParent, ui16 dwFlags)
+	{                        
+		CWnd::Create("CWndAboutModules", dwFlags | CWnd::WsNoActivate, CRect(0, 16, 400, 240), pParent);
+	}
+	
+	virtual void OnPaint()
+	{
+			const ui16 clrB = RGB565(b0b0b0);
+			const ui16 clrA = RGB565(808080);
+
+			BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
+
+			const char *strName = NULL;
+
+			int y = 40;
+			for ( int i = BIOS::SYS::EApp1; i <= BIOS::SYS::EApp4; i++ )
+			{
+				strName = (const char*)BIOS::SYS::IdentifyApplication( i );
+				if ( strName )
+					BIOS::LCD::Printf(   4, y, clrA, 0, "APP%d (identification found at 0x%x)", i - BIOS::SYS::EApp1 + 1, (ui32)strName );
+				else
+					BIOS::LCD::Printf(   4, y, clrA, 0, "APP%d (identification not found)", i - BIOS::SYS::EApp1 + 1 );
+
+				if (!strName)
+					strName = "Unknown";
+				char strNameShort[52] = {0};
+				memcpy(strNameShort, strName, 51);
+				char* pDelim = strstr(strNameShort, ";");
+				if ( pDelim )
+					*pDelim = 0;
+				BIOS::LCD::Print(   4, y+16, clrB, 0, strNameShort );
+				y += 48;
+			}
+	}
+};
+
 
 #endif

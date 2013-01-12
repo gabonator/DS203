@@ -151,7 +151,7 @@ SECTIONS
 	    . = ALIGN(4);
       _vectors = .;
       *(.isr_vectors)      /* Vector table */
-      *(.exec)
+      *(.identify)
     } >ENTRY
 
     

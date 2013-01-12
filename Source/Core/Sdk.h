@@ -177,6 +177,10 @@ public:
 			{ "LCD.GetBitmap", CEvalToken::PrecedenceFunc, _LcdGetBitmap },
 			{ "LCD::Width", CEvalToken::PrecedenceConst, _LcdWidth },
 			{ "LCD::Height", CEvalToken::PrecedenceConst, _LcdHeight },
+
+			{ "MEM::Read", CEvalToken::PrecedenceFunc, _MemRead },
+			{ "MEM::Write", CEvalToken::PrecedenceFunc, _MemWrite },
+
 		
 			{ NULL, -1, NULL }
 		};

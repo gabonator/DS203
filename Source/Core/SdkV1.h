@@ -477,3 +477,38 @@ DECLARE_FUNCTION( _LcdGetBitmap )
 
 	return CEvalOperand(CEvalOperand::eoNone);
 }
+
+DECLARE_FUNCTION( _MemRead )
+{
+	_SAFE( arrOperands.GetSize() == 1 );
+
+	_ASSERT( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
+
+	int nAddress = arrOperands[-1].GetInteger();
+	arrOperands.Resize(-1);
+	ui32* pData = (ui32*)nAddress;
+	ui32 nData = *pData;
+
+	return (UINT)nData;
+}
+
+DECLARE_FUNCTION( _MemWrite )
+{
+	const CEvalToken* pTokDelim = &(CEval::getOperators()[2]);		
+
+	_SAFE( arrOperands.GetSize() == 3 );
+
+	_ASSERT( arrOperands[-3].Is( CEvalOperand::eoInteger ) );
+	_ASSERT( arrOperands[-2].Is( pTokDelim ) );
+	_ASSERT( arrOperands[-1].Is( CEvalOperand::eoInteger ) );
+
+	int nAddress = arrOperands[-3].GetInteger();
+	int nValue = arrOperands[-1].GetInteger();
+
+	arrOperands.Resize(-3);
+
+	ui32* pData = (ui32*)nAddress;
+	*pData = nValue;
+
+	return CEvalOperand(CEvalOperand::eoNone);
+}
