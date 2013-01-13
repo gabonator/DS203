@@ -6,7 +6,7 @@
 
 class CCoreGenerator
 {
-	static const struct SWaveData {
+	static const struct TWaveData {
 	  char* pszName;
 	  ui16 nCount;
 	  const ui16* pWave;
@@ -28,6 +28,12 @@ public:
 
 	static ui8*		GetVolatile();
 	static int&		GetVolatileLen();
+
+	static int GetDuty();
+	static void SetDuty(int nPercent);
+
+	static const TWaveData* GetWave( int nWave );
+	static void CopyToVolatile( int nWave );
 
 protected:
 	static ui16 _GetCount(ui8 nWaveIndex);

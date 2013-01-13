@@ -42,7 +42,7 @@ const ui16 pCardiac128Wave[] = {
 	0x234, 0x233, 0x235, 0x251, 0x275, 0x295, 0x2a6, 0x2b0, 0x2c8, 0x2e7, 0x300, 0x316, 0x328, 0x32e, 0x32f, 0x33f, 
 	0x350, 0x351, 0x352, 0x351, 0x34a, 0x356, 0x35f, 0x35d, 0x363, 0x367, 0x36b, 0x377, 0x384, 0x37a, 0x378, 0x369 };
 
-/*static*/ const CCoreGenerator::SWaveData CCoreGenerator::Waves[] = 
+/*static*/ const CCoreGenerator::TWaveData CCoreGenerator::Waves[] = 
 	{
 		{(char*)"DC", 0, NULL, 0},
 		{(char*)"sin - HQ", 36, pSineWave, 2 },
@@ -54,6 +54,11 @@ const ui16 pCardiac128Wave[] = {
 		{(char*)"Volatile", 0, NULL, 0 },
 		{NULL, 0, NULL, 0}		
 	};
+
+/*static*/ const CCoreGenerator::TWaveData* CCoreGenerator::GetWave( int nWave )
+{
+	return &Waves[nWave];
+}
 
 /*static*/ ui16* CCoreGenerator::GetRamDac()
 {
@@ -143,7 +148,7 @@ ui16* CCoreGenerator::_GetWave(ui8 nWaveIndex)
 	}
 
 	// scaling & offset
-	if ( nScale != 0x10000 || nOffset != 0x8000 )
+	if ( nScale != 0x10000 || nOffset != 0x800 )
 	{
 		for (int i=0; i<nLen; i++)
 		{
@@ -155,12 +160,21 @@ ui16* CCoreGenerator::_GetWave(ui8 nWaveIndex)
 				nSample = 0;
 			if ( nSample > 0xfff )
 				nSample = 0xfff;
+			_ASSERT(m_pRamWave[i]  == nSample );
 			m_pRamWave[i] = nSample;
 		}
 	}
 	m_nRamLen = nLen;
 	Settings.Gen.nSamples = nLen;
 	return m_pRamWave;
+}
+
+void CCoreGenerator::CopyToVolatile( int nWave )
+{
+	m_nVolatileLen = Waves[nWave].nCount;
+	const ui16* pData = Waves[nWave].pWave;
+	for ( int i = 0; i < m_nVolatileLen; i++, pData++ )
+		m_pVolatile[i] = *pData >> 4;
 }
 
 void CCoreGenerator::Update()
@@ -173,30 +187,32 @@ void CCoreGenerator::Update()
 			BIOS::GEN::ConfigureDc( Settings.Gen.nOffset >> 4 );
 			break;
 
-		case CSettings::Generator::_Volatile:
+		case CSettings::Generator::_Square:
+			BIOS::GEN::ConfigureSq( Settings.Gen.nPsc, Settings.Gen.nArr, Settings.Gen.nCcr);
+			break;
 
-			if ( Settings.Gen.Wave == CSettings::Generator::_Volatile )
-			{
-				if ( m_nVolatileLen == 0 )
-				{
-					m_nVolatileLen = Waves[CSettings::Generator::_SinLq].nCount;
-					const ui16* pData = Waves[CSettings::Generator::_SinLq].pWave;
-					for ( int i = 0; i < m_nVolatileLen; i++, pData++ )
-						m_pVolatile[i] = *pData >> 4;
-				}
-			}
+		case CSettings::Generator::_Volatile:
+			if ( m_nVolatileLen == 0 )
+				CopyToVolatile( CSettings::Generator::_SinLq );
 
 			BIOS::GEN::ConfigureWave( _GetWave(nWaveIndex), _GetCount(nWaveIndex) );
 			BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
 			break;
-
-		// Too lazy to implement custom code for square generator
-		//case CSettings::Generator::_Square:
-		//	BIOS::GEN::ConfigureSq( Settings.Gen.nPsc, Settings.Gen.nArr, (Settings.Gen.nArr+1)>>1);
-		//	break;
 
 		default:
 			BIOS::GEN::ConfigureWave( _GetWave(nWaveIndex), _GetCount(nWaveIndex) );
 			BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
 	}
 }
+
+int CCoreGenerator::GetDuty()
+{
+	return Settings.Gen.nCcr * 100 / Settings.Gen.nArr;
+}
+
+void CCoreGenerator::SetDuty(int nPercent)
+{
+	_ASSERTW( (Settings.Gen.nArr) * nPercent / 100 >= 0 );
+	Settings.Gen.nCcr = (Settings.Gen.nArr) * nPercent / 100;
+}
+

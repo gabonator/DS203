@@ -145,6 +145,7 @@ char tmp[16];
 		f = -f;
 
 //	_ASSERT( f < 10.0f );
+	f += 0.0005f;
 	BIOS::DBG::sprintf( tmp+1, "%d", (int)f );
 	f -= (int)f;
 	f *= 1000.0f;

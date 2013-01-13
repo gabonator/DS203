@@ -10,7 +10,7 @@ int __errno; // required by math.h
 
 __attribute__ ((section(".identify")))
 __attribute__((__used__))
-static const char strIdentification[] = "DSO_APP: Gabonators alternative UI;Alter UI;Gabriel Valky 2013;";
+static const char strIdentification[] = "DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;";
 
 int main(void)
 { 

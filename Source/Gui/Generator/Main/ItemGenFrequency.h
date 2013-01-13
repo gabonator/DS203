@@ -1,6 +1,10 @@
 #ifndef __ITEMGENFREQUENCY_H__
 #define __ITEMGENFREQUENCY_H__
 
+#define Hz *1.0f
+#define KHz *1000.0f
+#define MHz *1000000.0f
+
 class CItemFrequency : public CWndMenuItem
 {
 public:
@@ -24,10 +28,6 @@ public:
 			CWndMenuItem::OnKey( nKey );
 			return;
 		}
-
-		#define Hz *1.0f
-		#define KHz *1000.0f
-		#define MHz *1000000.0f
 
 		float fFreq = GetFrequency();
 		float fOldFreq = fFreq;
@@ -63,10 +63,6 @@ public:
 				fFreq = 1.0f;
 		}
 
-		#undef Hz
-		#undef KHz
-		#undef MHz
-
 		fFreq = ((int)(fFreq / fStep)) * fStep;
 		if ( fFreq < 1.0f )
 			fFreq = 1.0f;
@@ -88,13 +84,19 @@ public:
 					if ( Settings.Gen.nArr < 0x10000 )
 					{
 						Settings.Gen.nArr++;
-						BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
+						if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+							BIOS::GEN::ConfigureSq( Settings.Gen.nPsc, Settings.Gen.nArr, Settings.Gen.nCcr );
+						else
+							BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
 					}
 				} else {
 					if ( Settings.Gen.nArr > 1 )
 					{
 						Settings.Gen.nArr--;
-						BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
+						if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+							BIOS::GEN::ConfigureSq( Settings.Gen.nPsc, Settings.Gen.nArr, Settings.Gen.nCcr );
+						else
+							BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
 					}
 				}
 			}
@@ -108,6 +110,12 @@ public:
 	{
 		#define CPUCLOCK (72 MHz)
 		#define MHz *1000000.0f
+
+		if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+		{
+			float fFreq = CPUCLOCK / ( Settings.Gen.nArr + 1 ) / ( Settings.Gen.nPsc + 1 );
+			return fFreq;
+		}
 		if ( Settings.Gen.nSamples <= 0 ) 
 			return 0;
 		float fFreq = CPUCLOCK / 20 / ( Settings.Gen.nArr + 1 ) / Settings.Gen.nSamples; 
@@ -116,14 +124,33 @@ public:
 
 	bool SetFrequency(float fFreq)
 	{
+		int nPsc = 20;
 		int nSamples = Settings.Gen.nSamples;
-		int nArr = (int)((CPUCLOCK)/ (20.0f* fFreq * nSamples )) - 1;
+		if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+		{
+			nSamples = 1;
+			// calculate PSC
+			nPsc = 1;
+			if ( fFreq <= 10 Hz )
+				nPsc = 240;
+			else if ( fFreq <= 2 KHz )
+				nPsc = 180;
+			else if ( fFreq <= 20 KHz )
+				nPsc = 18;
+			Settings.Gen.nPsc = nPsc - 1;
+		}
+
+		int nArr = (int)((CPUCLOCK) / ( nPsc * fFreq * nSamples )) - 1;
 
 		if ( nArr <= 1 )
 			nArr = 1;
+		if ( Settings.Gen.Wave == CSettings::Generator::_Square && nArr < 8 )
+			nArr = 8;
 
 		bool bChanged = nArr != Settings.Gen.nArr;
 		Settings.Gen.nArr = nArr;
+		CCoreGenerator::SetDuty(Settings.Gen.nDuty);
+
 		//BIOS::GEN::ConfigureWaveRate( Settings.Gen.nArr );
 
 		#undef CPUCLOCK
@@ -142,5 +169,9 @@ public:
 	}
 
 };
+
+#undef Hz
+#undef KHz
+#undef MHz
 
 #endif

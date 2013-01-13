@@ -22,6 +22,13 @@
 
 	if (code == ToWord('L', 'E') )
 	{
+		if ( Settings.Gen.Wave != CSettings::Generator::_Volatile )
+		{
+			CCoreGenerator::CopyToVolatile( Settings.Gen.Wave );
+			Settings.Gen.Wave = CSettings::Generator::_Volatile;
+			CCoreGenerator::Update();
+		}
+		MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetRamDac(), CCoreGenerator::GetRamLen() );
 		MainWnd.m_wndSignalGraph.ShowWindow( SwShow );
 		return;
 	}

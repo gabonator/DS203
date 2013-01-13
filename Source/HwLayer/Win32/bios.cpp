@@ -863,3 +863,7 @@ void* BIOS::SYS::IdentifyApplication( int nCode )
 		return "DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;";
 	return NULL;
 }
+
+/*static*/ void BIOS::SYS::Execute( int nCode )
+{
+}

@@ -103,6 +103,7 @@ private:
 	void ShowLocalMenu(bool bFocus);
 	void ShowDiagram(CPoint& cpBase);
 	void ShowDiagramValues(CPoint cpBase);
+	void ShowMode();
 	void OnTimerGraph();
 	void OnTimerDiagram();
 	void ShowValues(bool bValues);

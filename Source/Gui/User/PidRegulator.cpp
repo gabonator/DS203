@@ -11,6 +11,7 @@
 // http://radhesh.wordpress.com/2008/05/11/pid-controller-simplified/
 
 int m_nFocus = 0;
+int m_nSubFocus = -1;
 
 float fVoltPerDiv = 0.2f;
 float fUpdate = 0.020f;
@@ -54,10 +55,26 @@ void CWndPidRegulator::Simulation()
 
 void CWndPidRegulator::Process()
 {
+#if 0
 	CMeasStatistics Meas;
 	Meas.Process( CSettings::Measure::_CH1, CSettings::Measure::_All );
 	m_Pid.m_Current = Meas.GetAvg();
+#else
+	// faster!
+	CSettings::Calibrator::FastCalc fastCalc1;
+	Settings.CH1Calib.Prepare( &Settings.CH1, fastCalc1 );
 
+	int nSum = 0;
+	for (int i=50; i<256+50; i++)
+	{
+		BIOS::ADC::SSample Sample;
+		Sample.nValue = BIOS::ADC::GetAt(i);
+		nSum += Sample.CH1;
+	}
+
+	float fAvg = nSum / 256.0f;
+	m_Pid.m_Current = Settings.CH1Calib.Voltage( fastCalc1, fAvg );
+#endif
 	ui16 nValue = Settings.DacCalib.Get( m_Pid.m_Output );
 	BIOS::GEN::ConfigureDc( nValue );
 }
@@ -85,7 +102,7 @@ void CWndPidRegulator::OnTimer()
 
 	long lPassed = BIOS::SYS::GetTick() - lTick;
 	if ( HasFocus() )
-		BIOS::LCD::Printf(300, 20, RGB565(404040), RGB565(000000), "upd: %dms  ", lPassed);
+		BIOS::LCD::Printf(340, 20, RGB565(404040), RGB565(000000), "%dms  ", lPassed);
 }
 
 void CWndPidRegulator::Create(CWnd *pParent, ui16 dwFlags)
@@ -132,7 +149,7 @@ void CWndPidRegulator::_Highlight( CPoint cpPoint, int nRadius, int nR, int nG, 
 void CWndPidRegulator::ShowLocalMenu(bool bFocus)
 {
 	/*static*/ const char* const ppszLocalMenu[] =
-	{"Diagram", "Values", "Graph", NULL};
+	{"Diagram", "Values", "Graph", "Mode", NULL};
 
 	int x = 4;
 	for ( int i=0; ppszLocalMenu[i]; i++ )
@@ -140,9 +157,12 @@ void CWndPidRegulator::ShowLocalMenu(bool bFocus)
 		if ( bFocus )
 		{
 			ui16 clrTab = (i==m_nFocus) ? RGB565(ffffff) : RGB565(b0b0b0);
+			ui16 clrText = RGB565(000000);
+			if ( i == m_nFocus && m_nSubFocus == -1 )
+				clrTab = RGB565(8080b0);
 			x += BIOS::LCD::Draw(x, 20, clrTab, RGB565(000000), CShapes::corner_left);
 			BIOS::LCD::Bar( x, 20, x + strlen(ppszLocalMenu[i])*8, 36, clrTab);
-			x += BIOS::LCD::Print(x, 20, RGB565(000000), RGBTRANS, ppszLocalMenu[i]);
+			x += BIOS::LCD::Print(x, 20, clrText, RGBTRANS, ppszLocalMenu[i]);
 			x += BIOS::LCD::Draw(x, 20, clrTab, RGB565(000000), CShapes::corner_right);
 		} else
 		{
@@ -176,15 +196,16 @@ void CWndPidRegulator::ShowDiagram( CPoint& cpBase )
 
 void CWndPidRegulator::ShowDiagramValues( CPoint cpBase )
 {
+	#define SELECTED(n) (m_nSubFocus==n) ? RGB565(8080b0) : RGB565(ffffff)
 	// values
-	BIOS::LCD::Printf( cpBase.x + 140, cpBase.y - 14, RGB565(b00000), RGB565(ffffff), "Kp =%s",
+	BIOS::LCD::Printf( cpBase.x + 140, cpBase.y - 14, RGB565(b00000), SELECTED(1), "Kp =%s",
 		CUtils::FormatFloat5(m_Pid.m_Kp) );
-	BIOS::LCD::Printf( cpBase.x + 140, cpBase.y + 48, RGB565(00b000), RGB565(ffffff), "Ki =%s",
+	BIOS::LCD::Printf( cpBase.x + 140, cpBase.y + 48, RGB565(00b000), SELECTED(2), "Ki =%s",
 		CUtils::FormatFloat5(m_Pid.m_Ki) );
-	BIOS::LCD::Printf( cpBase.x + 140, cpBase.y + 110, RGB565(0000b0), RGB565(ffffff), "Kd =%s",
+	BIOS::LCD::Printf( cpBase.x + 140, cpBase.y + 110, RGB565(0000b0), SELECTED(3), "Kd =%s",
 		CUtils::FormatFloat5(m_Pid.m_Kd) );
 
-	BIOS::LCD::Printf( cpBase.x + 4, cpBase.y + 52, RGB565(404040), RGB565(ffffff), "S =%s",
+	BIOS::LCD::Printf( cpBase.x + 4, cpBase.y + 52, RGB565(404040), SELECTED(0), "S =%s",
 		CUtils::FormatFloat5(m_Pid.m_Target) );
 	BIOS::LCD::Printf( cpBase.x + 280, cpBase.y + 52, RGB565(404040), RGB565(ffffff), "O =%s",
 		CUtils::FormatFloat5(m_Pid.m_Output) );
@@ -244,13 +265,14 @@ void CWndPidRegulator::ShowValues(bool bValues)
 				fValue = m_Pid.m_derivative * m_Pid.m_Kd;
 		}
 
+		ui16 clrBack = m_nSubFocus == i ? RGB565(8080b0) : RGB565(ffffff);
 		if ( !bValues )
 		{
-			BIOS::LCD::Print(   8, y, RGB565(808080), RGB565(ffffff), arrAttrs[i].strDesc );
-			BIOS::LCD::Printf( 208, y, arrAttrs[i].clr, RGB565(ffffff), "%s =%s %s", 
+			BIOS::LCD::Print(   8, y, RGB565(808080), clrBack, arrAttrs[i].strDesc );
+			BIOS::LCD::Printf( 208, y, arrAttrs[i].clr, clrBack, "%s =%s %s", 
 				arrAttrs[i].strVar, CUtils::FormatFloat5(fValue), arrAttrs[i].strUnits );
 		} else {
-			BIOS::LCD::Print( 208+4*8, y, arrAttrs[i].clr, RGB565(ffffff), CUtils::FormatFloat5(fValue) );
+			BIOS::LCD::Print( 208+4*8, y, arrAttrs[i].clr, clrBack, CUtils::FormatFloat5(fValue) );
 		}
 	}
 }
@@ -333,6 +355,30 @@ void CWndPidRegulator::OnTimerGraph()
 	}
 }
 
+void CWndPidRegulator::ShowMode()
+{
+	struct
+	{
+		const char* strDesc;
+		int nType;
+		void* pValue;
+	} const arrAttrs[] = 
+	{ 
+		{ "Simulation", 1, &m_bRealModel }
+	};
+
+	int y = 42;
+	for ( int i = 0; i < (int)COUNT(arrAttrs); i++, y += 16 )
+	{
+		const char* strValue = "?";
+		if ( arrAttrs[i].nType == 1 ) // inverted bool
+			strValue = !*((bool*)arrAttrs[i].pValue) ? "true " : "false";
+		ui16 clrBack = m_nSubFocus == i ? RGB565(8080b0) : RGB565(ffffff);
+		BIOS::LCD::Print(   8, y, RGB565(808080), RGB565(ffffff), arrAttrs[i].strDesc );
+		BIOS::LCD::Print( 208, y, RGB565(000000), clrBack, strValue );
+	}
+}
+
 void CWndPidRegulator::OnPaint()
 {
 	if ( HasFocus() )
@@ -360,28 +406,130 @@ void CWndPidRegulator::OnPaint()
 		case 2:
 			ShowGraph();
 		break;
+		case 3:
+			ShowMode();
+		break;
 	}
+}
+
+float _Step( float f )
+{
+	if ( f <= 1.0f )
+		return 0.01f;
+	if ( f <= 10.0f )
+		return 0.1f;
+	if ( f <= 100.0f )
+		return 1.0f;
+	return 0.01f;
 }
 
 void CWndPidRegulator::OnKey(ui16 nKey)
 {
+	if ( ( nKey == BIOS::KEY::KeyLeft || nKey == BIOS::KEY::KeyRight ) && m_nSubFocus != -1 )
+	{
+		int nDelta = nKey == BIOS::KEY::KeyLeft ? -1 : 1;
+		switch ( m_nFocus )
+		{
+		case 0:
+			switch ( m_nSubFocus )
+			{
+				case 0: m_Pid.m_Target += nDelta*0.010f; break;
+				case 1: m_Pid.m_Kp += nDelta * _Step(m_Pid.m_Kp); break;
+				case 2: m_Pid.m_Ki += nDelta * _Step(m_Pid.m_Ki); break;
+				case 3: m_Pid.m_Kd += nDelta * _Step(m_Pid.m_Kd); break;
+			}
+			ShowDiagramValues( CPoint(5, 55) );
+			break;
+		case 1:
+			switch ( m_nSubFocus )
+			{
+				case 0: m_Pid.m_Target += nDelta*0.010f; break;
+				case 1: 
+					fUpdate += nDelta * 0.010f; 
+					m_Pid.m_dt = fUpdate;
+					UTILS.Clamp<float>( fUpdate, 0.010f, 5.00f);
+					KillTimer();
+					SetTimer( (int)(fUpdate*1000.0f) );
+					break;
+				case 2: m_Pid.m_Kp += nDelta * _Step(m_Pid.m_Kp); break;
+				case 3: m_Pid.m_Ki += nDelta * _Step(m_Pid.m_Ki); break;
+				case 4: m_Pid.m_Kd += nDelta * _Step(m_Pid.m_Kd); break;
+			}
+			ShowValues( true );
+			break;
+		case 2:
+			m_Pid.m_Target += nDelta*0.010f; break;
+			break;
+		case 3:
+			m_bRealModel = nDelta < 0 ? true : false;
+			ShowMode(); 
+			break;
+		}
+		return;
+	}
 	if ( nKey == BIOS::KEY::KeyLeft )
 	{
 		if ( m_nFocus > 0 )
 		{
 			m_nFocus--;
+			m_nSubFocus = -1;
 			Invalidate();
 		}
 		return;
 	}
 	if ( nKey == BIOS::KEY::KeyRight )
 	{
-		if ( m_nFocus < 2 )
+		if ( m_nFocus < 3 )
 		{
 			m_nFocus++;
+			m_nSubFocus = -1;
 			Invalidate();
 		}
 		return;
+	}
+	if ( HasFocus() && nKey == BIOS::KEY::KeyDown )
+	{
+		int nMaxItems = 0;
+		switch ( m_nFocus )
+		{
+			case 0: nMaxItems = 4; break;
+			case 1: nMaxItems = 5; break;
+			case 2: nMaxItems = 1; break;
+			case 3: nMaxItems = 1; break;
+		}
+		if ( m_nSubFocus < nMaxItems-1 )
+			m_nSubFocus++;
+		if ( m_nSubFocus == 0 )
+			ShowLocalMenu(true);
+
+		switch ( m_nFocus )
+		{
+			case 0: ShowDiagramValues( CPoint(5, 55) ); break;
+			case 1: ShowValues( true ); break;
+			case 2: break;
+			case 3: ShowMode(); break;
+		}
+
+		return;
+	}
+	if ( HasFocus() && nKey == BIOS::KEY::KeyUp )
+	{
+		if ( m_nSubFocus > -1 )
+		{
+			m_nSubFocus--;
+			if ( m_nSubFocus == -1 )
+				ShowLocalMenu(true);
+
+			switch ( m_nFocus )
+			{
+				case 0: ShowDiagramValues( CPoint(5, 55) ); break;
+				case 1: ShowValues( true ); break;
+				case 2: break;
+				case 3: ShowMode(); break;
+			}
+	
+			return;
+		}
 	}
 	if ( nKey == BIOS::KEY::KeyEnter )
 	{
@@ -389,6 +537,22 @@ void CWndPidRegulator::OnKey(ui16 nKey)
 		m_Pid.m_Output = 0;
 		m_Pid.m_Current = 0;
 		return;
+	}
+	if ( nKey == BIOS::KEY::KeyEscape )
+	{
+		if ( m_nSubFocus != -1 )
+		{
+			m_nSubFocus = -1;
+			ShowLocalMenu(true);
+			switch ( m_nFocus )
+			{
+				case 0: ShowDiagramValues( CPoint(5, 55) ); break;
+				case 1: ShowValues( true ); break;
+				case 2: break;
+				case 3: ShowMode(); break;
+			}
+			return;
+		}
 	}
 	CWnd::OnKey( nKey );
 }

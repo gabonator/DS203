@@ -124,9 +124,12 @@ public:
 			// functions
 			{ "About", CEvalToken::PrecedenceFunc, _About },
 			{ "Help", CEvalToken::PrecedenceFunc, _Help },
+			{ "TTY", CEvalToken::PrecedenceConst, _Tty },	// for quick switching the output suitable for putty/other terminal
 
 			{ "WND.Message", CEvalToken::PrecedenceFunc, _WndMessage },
 			{ "WND.Dump", CEvalToken::PrecedenceFunc, _WndDump },			// output only through uart
+			{ "WND.GetFocus", CEvalToken::PrecedenceFunc, _WndGetFocus },
+			{ "WND.GetInfo", CEvalToken::PrecedenceFunc, _WndGetInfo },
 			{ "ADC.Transfer", CEvalToken::PrecedenceFunc, _AdcTransfer },	// output only through uart
 
 			// constants

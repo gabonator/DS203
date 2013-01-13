@@ -126,12 +126,17 @@ void BIOS::SYS::Execute( int nCode )
 	if ( !dwGotoAddr )
 		return;
 
+#if 0
 	u32 dwGotoBase = *(vu32*)(dwGotoAddr/*+4*/);
 	typedef void (*pFunc)(void);
 	pFunc GotoApp = (pFunc)(dwGotoBase);
 
 	__MSR_MSP(dwGotoAddr);
 	GotoApp();
+#else
+	__MSR_MSP(dwGotoAddr+4);
+//__set_MSP(dwGotoAddr+4);
+#endif
 }
 
 void* BIOS::SYS::IdentifyApplication( int nCode )

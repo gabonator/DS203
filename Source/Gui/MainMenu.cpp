@@ -71,6 +71,7 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 		{
 			SendMessage( &MainWnd.m_wndToolBar, ToWord('g', 'o'), (NATIVEPTR)strTarget);
 		} else {
+			//BIOS::SYS::Execute( BIOS::SYS::EApp1 );
 			MainWnd.m_wndMessage.Show(this, "Info", "Sorry, not implemented", RGB565(FFFF00));
 		}
 		return;

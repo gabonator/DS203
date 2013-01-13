@@ -20,14 +20,14 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::DigitalChannel::ppszTextPolarity[] =
 		{"Positive", "Negative"};
 /*static*/ const char* const CSettings::TimeBase::ppszTextResolution[] =
-		{"100ns", "200ns", "500ns", 
+		{/*"100ns",*/ "200ns", "500ns", 
 		"1us", "2us", "5us",
 		"10us", "20us", "50us", "100us", "200us", "500us",
 		"1ms", "2ms", "5ms",
 		"10ms", "20ms", "50ms", "100ms", "200ms", "500ms", 
 		"1s" };
 /*static*/ const float CSettings::TimeBase::pfValueResolution[] =
-		{100e-9f, 200e-9f, 500e-9f,
+		{/*100e-9f,*/ 200e-9f, 500e-9f,
 		1e-6f, 2e-6f, 5e-6f,
 		10e-6f, 20e-6f, 50e-6f, 100e-6f, 200e-6f, 500e-6f,
 		1e-3f, 2e-3f, 5e-3f,
@@ -157,8 +157,10 @@ void CSettings::Reset()
 	//Gen.nArr = 592; //2000-1;
 	Gen.nPsc = 180-1;
 	Gen.nArr = 24;
+	Gen.nCcr = (Gen.nArr+1)/2;
 	Gen.nScale = 0x10000;
 	Gen.nOffset = 0x8000;
+	Gen.nDuty = 50;
 
 	MarkT1.Mode = Marker::_On;
 	MarkT1.Source = Marker::_CH1;

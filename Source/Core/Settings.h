@@ -81,7 +81,7 @@ public:
 	public:
 		static const char* const ppszTextResolution[];
 		enum EResolution { 
-			_100ns, _200ns, _500ns, 
+			/*_100ns,*/ _200ns, _500ns, 
 			_1us, _2us, _5us,
 			_10us, _20us, _50us, _100us, _200us, _500us,
 			_1ms, _2ms, _5ms,
@@ -146,9 +146,11 @@ public:
 			Wave;
 		int nPsc;
 		int nArr;
+		int nCcr;
 		int nScale; // 65536 - full
 		int nOffset; // 0..65536
 
+		int nDuty; // wanted duty cycle, real duty can be calculated from arr/ccr
 		int nSamples;
 		float nFrequency; 
 		float fAmplitude; // 65536 -> full

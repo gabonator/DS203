@@ -1,6 +1,10 @@
 #include "MenuGenMain.h"
 #include <Source/Gui/MainWnd.h>
 
+bool _IsVisible(CWnd& wnd)
+{
+	return wnd.m_dwFlags & CWnd::WsVisible ? true : false;
+}
 /*virtual*/ void CWndMenuGenerator::Create(CWnd *pParent, ui16 dwFlags) 
 {
 	// todo set the amplitude and offset from settings
@@ -12,6 +16,7 @@
 	m_itmFreq.Create("Frequency", RGB565(b00040), 2, this );
 	m_itmAmpl.Create("Amplitude", RGB565(b00040), 2, this );
 	m_itmOffset.Create("Offset", RGB565(b00040), 2, this );
+	m_itmDuty.Create("Duty", RGB565(b00040), 2, this );
 	
 	OnMessage( &m_itmWave, ToWord('i', 'u'), 0 ); // force update
 }
@@ -43,6 +48,9 @@
 		MainWnd.m_wndSignalGraph.ShowWindow( SwShow );
 		if ( Settings.Gen.Wave == CSettings::Generator::_Dc )
 			MainWnd.m_wndSignalGraph.Setup( NULL, 0 );
+		else if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetWave(Settings.Gen.Wave)->pWave, 
+				CCoreGenerator::GetWave(Settings.Gen.Wave)->nCount );
 		else
 			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetRamDac(), CCoreGenerator::GetRamLen() );
 		return;
@@ -50,23 +58,51 @@
 
 	if ( code == ToWord('i', 'u') && pSender == &m_itmWave )
 	{
+		bool bRedraw = false;
 		CCoreGenerator::Update();
 		m_itmFreq.Invalidate();
 
-		bool bShowAmpl = ( Settings.Gen.Wave != CSettings::Generator::_Dc );
-		if ( m_itmAmpl.IsVisible() != bShowAmpl )
+		bool bShowOffset = ( Settings.Gen.Wave != CSettings::Generator::_Square );
+		if ( _IsVisible(m_itmOffset) != bShowOffset )
+		{
+			m_itmOffset.ShowWindow( bShowOffset ? CWnd::SwShow : CWnd::SwHide );
+			bRedraw = true;
+		}
+
+		bool bShowAmpl = ( Settings.Gen.Wave != CSettings::Generator::_Dc ) && bShowOffset;
+		if ( _IsVisible(m_itmAmpl) != bShowAmpl )
 		{
 			m_itmAmpl.ShowWindow( bShowAmpl ? CWnd::SwShow : CWnd::SwHide );
-			MainWnd.Invalidate();
+			bRedraw = true;
+		}
+
+		bool bShowDuty = ( Settings.Gen.Wave == CSettings::Generator::_Square );
+		if ( _IsVisible(m_itmDuty) != bShowDuty )
+		{
+			m_itmDuty.ShowWindow( bShowDuty ? CWnd::SwShow : CWnd::SwHide );
+			bRedraw = true;
 		}
 
 		if ( Settings.Gen.Wave == CSettings::Generator::_Dc )
 			MainWnd.m_wndSignalGraph.Setup( NULL, 0 );
+		else if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetWave(Settings.Gen.Wave)->pWave, 
+				CCoreGenerator::GetWave(Settings.Gen.Wave)->nCount );
 		else
 			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetRamDac(), CCoreGenerator::GetRamLen() );
+
+		if ( bRedraw )
+			MainWnd.Invalidate();
 	}
 
 	if ( code == ToWord('i', 'u') && pSender == &m_itmFreq )
+	{
+		CCoreGenerator::Update();
+		if ( _IsVisible( m_itmDuty ) )
+			m_itmDuty.Invalidate();
+	}
+
+	if ( code == ToWord('i', 'u') && pSender == &m_itmDuty )
 	{
 		CCoreGenerator::Update();
 	}

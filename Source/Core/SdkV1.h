@@ -132,6 +132,35 @@ DECLARE_FUNCTION( _WndDump )
 	return CEvalOperand(CEvalOperand::eoNone);
 }
 
+DECLARE_FUNCTION( _WndGetInfo )
+{
+	_SAFE( arrOperands.GetSize() == 1 );
+	ui32 dwPtr = arrOperands.RemoveLast().GetInteger();		
+
+	char msg[32];
+	BIOS::DBG::sprintf( msg, "QAN=(text, json)" );
+	BIOS::SERIAL::Send( msg );
+
+	CWnd* pWnd = (CWnd*)dwPtr;
+	_ScanWindowRecursive( pWnd, 0, msg );
+
+	BIOS::SERIAL::Putch( 0x1b ); // escape at end of text
+	return CEvalOperand(CEvalOperand::eoNone);
+}
+
+DECLARE_FUNCTION( _WndGetFocus )
+{
+	ui32 dwFocus = (ui32)MainWnd.GetFocus();
+	return (UINT)dwFocus;
+}
+
+DECLARE_FUNCTION( _Tty )
+{
+	Settings.Runtime.m_bUartTest = false;
+	Settings.Runtime.m_bUartEcho = true;
+	return "Tty ready\r\n";
+}
+
 static void _ScanWindowRecursive( CWnd* pWnd, int nMask, char* msg )
 {
 	// {ptr:0x01234567, name:"MainWnd", style:8, rect:{left:20,top:10,right:30,bottom:40}, children:[...] }
@@ -153,7 +182,7 @@ static void _ScanWindowRecursive( CWnd* pWnd, int nMask, char* msg )
 			BIOS::SERIAL::Send( msg );
 		BIOS::SERIAL::Send( "}" );
 
-		if ( pWnd->m_pFirst )
+		if ( pWnd->m_pFirst && nMask != 0 )
 		{
 			BIOS::SERIAL::Send( ", children:[" );
 			CWnd *pChild = pWnd->m_pFirst;
