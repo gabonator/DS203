@@ -57,29 +57,38 @@ Screenshots:
 
 ![Image 11](/gabonator/DS203/raw/master/Man/Screenshot/android.jpg)
 
+![Image 12](/gabonator/DS203/raw/master/Man/Screenshot/pid1.png)
+
+![Image 13](/gabonator/DS203/raw/master/Man/Screenshot/pid3.png)
+
+![Image 14](/gabonator/DS203/raw/master/Man/Screenshot/snake.png)
 
 Feature highlights:
 ======================
 
-- UART, CANBUS decoder
-- Mask tests (create envelope of your signal and catch disturbances which exceed this envelope)
+- UART, MIDI, CANBUS decoder
+- Mask tests, pass/fail calculations (create envelope of your signal and catch disturbances which exceed this envelope)
 - Advanced mathematical operators (3 operands)
 - User defined FIR filter (in Oscilloscope/Math)
 - Cursors with lock-to-channel function
 - Spectral analysis
+- PID Controller
 - Export to Wave (use your favourite sound editing program for signal examination)
 - Export to CSV file
 - Export to interactive SVG
 - Chromatic tuner utility with very precise frequency counter
-- Remote control with android device over UART/bluetooth
+- Remote control with android device over UART/bluetooth (or with DsoControl application)
+- Touchscreen support
+- Serial port monitor with selectable baud rate
+- Snake game :)
 
 Todo list:
 ======================
 - finish oscilloscope module - 92% done
-- calibration - 70% done
+- calibration - 80% done
 - fft view - 80% done
-- signal generator with modulations - 40% done
-- connection with android tablet/phone - 80% done
+- signal generator - 90% done
+- connection with android tablet/phone - 90% done
 - optimize ROM usage (many bitmaps are stored as 8bits per pixel) - 0%
 
 Calibration:
@@ -110,8 +119,8 @@ If you want to build this firmware with your own modules, follow the instruction
 References:
 ======================
 
-- Authors webpage - www.valky.eu
-- Seeedstudio forums - http://www.seeedstudio.com/forum/viewtopic.php?f=10&t=2362
+- Author's webpage - www.valky.eu
+- Seeedstudio forums - http://www.seeedstudio.com/forum/viewforum.php?f=26
 - DSO Quad wiki pages - http://www.seeedstudio.com/wiki/DSO_Quad
 
 Alternative firmwares and useful resouces:
@@ -120,3 +129,4 @@ Alternative firmwares and useful resouces:
  - Petteri Aimonen - http://essentialscrap.com/dsoquad/
  - Pedro Simoes - https://github.com/pmos69/dso203_gcc
  - Marco Sinatti - https://sites.google.com/site/marcosinatti/elettronica/dso
+
