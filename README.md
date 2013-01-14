@@ -113,10 +113,19 @@ This firmware finally implements a simple method for analog channel calibration.
    6. Hit save and try changing the input voltage and check whether you get correct reading at the Vin value. Use a sensible voltage while matching the K value, for example - if you are calibrating 200mV range, use 4x200mV = 800mV at input.
  - After finishing, select "Save calib data"
 
+
 Development:
 ======================
 
 If you want to build this firmware with your own modules, follow the instructions in man/Readme.txt.
+
+
+Remote control with android phone
+======================
+
+The firmware implements simple expression evaluator which can be used to control the device remotely. In Resources folder you can find android project (including .apk executable) which demonstrates this feature through bluetooth wireless connection. There is also PC application (Resources/DsoControl) that can be used as remote control by sending the mouse cursor position and keystrokes through bluetooth or UART.
+Read more here: https://github.com/gabonator/DS203/tree/master/Man/SerialOutput
+
 
 References:
 ======================
