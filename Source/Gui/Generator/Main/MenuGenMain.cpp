@@ -49,8 +49,11 @@ bool _IsVisible(CWnd& wnd)
 		if ( Settings.Gen.Wave == CSettings::Generator::_Dc )
 			MainWnd.m_wndSignalGraph.Setup( NULL, 0 );
 		else if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+		{
+			CCoreGenerator::SetDuty( Settings.Gen.nDuty );
 			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetWave(Settings.Gen.Wave)->pWave, 
 				CCoreGenerator::GetWave(Settings.Gen.Wave)->nCount );
+		}
 		else
 			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetRamDac(), CCoreGenerator::GetRamLen() );
 		return;

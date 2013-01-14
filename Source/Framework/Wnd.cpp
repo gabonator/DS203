@@ -145,8 +145,12 @@ void CWnd::Create( const char* pszId, ui16 dwFlags, const CRect& rc, CWnd* pPare
 
 		if (pFocus)
 		{
-			if (pFocus->GetLast())
-				pFocus = pFocus->GetLast();	
+			// find last child in pFocus
+			CWnd* pLast = pFocus->GetLast();
+			while ( pLast && ( !(pLast->m_dwFlags & CWnd::WsVisible) || (pLast->m_dwFlags & CWnd::WsNoActivate) ) )
+				pLast = pLast->GetPrev();
+			if ( pLast )
+				pFocus = pLast;
 
 			pFocus->SetFocus();
 			this->Invalidate();

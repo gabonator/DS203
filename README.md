@@ -63,6 +63,8 @@ Screenshots:
 
 ![Image 14](/gabonator/DS203/raw/master/Man/Screenshot/snake.png)
 
+![Image 15](/gabonator/DS203/raw/master/Man/Screenshot/sincinterpolator.png)
+
 Feature highlights:
 ======================
 
