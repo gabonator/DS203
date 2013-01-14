@@ -242,11 +242,9 @@ void CMainWnd::OnMouseClick()
 		{
 			CWnd* pPrevFocus = GetFocus();
 			pWnd->SetFocus();
-
+			pPrevFocus->Invalidate();
 			bool bProcess = false;
 			pTopDialog->SendMessage( pWnd, ToWord('M', 'C'), (NATIVEPTR)&bProcess );
-
-			pPrevFocus->Invalidate();
 			pWnd->Invalidate();
 		}
 	} else

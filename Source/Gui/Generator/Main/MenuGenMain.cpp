@@ -91,6 +91,10 @@ bool _IsVisible(CWnd& wnd)
 		else
 			MainWnd.m_wndSignalGraph.Setup( CCoreGenerator::GetRamDac(), CCoreGenerator::GetRamLen() );
 
+		if ( Settings.Gen.Wave == CSettings::Generator::_Square )
+		{
+			CCoreGenerator::SetDuty( Settings.Gen.nDuty );
+		}
 		if ( bRedraw )
 			MainWnd.Invalidate();
 	}

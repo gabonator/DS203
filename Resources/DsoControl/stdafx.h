@@ -7,11 +7,13 @@
 
 #include "targetver.h"
 
-#define _AFXDLL
+//#define _AFXDLL
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
-#include <afxtempl.h>
+//#include <afxtempl.h>
 #include <windows.h>
+#include <crtdbg.h>
+#include <stdio.h>
 
 // C RunTime Header Files
 #include <stdlib.h>

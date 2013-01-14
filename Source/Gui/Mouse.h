@@ -81,8 +81,10 @@ public:
 			for (int x=m_nX; x<m_nX+2; x++)
 			{
 				ui16 nPix = BIOS::LCD::GetPixel(x, y);
-				BIOS::LCD::PutPixel(x, y, ~nPix);
 				*pPix++ = nPix;
+				nPix = ~nPix;
+				//nPix = RGB565(ff0000);
+				BIOS::LCD::PutPixel(x, y, nPix);
 			}
 	}
 

@@ -160,7 +160,6 @@ ui16* CCoreGenerator::_GetWave(ui8 nWaveIndex)
 				nSample = 0;
 			if ( nSample > 0xfff )
 				nSample = 0xfff;
-			_ASSERT(m_pRamWave[i]  == nSample );
 			m_pRamWave[i] = nSample;
 		}
 	}

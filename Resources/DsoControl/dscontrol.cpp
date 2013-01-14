@@ -4,8 +4,11 @@
 #include "stdafx.h"
 #include "dscontrol.h"
 #include "SyncSerialComm.h"
+#include <Commctrl.h>
+#pragma comment(lib, "Comctl32.lib")
 
 #define MAX_LOADSTRING 100
+#define strPort "\\\\.\\COM11"
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
@@ -18,13 +21,45 @@ BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
+class CString
+{
+	char string[1024];
+public:
+	CString()
+	{
+		string[0] = 0;
+	}
+	CString(char* str)
+	{
+		strcpy(string, str);
+	}
+	char* GetBuffer()
+	{
+		return string;
+	}
+	int GetLength()
+	{
+		return strlen(string);
+	}
+	void Format(char* pszFormat, ...)
+	{
+		va_list argList;
+		va_start(argList, pszFormat);
+		vsprintf(string, pszFormat, argList);
+		va_end(argList);
+	}
+
+};
+
 CString m_strCommand = "";
 LONG m_lLastMouseEvent = 0;
+//HWND m_ghwndStatusBar = NULL;
+//HWND m_hStatus = NULL;
 
 class CComm : public CSyncSerialComm
 {
 public:
-	CComm() : CSyncSerialComm( "\\\\.\\COM11" )
+	CComm() : CSyncSerialComm( strPort )
 	{
 		HRESULT hOk = Open();
 		_ASSERT( hOk == S_OK );
@@ -110,14 +145,14 @@ DWORD FROM_565_TO_RGB(unsigned short clr565)
 }
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPTSTR    lpCmdLine,
-                     int       nCmdShow)
+	HINSTANCE hPrevInstance,
+	LPTSTR    lpCmdLine,
+	int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
- 	// TODO: Place code here.
+	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
 
@@ -195,27 +230,47 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   HWND hWnd;
+	HWND hWnd;
 
-   hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance; // Store instance handle in our global variable
 
-   int nWidth = 400 + GetSystemMetrics(SM_CXFRAME)*2;
-   int nHeight = 240 + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME)*2 + GetSystemMetrics(SM_CYMENU);
+	DWORD dwStyle = WS_OVERLAPPEDWINDOW;
+	int nWidth = 400 + GetSystemMetrics(SM_CXFRAME)*2;
+	int nHeight = 240 + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME)*2 + GetSystemMetrics(SM_CYMENU);
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, nWidth, nHeight, NULL, NULL, hInstance, NULL);
+	//DWORD dwStyle = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+	//int nWidth = 400 + GetSystemMetrics(SM_CXFRAME)*2;
+	//int nHeight = 240 + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME)*2+10 + GetSystemMetrics(SM_CYMENU);
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+	hWnd = CreateWindow(szWindowClass, szTitle, dwStyle,
+		CW_USEDEFAULT, 0, /*CW_USEDEFAULT, 0,*/ nWidth, nHeight, NULL, NULL, hInstance, NULL);
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
-   // connect, transfer bitmap
+	/*
+	m_ghwndStatusBar = CreateWindowEx(0, // extended not required
+	STATUSCLASSNAME, // status bar class name, equivalent to
+	// "msctls_statusbar32"
+	"", //caption not required
+	WS_CHILD | WS_VISIBLE,
+	-100, // x 
+	-100, // y
+	10, // width
+	10, // height
+	hWnd,
+	NULL,
+	(HINSTANCE) GetWindowLong (hWnd, GWL_HINSTANCE),
+	NULL);
+	*/
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
 
-   return TRUE;
+	// connect, transfer bitmap
+
+	return TRUE;
 }
 
 //
@@ -313,6 +368,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONUP:
 		{
+			CString strEvent;
+			strEvent.Format("MAIN.Mouse(%d,%d,%d);\n", LOWORD(lParam), HIWORD(lParam), 0);
+			m_Comm.Send(strEvent);
+			m_lLastMouseEvent = GetTickCount();
 		}
 		break;
 	case WM_KEYDOWN:
@@ -330,8 +389,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case VK_F3: m_Comm.Send("WND.Message(WND::WmKey, KEY::F3);\n"); break;
 		case VK_F4: m_Comm.Send("WND.Message(WND::WmKey, KEY::F4);\n"); break;
 		}
+/*
+	case WM_CREATE:
+		{
+			InitCommonControls();
+			m_hStatus=CreateStatusWindow(WS_CHILD | WS_VISIBLE, (LPCTSTR)NULL, hWnd, 200);
+			SendMessage(m_hStatus, SB_SIMPLE, (WPARAM)(BOOL)TRUE, (LPARAM)0);
+			SetWindowText( m_hStatus, "Pokus...");
+			RECT rectStatus;
+			GetClientRect( m_hStatus, &rectStatus);
 
+			RECT rect;
+			rect.left = 100;
+			rect.top = 100;
+			rect.right = rect.left + 400;
+			rect.bottom = rect.top + 240 + (rectStatus.bottom - rectStatus.top);
+			AdjustWindowRect( &rect, WS_OVERLAPPEDWINDOW, TRUE );
 
+			SetWindowPos( hWnd, NULL, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOMOVE );
+			InvalidateRect( hWnd, NULL, FALSE );
+			break;
+		}
+*/
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
