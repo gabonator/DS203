@@ -38,6 +38,9 @@ bool _IsVisible(CWnd& wnd)
 		m_itmAmpl.SetAmplitude( Settings.Gen.nScale / (float)0x10000 * 2.0f );
 		m_itmOffset.SetOffset( Settings.Gen.nOffset / (float)0x10000 * 2.0f );
 
+		bool bShowFreq = ( Settings.Gen.Wave != CSettings::Generator::_Dc );
+		m_itmFreq.ShowWindow( bShowFreq );
+
 		bool bShowOffset = ( Settings.Gen.Wave != CSettings::Generator::_Square );
 		m_itmOffset.ShowWindow( bShowOffset ? CWnd::SwShow : CWnd::SwHide );
 
@@ -65,7 +68,13 @@ bool _IsVisible(CWnd& wnd)
 	{
 		bool bRedraw = false;
 		CCoreGenerator::Update();
-		m_itmFreq.Invalidate();
+
+		bool bShowFreq = ( Settings.Gen.Wave != CSettings::Generator::_Dc );
+		if ( _IsVisible(m_itmFreq) != bShowFreq )
+		{
+			m_itmFreq.ShowWindow( bShowFreq ? CWnd::SwShow : CWnd::SwHide );
+			bRedraw = true;
+		}
 
 		bool bShowOffset = ( Settings.Gen.Wave != CSettings::Generator::_Square );
 		if ( _IsVisible(m_itmOffset) != bShowOffset )
@@ -102,6 +111,8 @@ bool _IsVisible(CWnd& wnd)
 		}
 		if ( bRedraw )
 			MainWnd.Invalidate();
+		else
+			m_itmFreq.Invalidate();
 	}
 
 	if ( code == ToWord('i', 'u') && pSender == &m_itmFreq )
