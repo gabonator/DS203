@@ -38,12 +38,14 @@ bool _IsVisible(CWnd& wnd)
 		m_itmAmpl.SetAmplitude( Settings.Gen.nScale / (float)0x10000 * 2.0f );
 		m_itmOffset.SetOffset( Settings.Gen.nOffset / (float)0x10000 * 2.0f );
 
-		bool bShowAmpl = ( Settings.Gen.Wave != CSettings::Generator::_Dc );
-		if ( m_itmAmpl.IsVisible() != bShowAmpl )
-		{
-			m_itmAmpl.ShowWindow( bShowAmpl ? CWnd::SwShow : CWnd::SwHide );
-			MainWnd.Invalidate();
-		}
+		bool bShowOffset = ( Settings.Gen.Wave != CSettings::Generator::_Square );
+		m_itmOffset.ShowWindow( bShowOffset ? CWnd::SwShow : CWnd::SwHide );
+
+		bool bShowAmpl = ( Settings.Gen.Wave != CSettings::Generator::_Dc ) && bShowOffset;
+		m_itmAmpl.ShowWindow( bShowAmpl ? CWnd::SwShow : CWnd::SwHide );
+
+		bool bShowDuty = ( Settings.Gen.Wave == CSettings::Generator::_Square );
+		m_itmDuty.ShowWindow( bShowDuty ? CWnd::SwShow : CWnd::SwHide );
 
 		MainWnd.m_wndSignalGraph.ShowWindow( SwShow );
 		if ( Settings.Gen.Wave == CSettings::Generator::_Dc )
