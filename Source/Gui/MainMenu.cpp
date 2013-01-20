@@ -17,9 +17,10 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 		{ &m_itmUser,			"User\napplications",	RGB565(ffffff), "User app",		(PVOID)iconUser },
 		{ &m_itmAbout,			"About",				RGB565(ffffff), "About",		(PVOID)iconAbout },
 
-		{ &m_itmResponse,		"Frequency\nresponse",	RGB565(808080), NULL,			NULL },
-		{ &m_itmLogic,			"Logic\nanalyser",		RGB565(808080), NULL,			NULL },
-		{ NULL,					NULL,					RGB565(808080), NULL,			NULL },
+		{ &m_itmApp2,		"Application\nslot 2",	RGB565(808080), "APP2",			NULL },
+		{ &m_itmApp3,		"Application\nslot 3",	RGB565(808080), "APP3",			NULL },
+		{ &m_itmApp4,		"Application\nslot 4",	RGB565(808080), "APP4",			NULL },
+//		{ NULL,					NULL,					RGB565(808080), NULL,			NULL },
 	};
 
 	return arrLayout;
@@ -67,11 +68,22 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 		int nId = _GetItemId( GetFocus() );
 		const char* strTarget = arrLayout[nId].m_strTarget;
 		
+		if ( strcmp(strTarget, "APP2") == 0 )
+		{
+			BIOS::SYS::Execute( BIOS::SYS::EApp2 );
+		} else
+		if ( strcmp(strTarget, "APP3") == 0 )
+		{
+			BIOS::SYS::Execute( BIOS::SYS::EApp3 );
+		} else
+		if ( strcmp(strTarget, "APP4") == 0 )
+		{
+			BIOS::SYS::Execute( BIOS::SYS::EApp4 );
+		} else
 		if (strTarget)
 		{
 			SendMessage( &MainWnd.m_wndToolBar, ToWord('g', 'o'), (NATIVEPTR)strTarget);
 		} else {
-			//BIOS::SYS::Execute( BIOS::SYS::EApp1 );
 			MainWnd.m_wndMessage.Show(this, "Info", "Sorry, not implemented", RGB565(FFFF00));
 		}
 		return;

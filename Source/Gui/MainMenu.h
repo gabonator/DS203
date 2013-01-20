@@ -26,12 +26,14 @@ private:
 public:
 	CWndMenuBlockIcon	m_itmOscilloscope;
 	CWndMenuBlockIcon	m_itmSpectrum;
-	CWndMenuBlockIcon	m_itmLogic;
-	CWndMenuBlockIcon	m_itmResponse;
 	CWndMenuBlockIcon	m_itmGenerator;
 	CWndMenuBlockIcon	m_itmSettings;
 	CWndMenuBlockIcon	m_itmUser;
 	CWndMenuBlockIcon	m_itmAbout;
+
+	CWndMenuBlockIcon	m_itmApp2;
+	CWndMenuBlockIcon	m_itmApp3;
+	CWndMenuBlockIcon	m_itmApp4;
 
 	virtual void Create(CWnd *pParent, ui16 dwFlags);
 	virtual void OnPaint();

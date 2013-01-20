@@ -134,7 +134,12 @@ void BIOS::SYS::Execute( int nCode )
 	__MSR_MSP(dwGotoAddr);
 	GotoApp();
 #else
-	__MSR_MSP(dwGotoAddr+4);
+
+  u32 *vector_table = (u32 *) dwGotoAddr;
+  __MSR_MSP(vector_table[0]);
+  ((void (*)(void)) vector_table[1])();
+
+//	__MSR_MSP(dwGotoAddr+4);
 //__set_MSP(dwGotoAddr+4);
 #endif
 }

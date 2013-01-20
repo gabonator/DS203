@@ -269,9 +269,9 @@ void CMainWnd::OnMouseClick()
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
 
-#ifdef _ENABLE_MONITOR
+#ifdef ENABLE_MONITOR
 		// When the user is in UART monitor screen, do not intercept UART traffic
-		if ( MainWnd.m_wndToolBar.GetCurrentLayout() != &MainWnd.m_wndUserMonitor )
+		if ( MainWnd.m_wndToolBar.GetCurrentLayout() != &MainWnd.m_wndUserCWndUserMonitor )
 #endif
 		SdkUartProc();
 
