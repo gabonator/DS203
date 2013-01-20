@@ -321,13 +321,30 @@ public:
 			for ( int i = BIOS::SYS::EApp1; i <= BIOS::SYS::EApp4; i++ )
 			{
 				strName = (const char*)BIOS::SYS::IdentifyApplication( i );
-				if ( strName )
+				if ( strName && strcmp(strName, "Unknown") == 0 )
+					BIOS::LCD::Printf(   4, y, clrA, 0, "APP%d (valid vector table found)", i - BIOS::SYS::EApp1 + 1 );
+				else if ( strName )
 					BIOS::LCD::Printf(   4, y, clrA, 0, "APP%d (identification found at 0x%x)", i - BIOS::SYS::EApp1 + 1, (ui32)strName );
 				else
 					BIOS::LCD::Printf(   4, y, clrA, 0, "APP%d (identification not found)", i - BIOS::SYS::EApp1 + 1 );
 
+/*
+				ui32 dwAddr = 0;
+				switch(i)
+				{
+					case BIOS::SYS::EApp1: dwAddr = 0x0800C000; break;
+					case BIOS::SYS::EApp2: dwAddr = 0x08014000; break;
+					case BIOS::SYS::EApp3: dwAddr = 0x0801C000; break;
+					case BIOS::SYS::EApp4: dwAddr = 0x08024000; break;
+				}
+				ui32* pData = (ui32*)dwAddr;
+
+				BIOS::LCD::Printf(4,y+32, 0xffff, 0, "%x:%x, %x, %x, %x", dwAddr, pData[0], pData[1], pData[2], pData[3]);
+*/
+
 				if (!strName)
-					strName = "Unknown";
+					strName = "Not installed";
+
 				char strNameShort[52] = {0};
 				memcpy(strNameShort, strName, 51);
 				char* pDelim = strstr(strNameShort, ";");

@@ -67,18 +67,27 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 		const CWndModuleSelector::TMenuBlockStruct* arrLayout = GetLayout();
 		int nId = _GetItemId( GetFocus() );
 		const char* strTarget = arrLayout[nId].m_strTarget;
-		
+	
 		if ( strcmp(strTarget, "APP2") == 0 )
 		{
-			BIOS::SYS::Execute( BIOS::SYS::EApp2 );
+			if ( BIOS::SYS::IdentifyApplication( BIOS::SYS::EApp2 ) )
+				BIOS::SYS::Execute( BIOS::SYS::EApp2 );
+			else
+				MainWnd.m_wndMessage.Show(this, "Info", "Application not installed", RGB565(FFFF00));
 		} else
 		if ( strcmp(strTarget, "APP3") == 0 )
 		{
-			BIOS::SYS::Execute( BIOS::SYS::EApp3 );
+			if ( BIOS::SYS::IdentifyApplication( BIOS::SYS::EApp3 ) )
+				BIOS::SYS::Execute( BIOS::SYS::EApp3 );
+			else
+				MainWnd.m_wndMessage.Show(this, "Info", "Application not installed", RGB565(FFFF00));
 		} else
 		if ( strcmp(strTarget, "APP4") == 0 )
 		{
-			BIOS::SYS::Execute( BIOS::SYS::EApp4 );
+			if ( BIOS::SYS::IdentifyApplication( BIOS::SYS::EApp4 ) )
+				BIOS::SYS::Execute( BIOS::SYS::EApp4 );
+			else
+				MainWnd.m_wndMessage.Show(this, "Info", "Application not installed", RGB565(FFFF00));
 		} else
 		if (strTarget)
 		{
