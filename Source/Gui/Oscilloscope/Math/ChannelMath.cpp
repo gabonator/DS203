@@ -11,6 +11,13 @@ void CMathChannel::MathSetup(CSettings::Calibrator::FastCalc* pFC1, CSettings::C
 		 Settings.Math.Type == CSettings::MathOperator::_FirAdivBplusC )
 		m_Fir.Reset();
 
+	if ( Settings.Math.Type == CSettings::MathOperator::_Off )
+	{
+		// type set to CSettings::MathOperator::_Off would cause assert in MathCalc
+		Settings.Math.Type = CSettings::MathOperator::_AplusBplusC;
+		MainWnd.m_wndMessage.Show( &MainWnd, "Information", "Math operator set to A+B+C", RGB565(ffff00) );	
+	}
+
 	m_pFC1 = pFC1;
 	m_pFC2 = pFC2;
 	m_nTemp = 0;
