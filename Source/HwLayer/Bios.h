@@ -213,6 +213,52 @@ public:
 		static int GetY();
 		static bool GetDown();
 	};
+
+	class GPIO
+	{
+	public:
+		enum {
+			// nPort
+			PortA = 0,
+			PortB = 1,
+			PortC = 2,
+			PortD = 3,
+
+			// nReg
+			RegCrl = 0,
+			RegCrh = 1,
+			RegIdr = 2,
+			RegOdr = 3,
+			RegBsrr = 4,
+			RegBrr = 5,
+			RegLckr = 6,
+			
+			// nState
+			StateInput = 0,           // ..00
+			StateOutput10Mhz = 1,     // ..01
+			StateOutput2Mhz = 2,      // ..10
+			StateOutput50Mhz = 3,     // ..11
+
+			StateInputAnalog = 0<<2,
+			StateInputFloating = 1<<2,
+			StateInputPull = 2<<2,
+
+			StateOutputPushPull = 0<<2,
+			StateOutputOpenDrain = 1<<2,
+			StateOutputFunctionPushPull = 2<<2,
+			StateOutputFunctionOpenDrain = 3<<2,
+			
+			// macros for easy use
+			StateSimpleInput = StateInput | StateInputFloating,
+			StateSimpleOutput = StateOutput2Mhz | StateOutputPushPull
+		};
+
+	public:
+		static ui32* GetRegister(int nPort, int nReg);
+		static void SetState(int nPort, int nPin, int nState);
+		static void SetPin(int nPort, int nPin, bool bOn);
+		static bool GetPin(int nPort, int nPin);
+	};
 };
 
 #endif

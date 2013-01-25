@@ -184,6 +184,13 @@ public:
 			{ "MEM::Read", CEvalToken::PrecedenceFunc, _MemRead },
 			{ "MEM::Write", CEvalToken::PrecedenceFunc, _MemWrite },
 
+			// io
+			{ "GPIOA->CRL", CEvalToken::PrecedenceVar, _IoGpioACrl },
+			{ "GPIOA->CRH", CEvalToken::PrecedenceVar, _IoGpioACrh },
+			{ "GPIOA->IDR", CEvalToken::PrecedenceVar, _IoGpioAIdr },
+			{ "GPIOA->ODR", CEvalToken::PrecedenceVar, _IoGpioAOdr },
+			{ "GPIOA->BSRR", CEvalToken::PrecedenceVar, _IoGpioABsrr },
+			{ "GPIOA->LCKR", CEvalToken::PrecedenceVar, _IoGpioALckr },
 		
 			{ NULL, -1, NULL }
 		};

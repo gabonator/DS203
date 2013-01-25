@@ -65,6 +65,8 @@ Screenshots:
 
 ![Image 15](/gabonator/DS203/raw/master/Man/Screenshot/sincinterpolator.png)
 
+![Image 16](/gabonator/DS203/raw/master/Man/Screenshot/onewire.jpg)
+
 Feature highlights:
 ======================
 
@@ -83,6 +85,7 @@ Feature highlights:
 - Touchscreen support
 - Serial port monitor with selectable baud rate
 - Snake game :)
+- OneWire implementation through TX pin of uart, currently compatible with DS1820, DS18S20, DS18B20
 
 Todo list:
 ======================

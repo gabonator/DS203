@@ -867,3 +867,22 @@ void* BIOS::SYS::IdentifyApplication( int nCode )
 /*static*/ void BIOS::SYS::Execute( int nCode )
 {
 }
+
+/*static*/ ui32* BIOS::GPIO::GetRegister(int nPort, int nReg)
+{
+	static ui32 dummy;
+	return &dummy;
+}
+
+/*static*/ void BIOS::GPIO::SetState(int nPort, int nPin, int nState)
+{
+}
+
+/*static*/ void BIOS::GPIO::SetPin(int nPort, int nPin, bool bOn)
+{
+}
+
+/*static*/ bool BIOS::GPIO::GetPin(int nPort, int nPin)
+{
+	return false;
+}

@@ -132,6 +132,7 @@ void CMainWnd::Create()
 				nChecksum = nNewChecksum;
 			}
 		}
+
 		if ( Settings.Runtime.m_bUartTest )
 		{
 			char test[32];
@@ -268,7 +269,6 @@ void CMainWnd::OnMouseClick()
 
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
-
 #ifdef ENABLE_MONITOR
 		// When the user is in UART monitor screen, do not intercept UART traffic
 		if ( MainWnd.m_wndToolBar.GetCurrentLayout() != &MainWnd.m_wndUserCWndUserMonitor )

@@ -65,6 +65,7 @@ typedef signed short si16;
 #define _ASSERTW(a) _ASSERT(a)
 #define _ASSERT_VALID(a) if(!(a)) { _ASSERT(#a); }
 #define LINKERSECTION(sec) 
+#define __asm__(x) 
 //__attribute__((section(".extra")))
 /*
 #ifndef _WIN32

@@ -333,6 +333,7 @@ DECLARE_FUNCTION( _BiosGet )
 	
 // new interface implementation
 DECLARE_COMMON( NATIVEENUM )
+DECLARE_COMMON( ui32 )
 DECLARE_COMMON( ui16 )
 DECLARE_COMMON( si16 )
 DECLARE_COMMON( int )
@@ -541,3 +542,10 @@ DECLARE_FUNCTION( _MemWrite )
 
 	return CEvalOperand(CEvalOperand::eoNone);
 }
+
+DECLARE_DYNAVAR( ui32, _IoGpioACrl, *BIOS::GPIO::GetRegister(BIOS::GPIO::PortA, BIOS::GPIO::RegCrl) )
+DECLARE_DYNAVAR( ui32, _IoGpioACrh, *BIOS::GPIO::GetRegister(BIOS::GPIO::PortA, BIOS::GPIO::RegCrh) )
+DECLARE_DYNAVAR( ui32, _IoGpioAIdr, *BIOS::GPIO::GetRegister(BIOS::GPIO::PortA, BIOS::GPIO::RegIdr) )
+DECLARE_DYNAVAR( ui32, _IoGpioAOdr, *BIOS::GPIO::GetRegister(BIOS::GPIO::PortA, BIOS::GPIO::RegOdr) )
+DECLARE_DYNAVAR( ui32, _IoGpioABsrr, *BIOS::GPIO::GetRegister(BIOS::GPIO::PortA, BIOS::GPIO::RegBsrr) )
+DECLARE_DYNAVAR( ui32, _IoGpioALckr, *BIOS::GPIO::GetRegister(BIOS::GPIO::PortA, BIOS::GPIO::RegLckr) )

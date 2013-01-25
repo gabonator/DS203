@@ -17,3 +17,4 @@ extern "C" {
 #include "../bios/serial.h"
 #include "../bios/ver.h"
 #include "../bios/mouse.h"
+#include "../bios/gpio.h"

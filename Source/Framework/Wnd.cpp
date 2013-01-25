@@ -355,6 +355,7 @@ void CWnd::_UpdateTimers()
 		CTimer& timer = m_arrTimers[i];
 		if ( /*(si32)(nTick - timer.m_nLast)*/ nTick > timer.m_nNext )
 		{
+			// enable resident timers ?
 			_ASSERT( timer.m_pWnd->m_dwFlags & CWnd::WsVisible );
 			timer.m_pWnd->OnTimer();
 			timer.m_nNext = BIOS::SYS::GetTick() + timer.m_nInterval;
