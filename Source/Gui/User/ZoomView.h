@@ -31,6 +31,8 @@ public:
 
 	virtual void OnTimer()
 	{
+		if ( HasOverlay() )
+			return;
 		NormalDraw();
 	}
 

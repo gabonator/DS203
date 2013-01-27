@@ -1,6 +1,21 @@
 #include "Timer.h"	
 #ifdef ENABLE_MODULE_TIMER
 
+#include <Source/Gui/MainWnd.h>
+
+// TODO: cleanup!
+char m_arrLastValue[5];
+ui16 m_arrLastColor;
+
+void ResetNumbers()
+{
+	m_arrLastColor = RGB565(ff00ff);
+	m_arrLastValue[0] = 0;
+	m_arrLastValue[1] = 0;
+	m_arrLastValue[2] = 0;
+	m_arrLastValue[3] = 0;
+}
+
 void CWndUserTimer::Create(CWnd *pParent, ui16 dwFlags)
 {
 	CWnd::Create("CWndUserTimer", dwFlags, CRect(0, 16, 400, 240), pParent);
@@ -30,6 +45,12 @@ void CWndUserTimer::Create(CWnd *pParent, ui16 dwFlags)
 
 void CWndUserTimer::OnTimer()
 {
+	if ( HasOverlay() )
+	{
+		ResetNumbers();
+		return;
+	}
+
 	if ( m_nValue > 0 )
 		m_nValue--;
 
@@ -82,17 +103,6 @@ void CWndUserTimer::SetDigit( CBitmap& bmp, int nValue, ui16 clrBack, ui16 clrFr
 	bmp.m_arrPalette[12] = seg & 0x0000010 ? clrFront2 : clrBack;
 	bmp.m_arrPalette[13] = seg & 0x0000001 ? clrFront1 : clrBack;
 	bmp.m_arrPalette[14] = seg & 0x0000001 ? clrFront2 : clrBack;
-}
-
-char m_arrLastValue[5];
-ui16 m_arrLastColor;
-void ResetNumbers()
-{
-	m_arrLastColor = RGB565(ff00ff);
-	m_arrLastValue[0] = 0;
-	m_arrLastValue[1] = 0;
-	m_arrLastValue[2] = 0;
-	m_arrLastValue[3] = 0;
 }
 
 void CWndUserTimer::DrawNumbers( char* numbers, ui16 clrBack, ui16 clrFront1, ui16 clrFront2 )

@@ -30,6 +30,9 @@ public:
 
 	void OnTick()	
 	{
+		if ( HasOverlay() )
+			return;
+
 		const int ax[3] = {20, 380, 200};
 		const int ay[3] = {40, 50, 220};
 

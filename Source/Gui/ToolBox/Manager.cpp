@@ -140,6 +140,7 @@ bool CWndManager::Exists(char *strName)
 	{
 		// save
 		BIOS::DBG::sprintf( strName, strTemplateFile[m_itmTabs.GetFocus()], m_nValue );
+		CRect rcSafe;
 
 		switch ( m_itmTabs.GetFocus() )
 		{
@@ -149,7 +150,11 @@ bool CWndManager::Exists(char *strName)
 				break;
 			case 1: // Bmp
 				ShowWindow(CWnd::SwHide);
+				rcSafe = m_rcOverlay;
+				m_rcOverlay.Invalidate();
 				MainWnd.Invalidate();
+				m_rcOverlay = rcSafe;
+
 				CExport::SaveScreenshot16( strName );
 				ShowWindow(CWnd::SwShow);
 				MainWnd.Invalidate();

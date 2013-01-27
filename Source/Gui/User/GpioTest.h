@@ -343,6 +343,9 @@ public:
 
 	virtual void OnTimer()
 	{
+		if ( HasOverlay() )
+			return;
+
 		ui32* pCrl = BIOS::GPIO::GetRegister( BIOS::GPIO::PortA, BIOS::GPIO::RegCrl );
 		ui32* pCrh = BIOS::GPIO::GetRegister( BIOS::GPIO::PortA, BIOS::GPIO::RegCrh );
 		ui32* pIdr = BIOS::GPIO::GetRegister( BIOS::GPIO::PortA, BIOS::GPIO::RegIdr );

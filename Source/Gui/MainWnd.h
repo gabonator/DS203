@@ -18,6 +18,8 @@
 #include "Spectrum/Spectrum.h"
 #include "Mouse.h"
 
+bool HasOverlay();
+
 #define ADD_MODULE( strName, type )
 #include "User/_Modules.h"
 #undef ADD_MODULE

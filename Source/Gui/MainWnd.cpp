@@ -403,3 +403,8 @@ bool CMainWnd::HasOverlay()
 {
 	return CWnd::m_rcOverlay.IsValid() || m_wndToolbox.IsVisible() || m_wndManager.IsVisible();
 }
+
+bool HasOverlay()
+{
+	return MainWnd.HasOverlay();
+}

@@ -254,7 +254,8 @@ void CWnd::Invalidate()
 {
 	// TODO: we should only mark this windows and redraw it a while later, but for keeping
 	// things simple, invalidate causes window to redraw
-	WindowMessage(WmPaint);
+	if ( m_dwFlags & CWnd::WsVisible )	// the window must be visible, should we check this by using IsVisible()?
+		WindowMessage(WmPaint);
 }
 
 void CWnd::SendMessage(CWnd* pTarget, ui16 code, ui32 data)
