@@ -202,6 +202,12 @@
     <ClInclude Include="..\..\Source\HwLayer\Win32\font.h" />
     <ClInclude Include="..\..\Source\HwLayer\Win32\Types.h" />
     <ClInclude Include="..\..\Source\HwLayer\Win32\sprintf\spf.h" />
+    <ClInclude Include="..\..\Source\Library\BMP085.h" />
+    <ClInclude Include="..\..\Source\Library\Delay.h" />
+    <ClInclude Include="..\..\Source\Library\DHT11.h" />
+    <ClInclude Include="..\..\Source\Library\DS1820.h" />
+    <ClInclude Include="..\..\Source\Library\I2C.h" />
+    <ClInclude Include="..\..\Source\Library\Pin.h" />
     <ClInclude Include="..\..\Source\Main\Application.h" />
   </ItemGroup>
   <ItemGroup>

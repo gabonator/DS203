@@ -44,7 +44,7 @@ public:
 	{
 		start(); 
 		ui8 rc = write( (address<<1) | 0 ); // clr read bit
-    return rc;
+		return rc;
 	}
 
 	ui8 requestFrom(ui8 address, int nReadCount)
@@ -58,12 +58,12 @@ public:
 	ui8 endTransmission(void)
 	{
 		stop();
-    return 0;
+		return 0;
 	}
 
 	ui8 read()
 	{
-		if ( m_nRead > 0 )
+		if ( m_nRead > 1 )
 		{
 			m_nRead--;
 			return _read( I2C_ACK );
@@ -77,28 +77,11 @@ public:
 	}
 
 private:	
-/*
-	ui8 send(ui8 data)
+	void Delay()
 	{
-		return i2c_write(data);
+		DelayUs(10);
 	}
 
-	void send(ui8* data, ui8 quantity)
-	{
-		for(ui8 i = 0; i < quantity; ++i)
-			send(data[i]);
-	}
-
-	void send(char* data)
-	{
-    send((ui8*)data, strlen(data));
-	}
-
-	void send(int data)
-	{
-		send((ui8)data);
-	}
-*/
 	void writebit( ui8 c )
 	{
 		if ( c )
@@ -107,56 +90,56 @@ private:
 			m_Sda.Low();
 
 		m_Scl.High();
-		DelayUs(50);
+		Delay();
 
 		m_Scl.Low();
-		DelayUs(50);
+		Delay();
 
 		if ( c ) 
 			m_Sda.Low();
-		DelayUs(50);
+		Delay();
 	}
 
 	ui8 readbit(void)
 	{
 		m_Sda.High();
-    m_Scl.High();
-    DelayUs(50);
+		m_Scl.High();
+		Delay();
 
 		ui8 c = m_Sda.Get();
 		m_Scl.Low();
-		DelayUs(50);
+		Delay();
 
-    return c;
+		return c;
 	}
 
 	void Init()
 	{
 		m_Sda.High();
 		m_Scl.High();
-		DelayUs(50);
+		Delay();
 	}
 
 	void start(void)
 	{
 		m_Sda.High();
 		m_Scl.High();
-		DelayUs(50);
-   
-    m_Sda.Low();
-		DelayUs(50);
+		Delay();
 
-    m_Scl.Low();
-		DelayUs(50);
+		m_Sda.Low();
+		Delay();
+
+		m_Scl.Low();
+		Delay();
 	}
 
 	void stop(void)
 	{
 		m_Scl.High();
-		DelayUs(50);
+		Delay();
 
 		m_Sda.High();
-		DelayUs(50);
+		Delay();
 	}
 
 	ui8 _write( ui8 c )
@@ -165,7 +148,7 @@ private:
 		{
 			writebit( c & 128 );
 			c <<= 1;
-    }
+		}
 		return readbit();
 	}
 
@@ -173,34 +156,18 @@ private:
 	{
 		ui8 res = 0;
 
-    for ( int i=0;i<8;i++) 
+		for ( int i=0;i<8;i++) 
 		{
-        res <<= 1;
-        res |= readbit();  
-    }
+			res <<= 1;
+			res |= readbit();  
+		}
 
-    if ( ack )
-        writebit( 0 );
-    else
-        writebit( 1 );
+		if ( ack )
+			writebit( 0 );
+		else
+			writebit( 1 );
 
-		DelayUs(50);
+		Delay();
 		return res;
 	}
-/*
-	ui8 receive( ui8 ack )
-	{
-		return read( ack );
-	}
-
-	ui8 receive()
-	{
-		return read( I2C_ACK );
-	}
-
-	ui8 receiveLast()
-	{
-		return read( I2C_NAK );
-	}
-*/
 };

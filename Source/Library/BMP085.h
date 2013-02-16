@@ -103,11 +103,11 @@ public:
   #endif
 
     // step 1
-    X1 = (UT - (si32)ac6) * ((si32)ac5) / pow(2,15);
-    X2 = ((si32)mc * pow(2,11)) / (X1+(si32)md);
+    X1 = (si32)((UT - (si32)ac6) * ((si32)ac5) / pow(2.0f,15.0f));
+    X2 = (si32)(((si32)mc * pow(2.0f,11.0f)) / (X1+(si32)md));
     B5 = X1 + X2;
-    temp = (B5+8)/pow(2,4);
-    temp /= 10;
+    temp = (B5+8)/pow(2.0f,4.0f);
+    temp /= 10.0f;
     
     return temp;
   }
@@ -115,8 +115,8 @@ public:
   float readAltitude(float sealevelPressure = 101325) // std atmosphere
   {
     float altitude;
-    float pressure = readPressure();
-    altitude = 44330 * (1.0 - pow(pressure /sealevelPressure,0.1903));
+    float pressure = (float)readPressure();
+    altitude = 44330 * (1.0f - pow(pressure /sealevelPressure,0.1903f));
     return altitude;
   }
 
@@ -146,8 +146,8 @@ public:
   #endif
 
     // do temperature calculations
-    X1=(UT-(si32)(ac6))*((si32)(ac5))/pow(2,15);
-    X2=((si32)mc*pow(2,11))/(X1+(si32)md);
+    X1=(si32)( (UT-(si32)(ac6))*((si32)(ac5))/pow(2.0f,15.0f) );
+    X2=(si32)( ((si32)mc*pow(2.0f,11.0f))/(X1+(si32)md) );
     B5=X1 + X2;
 
   #if DEBUG == 1

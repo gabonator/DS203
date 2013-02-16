@@ -39,21 +39,21 @@ public:
 		Float();
 
 		// ACKNOWLEDGE or TIMEOUT
-		if ( Delay( 1000, 1 ) == 1000 )
+		if ( Delay( 1000, true ) == 1000 )
 			return false;
-		if ( Delay( 1000, 0 ) == 1000 )
+		if ( Delay( 1000, false ) == 1000 )
 			return false;
 
 		return true;
 	}
 
-	int Delay(int nUs, int nLevel)
+	int Delay(int nUs, bool bLevel)
 	{
 		int i;
 		nUs *= 2;
 		for ( i = 0; i < nUs; i += 3 )
 		{
-			if ( Get() != nLevel )
+			if ( Get() != bLevel )
 				break;
 			DelayUs(1); // single loop takes probably 1.5us, multiply 3/2 x
 		}
@@ -76,13 +76,13 @@ public:
 		// READ OUTPUT - 40 BITS => 5 BYTES or TIMEOUT
 		for (int i=0; i<40; i++)
 		{
-			if ( Delay( 200, 1 ) == 200 )
+			if ( Delay( 200, true ) == 200 )
 				return false;
 
-			if ( Delay( 200, 0 ) == 200 )
+			if ( Delay( 200, false ) == 200 )
 				return false;
 
-			int nTime = Delay( 200, 1 );
+			int nTime = Delay( 200, true );
 
 			if ( nTime > 25 )
 				m_buffer[idx] |= 1 << cnt;
@@ -114,7 +114,7 @@ public:
 
 	float GetDewPoint()
 	{
-  	const float a = 17.271f;
+		const float a = 17.271f;
 		const float b = 237.7f;
 		float temp = (a * GetTemperature()) / (b + GetTemperature()) + log(GetHumidity()/100.0f);
 		float Td = (b * temp) / (a - temp);

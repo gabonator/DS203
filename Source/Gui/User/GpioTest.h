@@ -50,20 +50,28 @@ public:
 			UpdateDs1820();
 			return;
 		}
-
 		if ( m_Hygrometer.Init() )
 		{
 			UpdateDht11();
 			return;
 		}
-		BIOS::LCD::Printf(20, 0x90, RGB565(ff0000), 0, "No device attached");
+		BIOS::LCD::Printf(20, 0x90, RGB565(ff0000), 0, "No device attached          ");
 	}
 
 	void UpdateBmp085()
 	{
+		BIOS::LCD::Printf(20, 0x90, RGB565(ffff00), 0, "I2C: BMP085 device found");
+
 		int nP = m_Barometer.readRawPressure();
 		int nT = m_Barometer.readRawTemperature();
-		BIOS::LCD::Printf(20, 0x90, RGB565(ff0000), 0, "BMP085 p=%d t=%d  ", nP, nT);
+		float fTemp = m_Barometer.readTemperature();
+		float fAlt = m_Barometer.readAltitude(102250);
+	  int nPressure = m_Barometer.readPressure();
+
+		BIOS::LCD::Printf(20, 0xA0, RGB565(00ff00), 0, "RawP = %d RawT = %d  ", nP, nT);
+		BIOS::LCD::Printf(20, 0xB0, RGB565(00ff00), 0, "Pressure = %2f hPa    ", nPressure/100.0f);
+		BIOS::LCD::Printf(20, 0xC0, RGB565(00ff00), 0, "Temperature = %2f " "\xf8" "C  ", fTemp );
+		BIOS::LCD::Printf(20, 0xD0, RGB565(00ff00), 0, "Altitude = %1f m  ", fAlt );
 	}
 
 	void UpdateDht11()

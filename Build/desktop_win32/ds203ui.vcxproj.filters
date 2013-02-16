@@ -127,6 +127,9 @@
     <Filter Include="Source\Gui\Oscilloscope\Mask">
       <UniqueIdentifier>{45c29dd6-2916-4e4e-a69a-99ef22f7e1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Library">
+      <UniqueIdentifier>{90130453-27c4-4464-9fd5-c116c6fac695}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -497,6 +500,24 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Generator\Main\ItemGenDuty.h">
       <Filter>Source\Gui\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\BMP085.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\Delay.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\DHT11.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\DS1820.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\I2C.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\Pin.h">
+      <Filter>Source\Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

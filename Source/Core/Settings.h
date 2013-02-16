@@ -387,6 +387,7 @@ public:
 
 		int m_bUartTest;
 		int m_bUartEcho;	// not saved in settings
+		int m_bUartSdk;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{

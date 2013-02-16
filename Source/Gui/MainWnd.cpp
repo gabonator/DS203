@@ -269,7 +269,8 @@ void CMainWnd::OnMouseClick()
 
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
-		bool bEnableSdk = true;
+		bool bEnableSdk = Settings.Runtime.m_bUartSdk;
+
 #ifdef ENABLE_MONITOR
 		// When the user is in UART monitor screen, do not intercept UART traffic
 		if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndUserCWndUserMonitor )

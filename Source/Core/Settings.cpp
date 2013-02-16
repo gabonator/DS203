@@ -286,6 +286,7 @@ void CSettings::Reset()
 
 	Runtime.m_bUartTest = true;
 	Runtime.m_bUartEcho = false;
+	Runtime.m_bUartSdk = true;
 }
 
 ui32 CSettings::GetChecksum()
