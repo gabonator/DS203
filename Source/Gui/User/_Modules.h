@@ -1,3 +1,4 @@
+#include "Geiger.h"
 #include "Timer.h"
 #include "Tuner.h"
 #include "ZoomView.h"

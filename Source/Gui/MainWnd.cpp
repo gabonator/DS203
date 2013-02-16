@@ -269,11 +269,20 @@ void CMainWnd::OnMouseClick()
 
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
+		bool bEnableSdk = true;
 #ifdef ENABLE_MONITOR
 		// When the user is in UART monitor screen, do not intercept UART traffic
-		if ( MainWnd.m_wndToolBar.GetCurrentLayout() != &MainWnd.m_wndUserCWndUserMonitor )
+		if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndUserCWndUserMonitor )
+			bEnableSdk = false;
 #endif
-		SdkUartProc();
+
+#ifdef ENABLE_MODULE_GPIOTEST
+		if ( MainWnd.m_wndToolBar.GetCurrentLayout() == &MainWnd.m_wndUserCWndGpioTest )
+			bEnableSdk = false;
+#endif
+
+		if ( bEnableSdk )
+			SdkUartProc();
 
 		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() /*&& lForceRestart < 0*/ )
 		{

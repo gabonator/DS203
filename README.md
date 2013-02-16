@@ -35,37 +35,37 @@ Screenshots:
 ======================
 ![Image 1](/gabonator/DS203/raw/master/Man/Screenshot/uart_decoder_1.png)
 
-![Image 2](/gabonator/DS203/raw/master/Man/Screenshot/midi.png)
+![Image 2](Man/Screenshot/midi.png)
 
-![Image 3](/gabonator/DS203/raw/master/Man/Screenshot/cursor.png)
+![Image 3](Man/Screenshot/cursor.png)
            
-![Image 4](/gabonator/DS203/raw/master/Man/Screenshot/waveman_meas.png)
+![Image 4](Man/Screenshot/waveman_meas.png)
 
-![Image 5](/gabonator/DS203/raw/master/Man/Screenshot/spectrum.png)
+![Image 5](Man/Screenshot/spectrum.png)
 
-![Image 6](/gabonator/DS203/raw/master/Man/Screenshot/about.png)
+![Image 6](Man/Screenshot/about.png)
 
-![Image 7](/gabonator/DS203/raw/master/Man/Screenshot/calibration.png)
+![Image 7](Man/Screenshot/calibration.png)
 
-![Image 12](/gabonator/DS203/raw/master/Man/Screenshot/envelope.png)
+![Image 12](Man/Screenshot/envelope.png)
 
-![Image 8](/gabonator/DS203/raw/master/Man/Screenshot/svgexport.png)
+![Image 8](Man/Screenshot/svgexport.png)
 
-![Image 9](/gabonator/DS203/raw/master/Man/Screenshot/wave_export_ac.png)
+![Image 9](Man/Screenshot/wave_export_ac.png)
 
-![Image 10](/gabonator/DS203/raw/master/Man/Screenshot/tuner.png)
+![Image 10](Man/Screenshot/tuner.png)
 
-![Image 11](/gabonator/DS203/raw/master/Man/Screenshot/android.jpg)
+![Image 11](Man/Screenshot/android.jpg)
 
-![Image 12](/gabonator/DS203/raw/master/Man/Screenshot/pid1.png)
+![Image 12](Man/Screenshot/pid1.png)
 
-![Image 13](/gabonator/DS203/raw/master/Man/Screenshot/pid3.png)
+![Image 13](Man/Screenshot/pid3.png)
 
-![Image 14](/gabonator/DS203/raw/master/Man/Screenshot/snake.png)
+![Image 14](Man/Screenshot/snake.png)
 
-![Image 15](/gabonator/DS203/raw/master/Man/Screenshot/sincinterpolator.png)
+![Image 15](Man/Screenshot/sincinterpolator.png)
 
-![Image 16](/gabonator/DS203/raw/master/Man/Screenshot/onewire.jpg)
+![Image 16](Man/Screenshot/onewire.jpg)
 
 Feature highlights:
 ======================
