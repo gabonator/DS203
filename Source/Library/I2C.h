@@ -30,8 +30,7 @@ public:
 	{
 		m_Sda.Create( nSdaPortPin );
 		m_Scl.Create( nSclPortPin );
-
-		Init();
+//		Init();
 	}
 
 	void begin()
@@ -76,6 +75,13 @@ public:
 		return _write( c );
 	}
 
+	void init()
+	{
+		m_Sda.High();
+		m_Scl.High();
+		Delay();
+	}
+
 private:	
 	void Delay()
 	{
@@ -111,13 +117,6 @@ private:
 		Delay();
 
 		return c;
-	}
-
-	void Init()
-	{
-		m_Sda.High();
-		m_Scl.High();
-		Delay();
 	}
 
 	void start(void)

@@ -33,7 +33,7 @@ The DS203 device has 4 push buttons and two slide buttons. The function of first
 
 Screenshots:
 ======================
-![Image 1](/gabonator/DS203/raw/master/Man/Screenshot/uart_decoder_1.png)
+![Image 1](Man/Screenshot/uart_decoder_1.png)
 
 ![Image 2](Man/Screenshot/midi.png)
 

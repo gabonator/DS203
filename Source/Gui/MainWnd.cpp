@@ -1,9 +1,5 @@
 #include "MainWnd.h"
-//#include <Source/Framework/Eval.h>
-
 #include "MainWndSdk.h"
-
-//#include <stdarg.h>
 
 /*static*/ CMainWnd	*CMainWnd::m_pInstance = NULL;
 
@@ -20,6 +16,7 @@ void CMainWnd::Create()
 	Settings.Load();
 	Settings.LoadCalibration();
 	CCoreOscilloscope::ConfigureAdc();
+	CCoreGenerator::Update();
 	CCoreSettings::Update();
 
 	m_nLastKey = BIOS::SYS::GetTick();
@@ -62,7 +59,7 @@ void CMainWnd::Create()
 	m_wndCalibration.Create( this, WsHidden );
 
 #	define ADD_MODULE( strName, type ) m_wndUser##type.Create( this, WsHidden );
-#	include "User/_Modules.h"
+#	include <Source/User/_Modules.h>
 #	undef ADD_MODULE
 
 	m_wndToolbox.Create(this);
@@ -269,7 +266,7 @@ void CMainWnd::OnMouseClick()
 
 		// timers update
 		CWnd::WindowMessage( nMsg, nParam );
-		bool bEnableSdk = Settings.Runtime.m_bUartSdk;
+		bool bEnableSdk = Settings.Runtime.m_bUartSdk ? true : false;
 
 #ifdef ENABLE_MONITOR
 		// When the user is in UART monitor screen, do not intercept UART traffic

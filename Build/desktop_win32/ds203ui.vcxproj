@@ -157,18 +157,6 @@
     <ClInclude Include="..\..\Source\Gui\ToolBox\LineTabs.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\Manager.h" />
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Balls.h" />
-    <ClInclude Include="..\..\Source\Gui\User\CharMap.h" />
-    <ClInclude Include="..\..\Source\Gui\User\FullView.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Meter.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Monitor.h" />
-    <ClInclude Include="..\..\Source\Gui\User\PidRegulator.h" />
-    <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Snake.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Timer.h" />
-    <ClInclude Include="..\..\Source\Gui\User\Tuner.h" />
-    <ClInclude Include="..\..\Source\Gui\User\ZoomView.h" />
-    <ClInclude Include="..\..\Source\Gui\User\_Modules.h" />
     <ClInclude Include="..\..\Source\Gui\Windows\MessageBox.h" />
     <ClInclude Include="..\..\Source\Gui\Windows\WndButton.h" />
     <ClInclude Include="..\..\Source\Gui\Windows\WndConfirm.h" />
@@ -209,6 +197,22 @@
     <ClInclude Include="..\..\Source\Library\I2C.h" />
     <ClInclude Include="..\..\Source\Library\Pin.h" />
     <ClInclude Include="..\..\Source\Main\Application.h" />
+    <ClInclude Include="..\..\Source\User\Balls.h" />
+    <ClInclude Include="..\..\Source\User\CharMap.h" />
+    <ClInclude Include="..\..\Source\User\Dcf77.h" />
+    <ClInclude Include="..\..\Source\User\FullView.h" />
+    <ClInclude Include="..\..\Source\User\Geiger.h" />
+    <ClInclude Include="..\..\Source\User\GpioTest.h" />
+    <ClInclude Include="..\..\Source\User\Meter.h" />
+    <ClInclude Include="..\..\Source\User\Monitor.h" />
+    <ClInclude Include="..\..\Source\User\PidRegulator.h" />
+    <ClInclude Include="..\..\Source\User\ScreenSaver.h" />
+    <ClInclude Include="..\..\Source\User\Snake.h" />
+    <ClInclude Include="..\..\Source\User\Thermometer.h" />
+    <ClInclude Include="..\..\Source\User\Timer.h" />
+    <ClInclude Include="..\..\Source\User\Tuner.h" />
+    <ClInclude Include="..\..\Source\User\ZoomView.h" />
+    <ClInclude Include="..\..\Source\User\_Modules.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico" />
@@ -247,25 +251,6 @@
     <ClCompile Include="..\..\Source\Gui\ToolBox\Import.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\Manager.cpp" />
     <ClCompile Include="..\..\Source\Gui\ToolBox\ToolBox.cpp" />
-    <ClCompile Include="..\..\Source\Gui\User\CharMap.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Monitor.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\PidRegulator.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Timer.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\_Modules.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\ds203ui.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\stdafx.cpp" />
     <ClCompile Include="..\..\Source\Core\Controls.cpp" />
@@ -278,6 +263,28 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp" />
     <ClCompile Include="..\..\Source\HwLayer\Win32\bios.cpp" />
     <ClCompile Include="..\..\Source\Main\Application.cpp" />
+    <ClCompile Include="..\..\Source\User\CharMap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Meter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Monitor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\PidRegulator.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Thermometer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Timer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Tuner.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\_Modules.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

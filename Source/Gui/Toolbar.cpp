@@ -36,7 +36,7 @@
 		{ CBarItem::IMain,	(PSTR)"User app", &MainWnd.m_wndModuleSel},
 
 #		define ADD_MODULE( strName, type ) { CBarItem::ISub, (PSTR)strName, &MainWnd.m_wndUser##type },
-#		include "User/_Modules.h"
+#		include <Source/User/_Modules.h>
 #		undef ADD_MODULE
 
 		{ CBarItem::IEnd,		NULL, NULL }

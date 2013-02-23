@@ -2,6 +2,7 @@
 #define __UTILS_H__
 
 #include <Source/HwLayer/Types.h>
+#include <math.h>
 
 #define UTILS CUtils()
 

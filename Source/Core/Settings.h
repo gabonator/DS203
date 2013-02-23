@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', 10)
+#define _VERSION ToDword('D', 'S', 'C', 11)
 
 class CSettings : public CSerialize
 {
@@ -157,12 +157,12 @@ public:
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Wave) << nPsc << nArr << nScale;
+			stream << _E(Wave) << nPsc << nArr << nScale << nOffset;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Wave) >> nPsc >> nArr >> nScale;
+			stream >> _E(Wave) >> nPsc >> nArr >> nScale >> nOffset;
 			return *this;
 		}
 	};

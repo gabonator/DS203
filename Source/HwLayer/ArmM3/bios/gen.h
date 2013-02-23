@@ -10,6 +10,7 @@
 	static ui16 sData;
 	sData = nData;
 	ConfigureWave( &sData, 1 );
+  __Set(ANALOG_ARR, 3600); // 1khz
 }
 
 /*static*/ void BIOS::GEN::ConfigureWave(ui16* pData, ui16 cnt)

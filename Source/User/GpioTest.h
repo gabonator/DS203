@@ -211,6 +211,7 @@ public:
 
 		if (code == ToWord('L', 'E') )
 		{
+			m_Barometer.Wire.init();
 			m_Thermometer.Float();
 			SetTimer(200);
 			return;

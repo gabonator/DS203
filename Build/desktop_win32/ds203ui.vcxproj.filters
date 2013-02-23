@@ -31,9 +31,6 @@
     <Filter Include="Source\Gui\About">
       <UniqueIdentifier>{ec1431ff-88fe-4c7f-b6f5-3703a8819453}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Gui\User">
-      <UniqueIdentifier>{5bf6662a-1e47-4020-8b3f-a19d245ef8d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gui\Generator">
       <UniqueIdentifier>{b79d7ffa-0ab2-4cd0-a247-f558015e4190}</UniqueIdentifier>
     </Filter>
@@ -130,6 +127,9 @@
     <Filter Include="Source\Library">
       <UniqueIdentifier>{90130453-27c4-4464-9fd5-c116c6fac695}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\User">
+      <UniqueIdentifier>{ce83e428-dce4-4e68-b339-e0ae18d4d5d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\HwLayer\Win32\ds203ui.h">
@@ -222,15 +222,6 @@
     <ClInclude Include="..\..\Source\Main\Application.h">
       <Filter>Source\Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Snake.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Balls.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Meter.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Core\Calibration.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -275,9 +266,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\ToolBox\ToolBox.h">
       <Filter>Source\Gui\ToolBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\ScreenSaver.h">
-      <Filter>Source\Gui\User</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\ToolBox\Manager.h">
       <Filter>Source\Gui\ToolBox</Filter>
@@ -423,9 +411,6 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.h">
       <Filter>Source\Gui\Oscilloscope\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Tuner.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Spectrum\Core\FFT.h">
       <Filter>Source\Gui\Spectrum\Core</Filter>
     </ClInclude>
@@ -444,20 +429,8 @@
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h">
       <Filter>Source\Gui\Oscilloscope\Meas\Decoders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\_Modules.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\FullView.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Timer.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Meas\Decoders\CanBus.h">
       <Filter>Source\Gui\Oscilloscope\Meas\Decoders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\ZoomView.h">
-      <Filter>Source\Gui\User</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Framework\Eval.h">
       <Filter>Source\Framework</Filter>
@@ -474,20 +447,11 @@
     <ClInclude Include="..\..\Source\Gui\Settings\ItemAutoOff.h">
       <Filter>Source\Gui\Settings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\CharMap.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\Monitor.h">
-      <Filter>Source\Gui\User</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Core\BufferedIo.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gui\Oscilloscope\Math\FirFilter.h">
       <Filter>Source\Gui\Oscilloscope\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Gui\User\PidRegulator.h">
-      <Filter>Source\Gui\User</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\SdkV0.h">
       <Filter>Source\Core</Filter>
@@ -518,6 +482,54 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Library\Pin.h">
       <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\_Modules.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Balls.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\CharMap.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Dcf77.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\FullView.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Geiger.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\GpioTest.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Meter.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Monitor.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\PidRegulator.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\ScreenSaver.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Snake.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Thermometer.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Timer.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\Tuner.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\User\ZoomView.h">
+      <Filter>Source\User</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -651,32 +663,35 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp">
       <Filter>Source\Gui\Oscilloscope\Meas</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\_Modules.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Meter.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Timer.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Tuner.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Mask\MenuMask.cpp">
       <Filter>Source\Gui\Oscilloscope\Mask</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\CharMap.cpp">
-      <Filter>Source\Gui\User</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\Monitor.cpp">
-      <Filter>Source\Gui\User</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\FirFilter.cpp">
       <Filter>Source\Gui\Oscilloscope\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Gui\User\PidRegulator.cpp">
-      <Filter>Source\Gui\User</Filter>
+    <ClCompile Include="..\..\Source\User\_Modules.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\CharMap.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Meter.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Monitor.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\PidRegulator.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Thermometer.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Timer.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Tuner.cpp">
+      <Filter>Source\User</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
