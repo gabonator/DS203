@@ -146,6 +146,12 @@ SECTIONS
         *(.extra)
     } >EXTRA
 */
+/*
+    .cbios : {
+	    . = ALIGN(4);
+		  cbios.o
+    } >BIOSRAM
+*/
 
     .entry : {
 	    . = ALIGN(4);
@@ -189,7 +195,7 @@ SECTIONS
         *(.shbss)
 		*(.bss .bss.* .gnu.linkonce.b.*)
 		*(COMMON)
-        
+      
 	    . = ALIGN(4);
 	    /* This is used by the startup in order to initialize the .bss secion */
    	 	_ebss = . ;

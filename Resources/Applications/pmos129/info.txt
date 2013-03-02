@@ -1,0 +1,2 @@
+DSO203 GCC v1.29 APP - Community Edition
+pmos69-dso203_gcc-c78c0dc

@@ -139,9 +139,9 @@ public:
 
 			BIOS::LCD::Print (   4, 240-7*16, clrA, 0, "Firmware version:" );
 #ifdef GIT_REVISION
-			BIOS::LCD::Printf( 160, 240-7*16, clrB, 0, "1.0 rev. %d", GIT_REVISION );
+			BIOS::LCD::Printf( 160, 240-7*16, clrB, 0, "2.0 rev. %d", GIT_REVISION );
 #else
-			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, "1.0" );
+			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, "2.0" );
 #endif
 
 #ifdef GIT_HASH
@@ -225,6 +225,7 @@ public:
 
 		BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
 
+		BIOS::LCD::Print (   4, 240-12*16, clrA, 0, "Cold boot:" );
 		BIOS::LCD::Print (   4, 240-11*16, clrA, 0, "Battery voltage:" );
 		BIOS::LCD::Print (   4, 240-10*16, clrA, 0, "USB Powered:" );
 
@@ -297,6 +298,7 @@ public:
 		int nUsbPower = BIOS::SYS::Get( USB_POWER );
 		BIOS::LCD::Printf( 240, 240-11*16, clrB, 0, "%f V  ", fBattery );
 		BIOS::LCD::Printf( 240, 240-10*16, clrB, 0, "%s  ", nUsbPower ? "Yes" : "No" );
+		BIOS::LCD::Printf( 240, 240-12*16, clrB, 0, "%s  ", BIOS::SYS::IsColdBoot() ? "Yes" : "No");
 	}
 };
 

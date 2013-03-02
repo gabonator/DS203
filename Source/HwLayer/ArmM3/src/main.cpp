@@ -3,14 +3,28 @@ extern "C" {
 #include "BIOS.h"
 }
 
+#include <Source/HwLayer/Types.h>
+#include <Source/HwLayer/Bios.h>
 #include <Source/Main/Application.h>
 
 extern u8 _vectors[];
-int __errno; // required by math.h
+//extern int __errno; // required by math.h
+
+struct TIdentification {
+	const char strProgName[65];
+	u32 dwCode;	
+	u32 dwProcAddr;
+};
 
 __attribute__ ((section(".identify")))
 __attribute__((__used__))
-static const char strIdentification[] = "DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;";
+static TIdentification Identification = {
+	"DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;",
+	ToDword('B', 'I', 'O', 'S'),
+	(u32)(void*)&BIOS::SYS::GetProcAddress
+};
+
+//static const char strIdentification[] = "DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;";
 
 int main(void)
 { 

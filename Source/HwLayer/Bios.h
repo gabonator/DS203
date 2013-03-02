@@ -38,6 +38,11 @@ public:
 		static int GetTemperature();
 		static int GetCoreVoltage();
 		static void Standby( bool bEnterSleep );
+
+		static ui32 GetProcAddress( const char* strFunction );
+		static bool IsColdBoot();
+		static char* GetSharedBuffer();
+		static int GetSharedLength();
 	};
 
 	class LCD {
@@ -124,6 +129,11 @@ public:
 			Start = 0,
 			Empty = 1,
 			Full = 2
+		};
+		
+		enum {
+			Length = 4096,
+			BufferLength = Length*4
 		};
 
 	public:
@@ -259,6 +269,60 @@ public:
 		static void SetPin(int nPort, int nPin, bool bOn);
 		static bool GetPin(int nPort, int nPin);
 	};
-};
+	
+	class MEMORY
+	{
+	public:
+		static bool PageWrite(int nPage, const ui8* pBuffer);
+		static bool PageRead(int nPage, ui8* pBuffer);
+		static bool PageErase(int nPage);
 
+		static void LinearStart();
+		static bool LinearFinish();
+		static bool LinearProgram( ui32 nAddress, unsigned char* pData, int nLength );
+	};
+
+	class FAT
+	{
+	public:
+		enum EResult 
+		{
+			EOk,
+			EDiskError,
+			EIntError,
+			ENoFile,
+			ENoPath,
+			EDiskFull
+		};
+
+		enum EAttribute 
+		{
+			EReadOnly = 1,
+			EHidden = 2,
+			ESystem = 4,
+			EDirectory = 0x10,
+			EArchive = 0x20
+		};
+
+		struct TFindFile
+		{
+			ui32 nFileLength;		
+			ui16 nDate;
+			ui16 nTime;
+			ui8 nAtrib;
+			char strName[13];
+		};
+
+		static EResult Init();
+		static EResult Open(const char* strName, ui8 nIoMode);
+		static EResult Read(ui8* pSectorData);
+		static EResult Write(ui8* pSectorData);
+		static EResult Close(int nSize = -1);
+		static ui32 GetFileSize();
+	
+		static EResult OpenDir(char* strPath);
+		static EResult FindNext(TFindFile* pFile);
+	};
+
+};
 #endif

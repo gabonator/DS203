@@ -18,7 +18,8 @@ bool _IsVisible(CWnd& wnd)
 	m_itmOffset.Create("Offset", RGB565(b00040), 2, this );
 	m_itmDuty.Create("Duty", RGB565(b00040), 2, this );
 	
-	OnMessage( &m_itmWave, ToWord('i', 'u'), 0 ); // force update
+	if ( dwFlags & CWnd::WsVisible )
+		OnMessage( &m_itmWave, ToWord('i', 'u'), 0 ); // force update
 }
 
 /*virtual*/ void CWndMenuGenerator::OnMessage(CWnd* pSender, ui16 code, ui32 data)

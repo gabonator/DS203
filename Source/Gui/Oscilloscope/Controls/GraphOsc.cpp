@@ -1,6 +1,6 @@
 #include "GraphOsc.h"
 #include <Source/Gui/MainWnd.h>
-
+#include <Source/Gui/Oscilloscope/Core/CoreOscilloscope.h>
 
 CWndOscGraph::CWndOscGraph()
 {

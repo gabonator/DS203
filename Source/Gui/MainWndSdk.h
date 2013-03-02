@@ -1,4 +1,5 @@
 #include <Source/Core/Sdk.h>
+//#include <Source/Library/ihex.h>
 
 class CSdkStreamProvider : public CSdkEval
 {
@@ -142,12 +143,235 @@ public:
 	}
 };
 
+/*
+bool CMainWnd::UpdateAvailable()
+{
+}
+
+bool CMainWnd::UpdateApply()
+{
+}
+*/
+/*
+	if ( pSender == &m_itmReset && code == ToWord('l', 'e') )
+	{
+		MainWnd.m_wndConfirm.Show( this, "Message", "Connect probe to ground\nReady?", RGB565(ffff00), "Yes", "No");
+		return;
+	}
+	if ( pSender == &MainWnd.m_wndConfirm && code == ToWord('e', 'd') && data == (ui32)"Yes" )
+	{
+		m_proReset.m_pName = "Wait...";
+		m_itmReset.Invalidate();
+
+		m_nResetPhase = 0;
+		MainWnd.m_wndConfirm.Hide();
+		return;
+	}
+	if ( pSender == &MainWnd.m_wndConfirm && code == ToWord('e', 'd') && data == (ui32)"No" )
+	{
+		MainWnd.m_wndConfirm.Hide();
+		return;
+	}
+
+*/
+
+typedef uint32_t	Elf32_Addr;
+typedef uint16_t	Elf32_Half;
+typedef uint32_t	Elf32_Off;
+typedef int32_t		Elf32_Sword;
+typedef uint32_t	Elf32_Word;
+typedef uint32_t	Elf32_Size;
+
+#pragma pack(push)
+#pragma pack(2)
+typedef struct {
+        unsigned char   ident[16];
+        Elf32_Half      type;
+        Elf32_Half      machine;
+        Elf32_Word      version;
+        Elf32_Addr      entry;
+        Elf32_Off       phoff;
+        Elf32_Off       shoff;
+        Elf32_Word      flags;
+        Elf32_Half      ehsize;
+        Elf32_Half      phentsize;
+        Elf32_Half      phnum;
+        Elf32_Half      shentsize;
+        Elf32_Half      shnum;
+        Elf32_Half      shtrndx;
+} Elf32_Ehdr;
+
+typedef struct {
+	Elf32_Word	type;		/* Entry type. */
+	Elf32_Off	offset;	/* File offset of contents. */
+	Elf32_Addr	vaddr;	/* Virtual address in memory image. */
+	Elf32_Addr	paddr;	/* Physical address (not used). */
+	Elf32_Size	filesz;	/* Size of contents in file. */
+	Elf32_Size	memsz;	/* Size of contents in memory. */
+	Elf32_Word	flags;	/* Access permission flags. */
+	Elf32_Size	align;	/* Alignment in memory and file. */
+} Elf32_Phdr;
+#pragma pack(pop)
+
+
 void CMainWnd::SdkUartProc()
 {
 	static char buffer[128];
 	static int npos = 0;
 	static CSdkStreamProvider SdkStream;
 
+#if 0
+	static bool bApplied = false;
+	static long lLastTest = 0;
+	int nTick = BIOS::SYS::GetTick();
+	if ( lLastTest == 0 )
+		lLastTest = nTick;
+	if ( !bApplied && nTick - lLastTest > 10000 )
+	{
+		lLastTest = nTick;
+
+		char* pBuf = (char*)BIOS::DSK::GetSharedBuffer();
+//		memclr(pBuf, 0, 512);
+		strcpy(pBuf, "Toto je zaujimavy experiment 0123456789!!!!");
+
+		BIOS::FAT::Init();
+		BIOS::FAT::Open("test.txt", BIOS::DSK::IoWrite);
+		BIOS::FAT::Write((ui8*)pBuf);
+		BIOS::FAT::Close(strlen(pBuf));
+
+		CBufferedReader fw;
+		if ( fw.Open( (char*)"FW      HEX" ) )
+		{
+			bApplied = true;
+			m_wndMessage.Show(this, "Update utility", "FW file found!", RGB565(FFFF00));
+
+			IHexRecord irec;	
+			uint16_t addressOffset = 0x00;
+			uint32_t address = 0x0;
+			int ihexError;
+			int err;
+			BIOS::MEMORY::LinearStart();
+
+			while ((ihexError = Read_IHexRecord(&irec, fw)) == IHEX_OK) 
+			{
+				switch(irec.type)
+				{
+					case IHEX_TYPE_00:    /**< Data Record */
+						address = (((uint32_t) addressOffset) << 16 )+ irec.address;
+						err = !BIOS::MEMORY::LinearProgram( address, irec.data, irec.dataLen );
+
+						if(err)
+						{
+							m_wndMessage.Show(this, "Update utility", "Flashing error!", RGB565(FF0000));
+							fw.Close();
+							return;
+						}
+					break;
+
+					case IHEX_TYPE_04:    /**< Extended Linear Address Record */
+						addressOffset = (((uint16_t) irec.data[0]) << 8 ) + irec.data[1];		
+					break;
+
+					case IHEX_TYPE_01:    /**< End of File Record */
+					case IHEX_TYPE_05:    /**< Start Linear Address Record */
+					break;
+
+					case IHEX_TYPE_02:    /**< Extended Segment Address Record */
+					case IHEX_TYPE_03:    /**< Start Segment Address Record */
+						m_wndMessage.Show(this, "Update utility", "Invalid HEX!", RGB565(FF0000));
+						fw.Close();
+					return;
+				}
+
+				if ( irec.type == IHEX_TYPE_01 )
+					break;
+			}
+
+			BIOS::MEMORY::LinearFinish();
+			m_wndMessage.Show(this, "Update utility", "Flashing done!", RGB565(00FF00));
+
+			fw.Close();
+		}
+
+		if ( fw.Open( (char*)"FW      ELF" ) )
+		{
+			bApplied = true;
+			m_wndMessage.Show(this, "Update utility", "FW file found!", RGB565(FFFF00));
+			Elf32_Ehdr elfHeader;
+			Elf32_Phdr elfProgram[4];
+
+			fw >> CStream(&elfHeader, sizeof(Elf32_Ehdr));
+
+			_ASSERT( sizeof(Elf32_Phdr) == elfHeader.phentsize );
+			_ASSERT( elfHeader.phnum <= (int) COUNT(elfProgram) );
+			for ( int i = 0; i < elfHeader.phnum; i++ )
+				fw >> CStream(&elfProgram[i], sizeof(Elf32_Phdr));
+
+			int nFileOffset = sizeof(Elf32_Ehdr) + elfHeader.phnum * sizeof(Elf32_Phdr);
+
+			for ( int i = 0; i < elfHeader.phnum; i++ )
+			{
+				if ( elfProgram[i].offset == 0 )
+				{
+					// first program in regular file has offset set to 0, don't know why..
+					continue;
+				}
+
+				BIOS::MEMORY::LinearStart();
+
+				ui8 buffer[32];
+				while ( nFileOffset < (int)elfProgram[i].offset )
+				{
+					int nToRead = elfProgram[i].offset - nFileOffset;
+					if ( nToRead > 32 )
+						nToRead = 32;
+					fw >> CStream( buffer, nToRead );
+					nFileOffset += nToRead;
+				}
+				_ASSERT( nFileOffset == (int)elfProgram[i].offset );
+
+				int nOfs = 0;
+				int nAddress = elfProgram[i].paddr;
+				for ( nOfs = 0; nOfs < (int)elfProgram[i].filesz; )
+				{
+					int nToRead = 32;
+					if ( nOfs + nToRead > (int)elfProgram[i].filesz )
+						nToRead = elfProgram[i].filesz - nOfs;
+					fw >> CStream( buffer, nToRead );
+					nFileOffset += nToRead;
+					nOfs += nToRead;
+					if ( !BIOS::MEMORY::LinearProgram( nAddress, buffer, nToRead ) )
+					{
+						m_wndMessage.Show(this, "Update utility", "Flashing error!", RGB565(FF0000));
+						fw.Close();
+						return;
+					}
+					nAddress += nToRead;
+				}
+
+				memset( buffer, 0, sizeof(buffer) );
+
+				for ( ; nOfs < (int)elfProgram[i].memsz; )
+				{
+					int nToRead = 32;
+					if ( nOfs + nToRead > (int)elfProgram[i].memsz )
+						nToRead = elfProgram[i].memsz - nOfs;
+					nOfs += nToRead;
+					if ( !BIOS::MEMORY::LinearProgram( nAddress, buffer, nToRead ) )
+					{
+						m_wndMessage.Show(this, "Update utility", "Flashing error!", RGB565(FF0000));
+						fw.Close();
+						return;
+					}
+				}
+				BIOS::MEMORY::LinearFinish();
+			}
+
+			m_wndMessage.Show(this, "Update utility", "Flashing done!", RGB565(00FF00));
+			fw.Close();
+		}
+	}
+#endif
 	int ch;
 	while ( (ch = BIOS::SERIAL::Getch()) >= 0 )
 	{

@@ -50,7 +50,6 @@ void CMainWnd::Create()
 	m_wndSpectrumMain.Create( this, WsHidden );
 	m_wndSpectrumMarker.Create( this, WsHidden );
 	m_wndSpectrumAnnot.Create( this, WsHidden );
-	m_wndScreenSaver.Create( this, WsHidden );
 	m_wndAboutFirmware.Create( this, WsHidden );
 	m_wndAboutDevice.Create( this, WsHidden );
 	m_wndAboutStatus.Create( this, WsHidden );

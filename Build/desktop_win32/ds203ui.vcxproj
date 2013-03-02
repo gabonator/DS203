@@ -191,10 +191,13 @@
     <ClInclude Include="..\..\Source\HwLayer\Win32\Types.h" />
     <ClInclude Include="..\..\Source\HwLayer\Win32\sprintf\spf.h" />
     <ClInclude Include="..\..\Source\Library\BMP085.h" />
+    <ClInclude Include="..\..\Source\Library\Cookies.h" />
     <ClInclude Include="..\..\Source\Library\Delay.h" />
     <ClInclude Include="..\..\Source\Library\DHT11.h" />
     <ClInclude Include="..\..\Source\Library\DS1820.h" />
+    <ClInclude Include="..\..\Source\Library\elf.h" />
     <ClInclude Include="..\..\Source\Library\I2C.h" />
+    <ClInclude Include="..\..\Source\Library\ihex.h" />
     <ClInclude Include="..\..\Source\Library\Pin.h" />
     <ClInclude Include="..\..\Source\Main\Application.h" />
     <ClInclude Include="..\..\Source\User\Balls.h" />
@@ -203,6 +206,7 @@
     <ClInclude Include="..\..\Source\User\FullView.h" />
     <ClInclude Include="..\..\Source\User\Geiger.h" />
     <ClInclude Include="..\..\Source\User\GpioTest.h" />
+    <ClInclude Include="..\..\Source\User\Manager.h" />
     <ClInclude Include="..\..\Source\User\Meter.h" />
     <ClInclude Include="..\..\Source\User\Monitor.h" />
     <ClInclude Include="..\..\Source\User\PidRegulator.h" />
@@ -264,6 +268,9 @@
     <ClCompile Include="..\..\Source\HwLayer\Win32\bios.cpp" />
     <ClCompile Include="..\..\Source\Main\Application.cpp" />
     <ClCompile Include="..\..\Source\User\CharMap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Manager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Source\User\Meter.cpp">

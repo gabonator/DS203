@@ -4,6 +4,7 @@
 #define MainWnd (*CMainWnd::m_pInstance)
 
 #include "Toolbar.h"
+#include "Oscilloscope/Core/CoreOscilloscope.h"
 #include "Oscilloscope/Oscilloscope.h"
 #include "Windows/WndConfirm.h"
 #include "Windows/MessageBox.h"
@@ -55,7 +56,6 @@ public:
 	CWndOscInfo			m_wndInfoBar;
 	CWndLevelReferences	m_wndLReferences;
 	CWndTimeReferences	m_wndTReferences;
-	CWndScreenSaver		m_wndScreenSaver;
 	CWndAboutFirmware	m_wndAboutFirmware;
 	CWndAboutDevice		m_wndAboutDevice;
 	CWndAboutStatus		m_wndAboutStatus;

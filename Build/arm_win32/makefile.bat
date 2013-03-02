@@ -91,8 +91,13 @@ echo Compiling...
 :link
 echo Linking...
 !CC! -o !TFILE!_!APP!.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app!APP!.lds !OBJS!
+if not exist !TFILE!_!APP!.elf (
+  echo Build failed
+  goto :eof
+)
 !OBJCOPY! -O binary !TFILE!_!APP!.elf !TFILE!.bin
 !OBJCOPY! -O ihex !TFILE!_!APP!.elf !TFILE!.hex
+rem ..\Build\arm_win32\elfstrip.exe !TFILE!_!APP!.elf !TFILE!_clean.elf
 
 if not exist !TFILE!.hex (
   echo Build failed

@@ -1,16 +1,18 @@
 #ifndef AQW
 #define AQW
 
+int __errno; // required by math.h
+
 extern vu32 vu32Tick;
 extern vu16 Delay_Cnt;
 extern vu16 Beep_mS;
 int m_nBeepVolume = 50;
+int m_nColdBoot = -1;
 
 /*static*/ ui32 BIOS::SYS::GetTick()
 {
 	return vu32Tick;
 }
-
 
 void BIOS::SYS::Standby( bool bEnterSleep )
 {
@@ -33,8 +35,12 @@ void BIOS::SYS::Standby( bool bEnterSleep )
 
 /*static*/ void BIOS::SYS::Init()
 {
-	SYS::DelayMs(500);
-	LCD::Init();
+	if ( BIOS::SYS::IsColdBoot() )
+	{
+		SYS::DelayMs(500);
+		LCD::Init();
+		strcpy( BIOS::SYS::GetSharedBuffer(), "gaboui=1;");
+	}
 	ADC::Init();
 	SERIAL::Init();
 }
@@ -121,27 +127,16 @@ void BIOS::SYS::Execute( int nCode )
 		case BIOS::SYS::EApp4: dwGotoAddr = APP4_BASE; break;
 		case BIOS::SYS::ESys: dwGotoAddr = SYS_BASE; break;
 		case BIOS::SYS::EDfu: dwGotoAddr = DFU_BASE; break;
+		default:
+			dwGotoAddr = nCode;
 	}
-	// what about interrupt handlers? NVIC?
+
 	if ( !dwGotoAddr )
 		return;
-
-#if 0
-	u32 dwGotoBase = *(vu32*)(dwGotoAddr/*+4*/);
-	typedef void (*pFunc)(void);
-	pFunc GotoApp = (pFunc)(dwGotoBase);
-
-	__MSR_MSP(dwGotoAddr);
-	GotoApp();
-#else
 
   u32 *vector_table = (u32 *) dwGotoAddr;
   __MSR_MSP(vector_table[0]);
   ((void (*)(void)) vector_table[1])();
-
-//	__MSR_MSP(dwGotoAddr+4);
-//__set_MSP(dwGotoAddr+4);
-#endif
 }
 
 void* BIOS::SYS::IdentifyApplication( int nCode )
@@ -340,6 +335,35 @@ int BIOS::SYS::GetCoreVoltage()
 
 	int ADCConvertedValue = ADC_GetConversionValue(ADC1);
   return ADCConvertedValue;
+}
+
+ui32 BIOS::SYS::GetProcAddress(const char* strFuncName )
+{
+	return 0x12345678;
+}
+
+bool BIOS::SYS::IsColdBoot()
+{
+	// jpa's alterbios begins at 0x20001800
+	// original bios begins at 0x20000000 and takes 1396 bytes
+  // 0x20000800..0x20001800 can be used by applications
+	if ( m_nColdBoot == -1 )
+	{
+		ui32* pData = (ui32*)0x200017f0; 
+		m_nColdBoot = *pData == 0x6ab08a70 ? 0 : 1;
+		*pData = 0x6ab08a70;
+	}
+	return m_nColdBoot ? true : false;
+}
+
+char* BIOS::SYS::GetSharedBuffer()
+{
+	return (char*)0x20000800;
+}
+
+int BIOS::SYS::GetSharedLength()
+{
+	return 0x200017f0 - 0x20000800;
 }
 
 #endif

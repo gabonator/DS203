@@ -72,7 +72,7 @@
 /* Uncomment the line below to enable FLASH program/erase/protections functions,
    otherwise only FLASH configuration (latency, prefetch, half cycle) functions
    are enabled */
- #define _FLASH_PROG 
+// #define _FLASH_PROG 
 
 /************************************* FSMC ***********************************/
 #define _FSMC

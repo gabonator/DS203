@@ -1,7 +1,7 @@
 #include "MenuInput.h"
 
 #include <Source/Gui/MainWnd.h>
-
+#include <Source/Gui/Oscilloscope/Core/CoreOscilloscope.h>
 
 CWndMenuInput::CWndMenuInput()
 {

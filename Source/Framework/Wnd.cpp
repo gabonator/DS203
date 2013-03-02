@@ -312,11 +312,15 @@ CWnd* CWnd::_GetLastActiveWindow()
 {
 	CWnd* pWnd = this;
 	CWnd* pWndLast = NULL;
-	for ( int i = 0; i < 14 && pWnd; i++ )
+	int i;
+	for ( i = 0; i < 14 && pWnd; i++ )
 	{
 		pWndLast = pWnd;
 		pWnd = pWnd->_GetNextActiveWindow();
 	}
+	// when there is only child, make it accessible only by pressing down button (for file manager and single window modules)
+	if ( i == 2 && pWndLast->m_pFirst == NULL )
+		return NULL;
 	return pWndLast;
 }
 

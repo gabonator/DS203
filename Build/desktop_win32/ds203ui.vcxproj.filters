@@ -531,6 +531,18 @@
     <ClInclude Include="..\..\Source\User\ZoomView.h">
       <Filter>Source\User</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\User\Manager.h">
+      <Filter>Source\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\Cookies.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\elf.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Library\ihex.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">
@@ -691,6 +703,9 @@
       <Filter>Source\User</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\User\Tuner.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\User\Manager.cpp">
       <Filter>Source\User</Filter>
     </ClCompile>
   </ItemGroup>

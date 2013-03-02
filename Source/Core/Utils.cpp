@@ -16,6 +16,40 @@ char tmp[16];
 	return nValue;
 }
 
+int hexval(char ch)
+{
+	if ( ch >= '0' && ch <= '9' )
+		return ch - '0';
+	if ( ch >= 'A' && ch <= 'F' )
+		return ch - 'A' + 10;
+	if ( ch >= 'a' && ch <= 'f' )
+		return ch - 'a' + 10;
+	return -1;
+}
+/*
+bool ishex(char c)
+{
+	if ( ch >= '0' && ch <= '9' )
+		return true;
+	if ( ch >= 'A' && ch <= 'F' )
+		return true;
+	if ( ch >= 'a' && ch <= 'f' )
+		return true;
+	return false;
+}*/
+
+/*static*/ ui32 CUtils::htoi(char *str)
+{
+	ui32 nValue = 0;
+	int nDigit = 0;
+	while ( (nDigit = hexval(*str++)) != -1 )
+	{
+		nValue <<= 4;
+		nValue |= nDigit;
+	}
+	return nValue;
+}
+
 /*static*/ char* CUtils::itoa2(ui8 n)
 {
 	for (int i=0; i<8; i++)

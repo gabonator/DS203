@@ -1,5 +1,6 @@
 #include <Source/Framework/Eval.h>
 #include <Source/Gui/MainWnd.h>
+#include <Source/Gui/Oscilloscope/Core/CoreOscilloscope.h>
 
 	template <class T>
 	class CEvalMappedInteger : public CEval::CEvalVariable
