@@ -388,27 +388,19 @@ public:
 		int m_bUartTest;
 		int m_bUartEcho;	// not saved in settings
 		int m_bUartSdk;
-//TODO: remove
-		union {
-			char strName[8];
-			ui32 dwLength;
-		} m_Apps[3];
-
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
 			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume << m_nStandby
 				<< _E(m_Beep) << m_nShortcutTriangle << m_nShortcutS1 << m_nShortcutS2
-				<< m_bUartTest
-				<< CStream(&m_Apps, sizeof(m_Apps));
+				<< m_bUartTest;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
 			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume >> m_nStandby
 				>> _E(m_Beep) >> m_nShortcutTriangle >> m_nShortcutS1 >> m_nShortcutS2
-				>> m_bUartTest
-				>> CStream(&m_Apps, sizeof(m_Apps));
+				>> m_bUartTest;
 			return *this;
 		}
 	};

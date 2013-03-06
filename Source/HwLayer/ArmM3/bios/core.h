@@ -39,7 +39,8 @@ void BIOS::SYS::Standby( bool bEnterSleep )
 	{
 		SYS::DelayMs(500);
 		LCD::Init();
-		strcpy( BIOS::SYS::GetSharedBuffer(), "gaboui=1;");
+		BIOS::DBG::sprintf( (char*)BIOS::SYS::GetSharedBuffer(),
+			"gaboui=1;biosproc=0x%08x;", &BIOS::SYS::GetProcAddress);
 	}
 	ADC::Init();
 	SERIAL::Init();
@@ -339,7 +340,26 @@ int BIOS::SYS::GetCoreVoltage()
 
 ui32 BIOS::SYS::GetProcAddress(const char* strFuncName )
 {
-	return 0x12345678;
+
+	#define EXPORT(f, decl) if ( strcmp( strFuncName, #f ) == 0 ) return (NATIVEPTR)(decl)&f;
+	EXPORT(BIOS::LCD::PutPixel, void (*)(int, int, ui16));
+	EXPORT(BIOS::LCD::Print, int (*)(int, int, ui16, ui16, const char*));
+	EXPORT(BIOS::KEY::GetKeys, ui16 (*)());	
+	EXPORT(BIOS::SYS::Execute, void (*)(int));	
+	EXPORT(BIOS::LCD::Printf, int (*)(int x, int y, unsigned short clrf, unsigned short clrb, const char * format, ...));
+
+	EXPORT(NVIC_SetVectorTable, void (*)(ui32, ui32));
+	EXPORT(__USB_Init, void (*)(void));
+	EXPORT(__USB_Istr, void (*)(void));
+	EXPORT(__CTR_HP, void (*)(void));
+
+	#undef EXPORT
+
+//	if ( strcmp( strFuncName, "BIOS::LCD::PutPixel" ) == 0 ) return (NATIVEPTR)(void (*)(int, int, ui16)) &BIOS::LCD::PutPixel;
+//	if ( strcmp( strFuncName, "BIOS::LCD::Print" ) == 0 ) return (NATIVEPTR)(int (*)(int, int, ui16, ui16, const char*)) &BIOS::LCD::Print;
+
+//BIOS::KEY::GetKeys()
+	return NULL;
 }
 
 bool BIOS::SYS::IsColdBoot()

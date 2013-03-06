@@ -1,17 +1,17 @@
 #include "Manager.h"
+#include "CharMap.h"
+#include "Monitor.h"
 
-#if 0
+#if _WIN32
 #include "ZoomView.h"
 #include "Timer.h"
 //#include "Tuner.h"
 //#include "FullView.h"
 #include "ScreenSaver.h"
-//#include "Snake.h"
-#include "CharMap.h"
+#include "Snake.h"
 //#include "Thermometer.h"
 //#include "Balls.h"
 //#include "Meter.h"
-#include "Monitor.h"
 #include "PidRegulator.h"
 #include "GpioTest.h"
 #include "Geiger.h"

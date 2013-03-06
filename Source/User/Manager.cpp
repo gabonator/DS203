@@ -545,6 +545,7 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 		if ( IsModuleLoaded( strFile, nLength, dwEntry, dwBegin, dwEnd ) )
 		{
 			CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
+			Settings.Save();
 			BIOS::SYS::Execute( dwEntry );
 			// on win32 it continues...
 			Invalidate();
@@ -560,6 +561,7 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 			} else
 			{
 				CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
+				Settings.Save();
 				BIOS::SYS::Execute( dwEntry );
 				// on win32 it continues... file buffer was corrupted by linear flashing
 				Invalidate();
@@ -578,6 +580,7 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 		if ( IsModuleLoaded( strFile, nLength, dwEntry, dwBegin, dwEnd ) )
 		{
 			CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
+			Settings.Save();
 			BIOS::SYS::Execute( dwEntry );
 			// on win32 it continues...
 			Invalidate();
@@ -593,6 +596,7 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 			} else
 			{
 				CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
+				Settings.Save();
 				BIOS::SYS::Execute( dwEntry );
 				// on win32 it continues...
 				Invalidate();

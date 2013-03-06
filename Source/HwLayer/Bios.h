@@ -16,7 +16,7 @@ public:
 	class SYS {
 	public:
 		enum {
-			EApp1,
+			EApp1 = 0,
 			EApp2,
 			EApp3,
 			EApp4,
