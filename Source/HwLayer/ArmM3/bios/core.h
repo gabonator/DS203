@@ -117,7 +117,7 @@ void Assert(const char*msg, int n)
 #define SYS_BASE ((u32)(0x08004000)) // Size = 32KB
 #define DFU_BASE ((u32)(0x08000000)) // Size = 16KB 
 
-void BIOS::SYS::Execute( int nCode )
+int BIOS::SYS::Execute( int nCode )
 {
 	u32 dwGotoAddr = 0;
 	switch ( nCode )
@@ -129,17 +129,17 @@ void BIOS::SYS::Execute( int nCode )
 		case BIOS::SYS::ESys: dwGotoAddr = SYS_BASE; break;
 		case BIOS::SYS::EDfu: dwGotoAddr = DFU_BASE; break;
 		default:
-			((void (*)(void)) nCode)();
-			return;
-//			dwGotoAddr = nCode;
+			nCode |= 1; // THUMB instruction
+			return ((int (*)(void)) nCode)();
 	}
 
 	if ( !dwGotoAddr )
-		return;
+		return 0;
 
   u32 *vector_table = (u32 *) dwGotoAddr;
   __MSR_MSP(vector_table[0]);
   ((void (*)(void)) vector_table[1])();
+	return 1;
 }
 
 void* BIOS::SYS::IdentifyApplication( int nCode )

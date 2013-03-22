@@ -31,7 +31,7 @@ public:
 		static int GetBattery();
 		static void SetBacklight(int nLevel); // 0..100
 		static void SetVolume(int nLevel); // 0..100
-		static void Execute( int nCode );
+		static int Execute( int nCode );
 		static void* IdentifyApplication( int nCode );
 		static void Set( int nKey, int nValue );
 		static int Get( int nKey, int nSub = 0 );

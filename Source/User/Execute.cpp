@@ -48,56 +48,45 @@ int TCALL test(void)
 	return 123;
 }
 
-void CWndUserManager::ElfExecute( char* strName )
+void Experiment()
 {
 	typedef int (TCALL *TMain)(void);
-	ui16 arrCode[] = {0x7B20, 0x7047, 0x7047, 0x7047};
 
-	ui16* pEntry = (ui16*)&test;
-	BIOS::DBG::Print("%08x = %04x %04x %04x %04x\n",
+	ui32* pEntry = (ui32*)&test;
+	BIOS::DBG::Print("%08x =%08x %08x %08x\n",
 		pEntry, pEntry[0], pEntry[1], pEntry[2], pEntry[3]);
+
+	ui32 addr = (ui32)&test;
+	pEntry = (ui32*)(addr&~0xf);
+	BIOS::DBG::Print("%08x=%08x %08x %08x %08x\n",
+		pEntry, pEntry[0], pEntry[1], pEntry[2], pEntry[3]);
+
+	pEntry = (ui32*)&test;
 	int nRet = ((TMain) pEntry)();
 	BIOS::DBG::Print("1/2 Return code=%d\n", nRet);
 
-	pEntry = arrCode;
-	BIOS::DBG::Print("%08x = %04x %04x %04x %04x\n",
-		pEntry, pEntry[0], pEntry[1], pEntry[2], pEntry[3]);
+	ui32 myCode = 0x4770207b;
+		
+	BIOS::DBG::Print("%08x=%08x %08x %08x %08x\n",
+		&myCode, myCode);
 
-	nRet = ((TMain) pEntry)();
+	ui32 dwPtr = ((ui32)&myCode) | 1;
+
+	BIOS::DBG::Print("data=%08x code=%08x \n",
+		&myCode, dwPtr );
+
+	nRet = ((TMain) dwPtr)();
 	BIOS::DBG::Print("2/2 Return code=%d\n", nRet);
-
-	/*
-	typedef int (TCALL *TMain)(void);
-
-	memset(pGlobal, 0x90, 1024);
-	ui8* pRAM = pGlobal+128;
-	ui8* pSrc = (ui8*)&test;
-	memcpy( pRAM, pSrc, 1024);
-
-	ui8* pEntry = pSrc;
-	BIOS::DBG::Print("Data:%02x %02x %02x %02x.%02x %02x %02x %02x\n",
-		pEntry[0], pEntry[1], pEntry[2], pEntry[3],
-		pEntry[4], pEntry[5], pEntry[6], pEntry[7]);
-	
-	int nRet = ((TMain) pEntry)();
-	BIOS::DBG::Print("1/2 Return code=%d\n", nRet);
-
-	pEntry = pRAM;
-	BIOS::DBG::Print("Data:%02x %02x %02x %02x.%02x %02x %02x %02x\n",
-		pEntry[0], pEntry[1], pEntry[2], pEntry[3],
-		pEntry[4], pEntry[5], pEntry[6], pEntry[7]);
-
-	nRet = ((TMain) pEntry)();
-	BIOS::DBG::Print("2/2 Return code=%d\n", nRet);
-	*/
 }
-#if 0
 
+void CWndUserManager::ElfExecute( char* strName )
+{
 	/*
 		all variables used in this routine + (used by BIOS functions) must be placed 
 		at memory location not colliding with loaded image! Same limitation apply to the
 		code area in flash occupied by this function!
 	*/
+	BIOS::LCD::Clear(0);
 	BIOS::DBG::Print("Executing ELF image\n");
 	CBufferedReader2 fw;
 	if ( !fw.Open( strName ) )
@@ -127,16 +116,17 @@ void CWndUserManager::ElfExecute( char* strName )
 		SecBss = 3,
 		SecPlt = 4,
 		SecGot = 5,
-		SecDynStr = 6, // we need to load symbol list before DynSym
-		SecDynSym = 7,
-		SecRelPlt = 8, // process as last
-		SecInterp = 9,
-		SecStringTab = 10
+		SecDynamic = 6,
+		SecDynStr = 7, // we need to load symbol list before DynSym
+		SecDynSym = 8,
+		SecRelPlt = 9, // process as last
+		SecInterp = 10,
+		SecStringTab = 11
 	};
-	const char* arrSecNames[] = {"none", ".text", ".data", ".bss", ".plt", ".got", ".dynstr", ".dynsym", ".rel.plt", ".interp", ".shstrtab"};
+	const char* arrSecNames[] = {"none", ".text", ".data", ".bss", ".plt", ".got", ".dynamic", ".dynstr", ".dynsym", ".rel.plt", ".interp", ".shstrtab"};
 
-	int arrSectionIndex[11];
-	int arrSectionOffset[11];
+	int arrSectionIndex[COUNT(arrSecNames)];
+	int arrSectionOffset[COUNT(arrSecNames)];
 	for (int i=0; i<COUNT(arrSectionIndex); i++)
 	{
 		arrSectionIndex[i] = -1;
@@ -160,10 +150,11 @@ void CWndUserManager::ElfExecute( char* strName )
 		_ASSERT( sectionType > 0 );
 		arrSectionIndex[sectionType] = i;
 		arrSectionOffset[sectionType] = elfSection.offset;
-
+		/*
 		BIOS::DBG::Print("Section%d '%s' ofs=%d addr=%08x len=%d\n", i, 
 			strSectionNames+elfSection.name, elfSection.offset, elfSection.addr,
 			elfSection.size);
+			*/
 	}
 
 	for ( int i=0; i<(int)COUNT(arrSectionIndex); i++)
@@ -181,6 +172,7 @@ void CWndUserManager::ElfExecute( char* strName )
 			case SecData:
 			case SecPlt:
 			case SecGot:
+			case SecDynamic:
 			{
 				BIOS::DBG::Print("Flashing %d bytes at %08x.", elfSection.size, elfSection.addr );
 				fw.Seek( elfSection.offset );
@@ -238,11 +230,23 @@ void CWndUserManager::ElfExecute( char* strName )
 					fw >> CStream(&elfSymbol, sizeof(Elf32_Sym)); 
 					char* strSymbolName = strSymbolNames + elfSymbol.st_name;
 					ui32 dwProcAddr = BIOS::SYS::GetProcAddress( strSymbolName );
-					BIOS::DBG::Print("Relocation '%s' %08x <- %08x.\n", strSymbolName, elfRelocation.r_offset, dwProcAddr);
+					BIOS::DBG::Print("Relocation %08x <- %08x '%s'.", elfRelocation.r_offset, dwProcAddr, strSymbolName);
+					if ( i < nSymbolCount-1 )
+					{
+						BIOS::DBG::Print("\n");
+					}
 					_ASSERT(dwProcAddr);
 #ifndef _WIN32
-					ui32* pRelocation = (ui32*)elfRelocation.r_offset;
-					*pRelocation = dwProcAddr;
+					//ui32* pRelocation = (ui32*)elfRelocation.r_offset;
+					// *pRelocation points to REL[0] resolver
+					//*pRelocation = dwProcAddr;
+					((ui32*)0x20000E90)[i] = dwProcAddr;
+					/*
+					BIOS::DBG::Print("*0x%08x=0x%08x, ", pRelocation, *pRelocation);
+					ui32* pRelTarget = (ui32*)(*pRelocation);
+					BIOS::DBG::Print("*0x%08x=0x%08x \n", pRelTarget, *pRelTarget);
+					*pRelTarget = dwProcAddr;
+					*/
 #endif
 				}
 			}
@@ -250,41 +254,7 @@ void CWndUserManager::ElfExecute( char* strName )
 		BIOS::DBG::Print("\n");
 	}
 
-	BIOS::DBG::Print("Finished loading\n");
-	BIOS::DBG::Print("Jumping to entry %08x \n", elfHeader.entry);
-#ifndef _WIN32
-
-	ui8* pEntry = (ui8*)elfHeader.entry;
-
-	//ui8 bCode[4] = {0x7b, 0x20, 0x70, 0x47};
-	ui8 bCode[4] = {0x70, 0x20, 0x70, 0x47};
-	pEntry[0] = bCode[1];
-	pEntry[1] = bCode[0];
-	pEntry[2] = bCode[3];
-	pEntry[3] = bCode[2];
-
-	BIOS::DBG::Print("Data:%02x %02x %02x %02x.%02x %02x %02x %02x\n",
-		pEntry[0], pEntry[1], pEntry[2], pEntry[3],
-		pEntry[4], pEntry[5], pEntry[6], pEntry[7]);
-
-	pEntry = (ui8*)&test;
-	BIOS::DBG::Print("Verify @ %08x \n", pEntry);
-	BIOS::DBG::Print("Data:%02x %02x %02x %02x.%02x %02x %02x %02x \n",
-		pEntry[0], pEntry[1], pEntry[2], pEntry[3],
-		pEntry[4], pEntry[5], pEntry[6], pEntry[7]);
-
-	ui8	btest[32];
-	memcpy( btest, pEntry, 32);
-	pEntry = btest;
-
-	int nRet = ((int (*)(void)) pEntry)();
-	//int nRet = ((int (*)(void)) elfHeader.entry)();
-	BIOS::DBG::Print("Return code=%d\n", nRet);
-
-#endif
-
-
-//	BIOS::SYS::Execute( elfHeader.entry );
-	BIOS::DBG::Print("Done.\n"); // shouldn't get here
+	BIOS::DBG::Print("Load ok. Jumping to entry %08x \n", elfHeader.entry);
+	int nRet = BIOS::SYS::Execute( elfHeader.entry );
+	BIOS::DBG::Print("Return code=%d.\n", nRet);
 }
-#endif

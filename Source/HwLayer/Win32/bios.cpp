@@ -871,8 +871,9 @@ void* BIOS::SYS::IdentifyApplication( int nCode )
 	return NULL;
 }
 
-/*static*/ void BIOS::SYS::Execute( int nCode )
+/*static*/ int BIOS::SYS::Execute( int nCode )
 {
+	return 0;
 }
 
 /*static*/ ui32* BIOS::GPIO::GetRegister(int nPort, int nReg)

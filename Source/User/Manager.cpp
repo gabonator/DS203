@@ -537,6 +537,7 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 	if ( eType == EElf )
 	{
 		ElfExecute( strFullName );
+		return;
 
 		ui32 dwEntry, dwBegin, dwEnd;
 		char strLoader[32];
