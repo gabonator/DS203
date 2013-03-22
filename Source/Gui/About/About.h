@@ -135,13 +135,19 @@ public:
 			const ui16 clrB = RGB565(b0b0b0);
 			const ui16 clrA = RGB565(808080);
 
+#ifdef _VERSION2
+			const char *strVersion = "2.0";
+#else
+			const char *strVersion = "1.0";
+#endif
+
 			BIOS::LCD::Bar( m_rcClient, RGB565(000000) );
 
 			BIOS::LCD::Print (   4, 240-7*16, clrA, 0, "Firmware version:" );
 #ifdef GIT_REVISION
-			BIOS::LCD::Printf( 160, 240-7*16, clrB, 0, "2.0 rev. %d", GIT_REVISION );
+			BIOS::LCD::Printf( 160, 240-7*16, clrB, 0, "%a rev. %d", strVersion, GIT_REVISION );
 #else
-			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, "2.0" );
+			BIOS::LCD::Print ( 160, 240-7*16, clrB, 0, strVersion );
 #endif
 
 #ifdef GIT_HASH

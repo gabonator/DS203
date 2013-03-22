@@ -26,6 +26,17 @@ public:
 	virtual void OnTimer()
 	{
 		int nCurSlot = GetSlot();
+/*
+		int l = 1;
+		int q = rand()%15;
+		if ( q == 0 )
+			l = 4;
+		else if (q < 3)
+			l = 3;
+		else if (q < 7)
+			l = 2;
+		m_arrCounts[nCurSlot] = rand()%l;
+*/
 		if ( nCurSlot != m_nLastSlot )
 		{
 			m_arrCounts[nCurSlot] = 0;
@@ -149,7 +160,7 @@ public:
 				m_arrCounts[nCurSlot] = 0;
 				m_nLastSlot = nCurSlot;
 			}
-			m_arrCounts[nCurSlot]++;
+//			m_arrCounts[nCurSlot]++;
 			return;
 		}
 	}

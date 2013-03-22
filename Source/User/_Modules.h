@@ -1,8 +1,13 @@
+#ifdef _VERSION2
+
 #include "Manager.h"
 #include "CharMap.h"
 #include "Monitor.h"
 
-#if _WIN32
+#else
+
+#include "CharMap.h"
+#include "Monitor.h"
 #include "ZoomView.h"
 #include "Timer.h"
 //#include "Tuner.h"
@@ -14,6 +19,6 @@
 //#include "Meter.h"
 #include "PidRegulator.h"
 #include "GpioTest.h"
-#include "Geiger.h"
+//#include "Geiger.h"
 #include "Dcf77.h"
 #endif

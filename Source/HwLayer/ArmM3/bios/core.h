@@ -129,7 +129,9 @@ void BIOS::SYS::Execute( int nCode )
 		case BIOS::SYS::ESys: dwGotoAddr = SYS_BASE; break;
 		case BIOS::SYS::EDfu: dwGotoAddr = DFU_BASE; break;
 		default:
-			dwGotoAddr = nCode;
+			((void (*)(void)) nCode)();
+			return;
+//			dwGotoAddr = nCode;
 	}
 
 	if ( !dwGotoAddr )
@@ -338,6 +340,16 @@ int BIOS::SYS::GetCoreVoltage()
   return ADCConvertedValue;
 }
 
+void _BiosInit()
+{
+	BIOS::DBG::Print("BiosInit!");
+}
+
+void _BiosExit()
+{
+	BIOS::SYS::Execute(0);
+}
+
 ui32 BIOS::SYS::GetProcAddress(const char* strFuncName )
 {
 
@@ -352,6 +364,16 @@ ui32 BIOS::SYS::GetProcAddress(const char* strFuncName )
 	EXPORT(__USB_Init, void (*)(void));
 	EXPORT(__USB_Istr, void (*)(void));
 	EXPORT(__CTR_HP, void (*)(void));
+
+	#define EXPORT_ALIAS(al, f, decl) if ( strcmp( strFuncName, #al ) == 0 ) return (NATIVEPTR)(decl)&f;
+	EXPORT_ALIAS(PutPixel, BIOS::LCD::PutPixel, void (*)(int, int, ui16));
+	EXPORT_ALIAS(Print, BIOS::LCD::Print, int (*)(int, int, ui16, ui16, const char*));
+	EXPORT_ALIAS(GetKeys, BIOS::KEY::GetKeys, ui16 (*)());	
+	EXPORT_ALIAS(Execute, BIOS::SYS::Execute, void (*)(int));	
+	EXPORT_ALIAS(Printf, BIOS::LCD::Printf, int (*)(int x, int y, unsigned short clrf, unsigned short clrb, const char * format, ...));
+
+	EXPORT_ALIAS(gBiosInit, _BiosInit, void (*)());
+	EXPORT_ALIAS(gBiosExit, _BiosExit, void (*)());
 
 	#undef EXPORT
 

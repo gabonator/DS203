@@ -269,7 +269,8 @@ public:
 		static void SetPin(int nPort, int nPin, bool bOn);
 		static bool GetPin(int nPort, int nPin);
 	};
-	
+
+#ifdef _VERSION2	
 	class MEMORY
 	{
 	public:
@@ -317,12 +318,13 @@ public:
 		static EResult Open(const char* strName, ui8 nIoMode);
 		static EResult Read(ui8* pSectorData);
 		static EResult Write(ui8* pSectorData);
+		static EResult Seek(ui32 lOffset);
 		static EResult Close(int nSize = -1);
 		static ui32 GetFileSize();
 	
 		static EResult OpenDir(char* strPath);
 		static EResult FindNext(TFindFile* pFile);
 	};
-
+#endif
 };
 #endif

@@ -169,6 +169,7 @@ public:
 	}
 };
 
+#ifdef _VERSION2
 class CBufferedReader2 : public CSerialize
 {
 	ui8* m_pData;
@@ -251,6 +252,15 @@ public:
 			}
 		}
 		return *this;
+	}
+
+	void Seek(ui32 lOffset)
+	{
+		m_nOffset = lOffset % FILEINFO::SectorSize;
+		lOffset -= m_nOffset;
+		BIOS::FAT::Seek( lOffset );
+		BIOS::FAT::EResult eResult = BIOS::FAT::Read( m_pData );
+		_ASSERT( eResult == BIOS::FAT::EOk );
 	}
 
 	void Close()
@@ -351,4 +361,5 @@ public:
 	}
 };
 
+#endif
 #endif

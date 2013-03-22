@@ -97,3 +97,9 @@ BIOS::FAT::EResult Result(FRESULT r)
 {
 	return g_file.fsize;
 }
+
+/*static*/ BIOS::FAT::EResult BIOS::FAT::Seek(ui32 lOffset)
+{
+	FRESULT r = f_lseek(&g_file, lOffset);
+	return Result(r);
+}

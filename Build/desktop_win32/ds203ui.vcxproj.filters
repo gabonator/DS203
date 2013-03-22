@@ -708,5 +708,8 @@
     <ClCompile Include="..\..\Source\User\Manager.cpp">
       <Filter>Source\User</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\User\Execute.cpp">
+      <Filter>Source\User</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

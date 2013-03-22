@@ -1,6 +1,8 @@
 #ifndef __ITEMDISP_H__
 #define __ITEMDISP_H__
 
+#include "Source/Core/Controls.h"
+
 class CMPItem : public CWndMenuItem
 {
 protected:

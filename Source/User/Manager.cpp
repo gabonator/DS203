@@ -536,38 +536,48 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 
 	if ( eType == EElf )
 	{
+		ElfExecute( strFullName );
+
 		ui32 dwEntry, dwBegin, dwEnd;
-		if ( !ElfGetInfo(strFullName, dwEntry, dwBegin, dwEnd) )
+		char strLoader[32];
+		if ( ElfGetInterpreter( strFullName, strLoader ) )
 		{
-			MainWnd.m_wndMessage.Show(this, "Manager", "Failed to load!", RGB565(FF0000));
-			return;
-		}
-		if ( IsModuleLoaded( strFile, nLength, dwEntry, dwBegin, dwEnd ) )
+			if ( strcmp( strLoader, "gloader.1" ) == 0 )
+				ElfExecute( strFullName );
+		} else
 		{
-			CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
-			Settings.Save();
-			BIOS::SYS::Execute( dwEntry );
-			// on win32 it continues...
-			Invalidate();
-			return;
-		}
-		if ( CheckModuleConflict( dwBegin, dwEnd ) )
-		{
-			AddModule( strFile, nLength, dwEntry, dwBegin, dwEnd );
-			SaveModuleList();
-			if ( !ElfLoad( strFullName ) )
+			if ( !ElfGetInfo(strFullName, dwEntry, dwBegin, dwEnd) )
 			{
-				MainWnd.m_wndMessage.Show(this, "Manager", "Failed to execute!", RGB565(FF0000));
-			} else
+				MainWnd.m_wndMessage.Show(this, "Manager", "Failed to load!", RGB565(FF0000));
+				return;
+			}
+			if ( IsModuleLoaded( strFile, nLength, dwEntry, dwBegin, dwEnd ) )
 			{
 				CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
 				Settings.Save();
 				BIOS::SYS::Execute( dwEntry );
-				// on win32 it continues... file buffer was corrupted by linear flashing
+				// on win32 it continues...
 				Invalidate();
+				return;
 			}
-		} else
-			MainWnd.m_wndMessage.Show(this, "Manager", "Module conflict, won't load", RGB565(FFFF00));
+			if ( CheckModuleConflict( dwBegin, dwEnd ) )
+			{
+				AddModule( strFile, nLength, dwEntry, dwBegin, dwEnd );
+				SaveModuleList();
+				if ( !ElfLoad( strFullName ) )
+				{
+					MainWnd.m_wndMessage.Show(this, "Manager", "Failed to execute!", RGB565(FF0000));
+				} else
+				{
+					CCookies::SetCookie( (char*)"gui.manager.last", strFullName ); 
+					Settings.Save();
+					BIOS::SYS::Execute( dwEntry );
+					// on win32 it continues... file buffer was corrupted by linear flashing
+					Invalidate();
+				}
+			} else
+				MainWnd.m_wndMessage.Show(this, "Manager", "Module conflict, won't load", RGB565(FFFF00));
+		}
 	}
 	if ( eType == EHex )
 	{

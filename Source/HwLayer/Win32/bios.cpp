@@ -617,6 +617,7 @@ void BIOS::SYS::Beep(int)
 
 /*static*/ void BIOS::DBG::Print(const char * format, ...)
 {
+	_ASSERT( format );
 	static int px = 0;
 	static int py = 0;
 
@@ -893,6 +894,7 @@ void* BIOS::SYS::IdentifyApplication( int nCode )
 	return false;
 }
 
+#ifdef _VERSION2
 
 /*static*/ bool BIOS::MEMORY::PageWrite(int nPage, const ui8* pBuffer)
 {
@@ -1035,6 +1037,12 @@ FILEINFO fatFile;
 	return (fatFile.f != NULL && fatFile.f != INVALID_HANDLE_VALUE) ? BIOS::FAT::EOk : BIOS::FAT::EIntError;
 }
 
+/*static*/ BIOS::FAT::EResult BIOS::FAT::Seek(ui32 lOffset)
+{
+	fseek( fatFile.f, lOffset, SEEK_SET );
+	return BIOS::FAT::EOk;
+}
+
 /*static*/ BIOS::FAT::EResult BIOS::FAT::Read(ui8* pSectorData)
 {
 	return BIOS::DSK::Read(&fatFile, pSectorData) ? BIOS::FAT::EOk : BIOS::FAT::EIntError;
@@ -1058,6 +1066,7 @@ FILEINFO fatFile;
 	rewind(fatFile.f);
 	return nSize;
 }
+#endif
 
 bool BIOS::SYS::IsColdBoot()
 {
@@ -1073,4 +1082,31 @@ bool BIOS::SYS::IsColdBoot()
 /*static*/ int BIOS::SYS::GetSharedLength()
 {
 	return 4096;
+}
+
+void NullFunction()
+{
+}
+
+/*static*/ ui32 BIOS::SYS::GetProcAddress( const char* strFuncName )
+{
+	#define EXPORT(f, decl) if ( strcmp( strFuncName, #f ) == 0 ) return (NATIVEPTR)(decl)&f;
+	#define EXPORT_ALIAS(al, f, decl) if ( strcmp( strFuncName, #al ) == 0 ) return (NATIVEPTR)(decl)&f;
+	EXPORT(BIOS::LCD::PutPixel, void (*)(int, int, ui16));
+	EXPORT(BIOS::LCD::Print, int (*)(int, int, ui16, ui16, const char*));
+	EXPORT(BIOS::KEY::GetKeys, ui16 (*)());	
+	EXPORT(BIOS::SYS::Execute, void (*)(int));	
+	EXPORT(BIOS::LCD::Printf, int (*)(int x, int y, unsigned short clrf, unsigned short clrb, const char * format, ...));
+
+	EXPORT_ALIAS(PutPixel, BIOS::LCD::PutPixel, void (*)(int, int, ui16));
+	EXPORT_ALIAS(Print, BIOS::LCD::Print, int (*)(int, int, ui16, ui16, const char*));
+	EXPORT_ALIAS(GetKeys, BIOS::KEY::GetKeys, ui16 (*)());	
+	EXPORT_ALIAS(Execute, BIOS::SYS::Execute, void (*)(int));	
+	EXPORT_ALIAS(Printf, BIOS::LCD::Printf, int (*)(int x, int y, unsigned short clrf, unsigned short clrb, const char * format, ...));
+
+	EXPORT_ALIAS(gBiosInit, NullFunction, void (*)());
+	EXPORT_ALIAS(gBiosExit, NullFunction, void (*)());
+
+	#undef EXPORT
+	return NULL;
 }

@@ -55,6 +55,9 @@ private:
 	bool ElfGetInfo( char* strName, ui32& dwEntry, ui32& dwBegin, ui32& dwEnd );
 	bool ElfLoad( char* strName );
 
+	bool ElfGetInterpreter( char* strName, char* strInterpreter );
+	void ElfExecute( char* strName );
+
 	// hex
 	bool HexGetInfo( char* strName, ui32& dwEntry, ui32& dwBegin, ui32& dwEnd );
 	bool HexLoad( char* strName );

@@ -32,7 +32,7 @@ typedef signed short si16;
 #define GetColorB(rgb) (((rgb) >> 16)&0xff)
 
 #define RGB565(rgb) RGB565RGB( GetHtmlR(0x##rgb), GetHtmlG(0x##rgb), GetHtmlB(0x##rgb))
-#define COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
+#define COUNT(arr) (int)(sizeof(arr)/sizeof(arr[0]))
 #define RGBTRANS (RGB565(ff00ff)-1)
 
 #define RGB32(r,g,b) ((r) | ((g)<<8) | ((b)<<16))

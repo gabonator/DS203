@@ -18,6 +18,8 @@ extern "C" {
 #include "../bios/ver.h"
 #include "../bios/mouse.h"
 #include "../bios/gpio.h"
+#ifdef _VERSION2
 #include "../bios/flash.h"
 #include "../bios/fat.h"
+#endif
 

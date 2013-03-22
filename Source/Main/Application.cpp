@@ -69,8 +69,9 @@ CApplication::~CApplication()
 void CApplication::Create()
 {
 	BIOS::SYS::Init();
+#ifdef _VERSION2
 	BIOS::FAT::Init();
-
+#endif
 	GLOBAL.m_wndMain.Create();
 	GLOBAL.m_wndMain.WindowMessage( CWnd::WmPaint );
 
