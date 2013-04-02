@@ -1,6 +1,5 @@
 #include "GraphOsc.h"
 #include <Source/Gui/MainWnd.h>
-#include <Source/Gui/Oscilloscope/Core/CoreOscilloscope.h>
 
 CWndOscGraph::CWndOscGraph()
 {
@@ -169,9 +168,11 @@ void CWndOscGraph::OnPaintXY()
 		return;
 	}
 
+	
 	for (ui16 x=0; x<nColMax; x++, nIndex++)
 	{
 		ui32 ui32Sample = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
+		
 		int nSampleY2 = 0, nSampleY1 = 0;
 
 		if ( bEnabled1 )
@@ -199,10 +200,31 @@ void CWndOscGraph::OnPaintXY()
 		else
 			BIOS::LCD::PutPixel( m_rcClient.left + nSampleY2 + BlkX, m_rcClient.bottom - nSampleY1, clrPoint );
 	}
-
 }
 
-LINKERSECTION(".extra")
+ui32 GetInterpolatedSample( int nSample256 )
+{
+	// real sample index = nSample256 / 256.0f
+	int nBase = nSample256 / 256;
+	int nFraction = nSample256 & 0xff;
+
+	//_ASSERTW( nBase + 1 < BIOS::ADC::GetCount() );
+	if ( nBase + 1 >= (int)BIOS::ADC::GetCount() )
+		return 0;
+
+	BIOS::ADC::SSample nSampleA;
+	nSampleA.nValue = BIOS::ADC::GetAt( nBase );
+
+	BIOS::ADC::SSample nSampleB;
+	nSampleB.nValue = BIOS::ADC::GetAt( nBase + 1 );
+
+	// interpolate values for CH1 and CH2 in nSampleA..nSampleB and store result in nSampleA
+	nSampleA.CH1 += (int)(nSampleB.CH1 - nSampleA.CH1) * nFraction / 256;
+	nSampleA.CH2 += (int)(nSampleB.CH2 - nSampleA.CH2) * nFraction / 256;
+
+	return nSampleA.nValue;
+}
+
 void CWndOscGraph::OnPaintTY()
 {
 	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
@@ -308,6 +330,7 @@ void CWndOscGraph::OnPaintTY()
 
 	ui16 clrm = Settings.Math.uiColor;
 
+	int nTimebaseCorrection = CSettings::TimeBase::pfValueResolutionCorrection[ (NATIVEENUM)Settings.Time.Resolution ];
 	int nIndex = Settings.Time.Shift;
 	for (ui16 x=0; x<nMax; x++, nIndex++)
 	{
@@ -373,7 +396,13 @@ void CWndOscGraph::OnPaintTY()
 		}
 
 		BIOS::ADC::SSample Sample;
-		Sample.nValue = nIndex < nMaxIndex ?  BIOS::ADC::GetAt(nIndex) : 0;
+
+		// florian: Timebase Correction for Timebases < 2 us/Div
+		if ( nTimebaseCorrection >= 1024 )
+			Sample.nValue = nIndex < nMaxIndex ? BIOS::ADC::GetAt(nIndex) : 0;
+		else
+			Sample.nValue = GetInterpolatedSample( nIndex * 256 * nTimebaseCorrection / 1024 );
+		// florian end
 
 		if ( en1 )
 		{

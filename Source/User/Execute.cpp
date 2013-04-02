@@ -237,16 +237,12 @@ void CWndUserManager::ElfExecute( char* strName )
 					}
 					_ASSERT(dwProcAddr);
 #ifndef _WIN32
-					//ui32* pRelocation = (ui32*)elfRelocation.r_offset;
-					// *pRelocation points to REL[0] resolver
-					//*pRelocation = dwProcAddr;
-					((ui32*)0x20000E90)[i] = dwProcAddr;
 					/*
-					BIOS::DBG::Print("*0x%08x=0x%08x, ", pRelocation, *pRelocation);
-					ui32* pRelTarget = (ui32*)(*pRelocation);
-					BIOS::DBG::Print("*0x%08x=0x%08x \n", pRelTarget, *pRelTarget);
-					*pRelTarget = dwProcAddr;
+					0x20000E84 (GOT[2]) -> 0x20000DAC (PLT[0])
+					0x20000E84 (GOT[2]) <- new address
 					*/
+					ui32* pRelocation = (ui32*)elfRelocation.r_offset;
+					*pRelocation = dwProcAddr;
 #endif
 				}
 			}
@@ -255,6 +251,7 @@ void CWndUserManager::ElfExecute( char* strName )
 	}
 
 	BIOS::DBG::Print("Load ok. Jumping to entry %08x \n", elfHeader.entry);
+	// TODO: set stack pointer!
 	int nRet = BIOS::SYS::Execute( elfHeader.entry );
 	BIOS::DBG::Print("Return code=%d.\n", nRet);
 }

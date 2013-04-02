@@ -65,7 +65,7 @@ SECTIONS
     .text :
     {
 	    . = ALIGN(4);
-
+	    _scode = .;
       *(.text .text.* .gnu.linkonce.t.*)
     	*(.plt)
     	*(.gnu.warning)
@@ -73,7 +73,7 @@ SECTIONS
 
     	*(.ARM.extab* .gnu.linkonce.armextab.*)
     	*(.gcc_except_table)
-	   
+	    _ecode = .;
     } >ROM
  
     .eh_frame_hdr : ALIGN (4)

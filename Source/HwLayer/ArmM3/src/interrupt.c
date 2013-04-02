@@ -121,11 +121,12 @@ int UsartEmpty()
 
 void NMIException(void)
 {}
-
+/*
 void HardFaultException(void)
 {
   while (1) {}
 }
+*/
 
 void MemManageException(void)
 {

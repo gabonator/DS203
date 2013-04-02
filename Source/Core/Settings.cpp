@@ -26,13 +26,25 @@ CSettings* CSettings::m_pInstance = NULL;
 		"1ms", "2ms", "5ms",
 		"10ms", "20ms", "50ms", "100ms", "200ms", "500ms", 
 		"1s" };
+		
+/*static*/ const int CSettings::TimeBase::pfValueResolutionCorrection[] = // florian
+		{/*246,*/ 492, 614,
+		819, 983, 1024,
+		1024, 1024, 1024, 1024, 1024, 1024,
+		1024, 1024, 1024,
+		1024, 1024, 1024, 1024, 1024, 1024,
+		1024};
+		
 /*static*/ const float CSettings::TimeBase::pfValueResolution[] =
 		{/*100e-9f,*/ 200e-9f, 500e-9f,
-		1e-6f, 2e-6f, 5e-6f,
+		/* 97.65e-9f, 417e-9f, */
+		1e-6f, 2e-6f, 5e-6f, 
+		/*8e-7f, 1.934e-6f, 5e-6f,*/
 		10e-6f, 20e-6f, 50e-6f, 100e-6f, 200e-6f, 500e-6f,
 		1e-3f, 2e-3f, 5e-3f,
 		10e-3f, 20e-3f, 50e-3f, 100e-3f, 200e-3f, 500e-3f,
 		1.0f};
+		
 /*static*/ const char* const CSettings::Generator::ppszTextWave[] =
 		{"DC", "Sin HQ", "Sin LQ", "Triangle", "Sawtooth", "Square", "Cardiac", "Volatile"};
 /*static*/ const char* const CSettings::Trigger::ppszTextSync[] =

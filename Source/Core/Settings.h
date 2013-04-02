@@ -6,7 +6,7 @@
 #include <Source/HwLayer/Bios.h>
 #include "Serialize.h"
 
-#define _VERSION ToDword('D', 'S', 'C', 11)
+#define _VERSION ToDword('D', 'S', 'C', 10)
 
 class CSettings : public CSerialize
 {
@@ -33,6 +33,7 @@ public:
 
 		static const float pfValueProbe[];
 		static const float pfValueResolution[];
+		
 
 		ui16 u16Color;
 		si16 u16Position;
@@ -93,6 +94,7 @@ public:
 			Range;
 
 		static const float pfValueResolution[];
+		static const int pfValueResolutionCorrection[]; // florian
 
 		si16 Shift;
 		int InvalidFirst;
@@ -157,12 +159,12 @@ public:
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Wave) << nPsc << nArr << nScale << nOffset;
+			stream << _E(Wave) << nPsc << nArr << nScale;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Wave) >> nPsc >> nArr >> nScale >> nOffset;
+			stream >> _E(Wave) >> nPsc >> nArr >> nScale;
 			return *this;
 		}
 	};

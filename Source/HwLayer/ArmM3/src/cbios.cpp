@@ -23,3 +23,6 @@ extern "C" {
 #include "../bios/fat.h"
 #endif
 
+extern "C" {
+#include "../bios/crash.h"
+}

@@ -17,6 +17,8 @@ void Reset_Handler(void) __attribute__((__interrupt__));
 void __Init_Data(void);
 void Default_Handler(void);
 
+extern void HardFaultException();
+
 extern int main(void);
 extern void __libc_init_array(void);
 
