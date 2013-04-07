@@ -84,6 +84,7 @@ public:
 	virtual void		WindowMessage(int nMsg, int nParam =0);
 	bool				HasOverlay();
 	void				OnMouseClick();
+	void				Resample();
 
 private:
 	// auto trigger

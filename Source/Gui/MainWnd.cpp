@@ -250,7 +250,52 @@ void CMainWnd::OnMouseClick()
 	}
 }
 
-//long lForceRestart = -1;
+ui32 GetInterpolatedSample( int nSample256 )
+{
+	// real sample index = nSample256 / 256.0f
+	int nBase = nSample256 / 1024;
+	int nFraction = nSample256 & 1023;
+
+	_ASSERTW( nBase + 1 < (int)BIOS::ADC::GetCount() );
+
+	BIOS::ADC::SSample nSampleA;
+	nSampleA.nValue = BIOS::ADC::GetAt( nBase );
+
+	BIOS::ADC::SSample nSampleB;
+	nSampleB.nValue = BIOS::ADC::GetAt( nBase + 1 );
+
+	// interpolate values for CH1 and CH2 in nSampleA..nSampleB and store result in nSampleA
+	nSampleA.CH1 += (int)(nSampleB.CH1 - nSampleA.CH1) * nFraction / 1024;
+	nSampleA.CH2 += (int)(nSampleB.CH2 - nSampleA.CH2) * nFraction / 1024;
+
+	return nSampleA.nValue;
+}
+
+void CMainWnd::Resample()
+{
+	int nTimebaseCorrection = Settings.Time.pfValueResolutionCorrection[ (NATIVEENUM)Settings.Time.Resolution ];
+	if ( nTimebaseCorrection == 1024 )
+		return;
+
+	if ( nTimebaseCorrection < 1024 )
+	{
+		// shrink
+		for (int i=4096-1; i>=1; i--) // no need to copy [0] <- [0*nCorrect/1k]
+		{
+			BIOS::ADC::SSample& nSample = (BIOS::ADC::SSample&)BIOS::ADC::GetAt( i );
+			BIOS::ADC::SSample nInterpolated;
+			nInterpolated.nValue = GetInterpolatedSample( i * nTimebaseCorrection );
+
+			nSample.CH[0] = nInterpolated.CH[0];
+			nSample.CH[1] = nInterpolated.CH[1];
+			nSample.CH[2] = nInterpolated.CH[2]; // contains CH3 & CH4
+		}
+	} else {
+		// expand
+		_ASSERT( 0 );
+	}
+}
+
 /*virtual*/ void CMainWnd::WindowMessage(int nMsg, int nParam /*=0*/)
 {
 //	BIOS::LCD::Printf( 0, 0, RGB565(ff0000), RGB565(ffffff), "%d", BIOS::ADC::GetState() );
@@ -281,11 +326,12 @@ void CMainWnd::OnMouseClick()
 		if ( bEnableSdk )
 			SdkUartProc();
 
-		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() /*&& lForceRestart < 0*/ )
+		if ( (Settings.Trig.Sync != CSettings::Trigger::_None) && BIOS::ADC::Enabled() && BIOS::ADC::Ready() )
 		{
 			// ADC::Ready means that the write pointer is at the end of buffer, we can restart sampler
 			BIOS::ADC::Copy( BIOS::ADC::GetCount() );
 			BIOS::ADC::Restart();
+			Resample();
 
 			// trig stuff
 			m_lLastAcquired = BIOS::SYS::GetTick();
