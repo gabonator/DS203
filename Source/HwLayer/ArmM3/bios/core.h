@@ -375,12 +375,13 @@ ui32 BIOS::SYS::GetProcAddress(const char* strFuncName )
 	EXPORT_ALIAS(gBiosInit, _BiosInit, void (*)());
 	EXPORT_ALIAS(gBiosExit, _BiosExit, void (*)());
 
+
+	EXPORT(BIOS::SYS::GetTick, ui32 (*)());
+	EXPORT(BIOS::KEY::GetKeys, ui16 (*)());
+	EXPORT(BIOS::LCD::Pattern, void (*)(int, int, int, int, const ui16*, int));
+	EXPORT(BIOS::SYS::Beep, void (*)(int));
+
 	#undef EXPORT
-
-//	if ( strcmp( strFuncName, "BIOS::LCD::PutPixel" ) == 0 ) return (NATIVEPTR)(void (*)(int, int, ui16)) &BIOS::LCD::PutPixel;
-//	if ( strcmp( strFuncName, "BIOS::LCD::Print" ) == 0 ) return (NATIVEPTR)(int (*)(int, int, ui16, ui16, const char*)) &BIOS::LCD::Print;
-
-//BIOS::KEY::GetKeys()
 	return NULL;
 }
 

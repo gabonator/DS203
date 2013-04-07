@@ -8,6 +8,7 @@
 #define __USER_MANAGER_H__
 
 #include <Source/Framework/Wnd.h>
+//#include <Source/Library/elf.h>
 
 class CWndUserManager : public CWnd
 {
@@ -57,6 +58,8 @@ private:
 
 	bool ElfGetInterpreter( char* strName, char* strInterpreter );
 	void ElfExecute( char* strName );
+	//void FlashData( CBufferedReader2& f, Elf32_Shdr& sh );
+	//void FlashBss( CBufferedReader2& f, Elf32_Shdr& sh );
 
 	// hex
 	bool HexGetInfo( char* strName, ui32& dwEntry, ui32& dwBegin, ui32& dwEnd );

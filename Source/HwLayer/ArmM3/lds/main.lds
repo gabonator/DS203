@@ -58,9 +58,15 @@ SECTIONS
     .bios 0x08004200 (NOLOAD) : {
       BIOS.o
     }
+/*
+    .cbiosram : {
+			cbios.o(.data .bss .bss.*)
+		} >BIOSRAM
 
-
-    
+    .cbiosrom : {
+			cbios.o(.text)
+		} >BIOSROM 
+*/ 
     /* the program code is stored in the .text section, which goes to Flash */
     .text :
     {
@@ -146,13 +152,13 @@ SECTIONS
         *(.extra)
     } >EXTRA
 */
+
 /*
     .cbios : {
 	    . = ALIGN(4);
 		  cbios.o
     } >BIOSRAM
 */
-
     .entry : {
 	    . = ALIGN(4);
       _vectors = .;

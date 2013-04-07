@@ -107,11 +107,10 @@ bool CApplication::operator ()()
 
 	if ( nKeys )
 	{
-		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
 		if ( nKeys != lLastKeys && Settings.Runtime.m_Beep == CSettings::CRuntime::_On ) 
-		{
 			BIOS::SYS::Beep(50);
-		}
+
+		GLOBAL.m_wndMain.WindowMessage( CWnd::WmKey, nKeys );
 		lLastKeys = nKeys;
 	}
 

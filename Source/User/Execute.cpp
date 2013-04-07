@@ -31,54 +31,39 @@ bool CWndUserManager::ElfGetInterpreter( char* strName, char* strInterpreter )
 	fw.Close();
 	return false;
 }
-
-
-//ui8 pGlobal[1024];
-/*
-	BIOS::MEMORY::LinearStart();
-	BIOS::MEMORY::LinearProgram( 0x08014000, bCode, 4 );
-	BIOS::MEMORY::LinearFinish();
-*/
-// real: 7020 7047 7047 7047
-// load: 7b20 7047 7047 7047
-#define TCALL 
-
-int TCALL test(void)
+ 
+//LINKERSECTION(".gbios")
+void /*CWndUserManager::*/FlashData( CBufferedReader2& f, Elf32_Shdr& elfSection )
 {
-	return 123;
+				BIOS::DBG::Print("Flashing %d bytes at %08x.", elfSection.size, elfSection.addr );
+				f.Seek( elfSection.offset );
+				//LoadSection( fw, elfSection.addr, elfSection.size );
+#ifndef _WIN32
+				// section length should be aligned to 32bits!?
+				ui8* pWriteTo = (ui8*)elfSection.addr;
+				for (int i=0; i<(int)elfSection.size; i++)
+				{
+					ui8 bData;
+					f >> bData;
+					*pWriteTo++ = bData;
+				}
+#endif
 }
 
-void Experiment()
+//LINKERSECTION(".gbios")
+void /*CWndUserManager::*/FlashBss( CBufferedReader2& f, Elf32_Shdr& elfSection )
 {
-	typedef int (TCALL *TMain)(void);
-
-	ui32* pEntry = (ui32*)&test;
-	BIOS::DBG::Print("%08x =%08x %08x %08x\n",
-		pEntry, pEntry[0], pEntry[1], pEntry[2], pEntry[3]);
-
-	ui32 addr = (ui32)&test;
-	pEntry = (ui32*)(addr&~0xf);
-	BIOS::DBG::Print("%08x=%08x %08x %08x %08x\n",
-		pEntry, pEntry[0], pEntry[1], pEntry[2], pEntry[3]);
-
-	pEntry = (ui32*)&test;
-	int nRet = ((TMain) pEntry)();
-	BIOS::DBG::Print("1/2 Return code=%d\n", nRet);
-
-	ui32 myCode = 0x4770207b;
-		
-	BIOS::DBG::Print("%08x=%08x %08x %08x %08x\n",
-		&myCode, myCode);
-
-	ui32 dwPtr = ((ui32)&myCode) | 1;
-
-	BIOS::DBG::Print("data=%08x code=%08x \n",
-		&myCode, dwPtr );
-
-	nRet = ((TMain) dwPtr)();
-	BIOS::DBG::Print("2/2 Return code=%d\n", nRet);
+				BIOS::DBG::Print("Filling %d bytes at %08x.", elfSection.size, elfSection.addr );
+#ifndef _WIN32
+				// section length should be aligned to 32bits!?
+				ui8* pWriteTo = (ui8*)elfSection.addr;
+				for (int i=0; i<(int)elfSection.size; i++)
+					*pWriteTo++ = 0;
+#endif
+				//ZeroSection( elfSection.addr, elfSection.size );
 }
 
+//LINKERSECTION(".gbios")
 void CWndUserManager::ElfExecute( char* strName )
 {
 	/*
@@ -103,11 +88,15 @@ void CWndUserManager::ElfExecute( char* strName )
 	int nStringTableOfs = elfSection.offset;
 	int nStringTableLen = elfSection.size;
 
+	char strSymbolNames[128];
+
+/*
 	_ASSERT( nStringTableLen < 128 );
 	char strSectionNames[128];
 	char* strSymbolNames = strSectionNames;
 	fw.Seek(nStringTableOfs);
 	fw >> CStream(strSectionNames, nStringTableLen);
+*/
 
 	enum SecType {
 		SecNone = 0,
@@ -121,9 +110,12 @@ void CWndUserManager::ElfExecute( char* strName )
 		SecDynSym = 8,
 		SecRelPlt = 9, // process as last
 		SecInterp = 10,
-		SecStringTab = 11
+		SecStringTab = 11,
+		SecInit = 12,
+		SecStrTab = 13,
+		SecSymTab = 14
 	};
-	const char* arrSecNames[] = {"none", ".text", ".data", ".bss", ".plt", ".got", ".dynamic", ".dynstr", ".dynsym", ".rel.plt", ".interp", ".shstrtab"};
+	const char* arrSecNames[] = {"none", ".text", ".data", ".bss", ".plt", ".got", ".dynamic", ".dynstr", ".dynsym", ".rel.plt", ".interp", ".shstrtab", ".init_array", ".strtab", ".symtab"};
 
 	int arrSectionIndex[COUNT(arrSecNames)];
 	int arrSectionOffset[COUNT(arrSecNames)];
@@ -132,12 +124,50 @@ void CWndUserManager::ElfExecute( char* strName )
 		arrSectionIndex[i] = -1;
 		arrSectionOffset[i] = -1;
 	}
-	fw.Seek( elfHeader.shoff );
+	//fw.Seek( elfHeader.shoff );
 	for (int i=0; i<elfHeader.shnum; i++)
 	{
-		//fw.Seek( elfHeader.shoff + i * sizeof(Elf32_Shdr) );
+		fw.Seek( elfHeader.shoff + i * sizeof(Elf32_Shdr) );
 		fw >> CStream(&elfSection, sizeof(Elf32_Shdr));
-		char* strSectionName = strSectionNames + elfSection.name;
+
+		// get section name
+		char strSectionName[15];
+		int nSectionNameMaxLen = nStringTableLen - elfSection.name;
+		if ( nSectionNameMaxLen > 14 )
+			nSectionNameMaxLen = 14;
+		strSectionName[14] = 0;
+
+		fw.Seek(nStringTableOfs + elfSection.name);
+		fw >> CStream( strSectionName, nSectionNameMaxLen );
+
+//		char* strSectionName = strSectionNames + elfSection.name;
+
+		if ( strncmp( strSectionName, ".text", 5 ) == 0 )
+		{
+			BIOS::DBG::Print("%s>", strSectionName);
+			// flash code
+			FlashData( fw, elfSection );
+			BIOS::DBG::Print("\n");
+			continue;
+		}
+
+		if ( strncmp( strSectionName, ".data", 5 ) == 0 )
+		{
+			BIOS::DBG::Print("%s>", strSectionName);
+			// flash data
+			FlashData( fw, elfSection );
+			BIOS::DBG::Print("\n");
+			continue;
+		}
+
+		if ( strncmp( strSectionName, ".bss", 4 ) == 0 )
+		{
+			BIOS::DBG::Print("%s>", strSectionName);
+			// flash bss
+			FlashBss( fw, elfSection );
+			BIOS::DBG::Print("\n");
+			continue;
+		}
 
 		SecType sectionType = SecNone;
 		for (int j=0; j<COUNT(arrSecNames); j++)
@@ -148,8 +178,15 @@ void CWndUserManager::ElfExecute( char* strName )
 			}
 
 		_ASSERT( sectionType > 0 );
-		arrSectionIndex[sectionType] = i;
-		arrSectionOffset[sectionType] = elfSection.offset;
+		if ( sectionType > 0 )
+		{
+			arrSectionIndex[sectionType] = i;	
+			arrSectionOffset[sectionType] = elfSection.offset;
+		} else
+		{
+			BIOS::DBG::Print("UNKNOWN SECTION NAME: '%s'\n", strSectionName );
+			BIOS::SYS::DelayMs(4000);
+		}
 		/*
 		BIOS::DBG::Print("Section%d '%s' ofs=%d addr=%08x len=%d\n", i, 
 			strSectionNames+elfSection.name, elfSection.offset, elfSection.addr,
@@ -170,40 +207,27 @@ void CWndUserManager::ElfExecute( char* strName )
 		{
 			case SecText:
 			case SecData:
+			{
+				_ASSERT( 0 );
+				FlashData( fw, elfSection );
+				break;	
+			}
 			case SecPlt:
 			case SecGot:
 			case SecDynamic:
 			{
-				BIOS::DBG::Print("Flashing %d bytes at %08x.", elfSection.size, elfSection.addr );
-				fw.Seek( elfSection.offset );
-				//LoadSection( fw, elfSection.addr, elfSection.size );
-#ifndef _WIN32
-				// section length should be aligned to 32bits!?
-				ui8* pWriteTo = (ui8*)elfSection.addr;
-				for (int i=0; i<(int)elfSection.size; i++)
-				{
-					ui8 bData;
-					fw >> bData;
-					*pWriteTo++ = bData;
-				}
-#endif
+				FlashData( fw, elfSection );
 				break;
 			}
 			case SecBss:
 			{
-				BIOS::DBG::Print("Filling %d bytes at %08x.", elfSection.size, elfSection.addr );
-#ifndef _WIN32
-				// section length should be aligned to 32bits!?
-				ui8* pWriteTo = (ui8*)elfSection.addr;
-				for (int i=0; i<(int)elfSection.size; i++)
-					*pWriteTo++ = 0;
-#endif
-				//ZeroSection( elfSection.addr, elfSection.size );
+				_ASSERT( 0 );
+				FlashBss( fw, elfSection );
 				break;
 			}
 			case SecDynStr:
 			{
-				_ASSERT( elfSection.size < sizeof(strSectionNames) );
+				_ASSERT( elfSection.size < sizeof(strSymbolNames) );
 				fw.Seek( elfSection.offset );
 				fw >> CStream( strSymbolNames, elfSection.size );
 				break;
@@ -244,6 +268,47 @@ void CWndUserManager::ElfExecute( char* strName )
 					ui32* pRelocation = (ui32*)elfRelocation.r_offset;
 					*pRelocation = dwProcAddr;
 #endif
+				}
+				break;
+			}
+			case SecInit:
+			{
+				// last processed section before jumping to entry
+				int nCount = elfSection.size/sizeof(ui32);
+				fw.Seek( elfSection.offset );
+				for (int i=0; i<nCount; i++)
+				{
+					ui32 dwInitPtr;
+					fw >> dwInitPtr;
+					BIOS::DBG::Print("0x%08x", dwInitPtr);
+#ifndef _WIN32
+					typedef void (*TInitFunc)();
+					TInitFunc InitFunc = (TInitFunc)dwInitPtr;
+					InitFunc();
+#endif
+					BIOS::DBG::Print(", ");
+				}			
+				BIOS::DBG::Print("Done.");
+				break;
+			}
+			case SecStrTab:
+			{
+				_ASSERT( elfSection.size < sizeof(strSymbolNames) );
+				fw.Seek( elfSection.offset );
+				fw >> CStream( strSymbolNames, elfSection.size );
+				break;
+			}
+			case SecSymTab:
+			{
+				_ASSERT( arrSectionOffset[SecStrTab] != -1 );
+				int nSymbolCount = elfSection.size/sizeof(Elf32_Sym);
+				for (int i=0; i<nSymbolCount; i++)
+				{
+					Elf32_Sym elfSymbol;
+					fw.Seek( elfSection.offset + i * sizeof(Elf32_Sym) );
+					fw >> CStream(&elfSymbol, sizeof(Elf32_Sym));
+					char* strExportName = strSymbolNames + elfSymbol.st_name;
+					BIOS::DBG::Print("%s = %08x ", strExportName, elfSymbol.st_value);
 				}
 			}
 		}
