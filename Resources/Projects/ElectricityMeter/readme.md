@@ -8,7 +8,12 @@ It was hard to find such large plastic nuts and screws, the one I used are sold 
 Experiments
 ------------------
 Comparing the response of photo diode and photo resistor to modulated light. 
-https://raw.github.com/gabonator/DS203/master/Resources/Projects/ElectricityMeter/meas.html
+<!-- http://htmlpreview.github.io/?https://raw.github.com/gabonator/DS203/blob/master/Resources/Projects/ElectricityMeter/meas.html -->
+http://pub.valky.eu/emetermeas
+
+User interface
+------------------
+![Image](app.png)
 
 Photos
 ------------------
