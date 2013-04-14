@@ -1,7 +1,7 @@
 #ifndef __CLASSES_H__
 #define __CLASSES_H__
 
-class CPoint {
+class DLLAPI CPoint {
 public:
 	// RAM optimization int->short
 	short x, y;
@@ -18,7 +18,7 @@ public:
 	}
 };
 
-class CRect {
+class DLLAPI CRect {
 public:
 	CRect()
 	{
@@ -79,7 +79,7 @@ public:
 		bottom = 0;
 	}
 
-	bool IsValid()
+	bool IsValid() const
 	{
 		return right > left;
 	}
@@ -119,7 +119,7 @@ public:
 };
 
 template <class TYPE>
-class CArray
+class DLLAPI CArray
 {
 	TYPE	*m_arrElements;
 	ui16	m_nCount;

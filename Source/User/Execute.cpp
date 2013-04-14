@@ -1,5 +1,6 @@
 #include "Manager.h"
 #include <Source/Library/elf.h>
+#include <Source/Core/BufferedIo.h>
 
 bool CWndUserManager::ElfGetInterpreter( char* strName, char* strInterpreter )
 {
@@ -31,36 +32,143 @@ bool CWndUserManager::ElfGetInterpreter( char* strName, char* strInterpreter )
 	fw.Close();
 	return false;
 }
- 
+
+bool Verify( CBufferedReader2& f, Elf32_Shdr& elfSection )
+{
+	f.Seek( elfSection.offset );
+
+	ui8* pMem = (ui8*)elfSection.addr;
+	for (int i=0; i<(int)elfSection.size; i++, pMem++)
+	{
+		ui8 bData;
+		f >> bData;
+		if ( bData != *pMem )
+			return false;
+	}
+	return true;
+}
+
+bool VerifyZero( CBufferedReader2& f, Elf32_Shdr& elfSection )
+{
+	ui8* pMem = (ui8*)elfSection.addr;
+	for (int i=0; i<(int)elfSection.size; i++, pMem++)
+	{
+		if ( 0 != *pMem )
+			return false;
+	}
+	return true;
+}
+
+void FlashRam( CBufferedReader2& f, Elf32_Shdr& elfSection )
+{
+	f.Seek( elfSection.offset );
+	ui8* pWriteTo = (ui8*)elfSection.addr;
+	for (int i=0; i<(int)elfSection.size; i++)
+	{
+		ui8 bData;
+		f >> bData;
+		*pWriteTo++ = bData;
+	}
+}
+
+void ZeroRam( CBufferedReader2& f, Elf32_Shdr& elfSection )
+{
+	// section length should be aligned to 32bits!?
+	ui8* pWriteTo = (ui8*)elfSection.addr;
+	for (int i=0; i<(int)elfSection.size; i++)
+		*pWriteTo++ = 0;
+}
+
+void FlashRom( CBufferedReader2& f, Elf32_Shdr& elfSection )
+{
+	int nLength = (int)elfSection.size;
+	ui32 dwAddr = elfSection.addr;
+
+	f.Seek( elfSection.offset );
+	BIOS::MEMORY::LinearStart();
+	for ( int i=0; i<nLength; )
+	{
+		ui8 buffer[64];
+		int nToLoad = nLength-i;
+		if ( nToLoad > 64 )
+			nToLoad = 64;
+		f >> CStream(buffer, nToLoad);
+		if ( !BIOS::MEMORY::LinearProgram( dwAddr, buffer, nToLoad) )
+		{
+			_ASSERT(!!!"LinearProgram failed");
+		}
+		i += nToLoad;
+		dwAddr += nToLoad;
+	}
+	BIOS::MEMORY::LinearFinish();
+}
+
+void ZeroRom( CBufferedReader2& f, Elf32_Shdr& elfSection )
+{
+	int nLength = (int)elfSection.size;
+	ui32 dwAddr = elfSection.addr;
+
+	ui8 buffer[64] = {0};
+
+	BIOS::MEMORY::LinearStart();
+	for ( int i=0; i<nLength; )
+	{
+		int nToLoad = nLength-i;
+		if ( nToLoad > 64 )
+			nToLoad = 64;
+		if ( !BIOS::MEMORY::LinearProgram( dwAddr, buffer, nToLoad) )
+		{
+			_ASSERT(!!!"LinearProgram failed");
+		}
+		i += nToLoad;
+		dwAddr += nToLoad;
+	}
+	BIOS::MEMORY::LinearFinish();
+}
+
 //LINKERSECTION(".gbios")
 void /*CWndUserManager::*/FlashData( CBufferedReader2& f, Elf32_Shdr& elfSection )
 {
-				BIOS::DBG::Print("Flashing %d bytes at %08x.", elfSection.size, elfSection.addr );
-				f.Seek( elfSection.offset );
-				//LoadSection( fw, elfSection.addr, elfSection.size );
+	if ( Verify( f, elfSection ) )
+	{
+		BIOS::DBG::Print("Ignoring %d bytes at %08x.", elfSection.size, elfSection.addr );
+		return;
+	}
+	BIOS::DBG::Print("Flashing %d bytes at %08x.", elfSection.size, elfSection.addr );
+
 #ifndef _WIN32
-				// section length should be aligned to 32bits!?
-				ui8* pWriteTo = (ui8*)elfSection.addr;
-				for (int i=0; i<(int)elfSection.size; i++)
-				{
-					ui8 bData;
-					f >> bData;
-					*pWriteTo++ = bData;
-				}
+	if ( (elfSection.addr >> 24) == 0x20 )
+	{
+		FlashRam( f, elfSection );
+	} else
+	if ( (elfSection.addr >> 24) == 0x08 )
+	{
+		FlashRom( f, elfSection );
+	} else
+		_ASSERT(!!!"Unrecognized memory location");
 #endif
 }
 
 //LINKERSECTION(".gbios")
 void /*CWndUserManager::*/FlashBss( CBufferedReader2& f, Elf32_Shdr& elfSection )
 {
-				BIOS::DBG::Print("Filling %d bytes at %08x.", elfSection.size, elfSection.addr );
+	if ( VerifyZero( f, elfSection ) )
+	{
+		BIOS::DBG::Print("Ignoring %d bytes at %08x.", elfSection.size, elfSection.addr );
+		return;
+	}
+	BIOS::DBG::Print("Filling %d bytes at %08x.", elfSection.size, elfSection.addr );
 #ifndef _WIN32
-				// section length should be aligned to 32bits!?
-				ui8* pWriteTo = (ui8*)elfSection.addr;
-				for (int i=0; i<(int)elfSection.size; i++)
-					*pWriteTo++ = 0;
+	if ( (elfSection.addr >> 24) == 0x20 )
+	{
+		ZeroRam( f, elfSection );
+	} else
+	if ( (elfSection.addr >> 24) == 0x08 )
+	{
+		ZeroRom( f, elfSection );
+	} else
+		_ASSERT(!!!"Unrecognized memory location");
 #endif
-				//ZeroSection( elfSection.addr, elfSection.size );
 }
 
 //LINKERSECTION(".gbios")

@@ -129,7 +129,7 @@ ui16 CWndOscGraph::_Interpolate( ui16 clrA, ui16 clrB )
 
 void CWndOscGraph::OnPaintXY()
 {
-	if ( CWnd::m_rcOverlay.IsValid() )
+	if ( CWnd::GetOverlay().IsValid() )
 	{
 		return;
 	}
@@ -205,7 +205,7 @@ void CWndOscGraph::OnPaintXY()
 void CWndOscGraph::OnPaintTY()
 {
 	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
-	if ( !CWnd::m_rcOverlay.IsValid() /*&& m_bNeedRedraw*/ )
+	if ( !CWnd::GetOverlay().IsValid() /*&& m_bNeedRedraw*/ )
 	{
 		CRect rc = m_rcClient;
 		rc.Inflate( 1, 1, 1, 1 );
@@ -229,14 +229,14 @@ void CWndOscGraph::OnPaintTY()
 	if (!bTrigger)
 		nTriggerTime = -1;
 
-	int nCut = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.left - m_rcClient.left : m_rcClient.Width();
-	int nCutTop = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.bottom - m_rcClient.top : 0;
+	int nCut = CWnd::GetOverlay().IsValid() ? CWnd::GetOverlay().left - m_rcClient.left : m_rcClient.Width();
+	int nCutTop = CWnd::GetOverlay().IsValid() ? CWnd::GetOverlay().bottom - m_rcClient.top : 0;
 	if ( nCutTop >= m_rcClient.Height() )
 		nCut = m_rcClient.Width();
-	int nFirstTop = CWnd::m_rcOverlay.IsValid() ? CWnd::m_rcOverlay.top - m_rcClient.top : 0;
+	int nFirstTop = CWnd::GetOverlay().IsValid() ? CWnd::GetOverlay().top - m_rcClient.top : 0;
 
 	int nMax = m_rcClient.Width(); 
-	if ( CWnd::m_rcOverlay.IsValid() && CWnd::m_rcOverlay.left - m_rcClient.left <= 0 )
+	if ( CWnd::GetOverlay().IsValid() && CWnd::GetOverlay().left - m_rcClient.left <= 0 )
 		return;
 
 	CSettings::Calibrator::FastCalc Ch1fast, Ch2fast;

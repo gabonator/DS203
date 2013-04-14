@@ -2,14 +2,13 @@
 //
 
 #include "stdafx.h"
-#include "ds203ui.h"
 
 #define MAX_LOADSTRING 100
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
-TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
-TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
+TCHAR szTitle[MAX_LOADSTRING] = _T("dw203Bios");			// The title bar text
+TCHAR szWindowClass[MAX_LOADSTRING] = _T("DS203BIOS");		// the main window class name
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -20,10 +19,11 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 #include <Source/HwLayer/Win32/device.h>
 #include <Source/Framework/Application.h>
 
-CApplication myApp;
+HINSTANCE g_Instance = NULL;
+
 CDevice *CDevice::m_pInstance = NULL;
 CDevice g_dev;
-CApplicationProto* g_app = &myApp;
+CApplicationProto* g_app = NULL;
 
 HWND g_hwnd = NULL;
 BOOL g_running = FALSE;
@@ -58,39 +58,6 @@ DWORD WINAPI ThreadProcApp(HANDLE handle)
 	return 0;
 }
 
-int APIENTRY _tWinMain(HINSTANCE hInstance,
-					   HINSTANCE hPrevInstance,
-					   LPTSTR    lpCmdLine,
-					   int       nCmdShow)
-{
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
-
-	// TODO: Place code here.
-	MSG msg;
-
-	// Initialize global strings
-	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadString(hInstance, IDC_DS203UI, szWindowClass, MAX_LOADSTRING);
-	MyRegisterClass(hInstance);
-
-	// Perform application initialization:
-	if (!InitInstance (hInstance, nCmdShow))
-	{
-		return FALSE;
-	}
-	
-	// Main message loop:
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	return (int) msg.wParam;
-}
-
-
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEX wcex;
@@ -102,12 +69,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= 0;
 	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DS203UI));
+	wcex.hIcon			= NULL; //LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DS203UI));
 	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName	= NULL; //MAKEINTRESOURCE(IDC_DS203UI);
 	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.hIconSm		= NULL; //LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassEx(&wcex);
 }
@@ -126,6 +93,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	if (!hWnd)
 	{
+		int nGLE = GetLastError();
 		return FALSE;
 	}
 
@@ -185,6 +153,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 	{
 		g_running = TRUE;
+		_ASSERT( g_app );
 		hDrawThread = CreateThread( NULL, NULL, &ThreadProcDraw, NULL, NULL, NULL );
 		hAppThread = CreateThread( NULL, NULL, &ThreadProcApp, NULL, NULL, NULL );
 		break;
@@ -218,4 +187,47 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+__declspec(dllexport) int Main(CApplicationProto* pApp)
+{
+	g_app = pApp;
+
+	MSG msg;
+
+	g_Instance = GetModuleHandle(NULL);
+	MyRegisterClass(g_Instance);
+	// Perform application initialization:
+	if (!InitInstance (g_Instance, SW_SHOW))
+	{
+		return FALSE;
+	}
+	
+	// Main message loop:
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	return (int) msg.wParam;
+}
+
+BOOL APIENTRY DllMain( HANDLE hModule, 
+                       DWORD  ul_reason_for_call, 
+                       LPVOID lpReserved
+					 )
+{
+    switch (ul_reason_for_call)
+	{
+		case DLL_PROCESS_ATTACH:
+		case DLL_THREAD_ATTACH:
+			//Attach();
+			break;
+		case DLL_THREAD_DETACH:
+		case DLL_PROCESS_DETACH:
+			//Detach();
+			break;
+    }
+    return TRUE;
 }

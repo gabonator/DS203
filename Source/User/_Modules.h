@@ -1,8 +1,10 @@
 #ifdef _VERSION2
 
+#include "EMeter.h"
 #include "Manager.h"
 #include "CharMap.h"
 #include "Monitor.h"
+#include "Dcf77.h"
 
 #else
 
@@ -21,4 +23,5 @@
 #include "GpioTest.h"
 //#include "Geiger.h"
 #include "Dcf77.h"
+#include "EMeter.h"
 #endif

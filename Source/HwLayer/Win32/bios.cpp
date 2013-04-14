@@ -478,7 +478,7 @@ BOOL bADCReady = FALSE;
 	long lTick = GetTickCount();
 	if (lLast == 0)
 		lLast = GetTickCount();
-	bADCReady = (GetTickCount()-lLast) > 100;
+	bADCReady = (GetTickCount()-lLast) > 20;
 	if (bADCReady)
 		lLast = lTick;
 	return bADCReady;
@@ -489,21 +489,45 @@ BOOL bADCReady = FALSE;
 	static long lCounter = 0;
 	if (lCounter == 4096)
 		lCounter = 0;
-#if 0
-	FLOAT fm = (sin(GetTickCount()*0.001f)+1.0f)*0.5f;
-	if ( fm < 0.5)
-		fm = 0.8f-0.7f*fm;
-	else
-		fm = 0;
-	FLOAT fa = 0.035f + (GetTickCount()%20000)/20000.0f*0.14f;
-#else
-	FLOAT fm = 1;
-	FLOAT fa = 0.035f;// + (GetTickCount()%20000)/20000.0f*0.14f;
-//	FLOAT fa = 0.1f;
-#endif
+
+	FLOAT a, b;
+
+	switch (3)
+	{
+	case 1:
+		{
+			FLOAT fm = (sin(GetTickCount()*0.001f)+1.0f)*0.5f;
+			if ( fm < 0.5)
+				fm = 0.8f-0.7f*fm;
+			else
+				fm = 0;
+			FLOAT fa = 0.035f + (GetTickCount()%20000)/20000.0f*0.14f;
+			a = cos(lCounter*(fa)*10)*(fm)+0.2f;
+			b = sin(lCounter*0.011f+1)*0.5f;
+
+			break;
+
+		}
+
+	case 2:
+		{
+			FLOAT fm = 1;
+			FLOAT fa = 0.035f;// + (GetTickCount()%20000)/20000.0f*0.14f;
+			a = cos(lCounter*(fa)*10)*(fm)+0.2f;
+			b = sin(lCounter*0.011f+1)*0.5f;
+			break;
+		}
+
+	case 3:
+		{
+			a = 0;
+			b = 0;
+			float t = -pow(abs(cos(GetTickCount()*0.001f)),50);
+			a = t/3;
+			break;
+		}
+	}
 	//fa = lCounter*0.0001f;
-	FLOAT a = cos(lCounter*(fa)*10)*(fm)+0.2f;
-	FLOAT b = sin(lCounter*0.011f+1)*0.5f;
 	unsigned long da = (ui32)((a+1.0f)*127);
 	unsigned long db = (ui32)((b+1.0f)*127);
 	da = max(0, min(da, 255));

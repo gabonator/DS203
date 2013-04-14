@@ -453,7 +453,7 @@ void CMainWnd::CallShortcut(int nShortcut)
 
 bool CMainWnd::HasOverlay()
 {
-	return CWnd::m_rcOverlay.IsValid() || m_wndToolbox.IsVisible() || m_wndManager.IsVisible();
+	return CWnd::GetOverlay().IsValid() || m_wndToolbox.IsVisible() || m_wndManager.IsVisible();
 }
 
 bool HasOverlay()

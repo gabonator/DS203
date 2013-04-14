@@ -1,13 +1,14 @@
 #include "Wnd.h"
 
-/*static*/ CWnd* 									CWnd::m_pTop = NULL;
-/*static*/ ui16 									CWnd::m_nInstances = 0;
-/*static*/ CWnd* 									CWnd::m_pFocus = NULL;
+/*static*/ CWnd* 							CWnd::m_pTop = NULL;
+/*static*/ ui16 							CWnd::m_nInstances = 0;
+/*static*/ CWnd* 							CWnd::m_pFocus = NULL;
 /*static*/ CWnd::CTimer 					CWnd::m_arrTimers_[16];
-/*static*/ CArray<CWnd::CTimer> 	CWnd::m_arrTimers;
+/*static*/ CArray<CWnd::CTimer> 			CWnd::m_arrTimers;
 /*static*/ CWnd::CModal						CWnd::m_arrModals_[8];
-/*static*/ CArray<CWnd::CModal> 	CWnd::m_arrModals;
-/*static*/ CRect 									CWnd::m_rcOverlay;
+/*static*/ CArray<CWnd::CModal> 			CWnd::m_arrModals;
+/*static*/ CRect 							CWnd::m_rcOverlay;
+/*static*/ CRect 							CWnd::m_rcOverlayStack;
 
 CWnd::CWnd()
 {
@@ -415,3 +416,27 @@ void CWnd::StopModal()
 	m_rcOverlay = m_arrModals.GetLast().m_rcPrevOverlay;
 	m_arrModals.RemoveLast();
 }
+
+const CRect& CWnd::GetOverlay()
+{
+	return m_rcOverlay;
+}
+
+const CWnd::CModal& CWnd::GetTopModal()
+{
+	return CWnd::m_arrModals.GetLast();
+}
+
+void CWnd::PushOverlay()
+{
+	_ASSERT( !m_rcOverlayStack.IsValid() );
+	m_rcOverlayStack = m_rcOverlay;
+	m_rcOverlay.Invalidate();
+}
+
+void CWnd::PopOverlay()
+{
+	_ASSERT( m_rcOverlayStack.IsValid() );
+	m_rcOverlay = m_rcOverlayStack;
+}
+

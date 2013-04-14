@@ -99,4 +99,6 @@ struct FILEINFO {
 	ui8 nSectors;
 };
 
+#define DLLAPI 
+
 #endif

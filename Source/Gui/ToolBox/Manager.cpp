@@ -121,10 +121,9 @@ bool CWndManager::Exists(char *strName)
 					MainWnd.m_wndMessage.Show(&MainWnd, "Sorry...", "Import failed!", RGB565(ffff00));
 				else
 				{
-					CRect rcSafe = m_rcOverlay;
-					m_rcOverlay.Invalidate();
+					CWnd::PushOverlay();
 					MainWnd.Invalidate(); // to redraw the graph
-					m_rcOverlay = rcSafe;
+					CWnd::PopOverlay();
 				}
 				//Invalidate(); // Why it forgets to redraw current window!?
 				break;
@@ -150,10 +149,9 @@ bool CWndManager::Exists(char *strName)
 				break;
 			case 1: // Bmp
 				ShowWindow(CWnd::SwHide);
-				rcSafe = m_rcOverlay;
-				m_rcOverlay.Invalidate();
+				CWnd::PushOverlay();
 				MainWnd.Invalidate();
-				m_rcOverlay = rcSafe;
+				CWnd::PopOverlay();
 
 				CExport::SaveScreenshot16( strName );
 				ShowWindow(CWnd::SwShow);

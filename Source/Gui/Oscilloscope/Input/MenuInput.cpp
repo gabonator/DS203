@@ -82,7 +82,7 @@ LINKERSECTION(".extra")
 		CCoreOscilloscope::ConfigureTrigger();
 		Settings.Trig.nLastChange = BIOS::SYS::GetTick();
 		// update
-		CWnd::m_arrModals.GetLast().m_pPrevFocus->Invalidate();
+		CWnd::GetTopModal().m_pPrevFocus->Invalidate();
 	}
 
 	// window
@@ -151,7 +151,7 @@ LINKERSECTION(".extra")
 			MainWnd.m_wndLReferences.Invalidate();
 		}
 		// update
-		CWnd::m_arrModals.GetLast().m_pPrevFocus->Invalidate();
+		CWnd::GetTopModal().m_pPrevFocus->Invalidate();
 		CCoreOscilloscope::ConfigureAdc();
 	}
 	if ( code == ToWord('u', 'p') && pSender->m_pParent == &m_wndListDInput )
@@ -167,7 +167,7 @@ LINKERSECTION(".extra")
 			MainWnd.m_wndLReferences.Invalidate();
 		}
 		// update
-		CWnd::m_arrModals.GetLast().m_pPrevFocus->Invalidate();
+		CWnd::GetTopModal().m_pPrevFocus->Invalidate();
 	}
 	// Selector
 	if ( code == ToWord('l', 'e') )	// provider selector combo box

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\HwLayer">
+      <UniqueIdentifier>{f8790555-8ad1-48ff-857b-3c0479891cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\HwLayer\Win32">
+      <UniqueIdentifier>{a8acb742-85ff-4708-8ef7-3617c9bdbdcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Framework">
+      <UniqueIdentifier>{a93459ad-d6f3-440a-89ee-aef909173802}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\HwLayer\Win32\bios.cpp">
+      <Filter>Source Files\HwLayer\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\HwLayer\WinBios\dsBios.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Framework\Wnd.cpp">
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\HwLayer\Bios.h">
+      <Filter>Source Files\HwLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\HwLayer\Types.h">
+      <Filter>Source Files\HwLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\HwLayer\Win32\device.h">
+      <Filter>Source Files\HwLayer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\HwLayer\Win32\font.h">
+      <Filter>Source Files\HwLayer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\HwLayer\Win32\Types.h">
+      <Filter>Source Files\HwLayer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\HwLayer\WinBios\stdafx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Framework\Classes.h">
+      <Filter>Source Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Framework\Eval.h">
+      <Filter>Source Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Framework\Thread.h">
+      <Filter>Source Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Framework\Wnd.h">
+      <Filter>Source Files\Framework</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

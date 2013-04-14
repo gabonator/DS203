@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{854D4FE2-58DF-4FC5-8321-9E06BF6438FD}</ProjectGuid>
+    <RootNamespace>dsGui</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\..\..\..\Bin\</OutDir>
+    <IntDir>$(Configuration)\..\..\..\..\Bin\Intermediate\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\..\..\..\Bin\</OutDir>
+    <IntDir>$(Configuration)\..\..\..\..\Bin\Intermediate\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;_CRT_SECURE_NO_WARNINGS;_VERSION2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SolutionDir)$(Configuration)\..\..\..\Bin\dsbios.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;_CRT_SECURE_NO_WARNINGS;_VERSION2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)$(Configuration)\..\..\..\Bin\dsbios.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Source\Core\Controls.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Core\Serialize.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Core\Settings.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Core\Shapes.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Core\Utils.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\CalibAnalog.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\CalibDac.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\CalibMenu.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\Calibration.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Generator\Core\CoreGenerator.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Generator\Edit\MenuGenEdit.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Generator\Main\MenuGenMain.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\MainMenu.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\MainWnd.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Mask\MenuMask.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Math\FirFilter.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Controls\Annot.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Core\FFT.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Main\MenuSpectMain.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\Toolbar.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\Export.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\Import.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\Manager.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\ToolBox.cpp" />
+    <ClCompile Include="..\..\..\..\Source\HwLayer\WinGui\Main.cpp" />
+    <ClCompile Include="..\..\..\..\Source\Main\Application.cpp" />
+    <ClCompile Include="..\..\..\..\Source\User\CharMap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Execute.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Manager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Meter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Monitor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\PidRegulator.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Thermometer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Timer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Tuner.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\_Modules.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Source\Core\Bitmap.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\BufferedIo.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Calibration.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Controls.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Design.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\ListItems.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Sdk.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\SdkV0.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\SdkV1.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Serialize.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Settings.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Shapes.h" />
+    <ClInclude Include="..\..\..\..\Source\Core\Utils.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\About\About.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibAnalog.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibCore.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibDac.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibMenu.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\Calibration.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Controls\GraphSig.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Core\CoreGenerator.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Edit\MenuGenEdit.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Generator.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenAmplitude.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenDuty.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenFrequency.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenOffset.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenWaveform.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\MenuGenMain.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\MainMenu.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\MainWnd.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\MainWndSdk.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Mouse.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphBase.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphSig.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\LevelRef.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\OscInfo.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\TimeRef.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\ZoomBar.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Disp\ItemDisp.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemAnalog.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemDigital.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemTime.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemTrigger.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemWindow.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ListAnalog.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ListDigital.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ListTrigger.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\MenuInput.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Mask\MenuMask.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ChannelMath.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\FirFilter.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ItemOperand.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ItemOperator.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ListOperand.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ListOperator.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\MenuMath.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Decoders\CanBus.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Statistics.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Oscilloscope.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\Controls\Slider.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\Core\SettingsCore.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemAutoOff.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemBacklight.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemBeepOnOff.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemShortcut.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemVolume.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\KeySettings.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\Settings.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Controls\Annot.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Core\FFT.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Main\ItemDisplay.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Main\ItemWindow.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Main\MenuSpectMain.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Marker\ItemMarker.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Spectrum.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Toolbar.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\Export.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\Import.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\LineTabs.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\Manager.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\ToolBox.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Windows\MessageBox.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Windows\WndButton.h" />
+    <ClInclude Include="..\..\..\..\Source\Gui\Windows\WndConfirm.h" />
+    <ClInclude Include="..\..\..\..\Source\Main\Application.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Balls.h" />
+    <ClInclude Include="..\..\..\..\Source\User\CharMap.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Dcf77.h" />
+    <ClInclude Include="..\..\..\..\Source\User\FullView.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Geiger.h" />
+    <ClInclude Include="..\..\..\..\Source\User\GpioTest.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Manager.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Meter.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Monitor.h" />
+    <ClInclude Include="..\..\..\..\Source\User\PidRegulator.h" />
+    <ClInclude Include="..\..\..\..\Source\User\ScreenSaver.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Snake.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Thermometer.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Timer.h" />
+    <ClInclude Include="..\..\..\..\Source\User\Tuner.h" />
+    <ClInclude Include="..\..\..\..\Source\User\ZoomView.h" />
+    <ClInclude Include="..\..\..\..\Source\User\_Modules.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

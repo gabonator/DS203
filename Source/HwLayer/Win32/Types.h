@@ -5,6 +5,7 @@
 #error Include the folder "HwLayer/Win32" only for desktop application compilation
 #endif
 
+#include <stdint.h>
 #include <windows.h>
 #include <crtdbg.h>
 #include <stdio.h>
@@ -86,5 +87,10 @@ struct FILEINFO {
 	FILE *f;
 };
 
+#ifdef _DLLEXPORT
+#	define DLLAPI __declspec(dllexport)
+#else
+#	define DLLAPI
+#endif
 
 #endif

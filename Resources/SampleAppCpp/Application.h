@@ -1,21 +1,17 @@
-//#pragma once
-#ifndef __APPLICATION__
-#define __APPLICATION__
+#pragma once
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <Source/HwLayer/Types.h>
+#include <Source/Framework/Application.h>
 
 bool HasOverlay();
 
-class CApplication 
+class CApplication : public CApplicationProto
 {
 public:
 	CApplication();
-	~CApplication();
-	void Create();
-	void Destroy();
-	bool operator ()();
+	virtual ~CApplication();
+	virtual void Create();
+	virtual void Destroy();
+	virtual bool operator ()();
 };
 
-#endif

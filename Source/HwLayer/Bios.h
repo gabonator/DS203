@@ -4,16 +4,16 @@
 #include <Source/Framework/Classes.h>
 #include "Types.h"
 
-class BIOS {
+class DLLAPI BIOS {
 public:
-	class DBG {
+	class DLLAPI DBG {
 	public:
 		static void Print (const char* format, ...);
 		// move to utils?
 		static int sprintf(char* buf, const char * format, ...);
 	};
 
-	class SYS {
+	class DLLAPI SYS {
 	public:
 		enum {
 			EApp1 = 0,
@@ -45,7 +45,7 @@ public:
 		static int GetSharedLength();
 	};
 
-	class LCD {
+	class DLLAPI LCD {
 	public:
 		enum {
 			// Screen resolution
@@ -88,7 +88,7 @@ public:
 		static const void* GetCharRom();
 	};
 
-	class KEY {
+	class DLLAPI KEY {
 	public:
 		enum {
 			// Key definitions
@@ -108,7 +108,7 @@ public:
 		static ui16 GetKeys();
 	};
 
-	class ADC {
+	class DLLAPI ADC {
 	public:
 		typedef unsigned long TSample;
 		union SSample {
@@ -159,7 +159,7 @@ public:
 		static TSample& GetAt(int i);
 	};
 
-	class GEN {
+	class DLLAPI GEN {
 	public:
 		enum
 			{
@@ -174,7 +174,7 @@ public:
 		static void ConfigureDc(ui16 nData);
 	};
 
-	class DSK {
+	class DLLAPI DSK {
 	public:
 		enum {
 			IoRead = 1,
@@ -188,7 +188,7 @@ public:
 		static BOOL Close(FILEINFO* pFileInfo, int nSize = -1);
 	};
 
-	class SERIAL
+	class DLLAPI SERIAL
 	{
 	public:
 		static void Init();
@@ -198,7 +198,7 @@ public:
 		static void Putch(char ch);
 	};
 
-	class VER
+	class DLLAPI VER
 	{
 	public:
 		static const char* GetHardwareVersion();
@@ -210,7 +210,7 @@ public:
 		static void DrawLogo(int x, int y);
 	};
 
-	class MOUSE
+	class DLLAPI MOUSE
 	{
 	public:
 		enum {
@@ -224,7 +224,7 @@ public:
 		static bool GetDown();
 	};
 
-	class GPIO
+	class DLLAPI GPIO
 	{
 	public:
 		enum {
@@ -271,7 +271,7 @@ public:
 	};
 
 #ifdef _VERSION2	
-	class MEMORY
+	class DLLAPI MEMORY
 	{
 	public:
 		static bool PageWrite(int nPage, const ui8* pBuffer);
@@ -283,7 +283,7 @@ public:
 		static bool LinearProgram( ui32 nAddress, unsigned char* pData, int nLength );
 	};
 
-	class FAT
+	class DLLAPI FAT
 	{
 	public:
 		enum EResult 

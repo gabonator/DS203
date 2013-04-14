@@ -623,9 +623,9 @@ public:
 		}
 		if ( nKey & (BIOS::KEY::KeyUp | BIOS::KEY::KeyDown) )
 		{
-			CWnd* pSafeFocus = m_pFocus;
+			CWnd* pSafeFocus = GetFocus();
 			CListItem::OnKey( nKey );
-			if ( m_pFocus != pSafeFocus )
+			if ( GetFocus() != pSafeFocus )
 				GetParent()->Invalidate();
 			return;
 		}

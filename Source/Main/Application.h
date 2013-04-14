@@ -1,14 +1,12 @@
-//#pragma once
+
 #ifndef __APPLICATION__
 #define __APPLICATION__
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <Source/Framework/Application.h>
 
 #define Application (*CApplication::getInstance())
 
-class CApplication 
+class CApplication : public CApplicationProto
 {
 	static CApplication* m_pInstance;
  
@@ -17,8 +15,9 @@ public:
 
 	CApplication();
 	~CApplication();
-	void Create();
-	bool operator ()();
+	virtual void Create();
+	virtual void Destroy();
+	virtual bool operator ()();
 };
 
 #endif

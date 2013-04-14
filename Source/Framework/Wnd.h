@@ -5,10 +5,10 @@
 #include <Source/HwLayer/Bios.h>
 #include <Source/Framework/Classes.h>
 
-class CWnd
+class DLLAPI CWnd
 {
 public:
-	class CTimer 
+	class DLLAPI CTimer 
 	{
 	public:
 		CTimer( CWnd* pWnd, ui32 nInterval ) :
@@ -26,7 +26,7 @@ public:
 		ui32		m_nNext;
 	};
 
-	class CModal
+	class DLLAPI CModal
 	{
 	public:
 		CModal()
@@ -71,6 +71,7 @@ public:
 	static CArray<CTimer>	m_arrTimers;
 	static CArray<CModal> m_arrModals;
 	static CRect m_rcOverlay;
+	static CRect m_rcOverlayStack;
 
 	CRect	m_rcClient;						// 8
 	CWnd*	m_pParent;						// 4
@@ -106,6 +107,11 @@ public:
 	void KillTimer();
 	void StartModal(CWnd* pwndChildFocus = NULL);
 	void StopModal();
+
+	const CRect& GetOverlay();
+	const CModal& GetTopModal();
+	void PushOverlay();
+	void PopOverlay();
 
 private:
 	CWnd* _GetNextActiveWindow();

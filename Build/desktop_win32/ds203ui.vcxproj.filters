@@ -543,6 +543,9 @@
     <ClInclude Include="..\..\Source\Library\ihex.h">
       <Filter>Source\Library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Framework\Application.h">
+      <Filter>Source\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ds203ui.ico">

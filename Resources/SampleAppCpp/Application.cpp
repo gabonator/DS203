@@ -12,6 +12,13 @@
 #include "Snake.h"
 //#include "Dcf77.h"           
 
+/*
+// TODO: fix these
+CApplicationProto::~CApplicationProto() {}
+void CApplicationProto::Create() {}
+void CApplicationProto::Destroy() {}
+bool CApplicationProto::operator ()() { return false; }
+*/
 bool HasOverlay()
 {
 	return false;

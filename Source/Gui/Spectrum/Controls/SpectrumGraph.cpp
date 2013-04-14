@@ -17,7 +17,7 @@ void CWndSpectrumGraphTempl::OnPaint()
 	// maximum size
 	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
 
-	if ( !CWnd::m_rcOverlay.IsValid() )
+	if ( !CWnd::GetOverlay().IsValid() )
 	{
 		CRect rc = m_rcClient;
 		rc.Inflate( 1, 1, 1, 1 );
@@ -172,7 +172,7 @@ void CWndTimeGraphTempl::OnPaint()
 	// maximum size
 	ui16 column[CWndGraph::DivsY*CWndGraph::BlkY];
 
-	if ( !CWnd::m_rcOverlay.IsValid() )
+	if ( !CWnd::GetOverlay().IsValid() )
 	{
 		CRect rc = m_rcClient;
 		rc.Inflate( 1, 1, 1, 1 );
@@ -288,7 +288,7 @@ void CWndTimeGraphTempl::OnPaint()
 	ui16 column[256];
 	_ASSERT( m_nWidth == 256 );
 
-	if ( !CWnd::m_rcOverlay.IsValid() )
+	if ( !CWnd::GetOverlay().IsValid() )
 	{
 		CRect rc = m_rcClient;
 		rc.Inflate( 1, 1, 1, 1 );

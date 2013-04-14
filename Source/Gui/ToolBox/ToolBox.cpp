@@ -160,10 +160,9 @@ void CWndToolbox::DoModal()
 
 	pSafeFocus->SetFocus();
 
-	CRect rcSafe = m_rcOverlay;
-	m_rcOverlay.Invalidate();
+	CWnd::PushOverlay();
 	MainWnd.Invalidate(); // to redraw the graph
-	m_rcOverlay = rcSafe;
+	CWnd::PopOverlay();
 }
 
 /*virtual*/ void CWndToolbox::ToggleAdc()

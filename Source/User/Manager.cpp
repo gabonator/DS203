@@ -284,8 +284,11 @@ void CWndUserManager::DrawLine( BIOS::FAT::TFindFile& fileInfo, int y, bool bSel
 	ui16 clrBack = bSelected ? RGB565(00b0b0) : RGB565(0000b0);
 	BIOS::LCD::Bar( 0, y, /*320*/400-8, y+14, clrBack );
 
-	if ( stricmp( strExt, "hex" ) == 0 || stricmp( strExt, "elf" ) == 0 || stricmp( strExt, "adr" ) == 0 )
+	if ( stricmp( strExt, "hex" ) == 0 || stricmp( strExt, "elf" ) == 0 || 
+		 stricmp( strExt, "adr" ) == 0 || stricmp( strExt, "exe" ) == 0 )
+	{
 		clr = RGB565(00ff00);
+	}
 		
 	BIOS::LCD::Print( 4, y, clr, clrBack, strFile);
 	if ( strExt[0] )
@@ -509,7 +512,8 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 		EBmp,
 		EWav,
 		EAdr,
-		ETxt
+		ETxt,
+		EExe
 	} eType = ENone;
 
 	if ( strSuffix )
@@ -527,6 +531,8 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 			eType = EAdr;
 		else if ( stricmp( strSuffix, "txt" ) == 0 )
 			eType = ETxt;
+		else if ( stricmp( strSuffix, "exe" ) == 0 )
+			eType = EExe;
 	}
 	if ( eType == ENone )
 	{
@@ -628,6 +634,21 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 		else
 			MainWnd.m_wndMessage.Show(this, "Manager", "Error flashing", RGB565(FF0000));
 
+	}
+	if ( eType == EExe )
+	{
+#ifdef _WINDOWS
+		char pszFileName[256];
+		GetModuleFileName( NULL, pszFileName, 256 );
+		char* strModuleName = strrchr( pszFileName, '\\' );
+		strModuleName = strModuleName ? strModuleName + 1 : pszFileName;
+		if ( stricmp(strFullName + strlen(strFullName) - strlen(strModuleName), strModuleName ) == 0 )
+			MainWnd.m_wndMessage.Show(this, "Manager", "Already running!", RGB565(FF0000));
+		else
+			ShellExecuteA( NULL, "open", strFullName, NULL, NULL, CWnd::SwShow );
+#else
+		MainWnd.m_wndMessage.Show(this, "Manager", "Cannot execute Win32 app", RGB565(FF0000));
+#endif
 	}
 }
 

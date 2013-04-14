@@ -1,0 +1,595 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Main">
+      <UniqueIdentifier>{b1aaaff3-d803-467a-af43-11e3d2d15e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{0a33dc90-bb56-4c0f-a576-3f376cd39189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui">
+      <UniqueIdentifier>{1a5254e0-fb63-4c76-a62f-0fc0978da943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\About">
+      <UniqueIdentifier>{4466bac8-6580-411b-b6ca-8a4bf9217c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Calibration">
+      <UniqueIdentifier>{a80b5b09-08ed-4e3b-81f0-b657e0058434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope">
+      <UniqueIdentifier>{2aef88b2-4984-456f-b287-41e357ebd1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Settings">
+      <UniqueIdentifier>{d3b8596f-2869-4a7d-8716-71b48234cc63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Spectrum">
+      <UniqueIdentifier>{4d910176-e978-43ca-8c06-0261ab454b7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Toolbox">
+      <UniqueIdentifier>{03124b85-660a-4c56-b5bd-5f6618a7c55e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Windows">
+      <UniqueIdentifier>{ecabd3b2-99e0-431c-a1ba-ea7529361a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Spectrum\Controls">
+      <UniqueIdentifier>{bda32b28-50da-4f30-88ff-3a8cac98f73a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Spectrum\Main">
+      <UniqueIdentifier>{2d9e2b55-2510-4d87-95e4-628abd8dd808}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Spectrum\Marker">
+      <UniqueIdentifier>{4912a5fd-1e5d-4891-b10c-10e4c8b339a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Spectrum\Core">
+      <UniqueIdentifier>{3918761a-3224-41de-bcbe-8aeef4cd57d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Settings\Controls">
+      <UniqueIdentifier>{1797616e-60c4-4885-8ffd-4578a8da5895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Settings\Core">
+      <UniqueIdentifier>{0544e602-caa8-40a0-8ea8-7334fa83d9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Controls">
+      <UniqueIdentifier>{fe9cfdc6-52c9-4ec2-ab16-2819d904fa4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Core">
+      <UniqueIdentifier>{08eac8d5-8e34-4bb4-ab3a-3a76c4d0d5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Disp">
+      <UniqueIdentifier>{f8888eee-aff5-4b65-8ba0-f5adaf23a10f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Input">
+      <UniqueIdentifier>{d0c981fb-05e7-4727-8759-78e2ddafc2b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Marker">
+      <UniqueIdentifier>{ec70b591-de07-45ed-88e9-08e9e643ff68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Mask">
+      <UniqueIdentifier>{9e9ee6b9-652f-4a5a-944d-25619cc336dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Math">
+      <UniqueIdentifier>{73247e81-909c-402d-adb3-9a98841f76b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Meas">
+      <UniqueIdentifier>{dde1f1dc-8666-4006-a9b3-59af2122dad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui\Oscilloscope\Meas\Decoders">
+      <UniqueIdentifier>{a9030596-1509-4c8a-a2f2-664401b2b763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Generator">
+      <UniqueIdentifier>{27d132db-0604-4ba2-98a7-eace075f26cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Generator\Controls">
+      <UniqueIdentifier>{3db80fb9-5e8c-4a1e-9aa1-dfaf29e839ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Generator\Core">
+      <UniqueIdentifier>{36fc2ee2-052e-4521-9f3d-b994b9dc0103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Generator\Edit">
+      <UniqueIdentifier>{7e2b917a-03a1-45b7-8f93-ad3120705da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Generator\Main">
+      <UniqueIdentifier>{97903e89-e4f8-4015-b00d-f929e1935640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\User">
+      <UniqueIdentifier>{ed80a99a-49ee-47cc-bc22-eb9a33c0bfec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Source\Main\Application.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Core\Controls.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Core\Serialize.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Core\Settings.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Core\Shapes.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Core\Utils.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\MainMenu.cpp">
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\MainWnd.cpp">
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Toolbar.cpp">
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\CalibAnalog.cpp">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\CalibDac.cpp">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\CalibMenu.cpp">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Calibration\Calibration.cpp">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\Export.cpp">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\Import.cpp">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\Manager.cpp">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\ToolBox\ToolBox.cpp">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Controls\Annot.cpp">
+      <Filter>Source Files\Gui\Spectrum\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.cpp">
+      <Filter>Source Files\Gui\Spectrum\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Core\FFT.cpp">
+      <Filter>Source Files\Gui\Spectrum\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Main\MenuSpectMain.cpp">
+      <Filter>Source Files\Gui\Spectrum\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.cpp">
+      <Filter>Source Files\Gui\Spectrum\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Disp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Input\MenuInput.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Mask\MenuMask.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Mask</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Math\FirFilter.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Math\MenuMath.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Meas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Statistics.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Meas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\HwLayer\WinGui\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Generator\Core\CoreGenerator.cpp">
+      <Filter>Source Files\Generator\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Generator\Edit\MenuGenEdit.cpp">
+      <Filter>Source Files\Generator\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Generator\Main\MenuGenMain.cpp">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\_Modules.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\CharMap.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Execute.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Manager.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Meter.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Monitor.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\PidRegulator.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Thermometer.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Timer.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\User\Tuner.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Source\Main\Application.h">
+      <Filter>Source Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Bitmap.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\BufferedIo.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Calibration.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Controls.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Design.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\ListItems.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Sdk.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\SdkV0.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\SdkV1.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Serialize.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Settings.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Shapes.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Core\Utils.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\MainMenu.h">
+      <Filter>Source Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\MainWnd.h">
+      <Filter>Source Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\MainWndSdk.h">
+      <Filter>Source Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Mouse.h">
+      <Filter>Source Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Toolbar.h">
+      <Filter>Source Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\About\About.h">
+      <Filter>Source Files\Gui\About</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibAnalog.h">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibCore.h">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibDac.h">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\CalibMenu.h">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Calibration\Calibration.h">
+      <Filter>Source Files\Gui\Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Windows\MessageBox.h">
+      <Filter>Source Files\Gui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Windows\WndButton.h">
+      <Filter>Source Files\Gui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Windows\WndConfirm.h">
+      <Filter>Source Files\Gui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\Export.h">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\Import.h">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\LineTabs.h">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\Manager.h">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\ToolBox\ToolBox.h">
+      <Filter>Source Files\Gui\Toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Spectrum.h">
+      <Filter>Source Files\Gui\Spectrum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Controls\Annot.h">
+      <Filter>Source Files\Gui\Spectrum\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Controls\SpectrumGraph.h">
+      <Filter>Source Files\Gui\Spectrum\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Core\FFT.h">
+      <Filter>Source Files\Gui\Spectrum\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Main\ItemDisplay.h">
+      <Filter>Source Files\Gui\Spectrum\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Main\ItemWindow.h">
+      <Filter>Source Files\Gui\Spectrum\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Main\MenuSpectMain.h">
+      <Filter>Source Files\Gui\Spectrum\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Marker\ItemMarker.h">
+      <Filter>Source Files\Gui\Spectrum\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Spectrum\Marker\MenuSpectMarker.h">
+      <Filter>Source Files\Gui\Spectrum\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemAutoOff.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemBacklight.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemBeepOnOff.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemShortcut.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\ItemVolume.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\KeySettings.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\Settings.h">
+      <Filter>Source Files\Gui\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\Controls\Slider.h">
+      <Filter>Source Files\Gui\Settings\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Settings\Core\SettingsCore.h">
+      <Filter>Source Files\Gui\Settings\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Oscilloscope.h">
+      <Filter>Source Files\Gui\Oscilloscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphBase.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\GraphSig.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\LevelRef.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\OscInfo.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\TimeRef.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Controls\ZoomBar.h">
+      <Filter>Source Files\Gui\Oscilloscope\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.h">
+      <Filter>Source Files\Gui\Oscilloscope\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Disp\ItemDisp.h">
+      <Filter>Source Files\Gui\Oscilloscope\Disp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.h">
+      <Filter>Source Files\Gui\Oscilloscope\Disp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemAnalog.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemDigital.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemTime.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemTrigger.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ItemWindow.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ListAnalog.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ListDigital.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\ListTrigger.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Input\MenuInput.h">
+      <Filter>Source Files\Gui\Oscilloscope\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ItemDelta.h">
+      <Filter>Source Files\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ItemMarker.h">
+      <Filter>Source Files\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ListMarker.h">
+      <Filter>Source Files\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.h">
+      <Filter>Source Files\Gui\Oscilloscope\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Mask\MenuMask.h">
+      <Filter>Source Files\Gui\Oscilloscope\Mask</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ChannelMath.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\FirFilter.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ItemOperand.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ItemOperator.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ListOperand.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\ListOperator.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Math\MenuMath.h">
+      <Filter>Source Files\Gui\Oscilloscope\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\ItemMeas.h">
+      <Filter>Source Files\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\ListMeas.h">
+      <Filter>Source Files\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\MenuMeas.h">
+      <Filter>Source Files\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Statistics.h">
+      <Filter>Source Files\Gui\Oscilloscope\Meas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Decoders\CanBus.h">
+      <Filter>Source Files\Gui\Oscilloscope\Meas\Decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Oscilloscope\Meas\Decoders\Serial.h">
+      <Filter>Source Files\Gui\Oscilloscope\Meas\Decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Generator.h">
+      <Filter>Source Files\Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Controls\GraphSig.h">
+      <Filter>Source Files\Generator\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Core\CoreGenerator.h">
+      <Filter>Source Files\Generator\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Edit\MenuGenEdit.h">
+      <Filter>Source Files\Generator\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenAmplitude.h">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenDuty.h">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenFrequency.h">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenOffset.h">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\ItemGenWaveform.h">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Gui\Generator\Main\MenuGenMain.h">
+      <Filter>Source Files\Generator\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\_Modules.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Balls.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\CharMap.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Dcf77.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\FullView.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Geiger.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\GpioTest.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Manager.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Meter.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Monitor.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\PidRegulator.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\ScreenSaver.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Snake.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Thermometer.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Timer.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\Tuner.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\User\ZoomView.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

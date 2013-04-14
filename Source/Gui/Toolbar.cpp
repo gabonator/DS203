@@ -4,6 +4,7 @@
 /*static*/ const CWndToolBar::CBarItem* CWndToolBar::GetMenuItems()
 {
 	static const CBarItem arrMenuItems[] = {
+
 		{ CBarItem::IMain,	(PSTR)"Oscilloscope", &MainWnd.m_wndModuleSel},
 		{ CBarItem::ISub,	(PSTR)"Input", &MainWnd.m_wndMenuInput},
 		{ CBarItem::ISub,	(PSTR)"Cursor", &MainWnd.m_wndMenuCursor},

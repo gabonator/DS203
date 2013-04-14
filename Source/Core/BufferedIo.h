@@ -1,6 +1,8 @@
 #ifndef __TOOLBOX_BUFFEREDIO_H__
 #define __TOOLBOX_BUFFEREDIO_H__
 
+#include <Source/Core/Serialize.h>
+
 class CBufferedWriter : public CSerialize
 {
 	ui8* m_pData;
@@ -360,6 +362,5 @@ public:
 		BIOS::FAT::Close( m_nSize );
 	}
 };
-
 #endif
 #endif
