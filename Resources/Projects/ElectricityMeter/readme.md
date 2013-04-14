@@ -5,6 +5,11 @@ Photo-resistor is placed in front of LED diode signalling the power consumption.
 The aim of this project was to design a simple non-invasive energy consumption meter. The power meter device is a property of energy distribution company, so no modifications or disassembling is possible. The only modification was fixing a plastic nut with silicone on the plastic casing of the meter. Silicone is strong enough to hold the sensor firmly on it's place while it can be easily removed without damaging the plastic casing.
 It was hard to find such large plastic nuts and screws, the one I used are sold under the name "plastic toilet seat screws" :) Before fixing the nut on the box, I used a bench grinder to make it smaller and to make it's top flat. The sensor with 4pin RJ connector are placed on a small piece of plexi glass. To reduce the interference of the outer light on the reading, the photo resistor is inside a black heat shrinking tube. The signals on the connector are following: 1. ground, 2. VCC, 3. signal
 
+Experiments
+------------------
+Comparing the response of photo diode and photo resistor to modulated light. 
+https://raw.github.com/gabonator/DS203/master/Resources/Projects/ElectricityMeter/meas.html
+
 Photos
 ------------------
 

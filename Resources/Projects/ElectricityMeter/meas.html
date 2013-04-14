@@ -1,0 +1,24 @@
+<html>
+<body>
+This document shows the response of two different optical sensor modules:<br>
+CH1: <a href="http://www.miki.pro/pdf/Foto%20Resistencia.pdf">GL5537</a> with 27kOhm resistor in series, $0.30<br>
+CH2: <a href="https://www.sparkfun.com/products/8688">TEMT6000</a> with 10kOhm resistor, $5.00<br>
+<br>
+<div style="width:100%; overflow:auto;">
+<embed src="wave002.svg">
+</div>
+
+Test signal:<br>
+<div id="test" style="width:400px; height:400px;"></div>
+<script language="javascript">
+setInterval("timer()", 80);
+
+var c=0;
+function timer()
+{
+	c++;
+	document.getElementById("test").style.background = (c % 20 == 0) ? "#ffffff" : "#000000";
+}
+</script>
+</body>
+</html>

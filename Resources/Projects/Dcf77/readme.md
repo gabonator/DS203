@@ -6,11 +6,7 @@ A friend of mine gave me old bronken radio controlled digital clock. On the PCB 
 Photos
 ------------------
 
-![Image](img01.jpg)
-![Image](img02.jpg)
 ![Image](img03.jpg)
-![Image](img04.jpg)
-![Image](img05.jpg)
 ![Image](img06.jpg)
 ![Image](img07.jpg)
 ![Image](img08.jpg)
