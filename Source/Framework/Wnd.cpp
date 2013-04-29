@@ -436,7 +436,8 @@ void CWnd::PushOverlay()
 
 void CWnd::PopOverlay()
 {
-	_ASSERT( m_rcOverlayStack.IsValid() );
+	//_ASSERT( m_rcOverlayStack.IsValid() );
 	m_rcOverlay = m_rcOverlayStack;
+	m_rcOverlayStack.Invalidate();
 }
 
