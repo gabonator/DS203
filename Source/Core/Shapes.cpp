@@ -1,5 +1,5 @@
 #include "Shapes.h"
-#include "Source/HWLayer/Types.h"
+#include "Source/HwLayer/Types.h"
 
 #define SHAPE(id) LINKERSECTION(".extra") const char CShapes::id[]
 

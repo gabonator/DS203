@@ -13,7 +13,7 @@ CRect m_rcBuffer;
 CPoint m_cpBuffer;
 
 #include <stdarg.h>
-#include "LowLcd.h"
+#include "lowlcd.h"
 //#include <stdio.h>
 //#include <malloc.h>
 

@@ -2,7 +2,7 @@
  File Name : Interrupt.c  
  Version   : DS203_APP Ver 2.3x                                  Author : bure
 *******************************************************************************/
-#include "Interrupt.h"
+#include "interrupt.h"
 #include "BIOS.h"
 
 vu32 vu32Tick;
