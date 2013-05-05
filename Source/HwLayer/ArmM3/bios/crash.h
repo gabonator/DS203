@@ -1,5 +1,7 @@
 // based on https://svn.kapsi.fi/jpa/dsoquad/pawn/DS203/
 
+#include <stdint.h>
+
 #define __irq__ __attribute__((interrupt("IRQ"), optimize("O2")))
 
 /* Tools for handling crashes & debugging */
@@ -39,6 +41,7 @@ const char BUILDID[32] = __DATE__ " " __TIME__;
 
 static bool make_memdump()
 {
+#ifdef _VERSION2
     FIL file;
     
     // Note: It's not important exactly at what point we capture the
@@ -55,6 +58,9 @@ static bool make_memdump()
     f_open(&file, "memory.dmp", FA_WRITE | FA_CREATE_ALWAYS);
     f_write(&file, (void*)0x20000000, 0xC000, (UINT*)&bytes);
     return (f_close(&file) == FR_OK && bytes == 0xC000);
+#else
+		return true;
+#endif
 }
 
 /* Stack parsing */

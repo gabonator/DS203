@@ -16,7 +16,7 @@ float CMeasStatistics::_GetSamplef( BIOS::ADC::TSample& nSample )
 	else if ( m_curSrc == CSettings::Measure::_CH2 )
 	{
 		nSample = (ui8)((nSample>>8) & 0xff);
-		fSample = Settings.CH1Calib.Voltage( fastCalc1, (float)nSample );
+		fSample = Settings.CH2Calib.Voltage( fastCalc2, (float)nSample );
 	}
 	else if ( m_curSrc == CSettings::Measure::_Math )
 	{
