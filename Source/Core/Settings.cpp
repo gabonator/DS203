@@ -1,5 +1,5 @@
 #include "Settings.h"    
-#include <Source/HwLayer/bios.h>
+#include <Source/HwLayer/Bios.h>
 #include <Source/Gui/Toolbar.h>
 #include <string.h>
 

@@ -4,7 +4,7 @@
 extern "C" void __cxa_pure_virtual() { _ASSERT(!!!"Pure virtual call"); while(1);}
 
 extern "C" {
-#include "bios.h"
+#include "BIOS.h"
 }
 
 #include "../bios/core.h"
