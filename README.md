@@ -144,3 +144,12 @@ Alternative firmwares and useful resouces:
  - Pedro Simoes - https://github.com/pmos69/dso203_gcc
  - Marco Sinatti - https://sites.google.com/site/marcosinatti/elettronica/dso
 
+Credits and contributors:
+======================
+Please let me know if I forgot to mention someone who contributed to this project... 
+
+ - Frederic Borry
+ - Francesco Gugliuzza
+ - Florian Bauer
+
+ 

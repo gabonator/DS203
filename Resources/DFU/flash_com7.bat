@@ -1,0 +1,1 @@
+stm32flash -w dso_quad_bootloader_flash.bin COM7
