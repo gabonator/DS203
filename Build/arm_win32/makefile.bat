@@ -90,7 +90,7 @@ echo Compiling...
 !CPP! !WIN32_ARM_GCC_GPPFLAGS! !WIN32_ARM_GCC_INCLUDES! !REVISION! -c !CPP_SRCS!
 :link
 echo Linking...
-!CC! -o !TFILE!_!APP!.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app!APP!.lds !OBJS!
+!CC! -o !TFILE!_!APP!.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app!APP!_win.lds !OBJS!
 if not exist !TFILE!_!APP!.elf (
   echo Build failed
   goto :eof
