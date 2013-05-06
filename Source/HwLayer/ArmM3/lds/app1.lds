@@ -18,4 +18,4 @@ MEMORY
 	// 0x20003000 .. 0x2000B800  APP RAM   (34k)
 	// 0x2000B800 .. 0x2000C000  STACK     (2k)
 */
-INCLUDE ../Source/HwLayer/ArmM3/lds/main.lds
+INCLUDE ../../Source/HwLayer/ArmM3/lds/main.lds
