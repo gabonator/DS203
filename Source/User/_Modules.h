@@ -22,6 +22,6 @@
 #include "PidRegulator.h"
 #include "GpioTest.h"
 //#include "Geiger.h"
-#include "Dcf77.h"
-#include "EMeter.h"
+//#include "Dcf77.h"
+//#include "EMeter.h"
 #endif
