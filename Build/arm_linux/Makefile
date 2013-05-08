@@ -63,7 +63,7 @@ startup.o:
 	$(CC) $(LINUX_ARM_CFLAGS) $(LINUX_ARM_INCLUDES) -c $(SRC_DIR)/HwLayer/ArmM3/src/startup.c -o startup.o
 
 waveram.o:
-	$(CPP) $(LINUX_ARM_GPPFLAGS) $(LINUX_ARM_INCLUDES) -c $(SRC_DIR)/HwLayer/ArmM3/src/waveram.c -o waveram.o
+	$(CPP) $(LINUX_ARM_GPPFLAGS) $(LINUX_ARM_INCLUDES) -c $(SRC_DIR)/HwLayer/ArmM3/src/waveram.cpp -o waveram.o
 
 Main.o:
 	$(CPP) $(LINUX_ARM_GPPFLAGS) $(LINUX_ARM_INCLUDES) -c $(SRC_DIR)/HwLayer/ArmM3/src/main.cpp -o Main.o
