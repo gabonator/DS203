@@ -148,6 +148,7 @@ Credits and contributors:
 ======================
 Please let me know if I forgot to mention someone who contributed to this project... 
 
+ - krist10an
  - Frederic Borry
  - Francesco Gugliuzza
  - Florian Bauer
