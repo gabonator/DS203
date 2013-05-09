@@ -102,28 +102,25 @@ const CWndModuleSelector::TMenuBlockStruct* CWndModuleSelector::GetLayout()
 		CWnd* pCurrent = GetFocus();
 		int nCurrentId = _GetItemId(pCurrent);
 		_ASSERT( nCurrentId >= 0 && nCurrentId <= 9 );
+		int nNewId = nCurrentId;
 
-		int _x = nCurrentId % 3;
-		int _y = nCurrentId / 3;
-		if ( nKey & BIOS::KEY::KeyLeft && _x > 0 )
-			_x--;
-		if ( nKey & BIOS::KEY::KeyRight && _x < 2 )
-			_x++;
-		if ( nKey & BIOS::KEY::KeyUp && _y == 0 )
+		if ( nKey & BIOS::KEY::KeyLeft )
+			nNewId--;
+		if ( nKey & BIOS::KEY::KeyRight )
+			nNewId++;
+		if ( nKey & BIOS::KEY::KeyUp )
+			nNewId -= 3;
+		if ( nKey & BIOS::KEY::KeyDown )
+			nNewId += 3;
+		if ( ( nNewId < 0 ) || ( nNewId >= 9 ) )
 		{
 			MainWnd.m_wndToolBar.SetFocus();
 			pCurrent->Invalidate();
 			MainWnd.m_wndToolBar.Invalidate();
 			return;
 		}
-		if ( nKey & BIOS::KEY::KeyUp && _y > 0 )
-			_y--;
-		if ( nKey & BIOS::KEY::KeyDown && _y < 2 )
-			_y++;
 		
-		int nNewId = _y * 3 + _x;
 		CWnd* pNew = NULL;
-		
 		if ( nNewId != nCurrentId ) 
 			pNew = _GetWindowById( nNewId );
 		if ( pNew )
