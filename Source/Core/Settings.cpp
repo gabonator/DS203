@@ -52,7 +52,7 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Trigger::ppszTextSource[] =
 		{"CH1", "CH2", "CH3", "CH4", "Math"};
 /*static*/ const char* const CSettings::Trigger::ppszTextType[] =
-		{"high", "low"};
+		{"Falling", "Rising", "<Vt", ">Vt", "<TL", ">TL", "<TH", ">TH" };
 
 /*static*/ const char* const CSettings::Marker::ppszTextMode[] =
 		{"Off", "On", "Auto"};
@@ -68,15 +68,18 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::Measure::ppszTextSource[] =
 		{ "CH1", "CH2", "Math" };
 /*static*/ const char* const CSettings::Measure::ppszTextType[] =
-		{ "Minimum", "Maximum", "Average", "RMS", "RectAvg", "Vpp", "Freq", "Period", "PWM %", "FormFact", "Sigma", "Variance", "Baud" };
+		{ "Minimum", "Maximum", "Average", "RectAvg", "RMS", "Vpp", "Freq", "Period", "PWM %", "Delta+M", "Angle+M", "Time H", "Time L", 
+		"Rising", "Falling", "FormFact", "Sigma", "Variance", "Baud", "P(W)+M", "P(kW)+M", "Q(VAr)+M", "Q(kVA)+M", "S(VA)+M", 
+		"S(kVA)+M" };
 /*static*/ const char* const CSettings::Measure::ppszTextSuffix[] =
-		{ "V", "V", "V", "V", "V", "V", "kHz", "ms", "", "", "", "" };
+		{ "V", "V", "V", "V", "V", "V", "kHz", "ms", "", "ms", "deg", "ms", "ms", "ms", "ms", "", "", "", "", "W", "kW", "VAr", 
+		"kVAr", "VA", "kVA" };
 
 /*static*/ const char* const CSettings::Measure::ppszTextRange[] =
 		{ "View", "Selection", "All" };
 
 /*static*/ const char* const CSettings::MathOperator::ppszTextType[] = 
-		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C", "min(A,B)", "max(A,B)", "Fir(A)+C", "F(A)/B+C"};
+		{"Off", "A", "B", "C", "A+B+C", "A-B+C", "B-A+C", "(A>B)+C", "(A<B)+C", "min(A,B)", "max(A,B)", "Fir(A)+C", "F(A)/B+C", "A*B*C" };
 /*static*/ const char* const CSettings::MathOperand::ppszTextType[] = 
 		{"CH1raw", "CH1", "CH2raw", "CH2", "Const", "Fx"};
 
@@ -162,6 +165,8 @@ void CSettings::Reset()
 	Trig.State = Trigger::_Run;
 	Trig.nLevel = 128;
 	Trig.nTime = 30*5;
+	Trig.nHoldOff = 0;
+	Trig.nPosition = 150;
 	Trig.nLastChange = 0;
 
 	Gen.Wave = Generator::_SinHq;
@@ -266,6 +271,8 @@ void CSettings::Reset()
 
 	Math.Type = MathOperator::_AplusBplusC;
 	Math.uiColor = RGB565(ff80ff);
+	Math.Position = 127;
+	Math.Resolution = CSettings::AnalogChannel::_1V;
 
 	Disp.Axes = Display::_TY;
 	Disp.Draw = Display::_Lines;

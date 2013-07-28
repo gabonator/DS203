@@ -129,6 +129,13 @@
 			fast.fMultiplier = arrMultipliers[pSource->Resolution];
 		}
 
+		float GetMultiplier(int nRes)
+		{
+			const static float arrMultipliers[AnalogChannel::_ResolutionMax+1] = 
+				{50e-3f, 100e-3f, 200e-3f, 500e-3f, 1.0f, 2.0f, 5.0f, 10.0f};
+			return (arrMultipliers[nRes]);
+		}
+
 		static void Prepare(int nRes, int nVert, LinCalibCurve& pCurCurve, FastCalc& fast)
 		{
 			const static float arrMultipliers[AnalogChannel::_ResolutionMax+1] = 

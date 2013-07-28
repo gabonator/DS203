@@ -119,7 +119,7 @@ public:
 		static const char* const ppszTextType[];
 		enum ESync { _Auto, _Norm, _Single, _Scan, _None, _SyncMax = _None }
 			Sync;
-		enum { _EdgeLH, _EdgeHL, _Pulse, _TypeMax = _EdgeHL }
+		enum { _EdgeHL, _EdgeLH, _LevelLow, _LevelHigh, _LowerDTLow, _GreaterDTLow, _LowerDTHigh, _GreaterDTHigh, _TypeMax = _GreaterDTHigh }
 			Type;
 		enum { _CH1, _CH2, _CH3, _CH4, _Math, _SourceMax = _Math }
 			Source;
@@ -127,16 +127,18 @@ public:
 			State;
 		si16 nLevel;
 		si16 nTime;
+		si16 nHoldOff;
+		si16 nPosition;
 		ui32 nLastChange;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Sync) << _E(Type) << _E(Source) << _E(State) << nLevel << nTime;
+			stream << _E(Sync) << _E(Type) << _E(Source) << _E(State) << nLevel << nTime << nHoldOff;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Sync) >> _E(Type) >> _E(Source) >> _E(State) >> nLevel >> nTime;
+			stream >> _E(Sync) >> _E(Type) >> _E(Source) >> _E(State) >> nLevel >> nTime >> nPosition;
 			return *this;
 		}
 	};
@@ -215,7 +217,8 @@ public:
 			Enabled;
 		enum ESource { _CH1, _CH2, _Math, _MaxSource = _Math }
 			Source; 
-		enum { _Min, _Max, _Avg, _Rms, _RectAvg, _Vpp, _Freq, _Period, _Pwm, _FormFactor, _Sigma, _Dispersion, _Baud, _MaxType = _Baud }
+		enum { _Min, _Max, _Avg, _RectAvg, _Rms, _Vpp, _Freq, _Period, _Pwm, _DeltaTime, _Angle, _TimeH, _TimeL, _TimeRise, _TimeFall, _FormFactor, 
+			_Sigma, _Dispersion, _Baud, _P, _Pk, _Q, _Qk, _S, _Sk, _MaxType = _Sk }
 			Type;
 		enum ERange { _View, _Selection, _All, _MaxRange = _All }
 			Range;
@@ -262,18 +265,21 @@ public:
 		static const char* const ppszTextType[];
 		// = {"Off", "A", "B", "A+B+C", "A+B-C", "B-A+C"}
 		enum { _Off, _A, _B, _C, _AplusBplusC, _AminusBplusC, _BminusAplusC, 
-			_AgreaterBplusC, _AlessBplusC, _minAB, _maxAB, _FirAplusC, _FirAdivBplusC, _TypeMax = _FirAdivBplusC }
+			_AgreaterBplusC, _AlessBplusC, _minAB, _maxAB, _FirAplusC, _FirAdivBplusC,
+			_AmulBmulC, _TypeMax = _AmulBmulC }
 			Type;
 		ui16 uiColor;
+		AnalogChannel::eResolution Resolution;
+		si16 Position;
 
 		virtual CSerialize& operator <<( CStream& stream )
 		{
-			stream << _E(Type) << uiColor;
+			stream << _E(Type) << uiColor << _E(Resolution) << Position;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
-			stream >> _E(Type) >> uiColor;
+			stream >> _E(Type) >> uiColor >> _E(Resolution) >> Position;
 			return *this;
 		}
 	};

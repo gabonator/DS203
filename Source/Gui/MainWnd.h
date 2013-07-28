@@ -55,6 +55,7 @@ public:
 	CWndZoomBar			m_wndZoomBar;
 	CWndOscInfo			m_wndInfoBar;
 	CWndLevelReferences	m_wndLReferences;
+	CWndLevelReferencesMath	m_wndLReferencesM;
 	CWndTimeReferences	m_wndTReferences;
 	CWndAboutFirmware	m_wndAboutFirmware;
 	CWndAboutDevice		m_wndAboutDevice;

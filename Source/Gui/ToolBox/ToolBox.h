@@ -17,7 +17,8 @@ public:
 		MenuPauseResume = 1,
 		MenuManager = 0,
 		MenuReset = 2,
-		MenuMax = MenuReset
+		MenuSave = 3,
+		MenuMax = MenuSave
 	};
 
 public:

@@ -5,13 +5,14 @@
 #include "CharMap.h"
 #include "Monitor.h"
 #include "Dcf77.h"
+#include "GpioTest.h"
 
 #else
 
 #include "CharMap.h"
 #include "Monitor.h"
-#include "ZoomView.h"
-#include "Timer.h"
+//#include "ZoomView.h"
+//#include "Timer.h"
 //#include "Tuner.h"
 //#include "FullView.h"
 #include "ScreenSaver.h"

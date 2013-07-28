@@ -14,6 +14,7 @@ public:
 	static const char trig_base[];
 	static const char trig_time[];
 	static const char chb_base[];
+	static const char chm_base[];
 	static const char sel_left[]; 
 	static const char sel_right[];
 	static const char sig_dc[]; 
@@ -26,6 +27,12 @@ public:
 	static const char trig_pos_[]; 
 	static const char trig_neg[]; 
 	static const char trig_neg_[]; 
+	static const char trig_level_l[];
+	static const char trig_level_g[];
+	static const char trig_pulse_ll[];
+	static const char trig_pulse_gl[];
+	static const char trig_pulse_lh[];
+	static const char trig_pulse_gh[];
 	static const char prog_left[]; 
 	static const char prog_right[];
 	static const char prog_in[]; 

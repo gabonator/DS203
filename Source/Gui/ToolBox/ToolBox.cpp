@@ -37,6 +37,7 @@ void CWndToolbox::Create( CWnd* pParent )
 	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 1*16, FOC(1), RGB565(000000), 
 		m_bAdcEnabled ? "\x10 Pause" : "\x10 Resume" );
 	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 2*16, FOC(2), RGB565(000000), "\x10 Reset setings");
+	PrintBold( m_rcClient.left + 8, m_rcClient.top + 2 + 3*16, FOC(3), RGB565(000000), "\x10 Save setings");
 
 	char str[32];
 	BIOS::DBG::sprintf(str, "bat %d%%", BIOS::SYS::GetBattery());
@@ -142,18 +143,21 @@ void CWndToolbox::DoModal()
 
 	switch ( GetResult() )
 	{
-	case MenuPauseResume: 
-		// Resume / Pause
-		m_bAdcEnabled = !m_bAdcEnabled;
-		break;
-	case MenuManager:
-		m_bAdcEnabled = FALSE;
-		// Load wave BIN
-		break;
-	case MenuReset:
-		Settings.Reset();
-		break;
-	case -1: break;
+		case MenuPauseResume: 
+			// Resume / Pause
+			m_bAdcEnabled = !m_bAdcEnabled;
+			break;
+		case MenuManager:
+			m_bAdcEnabled = FALSE;
+			// Load wave BIN
+			break;
+		case MenuReset:
+			Settings.Reset();
+			break;
+		case MenuSave:
+			Settings.Save();
+			break;
+		case -1: break;
 	}
 
 	UpdateAdc();

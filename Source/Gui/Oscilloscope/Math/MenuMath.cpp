@@ -19,6 +19,7 @@
 		MainWnd.m_wndGraph.ShowWindow( SwHide );
 		MainWnd.m_wndInfoBar.ShowWindow( SwHide );
 		MainWnd.m_wndLReferences.ShowWindow( SwHide );
+		MainWnd.m_wndLReferencesM.ShowWindow( SwHide );
 		MainWnd.m_wndTReferences.ShowWindow( SwHide );
 		return;
 	}
@@ -28,6 +29,7 @@
 		MainWnd.m_wndGraph.ShowWindow( SwShow );
 		MainWnd.m_wndInfoBar.ShowWindow( SwShow );
 		MainWnd.m_wndLReferences.ShowWindow( SwShow );
+		MainWnd.m_wndLReferencesM.ShowWindow( SwShow );
 		MainWnd.m_wndTReferences.ShowWindow( SwShow );
 		return;
 	}
@@ -95,10 +97,17 @@
 	}
 	if ( code == ToWord('u', 'p') && bSenderOperator )
 	{
+		if ( pSender == &m_wndListOperator.m_itmPosition )
+		{
+			MainWnd.m_wndLReferences.Invalidate();
+			MainWnd.m_wndLReferencesM.Invalidate();
+			// update
+			CWnd::GetTopModal().m_pPrevFocus->Invalidate();
+		}
+
 		// done
 		m_wndListOperator.m_itmColour.Invalidate();
 		m_itmOperator.Invalidate();
 		return;
 	}
-
 }

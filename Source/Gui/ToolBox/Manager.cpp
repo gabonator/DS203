@@ -2,9 +2,9 @@
 #include <Source/Gui/MainWnd.h>
 
 
-const char* const CWndManager::tabs[] = {"Wave", "Bmp", "Csv", "Svg", NULL};
-const char* const CWndManager::strTemplateDisplay[] = {"    WAVE%03d.WAV", "    IMAGE%03d.BMP", "    WAVE%03d.CSV", "    WAVE%03d.SVG"};
-const char* const CWndManager::strTemplateFile[] = {"WAVE%03d WAV", "IMAGE%03dBMP", "WAVE%03d CSV", "WAVE%03d SVG"};
+const char* const CWndManager::tabs[] = {"Wave", "Bmp", "Csv", "Svg", "Dat", NULL};
+const char* const CWndManager::strTemplateDisplay[] = {"    WAVE%03d.WAV", "    IMAGE%03d.BMP", "    WAVE%03d.CSV", "    WAVE%03d.SVG", "    WAVE%03d.DAT"};
+const char* const CWndManager::strTemplateFile[] = {"WAVE%03d WAV", "IMAGE%03dBMP", "WAVE%03d CSV", "WAVE%03d SVG", "WAVE%03d DAT"};
 
 CWndManager::CWndManager()
 {
@@ -130,6 +130,7 @@ bool CWndManager::Exists(char *strName)
 			case 1: // Bmp
 			case 2: // Csv
 			case 3: // Svg
+			case 4: // Dat
 				MainWnd.m_wndMessage.Show(&MainWnd, "Sorry...", "This feature is not\nimplemented yet", RGB565(ffff00));
 				break;
 		}
@@ -166,6 +167,10 @@ bool CWndManager::Exists(char *strName)
 				CExport::SaveSvg( strName );
 				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
 //				MainWnd.m_wndMessage.Show(&MainWnd, "Sorry...", "This feature is not implemented yet", RGB565(ffff00));
+				break;
+			case 4: // Dat
+				CExport::SaveBinary( strName );
+				MainWnd.m_wndMessage.Show(&MainWnd, "Information", "Successfully saved", RGB565(ffff00));
 				break;
 		}
 	}

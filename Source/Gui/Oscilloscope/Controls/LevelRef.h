@@ -48,3 +48,29 @@ public:
 	}
 };
 
+class CWndLevelReferencesMath : public CWnd
+{
+public:
+	virtual void Create(CWnd *pParent, ui16 dwFlags) 
+	{
+		CWnd::Create("CWndLevelReferencesMath", dwFlags | CWnd::WsNoActivate, 
+			CRect(0, 22, 11, 22+CWndGraph::DivsY*CWndGraph::BlkY), pParent);
+	}
+
+	virtual void OnPaint()
+	{
+		if ( Settings.Math.Type != CSettings::MathOperator::_Off )
+		{
+			si16 y = Settings.Math.Position;
+
+			y = (y * (CWndGraph::DivsY*CWndGraph::BlkY)) >> 8;
+			int nScrY =  m_rcClient.bottom - y-5;
+			if ( nScrY >= 0 && nScrY+7 < BIOS::LCD::LcdHeight ) 
+			{
+				BIOS::LCD::Draw( m_rcClient.left, nScrY, 
+					Settings.Math.uiColor, RGBTRANS, CShapes::chm_base );
+			}
+		}
+	}
+};
+

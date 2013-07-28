@@ -20,8 +20,10 @@ float CMeasStatistics::_GetSamplef( BIOS::ADC::TSample& nSample )
 	}
 	else if ( m_curSrc == CSettings::Measure::_Math )
 	{
-		nSample = MainWnd.m_wndGraph.MathCalc( nSample );
-		fSample = nSample / 32.0f;	// matches the vertical grid
+		//nSample = ;
+		int s = MainWnd.m_wndGraph.MathCalc( nSample );
+		nSample = (s < 0) ? 0 : s;
+		fSample = (s - Settings.Math.Position) / 32.0f * (Settings.CH1Calib.GetMultiplier(Settings.Math.Resolution) / 1);	// matches the vertical grid
 	} else
 	_ASSERT( 0 );
 	return fSample;
@@ -42,6 +44,84 @@ int CMeasStatistics::_GetSample( BIOS::ADC::TSample nSample )
 		nSample = MainWnd.m_wndGraph.MathCalc( nSample );
 	}
 	return nSample;
+}
+
+bool CMeasStatistics::_GetEffectiveValuesForPower(float &fVoltage, float &fCurrent)
+{
+	fVoltage = sqrt(m_fSum2/m_nCount);
+
+	int nBegin = 0, nEnd = 0;
+	float fSum2 = 0;
+	if ( _GetRange( nBegin, nEnd, m_curRange ) )
+	{
+		CSettings::Measure::ESource tmp = m_curSrc;
+		m_curSrc = CSettings::Measure::_Math;
+
+		Settings.CH1Calib.Prepare( &Settings.CH1, fastCalc1 );
+		Settings.CH2Calib.Prepare( &Settings.CH2, fastCalc2 );
+		MainWnd.m_wndGraph.MathSetup( &fastCalc1, &fastCalc2 );
+
+		for ( int i = nBegin; i < nEnd; i++ )
+		{
+			BIOS::ADC::TSample nSample = BIOS::ADC::GetAt( i );
+			float fSample, fSample2;
+			fSample = _GetSamplef( nSample );
+			fSample2 = fSample * fSample;
+
+			fSum2 += fSample2;
+		}
+		m_curSrc = tmp;
+		fCurrent = sqrt(fSum2/m_nCount);
+		return (true);
+	}
+	return (false);
+}
+
+int CMeasStatistics::_FindEdge( CSettings::Measure::ESource src, CSettings::Measure::ERange range, si8 nRising, int nOffset, int &nTrigState )
+{
+	int nBegin = 0, nEnd = 0;
+	if ( !_GetRange( nBegin, nEnd, range ) )
+		return 0;
+	
+	if (nOffset > nBegin)
+		nBegin = nOffset;
+
+	int nThresh = 2;
+	int nTrigMin = Settings.Trig.nLevel - nThresh;
+	int nTrigMax = Settings.Trig.nLevel + nThresh;
+
+	int nNewState = -1;
+
+	m_curSrc = src;
+	for ( int i = nBegin; i < nEnd; i++ )
+	{
+		int nSample_ = BIOS::ADC::GetAt(i);
+		int nSample = _GetSample( nSample_ );
+
+		if ( nSample > nTrigMax )
+			nNewState = 1;
+		if ( nSample < nTrigMin )
+			nNewState = 0;
+
+		if ( nTrigState != -1 && nNewState != nTrigState )
+		{
+			// trigger changing it's output
+	 		nTrigState = nNewState;
+			if ( ( nNewState == 1 ) && (nRising >= 0) )
+			{
+				// rising edge
+				return i;
+			}
+			if ( ( nNewState == 0 ) && (nRising <= 0) )
+			{
+				// falling edge
+				return i;
+			}
+		}
+ 		nTrigState = nNewState;
+	}
+
+	return 0;
 }
 
 bool CMeasStatistics::Process( CSettings::Measure::ESource src, CSettings::Measure::ERange range )
@@ -166,6 +246,51 @@ float CMeasStatistics::GetPeriod()
 	return fValue;
 }
 
+float CMeasStatistics::GetChannelsDelta(bool rising) 
+{
+	int nBegin = 0, nEnd = 0;
+	if ( !_GetRange( nBegin, nEnd, m_curRange ) )
+		return 0;
+	if ( m_nRawMax - m_nRawMin < 16 )
+		return 0;
+		
+	Settings.CH1Calib.Prepare( &Settings.CH1, fastCalc1 );
+	Settings.CH2Calib.Prepare( &Settings.CH2, fastCalc2 );
+	MainWnd.m_wndGraph.MathSetup( &fastCalc1, &fastCalc2 );
+
+	int nTrigStateChannel = -1, nTrigStateMath = -1;
+	int nTotal = 0;
+	int nSum = 0;
+
+	CSettings::Measure::ESource src = m_curSrc;
+	for ( int i = nBegin; i < nEnd; i++ )
+	{
+		int edge = _FindEdge(src, m_curRange, rising ? 1 : -1, i, nTrigStateChannel);
+
+		if (edge > 0)
+		{
+			int edge2 = _FindEdge(CSettings::Measure::_Math, m_curRange, rising ? 1 : -1, edge, nTrigStateMath);
+			if (edge2 > edge)
+			{
+				nSum += edge2 - edge;
+				nTotal++;
+			}
+			i = edge;
+		}
+		else
+			break;
+	}
+	m_curSrc = src;
+
+	float fAvgDelta = nSum  / (float)nTotal;
+	// period in samples -> time in seconds
+	float fTimeRes = Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
+	float fValue = fTimeRes * fAvgDelta;
+	if ( fValue == 0 )
+		return 0;
+	return fValue;
+}
+
 float CMeasStatistics::GetPwm() 
 {
 	int nBegin = 0, nEnd = 0;
@@ -261,8 +386,148 @@ float CMeasStatistics::GetAvg() { return m_fSum/m_nCount; }
 float CMeasStatistics::GetRms() { return sqrt(m_fSum2/m_nCount); }
 float CMeasStatistics::GetRectAvg() { return m_fSumR/m_nCount; }
 float CMeasStatistics::GetVpp() { return m_fMax - m_fMin; }
+
+float CMeasStatistics::GetTime(bool bHighLevel)
+{
+	int nBegin = 0, nEnd = 0;
+	if ( !_GetRange( nBegin, nEnd, m_curRange ) )
+		return 0;
+	if ( m_nRawMax - m_nRawMin < 16 )
+		return 0;
+		
+	int nTrigStateChannel = -1, nTrigStateMath = -1;
+	int nTotal = 0;
+	int nSum = 0;
+
+	CSettings::Measure::ESource src = m_curSrc;
+	for ( int i = nBegin; i < nEnd; i++ )
+	{
+		int edge = _FindEdge(src, m_curRange, bHighLevel ? 1 : -1, i, nTrigStateChannel);
+
+		if (edge > 0)
+		{
+			int edge2 = _FindEdge(src, m_curRange, bHighLevel ? -1 : 1, edge, nTrigStateMath);
+			if (edge2 > edge)
+			{
+				nSum += edge2 - edge;
+				nTotal++;
+
+				i = edge2;
+			}
+			else
+				i = edge;
+		}
+		else
+			break;
+	}
+	m_curSrc = src;
+
+	float fAvgDelta = nSum  / (float)nTotal;
+	// period in samples -> time in seconds
+	float fTimeRes = Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
+	float fValue = fTimeRes * fAvgDelta;
+	if ( fValue == 0 )
+		return 0;
+	return fValue;
+}
+
+float CMeasStatistics::GetEdgeTime(bool bRising)
+{
+	int nBegin = 0, nEnd = 0;
+	if ( !_GetRange( nBegin, nEnd, m_curRange ) )
+		return 0;
+	if ( m_nRawMax - m_nRawMin < 16 )
+		return 0;
+		
+	int nTrig10 = (int)(0.1 * (m_nRawMax - m_nRawMin)) + m_nRawMin;
+	int nTrig90 = (int)(0.9 * (m_nRawMax - m_nRawMin)) + m_nRawMin;
+	int nEdge10 = -1, nEdge90 = -1;
+
+	int nTotal = 0;
+	int nSum = 0;
+
+	for ( int i = nBegin; i < nEnd; i++ )
+	{
+		int nSample_ = BIOS::ADC::GetAt(i);
+		int nSample = _GetSample( nSample_ );
+
+		if ( (nTrig90 - 10 < nSample) && ( nSample < nTrig90 + 10) )
+		{
+			nEdge90 = i;
+			if ( (nEdge10 != -1) && (nEdge90 != -1) && bRising )
+			{
+				nSum += nEdge90 - nEdge10;
+				nEdge10 = -1;
+				nTotal++;
+			}
+		}
+		if ( (nTrig10 - 10 < nSample) && ( nSample < nTrig10 + 10) )
+		{
+			nEdge10 = i;
+			if ( (nEdge10 != -1) && (nEdge90 != -1) && (!bRising) )
+			{
+				nSum += nEdge10 - nEdge90;
+				nEdge90 = -1;
+				nTotal++;
+			}
+		}
+	}
+
+	float fAvgDelta = nSum  / (float)nTotal;
+	// period in samples -> time in seconds
+	float fTimeRes = Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
+	float fValue = fTimeRes * fAvgDelta;
+	if ( fValue == 0 )
+		return 0;
+	return fValue;
+}
+
 float CMeasStatistics::GetFormFactor() { return GetRms() / GetRectAvg(); }
 float CMeasStatistics::GetDispersion() { float f = GetSigma(); return f*f; }
+
+float CMeasStatistics::GetActivePower()
+{
+	float effectiveVoltage = 0, effectiveCurrent = 0;
+
+	if (_GetEffectiveValuesForPower(effectiveVoltage, effectiveCurrent))
+	{
+		float fPeriod = GetPeriod();
+		if (fPeriod > 0)
+		{
+			float cosfi = (float)cos(2 * 3.141592 * GetChannelsDelta(true) / fPeriod);
+
+			return (effectiveVoltage * effectiveCurrent * cosfi);
+		}
+	}
+	return 0;
+}
+
+float CMeasStatistics::GetReactivePower()
+{
+	float effectiveVoltage = 0, effectiveCurrent = 0;
+
+	if (_GetEffectiveValuesForPower(effectiveVoltage, effectiveCurrent))
+	{
+		float fPeriod = GetPeriod();
+		if (fPeriod > 0)
+		{
+			float sinfi = (float)sin(2 * 3.141592 * GetChannelsDelta(true) / fPeriod);
+			return (effectiveVoltage * effectiveCurrent * sinfi);
+		}
+	}
+	return 0;
+}
+
+float CMeasStatistics::GetApparentPower()
+{
+	float effectiveVoltage = 0, effectiveCurrent = 0;
+
+	if (_GetEffectiveValuesForPower(effectiveVoltage, effectiveCurrent))
+	{
+		return (effectiveVoltage * effectiveCurrent);
+	}
+	return 0;
+}
 
 bool CMeasStatistics::_GetRange( int& nBegin, int& nEnd, CSettings::Measure::ERange range )
 {

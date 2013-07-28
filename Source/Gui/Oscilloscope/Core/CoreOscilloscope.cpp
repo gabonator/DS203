@@ -43,7 +43,7 @@
 	} else {
 		BIOS::ADC::ConfigureTrigger(Settings.Trig.nTime, Settings.Trig.nLevel, 
 			(ui8)(NATIVEENUM)Settings.Trig.Source, 
-			1-(ui8)(NATIVEENUM)Settings.Trig.Type );
+			(ui8)(NATIVEENUM)Settings.Trig.Type );
 	}
 }
 

@@ -492,7 +492,7 @@ BOOL bADCReady = FALSE;
 
 	FLOAT a, b;
 
-	switch (3)
+	switch (4)
 	{
 	case 1:
 		{
@@ -526,6 +526,16 @@ BOOL bADCReady = FALSE;
 			a = t/3;
 			break;
 		}
+
+	case 4:
+		{
+			FLOAT fm = 1;
+			FLOAT fa = 0.05f;
+			a = sin(lCounter*fa + 3.14/2) * 0.8;
+			b = sin(lCounter*fa)*0.25f;
+			break;
+		}
+
 	}
 	//fa = lCounter*0.0001f;
 	unsigned long da = (ui32)((a+1.0f)*127);

@@ -16,7 +16,7 @@ public:
 	static const char* const strTemplateFile[];
 
 	enum {
-		Width = 200,
+		Width = 250,
 		Height = 120
 	};
 

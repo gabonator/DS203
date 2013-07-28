@@ -46,6 +46,7 @@ void CMainWnd::Create()
 	m_wndZoomBar.Create( this, WsHidden, &m_wndGraph );
 	m_wndInfoBar.Create( this, WsHidden, &m_wndGraph );
 	m_wndLReferences.Create( this, WsHidden );
+	m_wndLReferencesM.Create( this, WsHidden );
 	m_wndTReferences.Create( this, WsHidden );
 	m_wndSpectrumMain.Create( this, WsHidden );
 	m_wndSpectrumMarker.Create( this, WsHidden );

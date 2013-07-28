@@ -53,4 +53,56 @@ public:
 	{
 		return BIOS::GPIO::GetPin( m_nPort, m_nPin );
 	}
+
+public:
+	// new interface with getter/setter functions
+	enum ELevel {
+		eLow = 0,
+		eHigh = 1,
+		eFloat = 2
+	};
+
+	CPin()
+	{
+	}
+
+	CPin( int nPortPin )
+	{
+		Create( nPortPin );
+	}
+
+	// experiment with getter / setter fuctions
+	void operator =( /*CPin::ELevel*/ int level )
+	{
+		switch ( level )
+		{
+			case eLow: Low(); return;
+			case eHigh: High(); return;
+			case eFloat: Float(); return;
+		}
+		_ASSERT(0);
+	}
+	operator const int ()
+	{
+		return Get();
+	}
+	operator const ui8 ()
+	{
+		return Get();
+	}
 };
+
+/*
+class CMyTest
+{
+public:
+	CMyTest()
+	{
+		CPin p( CPin::PortD | 0 );
+		p = 1;
+		p = CPin::eFloat;
+		const int nvalue = p;
+		p = 0;
+	}
+} MyTestInstance;
+*/

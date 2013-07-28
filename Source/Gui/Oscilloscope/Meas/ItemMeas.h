@@ -39,7 +39,7 @@ public:
 		if ( bEnabled )
 		{
 			y += 16;
-			char str[16]; 
+			char str[32]; 
 			const char* suffix = CSettings::Measure::ppszTextSuffix[ (int)m_pMeas->Type ];
 			float fValue = m_pMeas->fValue;
 			if ( fValue < 0 )

@@ -45,16 +45,31 @@ public:
 		BIOS::LCD::Print( x, y, clr, RGBTRANS, m_pszId );
 		x += 52;
 
-		if ( Settings.Trig.Type == CSettings::Trigger::_EdgeLH )
+		const char *pSym1 = NULL;
+		const char *pSym2 = NULL;
+		switch (Settings.Trig.Type)
 		{
-			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, CShapes::trig_pos_ );
-			x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, CShapes::trig_pos );
+			case CSettings::Trigger::_EdgeLH:
+				{
+					pSym1 = CShapes::trig_pos_;
+					pSym2 = CShapes::trig_pos;
+				} break;
+			case CSettings::Trigger::_EdgeHL:
+				{
+					pSym1 = CShapes::trig_neg_;
+					pSym2 = CShapes::trig_neg;
+				} break;
+			case CSettings::Trigger::_LevelLow: pSym2 = CShapes::trig_level_l; break;
+			case CSettings::Trigger::_LevelHigh: pSym2 = CShapes::trig_level_g; break;
+			case CSettings::Trigger::_LowerDTLow: pSym2 = CShapes::trig_pulse_ll; break;
+			case CSettings::Trigger::_GreaterDTLow: pSym2 = CShapes::trig_pulse_gl; break;
+			case CSettings::Trigger::_LowerDTHigh: pSym2 = CShapes::trig_pulse_lh; break;
+			case CSettings::Trigger::_GreaterDTHigh: pSym2 = CShapes::trig_pulse_gh; break;
 		}
-		else
-		{
-			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, CShapes::trig_neg_ );
-			x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, CShapes::trig_neg );
-		}
+
+		if (pSym1)
+			BIOS::LCD::Draw( x, y, RGB565(000000), RGBTRANS, pSym1 );
+		x += BIOS::LCD::Draw( x, y, clrSource, RGBTRANS, pSym2 );
 		
 		x = m_rcClient.left + 12 + MarginLeft;
 		y += 16;
