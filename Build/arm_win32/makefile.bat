@@ -5,7 +5,7 @@ rem DS203 Win32 GCC support by valky.eu ver 2.0
 rem USER DEFINED VALUES
 rem ===================================================
 set CBASE=C:\Programs\Devel\Gcc\arm-2011.03\bin\
-set TFILE=APP_G251
+set TFILE=GABOUI
 set APP=1
 rem ===================================================
 
@@ -20,9 +20,9 @@ if "%TARGET%"=="" (
   echo Could not find the DFU drive.
   echo Please turn on your DSO while holding the first button and then connect it to your computer
   echo.
-  rem echo Press any key
-  rem pause > nul
-  rem goto :eof
+	set online=no
+) else (
+	set online=yes
 )
 
 Echo DFU Drive: !TARGET!
@@ -88,8 +88,25 @@ echo Compiling...
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC2! -o !ASM_OUT2!
 !CC! !WIN32_ARM_GCC_CFLAGS! !WIN32_ARM_GCC_INCLUDES! -c !C_SRCS!
 !CPP! !WIN32_ARM_GCC_GPPFLAGS! !WIN32_ARM_GCC_INCLUDES! !REVISION! -c !CPP_SRCS!
+
+if "!online!"=="no" (
+  echo Linking... 
+
+  rem alternative slots
+  !CC! -o !TFILE!_1.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app1_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_1.elf !TFILE!_1.hex
+  !CC! -o !TFILE!_2.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app2_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_2.elf !TFILE!_2.hex
+  !CC! -o !TFILE!_3.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app3_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_3.elf !TFILE!_3.hex
+  !CC! -o !TFILE!_4.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app4_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_4.elf !TFILE!_4.hex
+
+  goto :eof
+)
+
 :link
-echo Linking...
+echo Linking... 
 !CC! -o !TFILE!_!APP!.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app!APP!_win.lds !OBJS!
 if not exist !TFILE!_!APP!.elf (
   echo Build failed
@@ -97,6 +114,7 @@ if not exist !TFILE!_!APP!.elf (
 )
 !OBJCOPY! -O binary !TFILE!_!APP!.elf !TFILE!.bin
 !OBJCOPY! -O ihex !TFILE!_!APP!.elf !TFILE!.hex
+
 rem ..\Build\arm_win32\elfstrip.exe !TFILE!_!APP!.elf !TFILE!_clean.elf
 
 if not exist !TFILE!.hex (
