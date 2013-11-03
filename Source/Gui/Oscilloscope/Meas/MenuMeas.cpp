@@ -79,6 +79,7 @@
 	{
 		// done
 		m_wndListMeas.StopModal();
+		_UpdateAll();
 		return;
 	}
 }
@@ -138,7 +139,9 @@ void CWndMenuMeas::_UpdateAll()
 				case CSettings::Measure::_Sigma:	meas.fValue = m_Stat.GetSigma(); break;
 				case CSettings::Measure::_Dispersion:
 					meas.fValue = m_Stat.GetDispersion(); break;
-				case CSettings::Measure::_Baud:		meas.fValue = m_Stat.GetBaud(); break;
+				case CSettings::Measure::_Baud:		
+					meas.fValue = m_Stat.GetBaud(); 
+				break;
 				case CSettings::Measure::_Pwm:		meas.fValue = m_Stat.GetPwm(); break;
 				case CSettings::Measure::_P:        meas.fValue = m_Stat.GetActivePower(); break;
 				case CSettings::Measure::_Pk:       meas.fValue = m_Stat.GetActivePower() / 1000; break;

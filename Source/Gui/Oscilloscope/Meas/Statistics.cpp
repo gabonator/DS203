@@ -4,6 +4,7 @@
 
 #include "Decoders/Serial.h"
 #include "Decoders/CanBus.h"
+#include "Decoders/Ir.h"
 
 float CMeasStatistics::_GetSamplef( BIOS::ADC::TSample& nSample )
 {
@@ -372,10 +373,23 @@ float CMeasStatistics::GetBaud()
 		Iterate.SetDecoder( &Iterate );
 		Iterate << 1;	// idle before start bit
 		Iterate.Do(&CSerialDecoder::Decode);
-		for ( int i = 0; i < 8; i++ )
-			Iterate << 0;	// finish byte when only single byte was sent
-		Iterate.Visualize();
+		Iterate.SetDecoder( (CBitDecoder*)NULL );
+
+		//this gives false results
+		//for ( int i = 0; i < 8; i++ )
+		//	Iterate << 0;	// finish byte when only single byte was sent
+
+		if ( !Iterate.Visualize() )
+		{
+			CIrDecoder Decoder;
+			Iterate.SetDecoder( &Decoder );
+			Iterate.Do(&CSerialDecoder::Decode);
+			Iterate.SetDecoder( (CEdgeDecoder*)NULL );
+			Decoder.Visualize();
+		}
 	}
+
+	//Iterate.Log();
 
 	return fBaud;
 }
@@ -547,7 +561,7 @@ bool CMeasStatistics::_GetRange( int& nBegin, int& nEnd, CSettings::Measure::ERa
 			nEnd = Settings.MarkT2.nValue;
 			break;
 		case CSettings::Measure::_All:
-			nBegin = 0;
+			nBegin = Settings.Time.InvalidFirst; // skip first samples
 			nEnd = BIOS::ADC::GetCount();
 			break;
 	}

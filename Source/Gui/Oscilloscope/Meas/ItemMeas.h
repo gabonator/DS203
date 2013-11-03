@@ -48,8 +48,10 @@ public:
 				fValue = -fValue;
 			} else
 				x += 6;
-
-			BIOS::DBG::sprintf(str, "%3f", fValue);
+			if ( fValue < 10000 )
+				BIOS::DBG::sprintf(str, "%3f", fValue);
+			else
+				BIOS::DBG::sprintf(str, "%1fk", fValue/1000.0f);
 		
 			while ( strlen(str) + strlen(suffix) > 7 )
 				str[strlen(str)-1] = 0;

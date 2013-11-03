@@ -102,8 +102,11 @@ public:
 		return true;
 	}
 
-	void Visualize()
+	bool Visualize()
 	{
+		if ( m_nFrameArb == 0 )
+			return false;
+
 		int x = 20;
 		int y = 30;
 		x += 8*BIOS::LCD::Print(x, y, RGB565(ff0000), 0x0101, "CanBus: ");
@@ -113,6 +116,7 @@ public:
 		x += 8*BIOS::LCD::Printf(x, y, RGB565(ffffff), 0x0101, ")" );
 		if ( !m_bFinished )
 			x += 8*BIOS::LCD::Printf(x, y, RGB565(ffffff), 0x0101, " ?" );
+		return true;
 	}
 
 	void Test()

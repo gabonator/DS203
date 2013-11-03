@@ -3,6 +3,11 @@ public:
 	virtual bool operator << (int nBit) = NULL;
 };
 
+class CEdgeDecoder {
+public:
+	virtual bool OnEdge(int nSamples, int nRising) = NULL;
+};
+
 class CSerialDecoder : public CBitDecoder
 {
 public:
@@ -22,7 +27,8 @@ public:
 	int nDecoded;
 	unsigned char strDecode[32];
 	int nIdle;
-	CBitDecoder* m_pCurrentDecoder;
+	CBitDecoder* m_pCurrentBitDecoder;
+	CEdgeDecoder* m_pCurrentEdgeDecoder;
 
 public:
 	CMeasStatistics* This()
@@ -37,7 +43,8 @@ public:
 		if ( This()->m_nRawMax - This()->m_nRawMin < 16 )
 			return false;
 
-		m_pCurrentDecoder = NULL;
+		m_pCurrentBitDecoder = NULL;
+		m_pCurrentEdgeDecoder = NULL;
 
 		nThresh = ( This()->m_nRawMax - This()->m_nRawMin ) / 4;
 		nTrigMin = This()->m_nRawMin + nThresh;
@@ -73,6 +80,7 @@ public:
 	bool Do(TProcessFunc ProcessEdge)
 	{
 		int nNewState = -1, nTrigState = -1;
+		nLast = -1;
 		for ( int i = nBegin; i < nEnd; i++ )
 		{
 			int nSample = BIOS::ADC::GetAt(i);
@@ -146,18 +154,31 @@ public:
 		if ( nCount <= 2 )
 			return true;
 
-		_ASSERT( m_pCurrentDecoder );
-
-		int nMin = nMinPeriod;
-		for ( int i = nMin; i <= nCount; i += nMin )
-			if ( !m_pCurrentDecoder->operator<< ( nIdle ? 1-nRising : nRising) )
+		if ( m_pCurrentBitDecoder )
+		{
+			int nMin = nMinPeriod;
+			for ( int i = nMin; i <= nCount; i += nMin )
+				if ( !m_pCurrentBitDecoder->operator<< ( nIdle ? 1-nRising : nRising ) )
+					return false;
+		} else
+		if ( m_pCurrentEdgeDecoder )
+		{
+			if ( !m_pCurrentEdgeDecoder->OnEdge( nCount, nRising ) )
 				return false;
+		} else
+			_ASSERT( 0 );
+
 		return true;
 	}
 
 	void SetDecoder( CBitDecoder* pDecoder )
 	{
-		m_pCurrentDecoder = pDecoder;
+		m_pCurrentBitDecoder = pDecoder;
+	}
+
+	void SetDecoder( CEdgeDecoder* pDecoder )
+	{
+		m_pCurrentEdgeDecoder = pDecoder;
 	}
 
 	virtual bool operator << (int nBit)
@@ -172,18 +193,24 @@ public:
 			if ( nPrev == 1 && nBit == 0 )
 			{
 				nDecodeIndex = 0;
+				nByte = 0;
 				//						BIOS::DBG::Print("<");
 			}
 			nPrev = nBit;
 			return true;
 		}
 
-		nByte >>= 1;
-		if ( nBit )
-			nByte |= 128;
-
-		if ( ++nDecodeIndex >= 8 )
+		if ( nDecodeIndex >= 1 && nDecodeIndex <= 8 )
 		{
+			nByte >>= 1;
+			if ( nBit )
+				nByte |= 128;
+		}
+
+		if ( nDecodeIndex == 9 )
+		{
+			if ( nBit != 1 )
+				return false;
 			//					BIOS::DBG::Print(">");
 			if ( nDecoded <= (int)sizeof(strDecode) )
 			{
@@ -200,18 +227,20 @@ public:
 
 	float GetBaud()
 	{
+		if ( nTotalBits == 0 )
+			return -1;
 		float fBaudPeriod = (nTotalTime / (float) nTotalBits) * Settings.Runtime.m_fTimeRes / CWndGraph::BlkX;
 		float fBaud = 1.0f / fBaudPeriod;
 		return fBaud;
 	}
 
-	void Visualize()
+	bool Visualize()
 	{
 		bool bMidi = _IsMidi();
 		bool bHex = bMidi;
 		// display decoded characters
 		if ( nDecoded <= 0 )
-			return;
+			return false;
 
 		int x = 20;
 		int y = 30 + ((int)This()->m_curSrc)*16;
@@ -233,8 +262,32 @@ public:
 			{
 				_ShowAscii(x, y);
 			}
+		return true;
 	}
+/*
+	void Log()
+	{
+		if (nDecoded < 4 || strDecode[0] != 0x10 || strDecode[1] != 0x7b || strDecode[nDecoded-1] != 0x03 || strDecode[nDecoded-2] != 0x10 )
+			return;
+		if ( nDecoded == 19 && strDecode[2] == 0x0d && strDecode[3] == 0x07 )
+			return;
+		BIOS::SYS::Beep(100);
 
+		static int q=0;
+		char name[8+3+1];
+		BIOS::DBG::sprintf(name, "LOG%04d TXT", q++);
+		CBufferedWriter f;
+		f.Open( name );
+		for ( int i = 0; i < nDecoded; i++ )
+		{
+			char str[4];
+			BIOS::DBG::sprintf(str, "%02x ", strDecode[i]);
+			f << str;
+		}
+		//f << "\r\n";
+		f.Close();
+	}
+*/
 	void _ShowBinary(int x, int y)
 	{
 		for ( int i = 0; i < nDecoded; i++ )

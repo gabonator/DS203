@@ -2,6 +2,7 @@
 #define __MEASURE_H__
 
 #include <Source/Core/Settings.h>
+#include <Source/Core/BufferedIo.h>
 
 class CMeasStatistics
 {
