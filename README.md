@@ -5,7 +5,7 @@ DS203 is a nice open source oscilloscope. And this is an attempt to design impro
 
 For owners of DS203 who would like to try this firmware:
 
-1. download hex file from Bin/APP_G251.hex
+1. download hex file from Bin/GABOUI_1.hex (the number specifies in which slot the app will be loaded)
 2. power on your oscilloscope while holding the first button
 3. on device's display, there should be displayed "DFU tool" and a new USB disk should appear in "My computer"
 4. copy the hex file to your oscilloscope
@@ -15,8 +15,10 @@ For owners of DS203 who would like to try this firmware:
 
 For developers that want to build the firmware, but don't want to use github:
 
-1. download whole repository: https://github.com/gabonator/DS203/zipball/master
-2. follow instructions in /Man/ folder
+1. download whole repository by clicking on "Download ZIP" button on right
+2. and run the build script Build/arm_win32/_makefile.bat
+
+For building this project you need ARM GCC toolchain. The building script will automatically download one for you, if you want to use your own toolchain, just modify the CBASE value in makefile.bat. The official download link for the toolchain is https://sourcery.mentor.com/sgpp/lite/arm/portal/package8735/public/arm-none-eabi/arm-2011.03-42-arm-none-eabi-i686-mingw32.tar.bz2 it is about 36MB. If the link will be dead or you will have troubles unpacking tar.bz2, you can download stripped version of that toolchain (13MB) from my webpage http://pub.valky.eu/arm-2011.03-lite.zip
 
 For developers that would like to contribute to this project:
 Just contact me, or make a modification of the source code and push me a request.

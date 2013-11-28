@@ -87,9 +87,11 @@ if not exist !CC!.* (
   rem echo Toolchain path: %CBASE%
 	rem echo Testing file: !CC!
   rem echo.
-	echo Please download it from http://pub.valky.eu/arm-2011.03-lite.zip and place it in /Toolchain folder
+	echo Please download the toolchain from http://pub.valky.eu/arm-2011.03-lite.zip and place it in /Toolchain folder
 	echo.
-	pause
+	echo Press space to download this link, or close this window to cancel download...
+	pause > nul
+	start http://pub.valky.eu/arm-2011.03-lite.zip
   goto :eof
 )
 
