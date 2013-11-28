@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
+rem Todo: if GIT_BUILDPC contain spaces, the compilation will fail!
 echo GIT_BUILDPC=%USERDOMAIN%/%USERNAME%
       
 where /Q git

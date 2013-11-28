@@ -4,7 +4,7 @@ setlocal ENABLEDELAYEDEXPANSION
 rem DS203 Win32 GCC support by valky.eu ver 2.0
 rem USER DEFINED VALUES
 rem ===================================================
-set CBASE=C:\Programs\Devel\Gcc\arm-2011.03\bin\
+set CBASE=..\Toolchain\arm-2011.03-lite\bin\
 set TFILE=GABOUI
 set APP=1
 rem ===================================================
@@ -18,7 +18,6 @@ FOR /F "eol=# tokens=1,* delims==" %%i in ('_identify.bat') do (
 
 if "%TARGET%"=="" (
   echo Could not find the DFU drive.
-  echo Please turn on your DSO while holding the first button and then connect it to your computer
   echo.
 	set online=no
 ) else (
@@ -27,7 +26,7 @@ if "%TARGET%"=="" (
 
 Echo DFU Drive: !TARGET!
 
-call :CheckSpaces "%CD%" %CD%
+call :CheckPathSpaces "%CD%" %CD%
 
 set CROSS=!CBASE!arm-none-eabi-
 set CC=!CROSS!gcc
@@ -36,11 +35,6 @@ set OBJCOPY=!CROSS!objcopy
 set LD=!CROSS!ld
 set AS=!CROSS!as
 set STRIP=!CROSS!strip
-
-if not exist !CC!.* (
-  echo Compiler not found !
-  goto :eof
-)
 
 FOR /F "eol=# tokens=1,* delims=:= " %%i in (../common/build.mk) do (
   set %%i=%%j
@@ -71,6 +65,9 @@ if NOT "%GIT_BUILDPC%"=="" (
 
 set REVISION=%D1% %D2% %D3%
 
+rem Revision macros cannot contain spaces!
+call :CheckRevSpaces "%GIT_BUILDPC%" %GIT_BUILDPC%
+
 cd ../../
 set BIN=Bin
 if not exist !BIN! (
@@ -81,7 +78,18 @@ if not exist !BIN! (
 )
 
 cd !BIN!
-rem goto link
+
+rem Verify compiler
+if not exist !CC!.* (
+  echo Compiler not found !
+	echo.
+	echo Current path: %CD%
+  echo Toolchain path: %CBASE%
+	echo Testing file: !CC!
+  echo.
+	echo Please download it from http://pub.valky.eu/arm-2011.03-lite.zip and place it to Toolchain folder
+  goto :eof
+)
 
 echo Compiling...
 !CC! !WIN32_ARM_GCC_AFLAGS! -c !ASM_SRC1! -o !ASM_OUT1!
@@ -152,10 +160,18 @@ if exist !TARGET!!TFILE!.rdy (
 )
 goto loop
 
-:CheckSpaces
+:CheckPathSpaces
 if not %1=="%2" (
   echo.
-  echo Your current path contains spaces, it can cause some problems...
+  echo Your current path contains spaces ^(%1^), it can cause some problems...
+  pause
+)
+goto :eof
+
+:CheckRevSpaces
+if not %1=="%2" (
+  echo.
+  echo Your computer name contains spaces ^(%1^), please modify _revision.bat so the GIT_BUILDPC will return string without spaces
   pause
 )
 goto :eof

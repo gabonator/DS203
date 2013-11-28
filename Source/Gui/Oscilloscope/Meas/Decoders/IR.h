@@ -205,7 +205,7 @@ public:
 		int x = 20;
 		int y = 30;
 		x += 1*BIOS::LCD::Print(x, y, RGB565(ff0000), 0x0101, "Ir: ");
-		char *strType = "Unknown";
+		const char *strType = "Unknown";
 		switch ( results.decode_type )
 		{
 		case NEC: strType = "NEC"; break;
@@ -253,7 +253,7 @@ public:
 			return false;
 		}
 		offset++;
-		for (int i = 0; i < NEC_BITS; i++) {
+		for (int i = 0; i < (int)NEC_BITS; i++) {
 			if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK)) {
 				return false;
 			}
@@ -411,7 +411,7 @@ public:
 		}
 		// Success
 		results->bits = (offset - 1) / 2;
-		if (results->bits < MITSUBISHI_BITS) {
+		if (results->bits < (int)MITSUBISHI_BITS) {
 			results->bits = 0;
 			return false;
 		}
@@ -487,7 +487,7 @@ public:
 	}
 
 	long decodeRC6(decode_results *results) {
-		if (results->rawlen < MIN_RC6_SAMPLES) {
+		if (results->rawlen < (int)MIN_RC6_SAMPLES) {
 			return false;
 		}
 		int offset = 1; // Skip first space
@@ -551,7 +551,7 @@ public:
 		offset++;
 
 		// decode address
-		for (int i = 0; i < PANASONIC_BITS; i++) {
+		for (int i = 0; i < (int)PANASONIC_BITS; i++) {
 			if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK)) {
 				return false;
 			}
@@ -596,7 +596,7 @@ public:
 			return false;
 		}
 		offset++;
-		for (int i = 0; i < JVC_BITS; i++) {
+		for (int i = 0; i < (int)JVC_BITS; i++) {
 			if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)) {
 				return false;
 			}
