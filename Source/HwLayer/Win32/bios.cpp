@@ -531,8 +531,8 @@ BOOL bADCReady = FALSE;
 		{
 			FLOAT fm = 1;
 			FLOAT fa = 0.05f;
-			a = sin(lCounter*fa + 3.14/2) * 0.8;
-			b = sin(lCounter*fa)*0.25f;
+			a = (float)sin(lCounter*fa + 3.14/2) * 0.8f;
+			b = (float)sin(lCounter*fa)*0.25f;
 			break;
 		}
 

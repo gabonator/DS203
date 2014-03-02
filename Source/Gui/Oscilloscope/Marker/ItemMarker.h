@@ -101,7 +101,7 @@ public:
 		}
 		if ( nKey & BIOS::KEY::KeyRight )
 		{
-			if ( m_pMarker->Type == CSettings::Marker::_Time && m_pMarker->nValue < 1024 )
+			if ( m_pMarker->Type == CSettings::Marker::_Time && m_pMarker->nValue < (int)BIOS::ADC::GetCount() )
 				m_pMarker->nValue++;
 			if ( m_pMarker->Type == CSettings::Marker::_Voltage && m_pMarker->nValue < 256 )
 				m_pMarker->nValue++;
