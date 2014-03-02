@@ -400,14 +400,14 @@ public:
 		virtual CSerialize& operator <<( CStream& stream )
 		{
 			stream << m_nMenuItem << m_nUptime << m_nBacklight << m_nVolume << m_nStandby
-				<< _E(m_Beep) << m_nShortcutTriangle << m_nShortcutS1 << m_nShortcutS2
+				<< _E(m_Beep) << m_nShortcutCircle << m_nShortcutTriangle << m_nShortcutS1 << m_nShortcutS2
 				<< m_bUartTest;
 			return *this;
 		}
 		virtual CSerialize& operator >>( CStream& stream )
 		{
 			stream >> m_nMenuItem >> m_nUptime >> m_nBacklight >> m_nVolume >> m_nStandby
-				>> _E(m_Beep) >> m_nShortcutTriangle >> m_nShortcutS1 >> m_nShortcutS2
+				>> _E(m_Beep) >> m_nShortcutCircle >> m_nShortcutTriangle >> m_nShortcutS1 >> m_nShortcutS2
 				>> m_bUartTest;
 			return *this;
 		}
