@@ -714,5 +714,8 @@
     <ClCompile Include="..\..\Source\User\Execute.cpp">
       <Filter>Source\User</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.cpp">
+      <Filter>Source\Gui\Oscilloscope\Marker</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

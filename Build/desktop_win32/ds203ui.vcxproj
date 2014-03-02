@@ -241,6 +241,7 @@
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Controls\GraphOsc.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Core\CoreOscilloscope.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Disp\MenuDisp.cpp" />
+    <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\ListMarker.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Marker\MenuMarker.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Mask\MenuMask.cpp" />
     <ClCompile Include="..\..\Source\Gui\Oscilloscope\Math\ChannelMath.cpp" />

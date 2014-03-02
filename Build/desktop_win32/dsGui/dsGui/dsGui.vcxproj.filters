@@ -241,6 +241,9 @@
     <ClCompile Include="..\..\..\..\Source\User\Tuner.cpp">
       <Filter>Source Files\User</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Gui\Oscilloscope\Marker\ListMarker.cpp">
+      <Filter>Source Files\Gui\Oscilloscope\Marker</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Source\Main\Application.h">
