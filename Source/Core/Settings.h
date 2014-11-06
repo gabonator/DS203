@@ -14,13 +14,17 @@ public:
 	static CSettings* m_pInstance;
 
 public:
-	class AnalogChannel : public CSerialize
-	{
-	public:
-		static const char* const ppszTextEnabled[];
-		static const char* const ppszTextCoupling[];
-		static const char* const ppszTextResolution[];
-		static const char* const ppszTextProbe[];
+class AnalogChannel : public CSerialize
+    {
+    public:
+        static const char* const ppszTextEnabled[];
+        static const char* const ppszTextCoupling[];
+        static const char* const ppszTextResolution[];
+        static const char* const ppszTextResolution10[];
+        static const char* const ppszTextResolution100[];
+        static const char* const ppszTextResolution1000[];
+        static const char* const* ppszTextResolutionByProbe[4];
+        static const char* const ppszTextProbe[];
 
 		enum eEnabled {_NO = 0, _YES = 1, _EnabledMax = _YES}
 			Enabled;
