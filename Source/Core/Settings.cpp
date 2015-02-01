@@ -10,7 +10,15 @@ CSettings* CSettings::m_pInstance = NULL;
 /*static*/ const char* const CSettings::AnalogChannel::ppszTextCoupling[] = 
 		{"AC", "DC", "GND"};
 /*static*/ const char* const CSettings::AnalogChannel::ppszTextResolution[] =
-		{"50mV", "100mV", "200mV", "500mV", "1V", "2V", "5V", "10V"};
+        {"50mV", "100mV", "200mV", "500mV", "1V", "2V", "5V", "10V"};
+/*static*/ const char* const CSettings::AnalogChannel::ppszTextResolution10[] =
+        {"500mV", "1V", "2V", "5V", "10V", "20V", "50V", "100V"};
+/*static*/ const char* const CSettings::AnalogChannel::ppszTextResolution100[] =
+        {"5V", "10V", "20V", "50V", "100V", "200V", "500V", "1000V"};
+/*static*/ const char* const CSettings::AnalogChannel::ppszTextResolution1000[] =
+        {"50V", "100V", "200V", "500V", "1000V", "2000V", "5000V", "10000V"};
+/*static*/ const char* const* CSettings::AnalogChannel::ppszTextResolutionByProbe[4] = 
+        {CSettings::AnalogChannel::ppszTextResolution, CSettings::AnalogChannel::ppszTextResolution10, CSettings::AnalogChannel::ppszTextResolution100, CSettings::AnalogChannel::ppszTextResolution1000};
 /*static*/ const float CSettings::AnalogChannel::pfValueResolution[] =
 		{0.050f, 0.100f, 0.200f, 0.500f, 1.0f, 2.0f, 5.0f, 10.0f};
 /*static*/ const char* const CSettings::AnalogChannel::ppszTextProbe[] =
