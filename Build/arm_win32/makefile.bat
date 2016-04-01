@@ -4,12 +4,13 @@ setlocal ENABLEDELAYEDEXPANSION
 rem DS203 Win32 GCC support by valky.eu ver 2.0
 rem USER DEFINED VALUES
 rem ===================================================
-set CBASE=..\Toolchain\arm-2011.03-lite\bin\
-set TFILE=GABOUI
+rem set CBASE=..\Toolchain\arm-2011.03-lite\bin\
+set CBASE=C:\Programs\Devel\Gcc\arm-2011.03\bin\
+set TFILE=GAB
 set APP=1
 rem ===================================================
 
-Echo DS203 Build tool by valky.eu
+echo DS203 Build tool by valky.eu
 
 echo Locating DFU drive...
 FOR /F "eol=# tokens=1,* delims==" %%i in ('_identify.bat') do (
@@ -22,9 +23,9 @@ if "%TARGET%"=="" (
 	set online=no
 ) else (
 	set online=yes
+  echo DFU Drive: !TARGET!
 )
 
-Echo DFU Drive: !TARGET!
 
 call :CheckPathSpaces "%CD%" %CD%
 
@@ -104,16 +105,27 @@ echo Compiling...
 if "!online!"=="no" (
   echo Linking... 
 
-  rem alternative slots
-  !CC! -o !TFILE!_1.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app1_win.lds !OBJS!
-  !OBJCOPY! -O ihex !TFILE!_1.elf !TFILE!_1.hex
-  !CC! -o !TFILE!_2.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app2_win.lds !OBJS!
-  !OBJCOPY! -O ihex !TFILE!_2.elf !TFILE!_2.hex
-  !CC! -o !TFILE!_3.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app3_win.lds !OBJS!
-  !OBJCOPY! -O ihex !TFILE!_3.elf !TFILE!_3.hex
-  !CC! -o !TFILE!_4.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app4_win.lds !OBJS!
-  !OBJCOPY! -O ihex !TFILE!_4.elf !TFILE!_4.hex
+  rem alternative slots - old hw revisions
+  !CC! -o !TFILE!_O1.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app1_oldhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_O1.elf !TFILE!_O1.hex
+  !CC! -o !TFILE!_O2.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app2_oldhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_O2.elf !TFILE!_O2.hex
+  !CC! -o !TFILE!_O3.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app3_oldhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_O3.elf !TFILE!_O3.hex
+  !CC! -o !TFILE!_O4.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app4_oldhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_O4.elf !TFILE!_O4.hex
 
+  rem alternative slots - new hw revisions
+  !CC! -o !TFILE!_N1.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app1_newhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_N1.elf !TFILE!_N1.hex
+  !CC! -o !TFILE!_N2.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app2_newhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_N2.elf !TFILE!_N2.hex
+  !CC! -o !TFILE!_N3.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app3_newhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_N3.elf !TFILE!_N3.hex
+  !CC! -o !TFILE!_N4.elf !WIN32_ARM_GCC_LDFLAGS! -T ../Source/HwLayer/ArmM3/lds/app4_newhw_win.lds !OBJS!
+  !OBJCOPY! -O ihex !TFILE!_N4.elf !TFILE!_N4.hex
+
+  del *.o *.d *.elf
   goto :eof
 )
 
@@ -147,12 +159,12 @@ if exist !TARGET!\*.WPT (
   goto :eof
 )
 
-Echo Downloading...
+echo Downloading...
 copy !TFILE!.hex !TARGET!!TFILE!.hex > nul 2> nul
 rem dir !TARGET! > nul
 
 rem del *.elf *.hex *.bin
-Echo Waiting for the device...
+echo Waiting for the device...
 :loop
 if exist !TARGET!!TFILE!.not (
   echo Failed to download

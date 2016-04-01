@@ -15,7 +15,8 @@ CPP_SRCS := ../Source/HwLayer/ArmM3/src/main.cpp ../Source/HwLayer/ArmM3/src/cbi
 
 WIN32_ARM_GCC_CFLAGS := -Wall -Os -Werror -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD
 WIN32_ARM_GCC_AFLAGS := -mcpu=cortex-m3 -mthumb
-WIN32_ARM_GCC_LDFLAGS := -nostartfiles -mcpu=cortex-m3 -mthumb -march=armv7 -mfix-cortex-m3-ldrd -msoft-float -lc -lgcc -Wl,-Map=myfile.map,--cref
+WIN32_ARM_GCC_LDFLAGS := -nostartfiles -mcpu=cortex-m3 -mthumb -march=armv7 -mfix-cortex-m3-ldrd -msoft-float -lc -lgcc 
+# generate map file: -Wl,-Map=myfile.map,--cref
 WIN32_ARM_GCC_GPPFLAGS := -Wall -Os -Werror -fno-common -mcpu=cortex-m3 -mthumb -msoft-float -MD -D _ARM -fno-exceptions -fno-rtti -fno-threadsafe-statics -Wno-psabi
 WIN32_ARM_GCC_INCLUDES := -I .. -I ../Source/HwLayer/ArmM3/stm32f10x/inc -I ../Source/HwLayer/ArmM3/src
 # win32 batch file doesn't support string tokenizing

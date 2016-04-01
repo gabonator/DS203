@@ -5,7 +5,7 @@ DS203 is a nice open source oscilloscope. And this is an attempt to design impro
 
 For owners of DS203 who would like to try this firmware:
 
-1. download hex file from Bin/GABOUI_1.hex (the number specifies in which slot the app will be loaded)
+1. download hex file from Bin/GAB_N1.hex (the number specifies in which slot the app will be loaded, N stands for newer hardware versions of dso board, choose GAB_O1.hex for older dso's)
 2. power on your oscilloscope while holding the first button
 3. on device's display, there should be displayed "DFU tool" and a new USB disk should appear in "My computer"
 4. copy the hex file to your oscilloscope
@@ -150,6 +150,7 @@ Credits and contributors:
 ======================
 Please let me know if I forgot to mention someone who contributed to this project... 
 
+ - 6HJS
  - krist10an
  - Frederic Borry
  - Francesco Gugliuzza
