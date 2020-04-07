@@ -398,7 +398,7 @@ public:
 	PSTR m_pEndPtr;
 
 private:
-	virtual const CEvalToken* isOperator( CHAR* pszExpression ) = NULL;
+	virtual const CEvalToken* isOperator( CHAR* pszExpression ) = 0;
 
 public:
 	CEvalOperand Eval( PSTR pszExpression )
@@ -418,7 +418,7 @@ public:
 
 		PSTR pszEnd = pszExpression + strlen( pszExpression );
 		
-		const CEvalToken *pPrevToken = NULL;
+		const CEvalToken *pPrevToken = 0;
 		const CEvalToken *pTokLPar = isOperator( (char*)"(" );
 		const CEvalToken *pTokRPar = isOperator( (char*)")" );
 		const CEvalToken *pTokDelim = isOperator( (char*)"," );

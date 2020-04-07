@@ -52,15 +52,19 @@ typedef ui32 UINT;
 #define DecEnum(e) *((ui8*)&(e))-=1
 #define IncEnum(e) *((ui8*)&(e))+=1
 
-#ifndef min 
+#ifndef min
 #	define min(a, b) ((a)<(b)?(a):(b))
 #endif
 #ifndef max
 #	define max(a, b) ((a)>(b)?(a):(b))
 #endif
+
+/**
+// already defined in math.h
 #ifndef abs
 #	define abs(a) ((a)>0?(a):(-(a)))
 #endif
+*/
 
 #define NATIVEPTR ui32
 #define NATIVEENUM unsigned char

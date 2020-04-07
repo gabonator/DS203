@@ -1,6 +1,6 @@
 class CBitDecoder {
 public:
-	virtual bool operator << (int nBit) = NULL;
+	virtual bool operator << (int nBit) = 0;
 };
 
 class CSerialDecoder : public CBitDecoder

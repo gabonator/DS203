@@ -19,7 +19,7 @@ struct TIdentification {
 __attribute__ ((section(".identify")))
 __attribute__((__used__))
 static TIdentification Identification = {
-	"DSO_APP: Gabonator's alternative UI;Alter UI;Gabriel Valky 2013;",
+	"DSO_APP: Gabonator's alternative UI 2020",
 	ToDword('B', 'I', 'O', 'S'),
 	(u32)(void*)&BIOS::SYS::GetProcAddress
 };

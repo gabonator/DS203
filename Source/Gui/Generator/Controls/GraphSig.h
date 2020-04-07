@@ -1,5 +1,14 @@
 #include <Source/Gui/Oscilloscope/Controls/GraphBase.h>
 
+//Somehow not found from Types.h
+#ifndef min
+#	define min(a, b) ((a)<(b)?(a):(b))
+#endif
+#ifndef max
+#	define max(a, b) ((a)>(b)?(a):(b))
+#endif
+
+
 //#define _GENERATOR_MULTIVIEW
 
 class CWndSigGraph : public CWnd
