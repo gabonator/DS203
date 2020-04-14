@@ -284,8 +284,8 @@ void CWndUserManager::DrawLine( BIOS::FAT::TFindFile& fileInfo, int y, bool bSel
 	ui16 clrBack = bSelected ? RGB565(00b0b0) : RGB565(0000b0);
 	BIOS::LCD::Bar( 0, y, /*320*/400-8, y+14, clrBack );
 
-	if ( stricmp( strExt, "hex" ) == 0 || stricmp( strExt, "elf" ) == 0 || 
-		 stricmp( strExt, "adr" ) == 0 || stricmp( strExt, "exe" ) == 0 )
+	if ( strcasecmp( strExt, "hex" ) == 0 || strcasecmp( strExt, "elf" ) == 0 || 
+		 strcasecmp( strExt, "adr" ) == 0 || strcasecmp( strExt, "exe" ) == 0 )
 	{
 		clr = RGB565(00ff00);
 	}
@@ -519,19 +519,19 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 	if ( strSuffix )
 	{
 		strSuffix++;
-		if ( stricmp( strSuffix, "hex" ) == 0 )
+		if ( strcasecmp( strSuffix, "hex" ) == 0 )
 			eType = EHex;
-		else if ( stricmp( strSuffix, "elf" ) == 0 )
+		else if ( strcasecmp( strSuffix, "elf" ) == 0 )
 			eType = EElf;
-		else if ( stricmp( strSuffix, "bmp" ) == 0 )
+		else if ( strcasecmp( strSuffix, "bmp" ) == 0 )
 			eType = EBmp;
-		else if ( stricmp( strSuffix, "wav" ) == 0 )
+		else if ( strcasecmp( strSuffix, "wav" ) == 0 )
 			eType = EWav;
-		else if ( stricmp( strSuffix, "adr" ) == 0 )
+		else if ( strcasecmp( strSuffix, "adr" ) == 0 )
 			eType = EAdr;
-		else if ( stricmp( strSuffix, "txt" ) == 0 )
+		else if ( strcasecmp( strSuffix, "txt" ) == 0 )
 			eType = ETxt;
-		else if ( stricmp( strSuffix, "exe" ) == 0 )
+		else if ( strcasecmp( strSuffix, "exe" ) == 0 )
 			eType = EExe;
 	}
 	if ( eType == ENone )
@@ -642,7 +642,7 @@ void CWndUserManager::Exec(char* strPath, char* strFile, int nLength)
 		GetModuleFileName( NULL, pszFileName, 256 );
 		char* strModuleName = strrchr( pszFileName, '\\' );
 		strModuleName = strModuleName ? strModuleName + 1 : pszFileName;
-		if ( stricmp(strFullName + strlen(strFullName) - strlen(strModuleName), strModuleName ) == 0 )
+		if ( strcasecmp(strFullName + strlen(strFullName) - strlen(strModuleName), strModuleName ) == 0 )
 			MainWnd.m_wndMessage.Show(this, "Manager", "Already running!", RGB565(FF0000));
 		else
 			ShellExecuteA( NULL, "open", strFullName, NULL, NULL, CWnd::SwShow );
@@ -978,7 +978,7 @@ bool CWndUserManager::CheckModule( char* strName, int nLength, char* strLoaded )
 		if ( mod.dwEntry == (ui32)-1 )
 		{
 			char* strExt = strrchr(strName, '.');
-			if ( strExt && stricmp(strExt+1, "adr") == 0 )
+			if ( strExt && strcasecmp(strExt+1, "adr") == 0 )
 			{
 				strcpy(strLoaded, "Fpga");
 			}
@@ -1025,7 +1025,7 @@ bool CWndUserManager::CheckModule( char* strName, int nLength, char* strLoaded )
 void CWndUserManager::AddModule( char* strName, int nLength, ui32 dwEntry, ui32 dwBegin, ui32 dwEnd )
 {
 	for ( int i=0; i < m_arrLoaded.GetSize(); i++)
-		_ASSERT( stricmp(strName, m_arrLoaded[i].strFileName) != 0 );
+		_ASSERT( strcasecmp(strName, m_arrLoaded[i].strFileName) != 0 );
 
 	TLoadedModule mod;
 	memset( mod.strFileName, 0, sizeof(mod.strFileName) );

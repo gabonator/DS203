@@ -1,6 +1,15 @@
 #ifndef __CLASSES_H__
 #define __CLASSES_H__
 
+//Somehow not found from Types.h
+#ifndef min
+#	define min(a, b) ((a)<(b)?(a):(b))
+#endif
+#ifndef max
+#	define max(a, b) ((a)>(b)?(a):(b))
+#endif
+
+
 class DLLAPI CPoint {
 public:
 	// RAM optimization int->short
