@@ -1,4 +1,13 @@
-﻿DS203 customized firmware
+# Project discontinued
+
+New project covering LA104, DS213, DS203 based on simple operating system for STM32F103 can be found here: https://github.com/gabonator/LA104 
+
+For now it supports switching between original firmware and simplified version of this repository's firmware, webusb remote controlled oscilloscope and various usefull applications. Follow the repository release section and https://github.com/gabonator/LA104/tree/master/system/release folder for new applications and testing disk images
+
+[![WebUsb Oscilloscope video](https://img.youtube.com/vi/aghTg4Pggv4/0.jpg)](https://www.youtube.com/watch?v=aghTg4Pggv4 "WebUsb Oscilloscope")
+
+
+DS203 customized firmware
 ======================
 
 DS203 is a nice open source oscilloscope. And this is an attempt to design improved GUI for the scope offering rich functions, better than those provided by original not-so-user-friendly firmware. The source code is in C++ for better code organisation and it is possible to compile it on Windows and Linux machine. For speeding up the development process, you can compile this application as native Win32 app, this offers you the ability to test new features on PC before compiling and uploading the firmware onto DS203 device. For windows users, there is a Visual Studio 2010 project file (Build/desktop_win32). For compiling the firmware for ARM Cortex M3 target device, there is a script in "Build" folder (arm_win32 for win32 platform, arm_linux for linux platform)
